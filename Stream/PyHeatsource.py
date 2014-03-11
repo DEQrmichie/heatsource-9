@@ -205,7 +205,7 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev, inputs, Q
 
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFactor,
                  ViewToSky, SampleDist, phi, emergent, VDensity, VHeight, ShaderList):
-    """Old method, now pushed down to a C module. This is left for testing only"""
+    """"""
     FullSunAngle, TopoShadeAngle, BankShadeAngle, rip, veg = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
