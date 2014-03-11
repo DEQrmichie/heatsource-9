@@ -20,17 +20,17 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 ================================================================================================
 INSTALL
 
--see OS specific instructions for step by step install
+See OS specific instructions for step by step install.
 
 Heat Source requires python 2.7 and the following python packages:
 
-numpy 1.8
-Bottleneck
-numexpr
-python-dateutil 1.5
-pytz
-xlrd
-pandas
+-numpy 1.8
+-Bottleneck
+-numexpr
+-python-dateutil 1.5
+-pytz
+-xlrd
+-pandas
 
 ================================================================================================
 LICENSE
