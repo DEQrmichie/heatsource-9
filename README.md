@@ -94,6 +94,7 @@ Roadmap for this version
 - Register heatsource with pypi so it can be automatically downloaded and installed via python package managers (pip/easy_install).
 - Make a heatsource package mpkg installer for mac.
 - Decide if cloudiness is a required input for solar runs.
+- Add effective LAI option
 
 
 Future Roadmap
