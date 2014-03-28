@@ -114,6 +114,7 @@ class CSVInterface(object):
                     "lidar": "# LIDAR DATA USED FOR VEG CODES (TRUE/FALSE)",
                     "lcdensity": "# LANDCOVER DENSITY FOR LIDAR DATA",
                     "lcoverhang": "# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)",
+                    "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/Density)",
                     "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",}
             
         cf = pd.read_csv(join(inputdir,control_file),quotechar='"',quoting=0,header=None,na_values=None)
@@ -224,8 +225,14 @@ class CSVInterface(object):
         kmlist = self.GetStreamKMlist()
         
         # Setup the headers for the Landcover file
-        lcDataColHeaders =['Longitude','Latitude','TopoWest','TopoSouth','TopoEast','EmergentVeg']    
-        type = ['LC','ELE','DEN']    
+        if IniParams["beers_data"] == "LAI":  #Use LAI methods
+             type = ['LC','ELE','LAI','K']
+             emergentlabel ='LAI_EMERGENT'
+        else:        
+            type = ['LC','ELE','DEN']
+            emergentlabel = 'DEN_EMERGENT'
+        
+        lcDataColHeaders =['Longitude','Latitude','TopoWest','TopoSouth','TopoEast','EmergentVeg']      
         if IniParams["radialsample_count"] == 999:  #999 is a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
             dir = ['NE','E','SE','S','SW','W','NW']
         else:        
@@ -233,12 +240,12 @@ class CSVInterface(object):
         
         zone = range(1,int(IniParams["transsample_count"])+1)
         
-        # Concatenate the type, dir, and zone and ordered in the correct way
+        # Concatenate the type, dir, and zone and order in the correct way
         for t in range(0,len(type)):
             for d in range(0,len(dir)):
                 for z in range(0,len(zone)):
                     if t==2 and d==0 and z==0:
-                        lcDataColHeaders.append('DEN_EMERGENT') # add this when we begin the density series
+                        lcDataColHeaders.append(emergentlabel) # add this when we begin the LAI/density series
                         lcDataColHeaders.append(type[t]+'_'+dir[d]+'_'+str(zone[z]))
                     else:
                         lcDataColHeaders.append(type[t]+'_'+dir[d]+'_'+str(zone[z]))
@@ -951,6 +958,7 @@ class CSVInterface(object):
         vheight = []
         vdens = []
         elevation = []
+        k = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
         if IniParams["radialsample_count"] == 999:
@@ -968,12 +976,17 @@ class CSVInterface(object):
                 dens = list(LCdata.ix[:,i+1+radial_count*trans_count*2])
             else:
                 dens = [IniParams["lcdensity"]]*len(col)
+            if IniParams["beers_data"] == "LAI":
+                kcoef = list(LCdata.ix[:,i+1+radial_count*trans_count*3])
+            else:
+                kcoef = [1]*len(col)
             # Make a list from the LC codes from the column, then send that to the multiplier
             # with a lambda function that averages them appropriately. Note, we're averaging over
             # the values (e.g. density) not the actual code, which would be meaningless.
             try:
                 vheight.append(self.multiplier([x for x in col], average))
                 vdens.append(self.multiplier([x for x in dens], average))
+                k.append(self.multiplier([x for x in kcoef], average))
             except KeyError, (stderr):
                 raise Exception("Vegetation height/density error" % stderr.message)
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
@@ -986,6 +999,7 @@ class CSVInterface(object):
             node.VHeight = vheight[0][i]
             node.VDensity = vdens[0][i]
             node.Overhang = IniParams["lcoverhang"]
+            node.k = k[0][i]
             
         # Average over the topo values
         topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
@@ -1048,11 +1062,13 @@ class CSVInterface(object):
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
                     # Calculate the riparian extinction value
-                    try:
-                        RE = -log(1-Vdens)/10
-                    except OverflowError:
-                        if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
-                        else: raise
+                   
+                    if IniParams["beers_data"] != "LAI":
+                        try:
+                            RE = -log(1-Vdens)/10
+                        except OverflowError:
+                            if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
+                            else: raise
                     # Calculate the node distance.
                     #Different for LiDAR because we assume you are sampling a tree at a specific location
                     #rather than a veg zone which represents the vegetation between two sample points

@@ -33,7 +33,7 @@ class StreamNode(object):
         __slots = ["Latitude", "Longitude", "Elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
-                "VHeight", "VDensity", "Overhang", #Vegetation params
+                "VHeight", "VDensity", "Overhang","k", #Vegetation params
                 "ContData", # Continuous data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
@@ -148,9 +148,9 @@ class StreamNode(object):
             raise Exception(msg)
 
         self.CalcDischarge = self.CalculateDischarge
-        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.VDensity, self.VHeight,
+        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.VDensity, self.VHeight, self.k,
                        self.SedDepth, self.dx, self.dt, self.SedThermCond, self.SedThermDiff, self.Q_in, self.T_in, has_prev,
-                       IniParams["transsample"],IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"],
+                       IniParams["transsample"], IniParams["transsample_count"], IniParams["beers_data"], IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"],
                        IniParams["calcevap"], IniParams["penman"], IniParams["calcalluvium"], IniParams["alluviumtemp"])
 
     def CalcDischarge_Opt(self,time):
@@ -287,7 +287,7 @@ c_k: %3.4f""" % stderr
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
-        Altitude, Zenith, Daytime, dir = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC,IniParams["radialsample_count"])
+        Altitude, Zenith, Daytime, dir = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC, IniParams["radialsample_count"])
         self.SolarPos = Altitude, Zenith, Daytime, dir
 
         try:
