@@ -295,23 +295,28 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
         pathEmergent = VHeight / sin(radians(Altitude))
         if pathEmergent > W_b:
             pathEmergent = W_b
-        if VDensity == 1:
-            VDensity = 0.9999
-            ripExtinctEmergent = 1
-            shadeDensityEmergent = 1
-        elif VDensity == 0:
-            VDensity = 0.00001
-            ripExtinctEmergent = 0
-            shadeDensityEmergent = 0
-        else:
-            ripExtinctEmergent = -log(1 - VDensity) / 10
-            shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
-        F_Direct[4] = F_Direct[4] * (1 - shadeDensityEmergent)
-        if VHeight: # if there's no VHeight, we get ZeroDivisionError because we don't need this next step
-            pathEmergent = VHeight
-            ripExtinctEmergent = -log(1 - VDensity) / VHeight
-            shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
-            F_Diffuse[4] = F_Diffuse[4] * (1 - shadeDensityEmergent)
+        
+        if BeersData == "LAI": #use LAI data
+            fraction_passed_emergent = exp(-1 * k[zone] * LAI[zone] * pathEmergent)
+            F_Diffuse[4] = F_Diffuse[4] * fraction_passed_emergent
+        else: # Use veg density data
+            if VDensity == 1:
+                VDensity = 0.9999
+                ripExtinctEmergent = 1
+                shadeDensityEmergent = 1
+            elif VDensity == 0:
+                VDensity = 0.00001
+                ripExtinctEmergent = 0
+                shadeDensityEmergent = 0
+            else:
+                ripExtinctEmergent = -log(1 - VDensity) / 10
+                shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
+            F_Direct[4] = F_Direct[4] * (1 - shadeDensityEmergent)
+            if VHeight: # if there's no VHeight, we get ZeroDivisionError because we don't need this next step
+                pathEmergent = VHeight
+                ripExtinctEmergent = -log(1 - VDensity) / VHeight
+                shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
+                F_Diffuse[4] = F_Diffuse[4] * (1 - shadeDensityEmergent)
 
     #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     #5 - Entering Stream

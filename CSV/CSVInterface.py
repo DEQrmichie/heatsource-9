@@ -1063,12 +1063,11 @@ class CSVInterface(object):
                     VH = Vheight + SH
                     # Calculate the riparian extinction value
                    
-                    if IniParams["beers_data"] != "LAI":
-                        try:
-                            RE = -log(1-Vdens)/10
-                        except OverflowError:
-                            if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
-                            else: raise
+                    try:
+                        RE = -log(1-Vdens)/10
+                    except OverflowError:
+                        if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
+                        else: raise
                     # Calculate the node distance.
                     #Different for LiDAR because we assume you are sampling a tree at a specific location
                     #rather than a veg zone which represents the vegetation between two sample points
