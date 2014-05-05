@@ -55,11 +55,10 @@ class ModelControl(object):
     """
     def __init__(self, inputdir, control_file, run_type=0):
         """ModelControl(inputdir, control_file, run_type) -> Class instance
-
         inputdir is the path to directory where the control csv file is located.
         control_file is the control file name.
-        run_type is one of 0,1,2 for Heat Source (Temperature), Solar only, or
-        hydraulics only, respectively.
+        run_type is one of 0,1,2,3 for Heat Source (Temperature), Solar only,
+        hydraulics only, or Setup, respectively.
         """
         # TODO: Fix the logger so it actually works
         self.ErrLog = Logger
@@ -79,7 +78,7 @@ class ModelControl(object):
         elif run_type == 1: self.run_all = self.run_sh
         elif run_type == 2: self.run_all = self.run_hy
         elif run_type == 3: self.run_all = self.run_setup
-        else: raise Exception("Bad run_type: %i. Must be 0, 1 or 2" %`self.run_type`)
+        else: raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" %`self.run_type`)
         # Create a Chronos iterator that controls all model time.
         Chronos.Start(start = IniParams["modelstart"],
                       stop = IniParams["modelend"],
@@ -154,7 +153,7 @@ class ModelControl(object):
             if not (minute + second):
                 ts = cnt.next() # Number of actual timesteps per tick
                 hr = 60/(IniParams["dt"]/60) # Number of timesteps in one hour
-                # This writes a line to the status bar of Excel.
+                # This writes a line to the status bar.
                 print("%i of %i timesteps"% (ts*hr, timesteps))
                 
                 # Call the Output class to update the textfiles. We call this every
