@@ -145,6 +145,12 @@ class CSVInterface(object):
         # If the number of radial sample directions is 999 (use heat source 8 default, same as 8 directions but no north)
         IniParams["radialsample_count"] = 999 if not IniParams["radialsample_count"] else IniParams["radialsample_count"]
         
+        # Set the total number landcover sample count (0 = emergent)
+        if (IniParams["radialsample_count"] == 999):
+            IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
+        else:
+            IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["radialsample_count"])
+        
         # Then make all of these integers because they're used later in for loops
         for key in ["inflowsites","flushdays","contsites", "transsample_count","radialsample_count"]:
             IniParams[key] = int(IniParams[key])
@@ -226,7 +232,7 @@ class CSVInterface(object):
         
         # Setup the headers for the Landcover file
         if IniParams["beers_data"] == "LAI":  #Use LAI methods
-             type = ['LC','ELE','LAI','K']
+             type = ['LC','ELE','LAI','k']
              emergentlabel ='LAI_EMERGENT'
         else:        
             type = ['LC','ELE','DEN']
@@ -260,11 +266,11 @@ class CSVInterface(object):
         # This just repeats the header if needed based on the number of sites and files.
         climatefile = pd.DataFrame(index=timelist, columns=['Cloudiness', 'WindSpeed','RelativeHumidity','AirTemp']*int((IniParams["contsites"]/len(climatefiles))))
         if IniParams["inflowsites"] > 0:
-            inflowfile = pd.DataFrame(index=timelist, columns=['Flow', 'Temp']*int((IniParams["inflowsites"]/len(tribfiles))))
+            inflowfile = pd.DataFrame(index=timelist, columns=['Flow','Temp']*int((IniParams["inflowsites"]/len(tribfiles))))
         
         # This sets the header names and index values for the other input files
         bcfile = pd.DataFrame(index=timelist, columns=['Flow', 'Temp'])
-        lccodes = pd.DataFrame(columns=['Name', 'Code','Height','Density','Overhang'])
+        lccodes = pd.DataFrame(columns=['Name','Code','Height','Density','Overhang'])
         lcfile = pd.DataFrame(index=kmlist,columns=lcDataColHeaders)
         accfile= pd.DataFrame(index=kmlist,columns=['Inflow','Temp','Outflow'])
         morphfile = pd.DataFrame(index=kmlist,columns=['Elevation','Gradient','BottomWidth','ChannelAngleZ','Mannings_n','SedThermalConductivity','SedThermalDiffusivity','SedHyporheicThickness','%HyporheicExchange','Porosity'])
@@ -787,6 +793,8 @@ class CSVInterface(object):
         mouth.dx = IniParams["longsample"] * mouth_dx
 
 
+
+
     def BuildZonesNormal(self):
         """This method builds the sampled vegzones in the case of non-lidar datasets"""
         # Hide your straight razors. This implementation will make you want to use them on your wrists.
@@ -958,7 +966,6 @@ class CSVInterface(object):
         vheight = []
         vdens = []
         elevation = []
-        k = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
         if IniParams["radialsample_count"] == 999:
@@ -976,17 +983,12 @@ class CSVInterface(object):
                 dens = list(LCdata.ix[:,i+1+radial_count*trans_count*2])
             else:
                 dens = [IniParams["lcdensity"]]*len(col)
-            if IniParams["beers_data"] == "LAI":
-                kcoef = list(LCdata.ix[:,i+1+radial_count*trans_count*3])
-            else:
-                kcoef = [1]*len(col)
             # Make a list from the LC codes from the column, then send that to the multiplier
             # with a lambda function that averages them appropriately. Note, we're averaging over
             # the values (e.g. density) not the actual code, which would be meaningless.
             try:
                 vheight.append(self.multiplier([x for x in col], average))
                 vdens.append(self.multiplier([x for x in dens], average))
-                k.append(self.multiplier([x for x in kcoef], average))
             except KeyError, (stderr):
                 raise Exception("Vegetation height/density error" % stderr.message)
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
@@ -999,7 +1001,6 @@ class CSVInterface(object):
             node.VHeight = vheight[0][i]
             node.VDensity = vdens[0][i]
             node.Overhang = IniParams["lcoverhang"]
-            node.k = k[0][i]
             
         # Average over the topo values
         topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
@@ -1062,7 +1063,6 @@ class CSVInterface(object):
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
                     # Calculate the riparian extinction value
-                   
                     try:
                         RE = -log(1-Vdens)/10
                     except OverflowError:
