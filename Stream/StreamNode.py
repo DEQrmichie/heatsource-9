@@ -103,6 +103,15 @@ class StreamNode(object):
         self.F_Total = 0.0
         self.Log = Logger
         self.ShaderList = ()
+        if (IniParams["radialsample_count"] == 999):
+            radial_count = 7
+        else:
+            radial_count = IniParams["radialsample_count"]
+        self.VHeight = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.VDensity = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.Overhang = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.k = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.LAI = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
     def GetNodeData(self):
         data = {}
@@ -271,7 +280,7 @@ c_k: %3.4f""" % stderr
                  self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, (self.T, self.S1, self.Mix_T_Delta), veg_block = \
                 _HS.CalcHeatFluxes(self.ContData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
-                            self.Q_hyp,self.next_km.T_prev, self.ShaderList[dir], self.Disp,
+                            self.Q_hyp,self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime,Altitude, Zenith, self.prev_km.Q_prev, self.prev_km.T_prev, solar_only, self.next_km.Mix_T_Delta)
 
         except _HS.HeatSourceError, (stderr):
@@ -296,7 +305,7 @@ c_k: %3.4f""" % stderr
                  self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, veg_block = \
                 _HS.CalcHeatFluxes(self.ContData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
-                            self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], self.Disp,
+                            self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime, Altitude, Zenith, 0.0, 0.0, solar_only, self.next_km.Mix_T_Delta)
         except _HS.HeatSourceError, (stderr, time):
             self.CatchException(stderr)
