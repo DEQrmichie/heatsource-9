@@ -204,13 +204,14 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev, inputs, Q
     return Q_new, Geom
 
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFactor,
-                 ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent, VDensity, VHeight, k, ShaderList):
+                 ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent, VDensity, VHeight, k, ShaderList, dir):
     """"""
-    FullSunAngle, TopoShadeAngle, BankShadeAngle, rip, veg = ShaderList
+    ##FullSunAngle,TopoShadeAngle,BankShadeAngle,RipExtinction,VegetationAngle = ShaderList # RM
+    FullSunAngle,TopoShadeAngle,BankShadeAngle,VegetationAngle = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
     F_Solar = [0]*8
-    FullSunAngle,TopoShadeAngle,BankShadeAngle,RipExtinction,VegetationAngle = ShaderList
+
     # Make all math functions local to save time by preventing failed searches of local, class and global namespaces
     #======================================================
     # 0 - Edge of atmosphere
@@ -250,16 +251,35 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     ########################################################
     #======================================================
     #3 - Above Stream Surface (Above Bank Shade)
-    Solar_blocked_byVeg = [0]*len(VegetationAngle) #amount of solar radiation blocked by each zone, plus one for diffuse
+    
+    # Calculate View To Sky
+    dir = dir + 1 # need to add 1 because zero is emergent in stack data, TODO fix. this should be consistent across the codebase
+    ViewToSky = 1
+    while zone >= 0:
+        if BeersData == "LAI": #use LAI data
+            fraction_passed = exp(-1 * k[dir][zone] * LAI[zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+            ViewToSky *=exp(-1 * k[dir][zone] * LAI[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+        else: # Use veg density data
+            # Calculate the riparian extinction value
+            try:
+                RipExtinction = -log(1-VDensity[dir][zone])/ 10
+                if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
+            except OverflowError:
+                if VDensity[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
+            fraction_passed = (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
+            ViewToSky *= (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
+    
+    # Back to normal
+    Solar_blocked_byVeg = [0]*SampleCount #amount of solar radiation blocked by each zone, plus one for diffuse appended later
     if Altitude <= TopoShadeAngle:    #>Topographic Shade IS Occurring<
         F_Direct[2] = 0
-        F_Diffuse[2] = F_Diffuse[1] * TopoFactor
+        F_Diffuse[2] = F_Diffuse[1] * TopoFactor # TODO should be 1 - TopoFactor ??
         F_Direct[3] = 0
     elif Altitude < FullSunAngle:  #Partial shade from veg
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         Dummy1 = F_Direct[2]
-        zone = len(VegetationAngle) - 1
+        zone = SampleCount - 1
         while zone >= 0:
         #for vegangle in VegetationAngle:  #Loop to find if shading is occuring from veg. in that zone
             if Altitude < VegetationAngle[zone]:  #veg shading is occurring from this zone
@@ -268,10 +288,15 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
                     Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
                     Dummy1 *=exp(-1 * k[zone] * LAI[zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                 else: # Use veg density data
-                    #RipExtinction is calculated in CSVInterface line 888
-                    fraction_passed = (1-(1-exp(-1* RipExtinction[zone] * (SampleDist/cos(radians(Altitude))))))
+                    # Calculate the riparian extinction value
+                    try:
+                        RipExtinction = -log(1-VDensity[dir][zone])/ 10
+                        if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
+                    except OverflowError:
+                        if VDensity[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
+                    fraction_passed = (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
                     Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
-                    Dummy1 *= (1-(1-exp(-1* RipExtinction[zone] * (SampleDist/cos(radians(Altitude))))))
+                    Dummy1 *= (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
             zone -= 1
         F_Direct[3] = Dummy1
     else: # Full sun
@@ -535,7 +560,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up, Delta_T,
     return Temp, S, T_mix
 
 def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T_prev,
-                   T_sed, Q_hyp, T_dn_prev, ShaderList, Disp, hour, JD, daytime, Altitude, Zenith,
+                   T_sed, Q_hyp, T_dn_prev, ShaderList, dir, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev):
     cloud, wind, humidity, T_air = ContData
     W_b, Elevation, TopoFactor, ViewToSky, phi, VDensity, VHeight, k, \
@@ -543,11 +568,11 @@ def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T
         has_prev, SampleDist, SampleCount, BeersData, emergent, wind_a, wind_b, calcevap, penman, calcalluv, T_alluv = C_args
 
     solar = [0]*8
-    veg_block = [0]*len(ShaderList[4])+[0] #plus one for diffuse blocked
+    veg_block = [0]*len(ShaderList[3])+[0] #plus one for diffuse blocked
     if daytime:
         solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b,
                     Elevation, TopoFactor, ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent,
-                    VDensity, VHeight, k, ShaderList)
+                    VDensity, VHeight, k, ShaderList, dir)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
