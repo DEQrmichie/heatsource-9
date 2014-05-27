@@ -205,8 +205,7 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev, inputs, Q
 
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFactor,
                  ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent, VDensity, VHeight, k, ShaderList, dir):
-    """"""
-    ##FullSunAngle,TopoShadeAngle,BankShadeAngle,RipExtinction,VegetationAngle = ShaderList # RM
+    """ """
     FullSunAngle,TopoShadeAngle,BankShadeAngle,VegetationAngle = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
@@ -252,28 +251,11 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     #======================================================
     #3 - Above Stream Surface (Above Bank Shade)
     
-    # Calculate View To Sky
     dir = dir + 1 # need to add 1 because zero is emergent in stack data, TODO fix. this should be consistent across the codebase
-    ViewToSky = 1
-    while zone >= 0:
-        if BeersData == "LAI": #use LAI data
-            fraction_passed = exp(-1 * k[dir][zone] * LAI[zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
-            ViewToSky *=exp(-1 * k[dir][zone] * LAI[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
-        else: # Use veg density data
-            # Calculate the riparian extinction value
-            try:
-                RipExtinction = -log(1-VDensity[dir][zone])/ 10
-                if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
-            except OverflowError:
-                if VDensity[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
-            fraction_passed = (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
-            ViewToSky *= (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
-    
-    # Back to normal
     Solar_blocked_byVeg = [0]*SampleCount #amount of solar radiation blocked by each zone, plus one for diffuse appended later
     if Altitude <= TopoShadeAngle:    #>Topographic Shade IS Occurring<
         F_Direct[2] = 0
-        F_Diffuse[2] = F_Diffuse[1] * TopoFactor # TODO should be 1 - TopoFactor ??
+        F_Diffuse[2] = F_Diffuse[1] * TopoFactor # TODO should this be 1 - TopoFactor ??
         F_Direct[3] = 0
     elif Altitude < FullSunAngle:  #Partial shade from veg
         F_Direct[2] = F_Direct[1]
@@ -291,6 +273,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
                     # Calculate the riparian extinction value
                     try:
                         RipExtinction = -log(1-VDensity[dir][zone])/ 10
+                        if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
                         if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
                     except OverflowError:
                         if VDensity[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
@@ -322,25 +305,25 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
             pathEmergent = W_b
         
         if BeersData == "LAI": #use LAI data
-            fraction_passed_emergent = exp(-1 * k[zone] * LAI[zone] * pathEmergent)
+            fraction_passed_emergent = exp(-1 * k[0][0] * LAI[0][0] * pathEmergent)
             F_Diffuse[4] = F_Diffuse[4] * fraction_passed_emergent
         else: # Use veg density data
-            if VDensity == 1:
-                VDensity = 0.9999
-                ripExtinctEmergent = 1
+            if VDensity[0][0] == 1:
+                VDensity[0][0] = 0.9999
+                RipExtinctionEmergent = 1
                 shadeDensityEmergent = 1
-            elif VDensity == 0:
-                VDensity = 0.00001
-                ripExtinctEmergent = 0
+            elif VDensity[0][0] == 0:
+                VDensity[0][0] = 0.00001
+                RipExtinctionEmergent = 0
                 shadeDensityEmergent = 0
             else:
-                ripExtinctEmergent = -log(1 - VDensity) / 10
-                shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
+                RipExtinctionEmergent = -log(1 - VDensity[0][0]) / 10
+                shadeDensityEmergent = 1 - exp(-RipExtinctionEmergent * pathEmergent)
             F_Direct[4] = F_Direct[4] * (1 - shadeDensityEmergent)
             if VHeight: # if there's no VHeight, we get ZeroDivisionError because we don't need this next step
-                pathEmergent = VHeight
-                ripExtinctEmergent = -log(1 - VDensity) / VHeight
-                shadeDensityEmergent = 1 - exp(-ripExtinctEmergent * pathEmergent)
+                pathEmergent = VHeight[0][0]
+                RipExtinctionEmergent = -log(1 - VDensity[0][0]) / VHeight[0][0]
+                shadeDensityEmergent = 1 - exp(-RipExtinctionEmergent * pathEmergent)
                 F_Diffuse[4] = F_Diffuse[4] * (1 - shadeDensityEmergent)
 
     #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::

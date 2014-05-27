@@ -792,9 +792,6 @@ class CSVInterface(object):
         mouth_dx = (vars)%self.multiple or 1.0 # number of extra variables if we're not perfectly divisible
         mouth.dx = IniParams["longsample"] * mouth_dx
 
-
-
-
     def BuildZonesNormal(self):
         """This method builds the sampled vegzones in the case of non-lidar datasets"""
         # Hide your straight razors. This implementation will make you want to use them on your wrists.
@@ -804,6 +801,7 @@ class CSVInterface(object):
         
         vheight = []
         vdensity = []
+        k = []
         overhang = []
         elevation = []
         average = lambda x:sum(x)/len(x)
@@ -825,19 +823,26 @@ class CSVInterface(object):
             try:
                 vheight.append(self.multiplier([LCcodes[x][0] for x in col], average))
                 vdensity.append(self.multiplier([LCcodes[x][1] for x in col], average))
-                overhang.append(self.multiplier([LCcodes[x][2] for x in col], average))
+                k.append(self.multiplier([LCcodes[x][2] for x in col], average))
+                overhang.append(self.multiplier([LCcodes[x][3] for x in col], average))
             except KeyError, (stderr):
                 raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
             print("Translating LULC Data", i, radial_count*trans_count+7)
-        # We have to set the emergent vegetation, so we strip those off of the iterator
-        # before we record the zones.
+            
         for i in xrange(len(keys)):
             node = self.Reach[keys[i]]
-            node.VHeight = vheight[0][i]
-            node.VDensity = vdensity[0][i]
-            node.Overhang = overhang[0][i]
+            xx = 0
+            for dir in xrange(radial_count+1):
+                for zone in xrange(trans_count):
+                    node.VHeight[dir][zone] = vheight[xx][i]
+                    node.VDensity[dir][zone] = vdensity[xx][i]
+                    node.k[dir][zone] = k[xx][i]
+                    node.Overhang[dir][zone] = overhang[xx][i]
+                    xx = xx + 1
+                    if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
+                        break # go to the next dir
                     
         # Average over the topo values
         topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
@@ -847,11 +852,11 @@ class CSVInterface(object):
         # ... and you thought things were crazy earlier! Here is where we build up the
         # values for each node. This is culled from earlier version's VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen in earlier!
+        
         for h in xrange(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
             VTS_Total = 0 #View to sky value
-            VTS_Total_old = 0
             LC_Angle_Max = 0
             # Now we set the topographic elevations in each direction
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) # Topography factor Above Stream Surface
@@ -879,9 +884,9 @@ class CSVInterface(object):
             for i in xrange(radial_count): # Iterate through each direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
-                rip = () # Riparian extinction, basically the amount of loss due to vegetation shading
                 W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
                 W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
+                
                 for j in xrange(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
                     Vdens = vdensity[i*trans_count+j+1][h]
@@ -898,12 +903,7 @@ class CSVInterface(object):
                     SH = Elev - node.Elevation
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
-                    # Calculate the riparian extinction value
-                    try:
-                        RE = -log(1-Vdens)/10
-                    except OverflowError:
-                        if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
-                        else: raise
+
                     # Calculate the node distance
                     #Adjustment for whether the veg sample represent a zone (see excel interface for explanation)
                     if IniParams["vegDistMethod"] == "zone":
@@ -918,27 +918,25 @@ class CSVInterface(object):
                         LC_Distance = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     T_Full += degrees(atan(VH/LC_Distance)), # It gets added to a tuple of full sun values
-                    # Now get the maximum of bank shade and topographic shade for this
-                    # direction
+                    
+                    # Now get the maximum of bank shade and topographic shade for this direction
                     T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
+                    
+                    # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
-                    W_Vdens_num += veg_angle*float(Vdens)
+                    if IniParams["beers_data"] == "LAI": #use LAI data
+                        LAI_den = Vdens / 9 #  Purpose here is the deveop a density. A LAI of 9 is pretty much closed canopy
+                        if LAI_den > 1:
+                            LAI_den = 1
+                        W_Vdens_num += veg_angle*float(LAI_den)
+                    else:
+                        W_Vdens_num += veg_angle*float(Vdens)
                     W_Vdens_dem += veg_angle
-                    ##########################################################
-                    # Now we calculate the view to sky value
-                    # LC_Angle is the vertical angle from the surface to the land-cover top. It's
-                    # multiplied by the density as a kludge
-                    ##LC_Angle = degrees(atan(VH / LC_Distance) * Vdens)
-                    ##if not j or LC_Angle_Max < LC_Angle:
-                    ##   LC_Angle_Max = LC_Angle
-
-                    #DT: My attempt to account for the difference in density between
-                    # vegetation shade (variable dens) and bank shade (1.0)
+                    
                     if j == trans_count - 1:
                         if max(T_Full) > 0:   #if bank and/or veg shade is occuring:
                             #Find weighted average the density:
-                            #Vdens_mod = (Amount of Veg shade * Veg dens) + (Amount of bank shace * bank dens, i.e. 1) / (Sum of amount of shade)
-                            #New way:
+                            #Vdens_mod = (Amount of Veg shade * Veg dens) + (Amount of bank shade * bank dens, i.e. 1) / (Sum of amount of shade)
                             if W_Vdens_dem > 0:
                                 Vdens_ave_veg = W_Vdens_num / W_Vdens_dem
                             else:
@@ -947,24 +945,20 @@ class CSVInterface(object):
                         else:
                             Vdens_mod = 1.0
                         VTS_Total += max(T_Full)*Vdens_mod # Add angle at end of each zone calculation
-                        ##VTS_Total_old += LC_Angle_Max
-                    rip += RE,
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), rip, T_Full),
+                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full),
             node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
-            ##ViewToSky_old = 1 - VTS_Total_old / (7 * 90)
-            ##print node.ViewToSky, ViewToSky_old, ViewToSky_old - node.ViewToSky
+
 
     def BuildZonesLidar(self):
         """Build zones if we are using LiDAR data"""
         #self.CheckEarlyQuit()
-        #raise NotImplementedError("LiDAR not yet implemented")
-        ################### under construction - copied from BuildZonesNormal
         #Tried to keep in the same general form as BuildZonesNormal so blame Metta
         self.CheckEarlyQuit()
         LCdata = self.GetLandCoverData() # Pull the LULC Data
                
         vheight = []
         vdens = []
+        k = []
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
@@ -989,18 +983,25 @@ class CSVInterface(object):
             try:
                 vheight.append(self.multiplier([x for x in col], average))
                 vdens.append(self.multiplier([x for x in dens], average))
+                #k.append(self.multiplier([x for x in col], average)) #TODO
             except KeyError, (stderr):
                 raise Exception("Vegetation height/density error" % stderr.message)
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
             print("Reading vegetation heights", i+1, radial_count*trans_count+7)
-        # We have to set the emergent vegetation, so we strip those off of the iterator
-        # before we record the zones.
+            
         for i in xrange(len(keys)):
             node = self.Reach[keys[i]]
-            node.VHeight = vheight[0][i]
-            node.VDensity = vdens[0][i]
-            node.Overhang = IniParams["lcoverhang"]
+            xx = 0
+            for dir in xrange(radial_count+1):
+                for zone in xrange(trans_count):
+                    node.VHeight[dir][zone] = vheight[xx][i]
+                    node.VDensity[dir][zone] = vdensity[xx][i]
+                    node.k[dir][zone] = k[xx][i]
+                    node.Overhang[dir][zone] = overhang[xx][i]
+                    xx = xx + 1
+                    if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
+                        break # go to the next dir
             
         # Average over the topo values
         topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
@@ -1010,11 +1011,12 @@ class CSVInterface(object):
         # ... and you thought things were crazy earlier! Here is where we build up the
         # values for each node. This is culled from earlier version's VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen in earlier!
+        
         for h in xrange(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
-            VTS_Total = 0 #View to sky value
             LC_Angle_Max = 0
+            VTS_Total = 0 #View to sky value
             # Now we set the topographic elevations in each direction
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) # Topography factor Above Stream Surface
             # This is basically a list of directions, each with one of three topographies
@@ -1041,9 +1043,9 @@ class CSVInterface(object):
             for i in xrange(7): # Iterate through each direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
-                rip = () # Riparian extinction, basically the amount of loss due to vegetation shading
                 W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
                 W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
+
                 for j in xrange(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
@@ -1062,12 +1064,7 @@ class CSVInterface(object):
                     SH = Elev - node.Elevation
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
-                    # Calculate the riparian extinction value
-                    try:
-                        RE = -log(1-Vdens)/10
-                    except OverflowError:
-                        if Vdens == 1: RE = 1 # cannot take log of 0, RE is full if it's zero
-                        else: raise
+
                     # Calculate the node distance.
                     #Different for LiDAR because we assume you are sampling a tree at a specific location
                     #rather than a veg zone which represents the vegetation between two sample points
@@ -1087,26 +1084,22 @@ class CSVInterface(object):
                     # Now get the maximum of bank shade and topographic shade for this
                     # direction
                     T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
-                    #Cacluation for the angle weighted veg density
+                    
+                    # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
-                    W_Vdens_num += veg_angle*float(Vdens)
+                    if IniParams["beers_data"] == "LAI": #use LAI data
+                        LAI_den = Vdens / 9 #  Purpose here is the deveop a density. A LAI of 9 is pretty much closed canopy
+                        if LAI_den > 1:
+                            LAI_den = 1
+                        W_Vdens_num += veg_angle*float(LAI_den)
+                    else:
+                        W_Vdens_num += veg_angle*float(Vdens)
                     W_Vdens_dem += veg_angle
-                    ##########################################################
-                    # Now we calculate the view to sky value
-                    # LC_Angle is the vertical angle from the surface to the land-cover top. It's
-                    # multiplied by the density as a kludge
-                    ##LC_Angle = degrees(atan(VH / LC_Distance) * Vdens)
-                    ##if not j or LC_Angle_Max < LC_Angle:
-                    ##    LC_Angle_Max = LC_Angle
-
-                    #DT: My attempt to account for the difference in density between
-                    # vegetation shade (variable dens) and bank shade (1.0)
-                    # the density representing vegetation is the weighted density based on the vegetation angle.
+                    
                     if j == trans_count - 1:
                         if max(T_Full) > 0:   #if bank and/or veg shade is occuring:
                             #Find weighted average the density:
-                            #Vdens_mod = (Amount of Veg shade * Veg dens) + (Amount of bank shace * bank dens, i.e. 1) / (Sum of amount of shade)
-                            #New way:
+                            #Vdens_mod = (Amount of Veg shade * Veg dens) + (Amount of bank shade * bank dens, i.e. 1) / (Sum of amount of shade)
                             if W_Vdens_dem > 0:
                                 Vdens_ave_veg = W_Vdens_num / W_Vdens_dem
                             else:
@@ -1115,29 +1108,32 @@ class CSVInterface(object):
                         else:
                             Vdens_mod = 1.0
                         VTS_Total += max(T_Full)*Vdens_mod # Add angle at end of each zone calculation
-                        ##VTS_Total_old += LC_Angle_Max
-                    rip += RE,
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), rip, T_Full),
-            node.ViewToSky = 1 - VTS_Total / (radial_count * 90) 
-   
+                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full),
+            node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
+
     def GetLandCoverCodes(self):
         """Return the codes from the Land Cover Codes csv input file as a dictionary of dictionaries"""
         self.CheckEarlyQuit()       
-        codes,height,dens,over = [],[],[],[]                
+        codes,height,dens,k,over = [],[],[],[],[]                
         
         data = pd.read_csv(join(IniParams["inputdir"],IniParams["lccodefile"]),quotechar='"')
-        data.columns = ['name', 'code','height','density','overhang']
+        data.columns = ['name', 'code','height','density','k','overhang']
         
         codes = list(data.code.values)
         # make a list of lists with values: [(height[0], dens[0], over[0]), (height[1],...),...]
-        vals = [tuple([j for j in i]) for i in zip(data.height.values,data.density.values,data.overhang.values)]
+        vals = [tuple([j for j in i]) for i in zip(data.height.values,data.density.values,data.k.values,data.overhang.values)]
         data = {}
 
         for i in xrange(len(codes)):
             # Each code is a tuple in the form of (VHeight, VDensity, Overhang)
             data[codes[i]] = vals[i]
-            if vals[i][0] != None and (vals[i][1] < 0 or vals[i][1] > 1):
-                raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % `vals[i][1]`)
+            
+            if IniParams["beers_data"] == "LAI": #use LAI data
+                if vals[i][0] != None and (vals[i][1] < 0):
+                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % `vals[i][1]`)           
+            else:
+                if vals[i][0] != None and (vals[i][1] < 0 or vals[i][1] > 1):
+                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % `vals[i][1]`)
         return data
         
     def GetLandCoverData(self):
