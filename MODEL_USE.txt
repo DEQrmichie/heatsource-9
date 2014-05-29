@@ -121,7 +121,8 @@ Row | Column ->[1] 	[2]				 			[3]
 [36] 		        36	# LIDAR DATA USED FOR VEG CODES (TRUE/FALSE)
 [37] 		        37	# LANDCOVER DENSITY FOR LIDAR DATA
 [38] 		        38	# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)
-[39] 		        39	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
+[39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/Density)
+[40] 		        40	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
 
 ###############################################################################
 ACCRETION INPUT FILE
