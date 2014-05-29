@@ -1,7 +1,7 @@
 heatsource-9
 ============
 
-Current Version: heatsource 9.0.0b6 (beta 6)
+Current Version: heatsource 9.0.0b7 (beta 7)
 
 ================================================================================================
 ABOUT 
@@ -76,6 +76,7 @@ true executables.
 - Heat source is now licensed under the GNU General Public License v3.
 - Outputs now get stamped with model version, simulation name, and user text in addition to the output parameter, units and date/time.
 - Implements variable number of radial samples (use 999 in control file for version 8 method).
+- Added effective LAI option
 
 ================================================================================================
 ROADMAP
@@ -94,7 +95,7 @@ Roadmap for this version
 - Register heatsource with pypi so it can be automatically downloaded and installed via python package managers (pip/easy_install).
 - Make a heatsource package mpkg installer for mac.
 - Decide if cloudiness is a required input for solar runs.
-- Add effective LAI option
+
 
 
 Future Roadmap
