@@ -67,14 +67,14 @@ If you build the control file in excel, and save it as a csv file the quotes wil
 Row | Column -> [1] [2]				                      [3]
 [16]		        16, # TRIBUTARY SITES, 		          2
 [15]		        17, # TRIBUTARY INPUT FILE NAMES, 	"Inflow_01.csv, Inflow_02.csv" 
-[18]		        18, # TRIBUTARY MODEL KM, 		      "4.05, 3.35"
+[18]		        18, # TRIBUTARY MODEL KM, 		"4.05, 3.35"
 
 or alternatively,
 
 Row | Column -> [1] [2]				                      [3]
 [16]		        16, # TRIBUTARY SITES, 		          2
 [15]		        17, # TRIBUTARY INPUT FILE NAMES, 	Inflows_all.csv
-[18]		        18, # TRIBUTARY MODEL KM, 		      "4.05, 3.35"
+[18]		        18, # TRIBUTARY MODEL KM, 		"4.05, 3.35"
 
 
 Below are all the input parameters that must be included in the control file.
@@ -82,16 +82,16 @@ Technically the parameters can be in any row as long as the names in column 2 do
 If you use 999 for the NUMBER OF RADIAL SAMPLES, the model will revert back to heat source 8 methods (samples in 7 directions excluding north). 
 Otherwise the direction for each the radial samples (n) measured in degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
 
-Row | Column ->[1] 	[2]				 			[3]
-[1] 		        1	  # USER TEXT
-[2] 		        2	  # SIMULATION NAME
-[3] 		        3	  # STREAM LENGTH (KILOMETERS)
-[4] 		        4	  # OUTPUT PATH
-[5] 		        5	  # INPUT PATH
-[6] 		        6	  # DATA START DATE (mm/dd/yyyy)
-[7] 		        7	  # MODELING START DATE (mm/dd/yyyy)
-[8] 		        8	  # MODELING END DATE (mm/dd/yyyy)
-[9] 		        9	  # DATA END DATE (mm/dd/yyyy)
+Row | Column -> 	[1] 	[2]							[3]
+[1] 		        1	# USER TEXT
+[2] 		        2	# SIMULATION NAME
+[3] 		        3	# STREAM LENGTH (KILOMETERS)
+[4] 		        4	# OUTPUT PATH
+[5] 		        5	# INPUT PATH
+[6] 		        6	# DATA START DATE (mm/dd/yyyy)
+[7] 		        7	# MODELING START DATE (mm/dd/yyyy)
+[8] 		        8	# MODELING END DATE (mm/dd/yyyy)
+[9] 		        9	# DATA END DATE (mm/dd/yyyy)
 [10] 		        10	# FLUSH INITIAL CONDITION (DAYS)
 [11] 		        11	# TIME OFFSET FROM UTC (HOURS)
 [12] 		        12	# TIME STEP - DT (MIN)
@@ -235,7 +235,8 @@ COLUMN
 [2] Code
 [3] Height (meters)
 [4] Density (0-1)
-[5] Overhang (meters)
+[5] k Extinction Coefﬁcient  (dimensionless)
+[6] Overhang (meters)
 
 ###############################################################################
 LANDCOVER DATA
@@ -256,8 +257,8 @@ COLUMN
 [6] TopoEast (degrees)
 [7-n] Landcover Samples (code or height meters)
 [n-n] Elevation Samples (meters)
-[n-N] Density Samples (0-1 or NA)
-	
+[n-n] Density Samples (0-1 or NA)
+[n-N] k Extinction Coefﬁcient  (dimensionless)
 Note - the column numbers for the landcover, elevation, and density samples are dependent on user specified information in the control file.
 
 ###############################################################################
