@@ -1,7 +1,7 @@
 heatsource-9
 ============
 
-Current Version: heatsource 9.0.0b7 (beta 7)
+Current Version: heatsource 9.0.0b8 (beta 8)
 
 ================================================================================================
 ABOUT 
@@ -29,7 +29,6 @@ Heat Source requires python 2.7 and the following python packages:
 -numexpr
 -python-dateutil 1.5
 -pytz
--xlrd
 -pandas
 
 ================================================================================================
