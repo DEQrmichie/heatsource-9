@@ -112,9 +112,9 @@ class CSVInterface(object):
                     "radialsample_count": "# NUMBER OF RADIAL SAMPLES",
                     "emergent": "# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)",
                     "lidar": "# LIDAR DATA USED FOR VEG CODES (TRUE/FALSE)",
-                    "lcdensity": "# LANDCOVER DENSITY FOR LIDAR DATA",
+                    "lcdensity": "# CANOPY COVER VALUE FOR LIDAR DATA",
                     "lcoverhang": "# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)",
-                    "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/Density)",
+                    "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)",
                     "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",}
             
         cf = pd.read_csv(join(inputdir,control_file),quotechar='"',quoting=0,header=None,na_values=None)
@@ -235,8 +235,8 @@ class CSVInterface(object):
              type = ['LC','ELE','LAI','k']
              emergentlabel ='LAI_EMERGENT'
         else:        
-            type = ['LC','ELE','DEN']
-            emergentlabel = 'DEN_EMERGENT'
+            type = ['LC','ELE','CCV']
+            emergentlabel = 'CCV_EMERGENT'
         
         lcDataColHeaders =['Longitude','Latitude','TopoWest','TopoSouth','TopoEast','EmergentVeg']      
         if IniParams["radialsample_count"] == 999:  #999 is a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
@@ -251,7 +251,7 @@ class CSVInterface(object):
             for d in range(0,len(dir)):
                 for z in range(0,len(zone)):
                     if t==2 and d==0 and z==0:
-                        lcDataColHeaders.append(emergentlabel) # add this when we begin the LAI/density series
+                        lcDataColHeaders.append(emergentlabel) # add this when we begin the LAI/Canopy cover series
                         lcDataColHeaders.append(type[t]+'_'+dir[d]+'_'+str(zone[z]))
                     else:
                         lcDataColHeaders.append(type[t]+'_'+dir[d]+'_'+str(zone[z]))
@@ -270,7 +270,10 @@ class CSVInterface(object):
         
         # This sets the header names and index values for the other input files
         bcfile = pd.DataFrame(index=timelist, columns=['Flow', 'Temp'])
-        lccodes = pd.DataFrame(columns=['Name','Code','Height','Density','Overhang'])
+        if IniParams["beers_data"] == "LAI":  #Use LAI methods
+            lccodes = pd.DataFrame(columns=['Name','Code','Height','LAI','k','Overhang'])
+        else:
+            lccodes = pd.DataFrame(columns=['Name','Code','Height','CanopyCover','k','Overhang'])
         lcfile = pd.DataFrame(index=kmlist,columns=lcDataColHeaders)
         accfile= pd.DataFrame(index=kmlist,columns=['Inflow','Temp','Outflow'])
         morphfile = pd.DataFrame(index=kmlist,columns=['Elevation','Gradient','BottomWidth','ChannelAngleZ','Mannings_n','SedThermalConductivity','SedThermalDiffusivity','SedHyporheicThickness','%HyporheicExchange','Porosity'])

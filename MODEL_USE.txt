@@ -1,4 +1,4 @@
-Quick documentation on model setup, operation, and CSV formats. To be expanded.
+﻿Quick documentation on model setup, operation, and CSV formats. To be expanded.
 
 This assumes you have installed everything already. If not see README.txt in the installer folder.
 
@@ -119,9 +119,9 @@ Row | Column -> 	[1] 	[2]							[3]
 [34] 		        34	# NUMBER OF RADIAL SAMPLES
 [37] 		        35	# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)
 [36] 		        36	# LIDAR DATA USED FOR VEG CODES (TRUE/FALSE)
-[37] 		        37	# LANDCOVER DENSITY FOR LIDAR DATA
+[37] 		        37	# CANOPY COVER VALUE FOR LIDAR DATA
 [38] 		        38	# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)
-[39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/Density)
+[39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)
 [40] 		        40	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
 
 ###############################################################################
@@ -234,7 +234,7 @@ COLUMN
 [1] Landcover Name
 [2] Code
 [3] Height (meters)
-[4] Density (0-1)
+[4] CanopyCover (0-1) or LAI
 [5] k Extinction Coefﬁcient  (dimensionless)
 [6] Overhang (meters)
 
@@ -257,9 +257,9 @@ COLUMN
 [6] TopoEast (degrees)
 [7-n] Landcover Samples (code or height meters)
 [n-n] Elevation Samples (meters)
-[n-n] Density Samples (0-1 or NA)
+[n-n] Canopy/LAI Samples (NA if not used)
 [n-N] k Extinction Coefﬁcient  (dimensionless)
-Note - the column numbers for the landcover, elevation, and density samples are dependent on user specified information in the control file.
+Note - the column numbers for the landcover, elevation, and caonpy cover/LAI samples are dependent on user specified information in the control file.
 
 ###############################################################################
 MORPHOLOGY DATA FILE
