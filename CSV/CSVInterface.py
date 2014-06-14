@@ -232,8 +232,8 @@ class CSVInterface(object):
         
         # Setup the headers for the Landcover file
         if IniParams["beers_data"] == "LAI":  #Use LAI methods
-             type = ['LC','ELE','LAI','k']
-             emergentlabel ='LAI_EMERGENT'
+            type = ['LC','ELE','LAI','k']
+            emergentlabel ='LAI_EMERGENT'
         else:        
             type = ['LC','ELE','CCV']
             emergentlabel = 'CCV_EMERGENT'

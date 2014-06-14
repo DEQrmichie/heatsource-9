@@ -13,6 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""PyHeatsource is the core of the model and where the 
+flux and hydrualic calculations are made."""
+
+
 from __future__ import division, print_function
 from math import pow, sqrt, log, atan, sin, cos, pi, tan, acos, exp,radians, log10
 from random import randint
