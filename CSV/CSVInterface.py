@@ -115,7 +115,8 @@ class CSVInterface(object):
                     "lcdensity": "# CANOPY COVER VALUE FOR LIDAR DATA",
                     "lcoverhang": "# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)",
                     "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)",
-                    "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",}
+                    "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",
+                    "heatsource8": "# USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)",}
             
         cf = pd.read_csv(join(inputdir,control_file),quotechar='"',quoting=0,header=None,na_values=None)
         # TODO put a checker in here
@@ -138,15 +139,19 @@ class CSVInterface(object):
         IniParams["calcevap"] = IniParams["calcevap"] in ("TRUE")
         IniParams["emergent"] = IniParams["emergent"] in ("TRUE")
         IniParams["lidar"] = IniParams["lidar"] in ("TRUE")
+        IniParams["heatsource8"] = IniParams["heatsource8"] in ("TRUE")
         
         # If the number of transverse sample per direction is NOT reported, assume 4 (old default)
         IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
         
-        # If the number of radial sample directions is 999 (use heat source 8 default, same as 8 directions but no north)
-        IniParams["radialsample_count"] = 999 if not IniParams["radialsample_count"] else IniParams["radialsample_count"]
+        # If True use heat source 8 default, same as 8 directions but no north
+        if IniParams["heatsource8"] == "True":
+            IniParams["radialsample_count"] = 999 
+        else:
+            IniParams["radialsample_count"]
         
         # Set the total number landcover sample count (0 = emergent)
-        if (IniParams["radialsample_count"] == 999):
+        if IniParams["heatsource8"] == "True":
             IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
         else:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["radialsample_count"])
@@ -239,7 +244,7 @@ class CSVInterface(object):
             emergentlabel = 'CCV_EMERGENT'
         
         lcDataColHeaders =['Longitude','Latitude','TopoWest','TopoSouth','TopoEast','EmergentVeg']      
-        if IniParams["radialsample_count"] == 999:  #999 is a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
+        if IniParams["heatsource8"] == "True": # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
             dir = ['NE','E','SE','S','SW','W','NW']
         else:        
             dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
@@ -809,7 +814,7 @@ class CSVInterface(object):
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
-        if IniParams["radialsample_count"] == 999:
+        if IniParams["heatsource8"] == "True":
             radial_count = 7 # heat source 8 default
         else:
             radial_count = IniParams["radialsample_count"]
@@ -913,7 +918,14 @@ class CSVInterface(object):
                         adjust = 0.5
                     else:
                         adjust = 0.0
-                    LC_Distance = IniParams["transsample"] * (j + 1 - adjust) #This is "+ 1" because j starts at 0
+                    
+                    # if adjust2 = 0 there is a landcover sample at the stream node    
+                    if IniParams["heatsource8"] == "True":
+                        adjust2 = 1
+                    else:
+                        adjust2 = 0
+                    
+                    LC_Distance = IniParams["transsample"] * (j + adjust2 - adjust)
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
                     if not j: LC_Distance -= Overhang
@@ -928,7 +940,7 @@ class CSVInterface(object):
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
                     if IniParams["beers_data"] == "LAI": #use LAI data
-                        LAI_den = Vdens / 9 #  Purpose here is the deveop a density. A LAI of 9 is pretty much closed canopy
+                        LAI_den = Vdens / 12 #  Purpose here is to deveop a density. A LAI of 12 is pretty much closed canopy
                         if LAI_den > 1:
                             LAI_den = 1
                         W_Vdens_num += veg_angle*float(LAI_den)
@@ -965,7 +977,7 @@ class CSVInterface(object):
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
-        if IniParams["radialsample_count"] == 999:
+        if IniParams["heatsource8"] == "True":
             radial_count = 7 # heat source 8 default
         else:
             radial_count = IniParams["radialsample_count"]
@@ -976,7 +988,7 @@ class CSVInterface(object):
         for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data          
             col = list(LCdata.ix[:,i]) # LULC column
             elev = list(LCdata.ix[:,i+radial_count*trans_count]) # Shift by 7 * "number of trans sample zones" to get elevation column
-            if IniParams["lcdensity"] == 999:
+            if IniParams["heatsource8"] == "True":
                 dens = list(LCdata.ix[:,i+1+radial_count*trans_count*2])
             else:
                 dens = [IniParams["lcdensity"]]*len(col)
@@ -1091,7 +1103,7 @@ class CSVInterface(object):
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
                     if IniParams["beers_data"] == "LAI": #use LAI data
-                        LAI_den = Vdens / 9 #  Purpose here is the deveop a density. A LAI of 9 is pretty much closed canopy
+                        LAI_den = Vdens / 12 #  Purpose here is to deveop a density. A LAI of 12 is pretty much closed canopy
                         if LAI_den > 1:
                             LAI_den = 1
                         W_Vdens_num += veg_angle*float(LAI_den)
