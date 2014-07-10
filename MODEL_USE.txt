@@ -79,8 +79,9 @@ Row | Column -> [1] [2]				                      [3]
 
 Below are all the input parameters that must be included in the control file.
 Technically the parameters can be in any row as long as the names in column 2 don't change and the parameter values are in column 3 (parameters values not shown here).
-If you use 999 for the NUMBER OF RADIAL SAMPLES, the model will revert back to heat source 8 methods (samples in 7 directions excluding north). 
-Otherwise the direction for each the radial samples (n) measured in degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
+If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert back to heat source 8 methods for landcover sampling methods.
+If FALSE, the direction for each the radial samples (n) measured in degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
+In addition the first landcover sample in each direction will be at the stream node.
 
 Row | Column -> 	[1] 	[2]							[3]
 [1] 		        1	# USER TEXT
@@ -123,6 +124,7 @@ Row | Column -> 	[1] 	[2]							[3]
 [38] 		        38	# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)
 [39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)
 [40] 		        40	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
+[41]                    41      # USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)
 
 ###############################################################################
 ACCRETION INPUT FILE
