@@ -63,7 +63,7 @@ class CSVInterface(object):
             if IniParams["lidar"]: self.BuildZonesLidar()
             else: self.BuildZonesNormal()
             self.GetTributaryData()
-            self.GetContinuousData()
+            self.GetClimateData()
             self.SetAtmosphericData()
             self.OrientNodes()    
 
@@ -145,13 +145,13 @@ class CSVInterface(object):
         IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
         
         # If True use heat source 8 default, same as 8 directions but no north
-        if IniParams["heatsource8"] == "True":
+        if IniParams["heatsource8"] == True:
             IniParams["radialsample_count"] = 999 
         else:
             IniParams["radialsample_count"]
         
         # Set the total number landcover sample count (0 = emergent)
-        if IniParams["heatsource8"] == "True":
+        if IniParams["heatsource8"] == True:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
         else:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["radialsample_count"])
@@ -244,7 +244,7 @@ class CSVInterface(object):
             emergentlabel = 'CCV_EMERGENT'
         
         lcDataColHeaders =['Longitude','Latitude','TopoWest','TopoSouth','TopoEast','EmergentVeg']      
-        if IniParams["heatsource8"] == "True": # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
+        if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
             dir = ['NE','E','SE','S','SW','W','NW']
         else:        
             dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
@@ -560,8 +560,8 @@ class CSVInterface(object):
             node.Q_tribs = node.Q_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             node.T_tribs = node.T_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
-    def GetContinuousData(self):
-        """Get data from the "Continuous Data" page"""
+    def GetClimateData(self):
+        """Get data from the input climate data csv file"""
         # This is remarkably similar to GetInflowData. We get a block of data, then set the dictionary of the node
         self.CheckEarlyQuit()
         print("Reading Continuous Data")
@@ -814,7 +814,7 @@ class CSVInterface(object):
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
-        if IniParams["heatsource8"] == "True":
+        if IniParams["heatsource8"] == True:
             radial_count = 7 # heat source 8 default
         else:
             radial_count = IniParams["radialsample_count"]
@@ -919,11 +919,11 @@ class CSVInterface(object):
                     else:
                         adjust = 0.0
                     
-                    # if adjust2 = 0 there is a landcover sample at the stream node    
-                    if IniParams["heatsource8"] == "True":
+                    # TODO this is a future function where there is a landcover sample at the stream node   
+                    if IniParams["heatsource8"] == True:
                         adjust2 = 1
-                    else:
-                        adjust2 = 0
+                    else:  # if adjust2 = 0 there is a landcover sample at the stream node 
+                        adjust2 = 1
                     
                     LC_Distance = IniParams["transsample"] * (j + adjust2 - adjust)
                     # We shift closer to the stream by the amount of overhang
@@ -977,7 +977,7 @@ class CSVInterface(object):
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
-        if IniParams["heatsource8"] == "True":
+        if IniParams["heatsource8"] == True:
             radial_count = 7 # heat source 8 default
         else:
             radial_count = IniParams["radialsample_count"]
@@ -988,7 +988,7 @@ class CSVInterface(object):
         for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data          
             col = list(LCdata.ix[:,i]) # LULC column
             elev = list(LCdata.ix[:,i+radial_count*trans_count]) # Shift by 7 * "number of trans sample zones" to get elevation column
-            if IniParams["heatsource8"] == "True":
+            if IniParams["heatsource8"] == True:
                 dens = list(LCdata.ix[:,i+1+radial_count*trans_count*2])
             else:
                 dens = [IniParams["lcdensity"]]*len(col)
