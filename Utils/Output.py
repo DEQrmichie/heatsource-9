@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+from __future__ import division, print_function
 from time import ctime
 from os.path import join
 from copy import deepcopy
+import csv
 
 from ..Dieties.IniParamsDiety import IniParams
 
@@ -51,7 +52,7 @@ class Output(object):
             desc["VTS"] = "View to Sky"
             desc["SolarBlock"] = "Solar Flux blocked by LULC (w/sq m)"
         if run_type != 1:
-            desc["Hyd_DA"] = "Ave Depth (m)"
+            desc["Hyd_DA"] = "Average Depth (m)"
             desc["Hyd_DM"] = "Max Depth (m)"
             desc["Hyd_Flow"] = "Flow Rate (cms)"
             desc["Hyd_Hyp"] = "Hyporheic Exchange (cms)"
@@ -75,34 +76,47 @@ class Output(object):
         # Here we build up the self.files attribute by cycling through the
         # filenames and descriptions
         for key in desc.iterkeys():
-            # String concatenation takes up a bit of time, but still a lot less
-            # than writing to a file each time.
-            header = "Heat Source %s hourly output file.  File created on %s\n" % (IniParams["version"], ctime())
-            header += "%s\n" % IniParams["name"] 
-            header += "%s\n\n" % IniParams["usertxt"]
-            header += "Output: %s\n\n" % desc[key]
-            header += "Datetime".ljust(14)
+            # Build the header that will be stamped to each output file
+            header = [["File Created:"] + [ctime()]]
+            header += [["Heat Source Version:"] + [IniParams["version"]]]
+            header += [["Simulation Name:"] + [IniParams["name"]]]
+            header += [["User Text:"] + [IniParams["usertxt"]]]
+            header += [["Output:"] + [desc[key]]]
+            header += [[""]]
+            header += [["Datetime"]]
             if key != "SolarBlock":
-                # Grab a joined list of left justified strings of all the kilometers
-                header += "".join([("%0.3f" % x.km).ljust(14) for x in self.nodes])
+                # Grab a list of all the stream kilometers
+                header[6] += [("%0.3f" % x.km) for x in self.nodes]
             else:
-                header += "rKM".ljust(14)
-                Labels = ["NE", "E", "SE", "S", "SW", "W", "NW"]
-                for dir in range(7):  #Seven directions
-                    for zone in range(IniParams["transsample_count"]):
-                        header += ("Veg_" + str(zone+1) + "_" + str(Labels[dir])).ljust(14)
-                header += ("diffuse_blocked").ljust(14)
-            header += "\n"
+                header[6] += ["Stream_KM"]
+                
+                if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
+                    dir = ['NE','E','SE','S','SW','W','NW']
+                    zone = range(1,int(IniParams["transsample_count"])+1)
+                else:
+                    dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
+                    zone = range(1,int(IniParams["transsample_count"])+1)
+                    
+                    # TODO this is a future fuction to have a landcover sample at the streamnode
+                    #zone = range(0,int(IniParams["transsample_count"]))
+                
+                for d in range(0,len(dir)):
+                    for z in range(0,len(zone)):
+                        header[6] += ["LC_" + dir[d] +"_" + str(zone[z])]
+                
+                header[6] += ["Diffuse_Blocked"]
             # Now create a file object in the dictionary, and write the header
-            self.files[key] = open(join(IniParams["outputdir"], key + ".txt"), 'w')
-            self.files[key].write(header)
+            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), 'wb'))
+            self.files[key].writerows(header)
 
     def close(self):
+        """This is a legacy method from writing to text files but there needs to be more testing before it is removed."""
         # Flush the rest of the values from the dataset by flushing the
         # daily values and by calling the write() method
         # self.write(self.run_type < 2)  #commented out this line so shade wouldn't output last day twice - DT
         # Then close all of the file objects cleanly
-        [f.close() for f in self.files.itervalues()]
+        #[f.close() for f in self.files.itervalues()]
+        print("Export to CSV complete")
 
     def __call__(self, time, hour):
         """Call the storage method with a time and an hour"""
@@ -113,7 +127,7 @@ class Output(object):
             self.first_hour = False
             #return
         # Create an Excel-friendly time string
-        timestamp = ("%0.6f" % float(time/86400 + 25569)).ljust(14)
+        timestamp = ("%0.6f" % float(time/86400 + 25569))
         # Localize variables to save a bit of time
         nodes = self.nodes
         data = self.data
@@ -175,27 +189,31 @@ class Output(object):
             # stored so far. We can do this because everytime we store data, we
             # append the time string to self.times
             timelist = sorted(data[name].keys())
-            line = ""
+            line = []
             if name != "SolarBlock":
                 for timestamp in timelist:
-                    line += timestamp
-                    line += "".join([("%0.4f" % x).ljust(14) for x in data[name][timestamp]])
-                    line += "\n"
+                    line += [[timestamp] + [("%0.4f" % x) for x in data[name][timestamp]]]
             else:
                 timesteps = 86400.0/float(IniParams["dt"])
                 for timestamp in timelist:
+                    i= 0
                     for x in self.nodes:
-                        line += timestamp
-                        line += ("%0.3f" % x.km).ljust(14)
-                        for dir in range(7):  #Seven directions
+                        line += [[timestamp] + [("%0.3f" % x.km)]]
+                        if IniParams["heatsource8"] == True:
+                            directions = [d for d in range(0,7)]  #Seven directions
+                        else:
+                            directions = [d for d in range(IniParams["radialsample_count"])]
+                        
+                        for d in directions:
                             for zone in range(IniParams["transsample_count"]):
-                                daily_ave_blocked = x.Solar_Blocked[dir][zone] / timesteps
-                                line += ("%0.4f" % daily_ave_blocked).ljust(14)
+                                daily_ave_blocked = x.Solar_Blocked[d][zone] / timesteps
+                                line[i] += ["%0.4f" % daily_ave_blocked]
                         daily_ave_diffuse_blocked = x.Solar_Blocked['diffuse'] / timesteps
-                        line += ("%0.4f" % daily_ave_diffuse_blocked).ljust(14)
-                        line += "\n"
+                        line[i] += ["%0.4f" % daily_ave_diffuse_blocked]
+                        i=i+1
+                        
             # finally, write all the lines to the file
-            fileobj.write(line)
+            fileobj.writerows(line)
         del data
         # Now empty out the dictionary by simply copying a new one.
         self.data = deepcopy(self.empty_vars)
