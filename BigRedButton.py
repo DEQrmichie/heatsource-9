@@ -181,7 +181,7 @@ class ModelControl(object):
         # one time. Ideally, for performance and impatience reasons, we want this to be somewhere
         # around or less than 1 microsecond.
         microseconds = (total_time/timesteps/len(self.reachlist))*1e6
-        message = "Heat Source, Copyright (C) 2000-2013, Oregon Department of Environmental Quality\n\nThis program comes with ABSOLUTELY NO WARRANTY. Appropriate model \nuse and application are the sole responsibility of the user. \nThis is free software, and you are welcome to redistribute it under \ncertain conditions described in the License.\n\n"       
+        message = "Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality\n\nThis program comes with ABSOLUTELY NO WARRANTY. Appropriate model \nuse and application are the sole responsibility of the user. \nThis is free software, and you are welcome to redistribute it under \ncertain conditions described in the License.\n\n"       
         message += "Finished in %0.1f minutes (spent %0.3f microseconds in each stream node). \nWater Balance: %0.3f/%0.3f\n" %\
                     (total_time, microseconds, total_inflow, out)
         message += "Simulation: %s\n" %IniParams["name"]
