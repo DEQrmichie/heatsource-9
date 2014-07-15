@@ -270,9 +270,9 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
         #for vegangle in VegetationAngle:  #Loop to find if shading is occuring from veg. in that zone
             if Altitude < VegetationAngle[zone]:  #veg shading is occurring from this zone
                 if BeersData == "LAI": #use LAI data
-                    fraction_passed = exp(-1 * k[zone] * LAI[zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+                    fraction_passed = exp(-1 * k[dir][zone] * VDensity[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                     Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
-                    Dummy1 *=exp(-1 * k[zone] * LAI[zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+                    Dummy1 *=exp(-1 * k[dir][zone] * VDensity[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                 else: # Use veg density data
                     # Calculate the riparian extinction value
                     try:
