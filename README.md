@@ -1,7 +1,7 @@
 heatsource-9
 ============
 
-Current Version: heatsource 9.0.0b8 (beta 8)
+Current Version: heatsource 9.0.0b9 (beta 9)
 
 ================================================================================================
 ABOUT 
@@ -20,7 +20,7 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 ================================================================================================
 INSTALL
 
-See OS specific instructions for step by step install.
+Heat Source 9 works on Windows, Mac, and Linux.
 
 Heat Source requires python 2.7 and the following python packages:
 
@@ -73,8 +73,8 @@ windows they are executed via python scripts. Note the windows scripts are basic
 true executables.
 - Reworked __version__ to conform to PEP 386 and added documentation.
 - Heat source is now licensed under the GNU General Public License v3.
-- Outputs now get stamped with model version, simulation name, and user text in addition to the output parameter, units and date/time.
-- Implements variable number of radial samples (use 999 in control file for version 8 method).
+- Outputs are in csv format now get stamped with model version, simulation name, and user text in addition to the output parameter, units and date/time.
+- Implements variable number of radial samples (use heatsource 8 switch in control file for version 8 method).
 - Added effective LAI option
 
 ================================================================================================
@@ -83,19 +83,15 @@ ROADMAP
 Roadmap for this version
 - Make the windows run scripts into executables.
 - Develop routines to convert heatsource v8 inputs to v9 csv format using pandas/xlrd package.
-- Switch outputs from txt to csv and write using pandas instead.
 - Implement a stop button possibly using methods from pygame or pykeylogger packages.
 - Fix/look into the Krieter bug.
 - Reformulate Muskingum calcs using updated methods such as Moramarco et al 2006.
 - Update the user manual.
 - Check elevation is a number.
 - General improvement to the QA/QC of certain inputs (see commented lines in CSVinterface).
-- More user control of light extinction coefficients/density parameter, plus integrate more recent formulations for beer's law. Proposal to use LAI/PAI (simple change).
 - Register heatsource with pypi so it can be automatically downloaded and installed via python package managers (pip/easy_install).
 - Make a heatsource package mpkg installer for mac.
 - Decide if cloudiness is a required input for solar runs.
-
-
 
 Future Roadmap
 - Allow variable timeseries input and utilize pandas interpolation methods.
