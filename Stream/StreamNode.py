@@ -171,7 +171,7 @@ class StreamNode(object):
             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S, self.dx, self.dt, self.z, self.n, self.d_cont,
                                  self.Q, up.Q, up.Q_prev, inputs, -1)
-        except _HS.HeatSourceError, (stderr):
+        except _HS.HeatSourceError:
             self.CatchException(stderr, time)
 
         self.Q_prev = self.Q
@@ -189,7 +189,7 @@ class StreamNode(object):
             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                     _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S, self.dx, self.dt, self.z, self.n, self.d_cont,
                                   0.0, 0.0, 0.0, 0.0, Q_bc)
-        except _HS.HeatSourceError, (stderr):
+        except _HS.HeatSourceError:
             self.CatchException(stderr, time)
 
 
@@ -223,7 +223,7 @@ class StreamNode(object):
             try:
                 Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                         _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx, self.dt, self.z, self.n, self.d_cont, 0.0, 0.0, 0.0, inputs, Q)
-            except _HS.HeatSourceError, (stderr):
+            except _HS.HeatSourceError:
                 self.CatchException(stderr, time)
             # If we hit this once, we remap so we can avoid the if statements in the future.
             self.CalcDischarge = self.CalcDischarge_Opt
@@ -235,7 +235,7 @@ class StreamNode(object):
             try:
                 Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                         _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx, self.dt, self.z, self.n, self.d_cont, 0.0, 0.0, 0.0, inputs, Q_bc)
-            except _HS.HeatSourceError, (stderr):
+            except _HS.HeatSourceError:
                 self.CatchException(stderr, time)
             self.CalcDischarge = self.CalcDischarge_BoundaryNode
 
@@ -283,7 +283,7 @@ c_k: %3.4f""" % stderr
                             self.Q_hyp,self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime,Altitude, Zenith, self.prev_km.Q_prev, self.prev_km.T_prev, solar_only, self.next_km.Mix_T_Delta)
 
-        except _HS.HeatSourceError, (stderr):
+        except _HS.HeatSourceError:
             self.CatchException(stderr, time)
 
         self.F_DailySum[1] += self.F_Solar[1]

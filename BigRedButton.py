@@ -137,7 +137,7 @@ class ModelControl(object):
                 # Note that all of the run methods have to have the same signature
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem, throw an exception up using a graphical window.
-            except HeatSourceError, (stderr):
+            except HeatSourceError:
                 msg = "At %s and time %s\n"%(self, Chronos.PrettyTime())
                 try:
                     msg += stderr+"\nThe model run has been halted. You may ignore any further error messages."
