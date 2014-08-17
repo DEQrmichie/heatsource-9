@@ -184,7 +184,7 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
 
     # Check the celerity to ensure stability. These tests are from the VB code.
     if dt >= (2 * K * (1 - X)):  #Unstable - Decrease dt or increase dx
-        raise Exception("Unstable timestep. K=%0.3f, X=%0.3f, tests=(%0.3f, %0.3f)" % (K,X,test0,test1))
+        raise Exception("Unstable timestep. K=%0.3f, X=%0.3f" % (K,X))
 
     # These calculations are from Chow's "Applied Hydrology"
     D = K * (1 - X) + 0.5 * dt
