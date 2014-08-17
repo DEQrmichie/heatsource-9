@@ -493,7 +493,7 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, VHeight, ViewT
         P = 998.2 # kg/m3
         F_Evap = -Evap_Rate * LHV * P #W/m2
         #Calculate Convection FLUX
-        if (Sat_Vapor - Air_Vapor) <> 0:
+        if (Sat_Vapor - Air_Vapor) != 0:
             Bowen = 0.61 * (Pressure / 1000) * (T_prev - T_Air) / (Sat_Vapor - Air_Vapor)
         else:
             Bowen = 1

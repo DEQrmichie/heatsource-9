@@ -596,15 +596,15 @@ class CSVInterface(object):
                 if cloud < 0 or cloud > 1:
                     if self.run_type == 1: # Alright in shade-a-lator # TODO zeros should not get a pass in solar only runs, fix
                         cloud = 0.0
-                    else: raise Exception("Cloudiness (value of '%s' in Continuous Data) must be greater than zero and less than one." % `cloud`) # TODO RM fix this so it gives the km in exception - actualy do for all
+                    else: raise Exception("Cloudiness (value of '%s' in Continuous Data) must be greater than zero and less than one." % cloud) # TODO RM fix this so it gives the km in exception - actualy do for all
                 if humid < 0 or humid is None or humid > 1:
                     if self.run_type == 1: # Alright in shade-a-lator
                         humid = 0.0
-                    else: raise Exception("Humidity (value of '%s' in Continuous Data) must be greater than zero and less than one." % `humid`)
+                    else: raise Exception("Humidity (value of '%s' in Continuous Data) must be greater than zero and less than one." % humid)
                 if air is None or air < -90 or air > 58:
                     if self.run_type == 1: # Alright in shade-a-lator
                         air = 0.0
-                    else: raise Exception("Air temperature input (value of '%s' in Continuous Data) outside of world records, -89 to 58 deg C." % `air`)
+                    else: raise Exception("Air temperature input (value of '%s' in Continuous Data) outside of world records, -89 to 58 deg C." % air)
                 node.ContData[time] = cloud, wind, humid, air
             print("Reading continuous data", tm.next()+1, length)
 

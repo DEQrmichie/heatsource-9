@@ -78,7 +78,7 @@ class ModelControl(object):
         elif run_type == 1: self.run_all = self.run_sh
         elif run_type == 2: self.run_all = self.run_hy
         elif run_type == 3: self.run_all = self.run_setup
-        else: raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" %`self.run_type`)
+        else: raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" % run_type)
         # Create a Chronos iterator that controls all model time.
         Chronos.Start(start = IniParams["modelstart"],
                       stop = IniParams["modelend"],
