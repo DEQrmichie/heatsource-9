@@ -833,7 +833,7 @@ class CSVInterface(object):
                 vdensity.append(self.multiplier([LCcodes[x][1] for x in col], average))
                 k.append(self.multiplier([LCcodes[x][2] for x in col], average))
                 overhang.append(self.multiplier([LCcodes[x][3] for x in col], average))
-            except KeyError:
+            except KeyError, stderr:
                 raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
@@ -999,7 +999,7 @@ class CSVInterface(object):
                 vheight.append(self.multiplier([x for x in col], average))
                 vdens.append(self.multiplier([x for x in dens], average))
                 #k.append(self.multiplier([x for x in col], average)) #TODO
-            except KeyError:
+            except KeyError, stderr:
                 raise Exception("Vegetation height/density error" % stderr.message)
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
