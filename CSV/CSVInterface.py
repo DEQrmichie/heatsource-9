@@ -1064,7 +1064,7 @@ class CSVInterface(object):
                 for j in xrange(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
-                        raise Exception("Vegetation height (value of %s in TTools Data) must be greater than zero and less than 120 meters (when LiDAR = True)" % `Vheight`)
+                        raise Exception("Vegetation height (value of %s in Landcover Data) must be greater than zero and less than 120 meters (when LiDAR = True)" % Vheight)
                     Vdens = vdens[i*trans_count+j+1][h]
                     Overhang = IniParams["lcoverhang"]
                     Elev = elevation[i*trans_count+j][h]

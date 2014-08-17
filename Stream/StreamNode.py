@@ -307,7 +307,7 @@ c_k: %3.4f""" % stderr
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime, Altitude, Zenith, 0.0, 0.0, solar_only, self.next_km.Mix_T_Delta)
-        except _HS.HeatSourceError, (stderr, time):
+        except _HS.HeatSourceError:
             self.CatchException(stderr)
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]

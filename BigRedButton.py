@@ -142,7 +142,7 @@ class ModelControl(object):
                 try:
                     msg += stderr+"\nThe model run has been halted. You may ignore any further error messages."
                 except TypeError:
-                    msg += `stderr`+"\nThe model run has been halted. You may ignore any further error messages."
+                    msg += stderr+"\nThe model run has been halted. You may ignore any further error messages."
                 msgbox(msg)
                 # Then just die
                 raise SystemExit
