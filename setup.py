@@ -10,7 +10,7 @@ if VI < (2,7):
     v = "%i.%i" %(VI[0],VI[1])
     raise Exception("Default Python version must be >2.7, not %s" % v)
 
-setup(name='heatsource-9',
+setup(name='heatsource9',
       version='9.0.0b9',
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -36,10 +36,10 @@ setup(name='heatsource-9',
       maintainer_email='michie.ryan@deq.state.or.us',
       platforms = ['darwin', 'win32'],
       license = ['GNU General Public License v3 (GPLv3)'],
-      packages=['heatsource-9',
-                'heatsource-9.CSV',
-                'heatsource-9.Dieties',
-                'heatsource-9.Stream',
-                'heatsource-9.Utils'],
+      packages=['heatsource9',
+                'heatsource9.CSV',
+                'heatsource9.Dieties',
+                'heatsource9.Stream',
+                'heatsource9.Utils'],
       requires=['pandas','numpy','xlrd']
       )
