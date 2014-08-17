@@ -706,13 +706,13 @@ class CSVInterface(object):
         data = {}
         
         # Get all the "columnar data" from the csv files. Note Stream Km is brought in as an index file and set as data type object.
-        # This is not the a perfects method but it is done to avoid trailing on floating point values messing with the dictionary.
+        # This is not a perfect method but it is done to avoid trailing on floating point values messing with the dictionary.
         # TODO organize the reading of this data into seperate methods so it is easier to find later.
         lcdata = pd.read_csv(join(IniParams["inputdir"],IniParams["lcdatafile"]),quotechar='"',quoting=0)
         morphdata = pd.read_csv(join(IniParams["inputdir"],IniParams["morphfile"]),quotechar='"',quoting=0,index_col='Stream_KM')
         accdata = pd.read_csv(join(IniParams["inputdir"],IniParams["accretionfile"]),quotechar='"',quoting=0,index_col='Stream_KM')
         
-        # Add these columns to morph data snce they do not exist in the input file.
+        # Add these columns to morph data since they do not exist in the input file.
         morphdata["Q_cont"] = 0
         morphdata["d_cont"] = 0
         
