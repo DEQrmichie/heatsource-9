@@ -224,7 +224,7 @@ def RunHS(inputdir, control_file):
         HSP = ModelControl(inputdir, control_file)
         HSP.Run()
         del HSP
-    except Exception, stderr:
+    except Exception:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -234,7 +234,7 @@ def RunSH(inputdir, control_file):
     try:
         HSP = ModelControl(inputdir, control_file, 1)
         HSP.Run()
-    except Exception, stderr:
+    except Exception:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -244,7 +244,7 @@ def RunHY(inputdir, control_file):
     try:
         HSP = ModelControl(inputdir, control_file, 2)
         HSP.Run()
-    except Exception, stderr:
+    except Exception:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -255,7 +255,7 @@ def RunSetup(inputdir,control_file):
     try:
         ErrLog = Logger
         CSVInterface(inputdir, control_file, ErrLog, 3)
-    except Exception, stderr:
+    except Exception:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()

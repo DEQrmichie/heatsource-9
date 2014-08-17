@@ -1145,10 +1145,10 @@ class CSVInterface(object):
             
             if IniParams["beers_data"] == "LAI": #use LAI data
                 if vals[i][0] != None and (vals[i][1] < 0):
-                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % `vals[i][1]`)           
+                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])           
             else:
                 if vals[i][0] != None and (vals[i][1] < 0 or vals[i][1] > 1):
-                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % `vals[i][1]`)
+                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])
         return data
         
     def GetLandCoverData(self):
