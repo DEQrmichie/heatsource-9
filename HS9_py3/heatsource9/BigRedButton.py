@@ -228,7 +228,7 @@ def RunHS(inputdir, control_file):
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
-        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error", err=True)
+        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "HeatSource Error")
 def RunSH(inputdir, control_file):
     """Run solar routines only"""
     try:
@@ -238,7 +238,7 @@ def RunSH(inputdir, control_file):
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
-        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error", err=True)
+        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error")
 def RunHY(inputdir, control_file):
     """Run hydraulics only"""
     try:
@@ -248,7 +248,7 @@ def RunHY(inputdir, control_file):
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
-        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error", err=True)
+        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error")
 
 def RunSetup(inputdir,control_file):
     """Run setup"""
@@ -259,5 +259,5 @@ def RunSetup(inputdir,control_file):
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
-        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error", err=True)        
+        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s"%stderr, "HeatSource Error")        
         

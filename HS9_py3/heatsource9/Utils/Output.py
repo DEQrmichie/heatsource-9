@@ -106,7 +106,7 @@ class Output(object):
                 
                 header[6] += ["Diffuse_Blocked"]
             # Now create a file object in the dictionary, and write the header
-            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), 'wb'))
+            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), 'w', newline=''))
             self.files[key].writerows(header)
 
     def close(self):
