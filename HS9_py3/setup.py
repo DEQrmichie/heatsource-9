@@ -20,7 +20,7 @@ setup(name='heatsource9',
           'Natural Language :: English',
           'Operating System :: MacOS :: MacOS X',
           'Operating System :: Microsoft :: Windows',
-          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.4',
           'Topic :: Scientific/Engineering',
           ],
       long_description="""Heat Source is a computer model used by the Oregon Department of Environmental Quality to simulate

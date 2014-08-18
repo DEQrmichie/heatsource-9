@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-#from setuptools import setup
 from distutils.core import setup, Extension
 from sys import version_info as VI
 
