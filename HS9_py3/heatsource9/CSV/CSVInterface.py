@@ -644,7 +644,7 @@ class CSVInterface(object):
         will contain all leftover elements. The usefulness of this method is that it will allow us to average over each <mul> consecutive elements
         """
         # From itertools recipes... We use all but the first (boundary node) element
-        lst = [i for i in zip(*[chain(iterable[1:], operator.mul(None, mul-1))]*mul)]
+        lst = [i for i in zip(*[chain(iterable[1:], repeat(None, mul-1))]*mul)]
         # Then we tack on the boundary node element
         lst.insert(0,(iterable[0],))
         # Then strip off the None values from the last (if any)
