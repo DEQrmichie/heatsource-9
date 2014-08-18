@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division, print_function
+
 from math import sqrt
 from time import ctime
 
@@ -22,7 +22,7 @@ from ..Dieties.IniParamsDiety import IniParams
 from ..Utils.Logger import Logger
 from ..Utils.easygui import msgbox
 from ..Utils.Dictionaries import Interpolator
-import PyHeatsource as py_HS
+from . import PyHeatsource as py_HS
 # import C_Heatsource as C_HS # TODO for the future
 
 _HS = None # Placeholder for heatsource module
@@ -85,7 +85,7 @@ class StreamNode(object):
         # Define members in __slots__ to ensure that later member names cannot be added accidentally
         # Set all the attributes to bare lists, or set from the constructor
         for attr in __slots:
-            x = kwargs[attr] if attr in kwargs.keys() else None
+            x = kwargs[attr] if attr in list(kwargs.keys()) else None
             setattr(self, attr, x)
         self.__slots = __slots
         self.__slots.sort()
@@ -307,7 +307,7 @@ c_k: %3.4f""" % stderr
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime, Altitude, Zenith, 0.0, 0.0, solar_only, self.next_km.Mix_T_Delta)
-        except _HS.HeatSourceError, stderr:
+        except _HS.HeatSourceError as stderr:
             self.CatchException(stderr)
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
@@ -389,7 +389,7 @@ c_k: %3.4f""" % stderr
     def MixItUp(self, time, Q_up, T_up):
         Q_in = 0
         T_in = 0
-        for i in xrange(len(self.Q_tribs[time])):
+        for i in range(len(self.Q_tribs[time])):
             Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
             T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
 

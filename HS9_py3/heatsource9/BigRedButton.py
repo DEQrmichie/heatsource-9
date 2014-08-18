@@ -19,23 +19,23 @@ loads and controls the model run. The other functions are
 supplied for use by the CSVinterface, which imports this
 module in order to run the model.
 """
-from __future__ import with_statement, division, print_function
+
 
 # Built-in modules
 from itertools import count
 from traceback import print_exc, format_tb
 from sys import exc_info
-from Utils.easygui import msgbox, buttonbox
+from .Utils.easygui import msgbox, buttonbox
 from time import time as Time
 
 # Heat Source modules
-from Dieties.IniParamsDiety import IniParams
-from CSV.CSVInterface import CSVInterface
-from Dieties.ChronosDiety import Chronos
-from Utils.Logger import Logger
-from Utils.Output import Output as O
-from Stream.PyHeatsource import HeatSourceError
-from __version__ import version_string
+from .Dieties.IniParamsDiety import IniParams
+from .CSV.CSVInterface import CSVInterface
+from .Dieties.ChronosDiety import Chronos
+from .Utils.Logger import Logger
+from .Utils.Output import Output as O
+from .Stream.PyHeatsource import HeatSourceError
+from .__version__ import version_string
 
 class ModelControl(object):
     """Main model control class for Heat Source.
@@ -69,7 +69,7 @@ class ModelControl(object):
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
         # headwater, but we want to run the model from headwater to mouth.
-        self.reachlist = sorted(self.HS.Reach.itervalues(), reverse=True)
+        self.reachlist = sorted(iter(self.HS.Reach.values()), reverse=True)
 
         # This if statement prevents us from having to test every timestep
         # We just call self.run_all(), which is a classmethod pointing to
@@ -137,7 +137,7 @@ class ModelControl(object):
                 # Note that all of the run methods have to have the same signature
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem, throw an exception up using a graphical window.
-            except HeatSourceError, stderr:
+            except HeatSourceError as stderr:
                 msg = "At %s and time %s\n"%(self, Chronos.PrettyTime())
                 try:
                     msg += stderr+"\nThe model run has been halted. You may ignore any further error messages."
@@ -151,7 +151,7 @@ class ModelControl(object):
             # The following house keeping tasks each hours saves us enormous amounts of
             # runtime overhead over doing it every timestep.
             if not (minute + second):
-                ts = cnt.next() # Number of actual timesteps per tick
+                ts = next(cnt) # Number of actual timesteps per tick
                 hr = 60/(IniParams["dt"]/60) # Number of timesteps in one hour
                 # This writes a line to the status bar.
                 print("%i of %i timesteps"% (ts*hr, timesteps))
@@ -224,7 +224,7 @@ def RunHS(inputdir, control_file):
         HSP = ModelControl(inputdir, control_file)
         HSP.Run()
         del HSP
-    except Exception, stderr:
+    except Exception as stderr:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -234,7 +234,7 @@ def RunSH(inputdir, control_file):
     try:
         HSP = ModelControl(inputdir, control_file, 1)
         HSP.Run()
-    except Exception, stderr:
+    except Exception as stderr:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -244,7 +244,7 @@ def RunHY(inputdir, control_file):
     try:
         HSP = ModelControl(inputdir, control_file, 2)
         HSP.Run()
-    except Exception, stderr:
+    except Exception as stderr:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()
@@ -255,7 +255,7 @@ def RunSetup(inputdir,control_file):
     try:
         ErrLog = Logger
         CSVInterface(inputdir, control_file, ErrLog, 3)
-    except Exception, stderr:
+    except Exception as stderr:
         f = open("HS_Error.txt", "w")
         print_exc(file=f)
         f.close()

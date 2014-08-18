@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division, print_function
+
 from time import ctime
 from os.path import join
 from copy import deepcopy
@@ -25,7 +25,7 @@ class Output(object):
     """Data and fileobject storage class"""
     def __init__(self, reach, start_time, run_type):
         # Store a sorted list of StreamNodes. This all could be a bit more abstracted.
-        self.nodes = sorted(reach.itervalues(),reverse=True)
+        self.nodes = sorted(iter(reach.values()),reverse=True)
         # A reference to the model's starting time (i.e. when spin-up is over)
         self.start_time = start_time
 
@@ -66,7 +66,7 @@ class Output(object):
 
         # Storage dictionary for the data.
         self.data = {}
-        for name in desc.keys():
+        for name in list(desc.keys()):
             self.data[name] = {}
         # make a deepcopy of the empty variables dictionary for use later
         self.empty_vars = deepcopy(self.data)
@@ -75,7 +75,7 @@ class Output(object):
 
         # Here we build up the self.files attribute by cycling through the
         # filenames and descriptions
-        for key in desc.iterkeys():
+        for key in desc.keys():
             # Build the header that will be stamped to each output file
             header = [["File Created:"] + [ctime()]]
             header += [["Heat Source Version:"] + [IniParams["version"]]]
@@ -92,10 +92,10 @@ class Output(object):
                 
                 if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
                     dir = ['NE','E','SE','S','SW','W','NW']
-                    zone = range(1,int(IniParams["transsample_count"])+1)
+                    zone = list(range(1,int(IniParams["transsample_count"])+1))
                 else:
                     dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
-                    zone = range(1,int(IniParams["transsample_count"])+1)
+                    zone = list(range(1,int(IniParams["transsample_count"])+1))
                     
                     # TODO this is a future fuction to have a landcover sample at the streamnode
                     #zone = range(0,int(IniParams["transsample_count"]))
@@ -184,7 +184,7 @@ class Output(object):
         # localize the
         data = self.data
         # Cycle through the file objects
-        for name, fileobj in self.files.iteritems():
+        for name, fileobj in self.files.items():
             # Each time is a single line, so we want to iterate over all the times
             # stored so far. We can do this because everytime we store data, we
             # append the time string to self.times

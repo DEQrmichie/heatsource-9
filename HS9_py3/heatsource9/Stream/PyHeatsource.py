@@ -17,7 +17,7 @@
 flux and hydrualic calculations are made."""
 
 
-from __future__ import division, print_function
+
 from math import pow, sqrt, log, atan, sin, cos, pi, tan, acos, exp,radians, log10
 from random import randint
 from bisect import bisect
@@ -118,7 +118,7 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, radial_count):
         dir = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
     else:        
         Angle_Incr = 360.0 / radial_count
-        DirNumbers = range(1,radial_count)
+        DirNumbers = list(range(1,radial_count))
         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
         if Azimuth < AngleStart[0]:
             Azimuth_mod = Azimuth + 360
@@ -508,7 +508,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up, Delta_T,
     T_in = 0
     T_up = T0
     numerator = 0
-    for i in xrange(len(Q_tup)):
+    for i in range(len(Q_tup)):
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         # make sure there's a value for discharge. Temp can be blank if discharge is negative (withdrawl)

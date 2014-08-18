@@ -147,9 +147,9 @@ if runningPython3:
     import tkinter.filedialog as tk_FileDialog
     from io import StringIO
 else:
-    from Tkinter import *
-    import tkFileDialog as tk_FileDialog
-    from StringIO import StringIO
+    from tkinter import *
+    import tkinter.filedialog as tk_FileDialog
+    from io import StringIO
 
 def write(*args):
     args = [str(arg) for arg in args]
@@ -1988,7 +1988,7 @@ settings.store()
         # find the length of the longest attribute name
         longest_key_length = 0
         keys = []
-        for key in self.__dict__.keys():
+        for key in list(self.__dict__.keys()):
             keys.append(key)
             longest_key_length = max(longest_key_length, len(key))
 

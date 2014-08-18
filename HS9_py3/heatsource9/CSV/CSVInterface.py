@@ -20,8 +20,8 @@ in the CSV files into a list of StreamNode classes for use
 by the Heat Source model.
 """
 # Builtin methods
-from __future__ import division, print_function
-from itertools import ifilter, izip, chain, repeat, count
+
+from itertools import chain, repeat, count
 from math import ceil, log, degrees, atan
 from os.path import exists, join, normpath
 from os import unlink
@@ -121,7 +121,7 @@ class CSVInterface(object):
         cf = pd.read_csv(join(inputdir,control_file),quotechar='"',quoting=0,header=None,na_values=None)
         # TODO put a checker in here
         #raise Exception("Control file does not have %s" % v) 
-        for k,v in lst.iteritems():
+        for k,v in lst.items():
             for i in range(0,len(cf)):
                 if (cf.ix[i,1] == v):
                     if (self.isNum(cf.ix[i,2]) == True):
@@ -249,7 +249,7 @@ class CSVInterface(object):
         else:        
             dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
         
-        zone = range(1,int(IniParams["transsample_count"])+1)
+        zone = list(range(1,int(IniParams["transsample_count"])+1))
         
         # Concatenate the type, dir, and zone and order in the correct way
         for t in range(0,len(type)):
@@ -325,11 +325,11 @@ class CSVInterface(object):
     def OrientNodes(self):
         print("Initializing StreamNodes")
         # Now we manually set each nodes next and previous kilometer values by stepping through the reach
-        l = sorted(self.Reach.keys(), reverse=True)
+        l = sorted(list(self.Reach.keys()), reverse=True)
         head = self.Reach[max(l)] # The headwater node
         # Set the previous and next kilometer of each node.
         slope_problems = []
-        for i in xrange(len(l)):
+        for i in range(len(l)):
             key = l[i] # The current node's key
             # Then, set pointers to the next and previous nodes
             if i == 0: pass
@@ -367,10 +367,10 @@ class CSVInterface(object):
         sites = self.ContDataSites # Localize the variable for speed
         sites.sort() #Sort the climate site by km. This is necessary for the bisect module
         c = count()
-        l = self.Reach.keys()
+        l = list(self.Reach.keys())
         # This routine iterates through all nodes and uses bisect to determine which climate site is closest to the node and 
         # initializes that node with the climate data that is closest (up or downstream)
-        for km, node in self.Reach.iteritems():
+        for km, node in self.Reach.items():
             if km not in sites: # if we are not on the node where the climate data is assigned we have t
                 # Kilometer's downstream and upstream
                 lower = bisect(sites,km)-1 if bisect(sites,km)-1 > 0 else 0 # zero is the lowest (protect against value of -1)
@@ -384,7 +384,7 @@ class CSVInterface(object):
                 if km-down < up-km: # Only if the distance to the downstream node is closer do we use that
                     datasite = self.Reach[down]
                 self.Reach[km].ContData = datasite.ContData
-                print("Setting Atmospheric Data", c.next()+1, len(l))
+                print("Setting Atmospheric Data", next(c)+1, len(l))
 
     def GetBoundaryConditions(self):
         """Get the boundary conditions"""
@@ -403,7 +403,7 @@ class CSVInterface(object):
         c = count()
         # Now set the discharge and temperature boundary condition dictionaries.
 
-        for i in xrange(len(timelist)):
+        for i in range(len(timelist)):
             time = timelist[i]
             flow, temp = data.Flow.values[i],data.Temp.values[i]
             # Get the flow boundary condition
@@ -415,17 +415,17 @@ class CSVInterface(object):
             # Temperature boundary condition
             t_val = temp if temp is not None else 0.0
             self.T_bc[time] = t_val
-            print("Reading boundary conditions",c.next(),length)
+            print("Reading boundary conditions",next(c),length)
 
         # Next we expand or revise the dictionary to account for the flush period
         # Flush flow: model start value over entire flush period
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             self.Q_bc[time] = self.Q_bc[IniParams["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             self.T_bc[time] = self.T_bc[first_day_time]
             first_day_time += 3600
@@ -439,7 +439,7 @@ class CSVInterface(object):
         """Build a list of kilometers corresponding to the tributary inflow or climate data sites"""
         # ini names that are passed: "inflowkm" or "contkm"
         t = ()
-        l = self.Reach.keys()
+        l = list(self.Reach.keys())
         l.sort()
 
         if ini == "contkm" or IniParams["inflowsites"] > 0:
@@ -448,7 +448,7 @@ class CSVInterface(object):
         else:
             kms= tuple([])    
     
-        for site in xrange(0,len(kms)):
+        for site in range(0,len(kms)):
             km = kms[site]
             if km is None or not isinstance(km, float):
                 # This is a bad dataset if there's no kilometer
@@ -470,7 +470,7 @@ class CSVInterface(object):
         """Build a time list in string format (MM/DD/YYYY HH:MM) corresponding to the data start and end dates available in the control file"""
         print("Creating timelist")
         timelist = []        
-        timelist = range(IniParams['date'],IniParams['end']+60,3600) # hourly timestep
+        timelist = list(range(IniParams['date'],IniParams['end']+60,3600)) # hourly timestep
         for i in range(0,len(timelist)):
             timelist[i] = strftime("%m/%d/%Y %H:%M",gmtime(timelist[i]))
         return timelist    
@@ -478,7 +478,7 @@ class CSVInterface(object):
     def GetTimelistUNIX(self):
         """Build a UNIX time list of floating point time values corresponding to the data start and end dates available in the control file"""        
         timelist = []        
-        timelist = range(IniParams['date'],IniParams['end']+60,3600) # hourly timestep
+        timelist = list(range(IniParams['date'],IniParams['end']+60,3600)) # hourly timestep
         return tuple(timelist)
                         
     def GetTimelistFlushPeriod(self):
@@ -526,7 +526,7 @@ class CSVInterface(object):
                 # Error checking?! Naw!!
                 c = count()
                 for flow, temp in line:
-                    i = c.next()
+                    i = next(c)
                     node = self.Reach[kms[i]] # Index by kilometer
                     if node not in nodelist or not len(nodelist): nodelist.append(node)
                     if flow is None or (flow > 0 and temp is None):
@@ -535,18 +535,18 @@ class CSVInterface(object):
                     # tuples of values because we may have more than one input for a given node
                     node.Q_tribs[time] += flow, #Append to tuple
                     node.T_tribs[time] += temp,
-                    print("Reading inflow data",tm.next()+1, length)
+                    print("Reading inflow data",next(tm)+1, length)
 
         # Next we expand or revise the dictionary to account for the flush period
         # Flush flow: model start value over entire flush period
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
                 node.Q_tribs[time] = node.Q_tribs[IniParams["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
                 node.T_tribs[time] = node.T_tribs[first_day_time]
@@ -585,7 +585,7 @@ class CSVInterface(object):
             line = data.pop(0)
             c = count()
             for cloud, wind, humid, air in line:
-                i = c.next()
+                i = next(c)
                 node = self.Reach[kms[i]] # Index by kilometer
                 # Append this node to a list of all nodes which have continuous data
                 if node.km not in self.ContDataSites:
@@ -606,12 +606,12 @@ class CSVInterface(object):
                         air = 0.0
                     else: raise Exception("Air temperature input (value of '%s' in Continuous Data) outside of world records, -89 to 58 deg C." % air)
                 node.ContData[time] = cloud, wind, humid, air
-            print("Reading continuous data", tm.next()+1, length)
+            print("Reading continuous data", next(tm)+1, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for km in self.ContDataSites:
                 node = self.Reach[km]
@@ -628,7 +628,7 @@ class CSVInterface(object):
         for km in self.ContDataSites:
             node = self.Reach[km]
             node.ContData = node.ContData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-            print("Subsetting ",tm.next()+1, length)
+            print("Subsetting ",next(tm)+1, length)
     
     def zipper(self,iterable,mul=2):
         """Zippify list by grouping <mul> consecutive elements together
@@ -644,28 +644,28 @@ class CSVInterface(object):
         will contain all leftover elements. The usefulness of this method is that it will allow us to average over each <mul> consecutive elements
         """
         # From itertools recipes... We use all but the first (boundary node) element
-        lst = [i for i in izip(*[chain(iterable[1:], repeat(None, mul-1))]*mul)]
+        lst = [i for i in zip(*[chain(iterable[1:], operator.mul(None, mul-1))]*mul)]
         # Then we tack on the boundary node element
         lst.insert(0,(iterable[0],))
         # Then strip off the None values from the last (if any)
-        lst[-1] = tuple(ifilter(lambda x: x is not None,lst[-1]))
+        lst[-1] = tuple(filter(lambda x: x is not None,lst[-1]))
         return self.numify(lst)
 
     def numify(self, lst):
         """Take a list of iterables and remove all values of None or empty strings"""
         # Remove None values at the end of each individual list
-        for i in xrange(len(lst)):
+        for i in range(len(lst)):
             # strip out values of None from the tuple, returning a new tuple
-            lst[i] = [x for x in ifilter(lambda x: x is not None, lst[i])]
+            lst[i] = [x for x in filter(lambda x: x is not None, lst[i])]
         # Remove blank strings from within the list
         for l in lst:
             n = []
-            for i in xrange(len(l)):
+            for i in range(len(l)):
                 if l[i] == "": n.append(i)
             n.reverse()
             for i in n: del l[i]
         # Make sure there are no zero length lists because they'll fail if we average
-        for i in xrange(len(lst)):
+        for i in range(len(lst)):
             if len(lst[i]) == 0: lst[i].append(0.0)
         return lst
 
@@ -680,7 +680,7 @@ class CSVInterface(object):
         # re-write it (well, not lazy, but I'm not paid as a programmer, and so I have
         # "better" things to do than optimize our code.)
         # First we strip off the None values.
-        stripNone = lambda y: [i for i in ifilter(lambda x: x is not None, y)]
+        stripNone = lambda y: [i for i in filter(lambda x: x is not None, y)]
         return [predicate(stripNone(x)) for x in self.zipper(iterable,self.multiple)]
 
     def zeroOutList(self, lst): # TODO Not used
@@ -726,11 +726,11 @@ class CSVInterface(object):
         accdata = accdata.fillna(0)
         print("Missing data in %s converted to zeros" % IniParams["accretionfile"])
             
-        for i in xrange(len(ttools)):
+        for i in range(len(ttools)):
             data[ttools[i]] = list(lcdata.ix[:,i])
-        for i in xrange(len(morph)):
+        for i in range(len(morph)):
             data[morph[i]] = list(morphdata.ix[:,i])
-        for i in xrange(len(flow)):
+        for i in range(len(flow)):
             data[flow[i]] = list(accdata.ix[:,i])
                     
         #Longitude check
@@ -771,7 +771,7 @@ class CSVInterface(object):
         # Build a boundary node
         node = StreamNode(run_type=self.run_type,Q_mb=Q_mb)
         # Then set the attributes for everything in the dictionary
-        for k,v in data.iteritems():
+        for k,v in data.items():
             setattr(node,k,v[0])
         # set the flow and temp boundary conditions for the boundary node
         node.Q_bc = self.Q_bc
@@ -790,7 +790,7 @@ class CSVInterface(object):
         num_nodes = int(ceil((vars)/self.multiple))
         for i in range(0, num_nodes):
             node = StreamNode(run_type=self.run_type,Q_mb=Q_mb)
-            for k,v in data.iteritems():
+            for k,v in data.items():
                 setattr(node,k,v[i+1])# Add one to ignore boundary node
             self.InitializeNode(node)
             self.Reach[node.km] = node
@@ -819,10 +819,10 @@ class CSVInterface(object):
         else:
             radial_count = IniParams["radialsample_count"]
 
-        keys = self.Reach.keys()
+        keys = list(self.Reach.keys())
         keys.sort(reverse=True) # Downstream sorted list of stream kilometers
         print("Translating LULC Data")
-        for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data
+        for i in range(6, radial_count*trans_count+7): # For each column of LULC data
             col = list(LCdata.ix[:,i]) # LULC column
             elev = list(LCdata.ix[:,i+radial_count*trans_count]) # Shift by 28 to get elevation column
             # Make a list from the LC codes from the column, then send that to the multiplier
@@ -833,17 +833,17 @@ class CSVInterface(object):
                 vdensity.append(self.multiplier([LCcodes[x][1] for x in col], average))
                 k.append(self.multiplier([LCcodes[x][2] for x in col], average))
                 overhang.append(self.multiplier([LCcodes[x][3] for x in col], average))
-            except KeyError, stderr:
+            except KeyError as stderr:
                 raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
             print("Translating LULC Data", i, radial_count*trans_count+7)
             
-        for i in xrange(len(keys)):
+        for i in range(len(keys)):
             node = self.Reach[keys[i]]
             xx = 0
-            for dir in xrange(radial_count+1):
-                for zone in xrange(trans_count):
+            for dir in range(radial_count+1):
+                for zone in range(trans_count):
                     node.VHeight[dir][zone] = vheight[xx][i]
                     node.VDensity[dir][zone] = vdensity[xx][i]
                     node.k[dir][zone] = k[xx][i]
@@ -861,7 +861,7 @@ class CSVInterface(object):
         # values for each node. This is culled from earlier version's VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen in earlier!
         
-        for h in xrange(len(keys)):
+        for h in range(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
             VTS_Total = 0 #View to sky value
@@ -871,9 +871,9 @@ class CSVInterface(object):
             # This is basically a list of directions, each with one of three topographies
             ElevationList = []
             Angle_Incr = 360.0 / radial_count
-            DirNumbers = range(1,radial_count+1)
+            DirNumbers = list(range(1,radial_count+1))
             AngleMid = [x*Angle_Incr for x in DirNumbers]
-            for i in xrange(radial_count): # Iterate through each direction
+            for i in range(radial_count): # Iterate through each direction
                 DirAngle = AngleMid[i]
                 if DirAngle < 135:
                     ElevationList.append(topo_e[h])
@@ -889,13 +889,13 @@ class CSVInterface(object):
             # two angles so that late we can test whether we are between them, and only do the shading calculations
             # if that is true.
 
-            for i in xrange(radial_count): # Iterate through each direction
+            for i in range(radial_count): # Iterate through each direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
                 W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
                 W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
                 
-                for j in xrange(trans_count): # Iterate through each of the zones
+                for j in range(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
                     Vdens = vdensity[i*trans_count+j+1][h]
                     Overhang = overhang[i*trans_count+j+1][h]
@@ -982,10 +982,10 @@ class CSVInterface(object):
         else:
             radial_count = IniParams["radialsample_count"]
 
-        keys = self.Reach.keys()
+        keys = list(self.Reach.keys())
         keys.sort(reverse=True) # Downstream sorted list of stream kilometers
         print("Translating LULC Data")
-        for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data          
+        for i in range(6, radial_count*trans_count+7): # For each column of LULC data          
             col = list(LCdata.ix[:,i]) # LULC column
             elev = list(LCdata.ix[:,i+radial_count*trans_count]) # Shift by 7 * "number of trans sample zones" to get elevation column
             if IniParams["heatsource8"] == True:
@@ -999,17 +999,17 @@ class CSVInterface(object):
                 vheight.append(self.multiplier([x for x in col], average))
                 vdens.append(self.multiplier([x for x in dens], average))
                 #k.append(self.multiplier([x for x in col], average)) #TODO
-            except KeyError, stderr:
+            except KeyError as stderr:
                 raise Exception("Vegetation height/density error" % stderr.message)
             if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                 elevation.append(self.multiplier(elev, average))
             print("Reading vegetation heights", i+1, radial_count*trans_count+7)
             
-        for i in xrange(len(keys)):
+        for i in range(len(keys)):
             node = self.Reach[keys[i]]
             xx = 0
-            for dir in xrange(radial_count+1):
-                for zone in xrange(trans_count):
+            for dir in range(radial_count+1):
+                for zone in range(trans_count):
                     node.VHeight[dir][zone] = vheight[xx][i]
                     node.VDensity[dir][zone] = vdensity[xx][i]
                     node.k[dir][zone] = k[xx][i]
@@ -1027,7 +1027,7 @@ class CSVInterface(object):
         # values for each node. This is culled from earlier version's VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen in earlier!
         
-        for h in xrange(len(keys)):
+        for h in range(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
             LC_Angle_Max = 0
@@ -1037,9 +1037,9 @@ class CSVInterface(object):
             # This is basically a list of directions, each with one of three topographies
             ElevationList = []
             Angle_Incr = 360.0 / radial_count
-            DirNumbers = range(1,radial_count+1)
+            DirNumbers = list(range(1,radial_count+1))
             AngleMid = [x*Angle_Incr for x in DirNumbers]
-            for i in xrange(radial_count): # Iterate through each direction
+            for i in range(radial_count): # Iterate through each direction
                 DirAngle = AngleMid[i]
                 if DirAngle < 135:
                     ElevationList.append(topo_e[h])
@@ -1055,13 +1055,13 @@ class CSVInterface(object):
             # two angles so that late we can test whether we are between them, and only do the shading calculations
             # if that is true.
 
-            for i in xrange(7): # Iterate through each direction
+            for i in range(7): # Iterate through each direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
                 W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
                 W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
 
-                for j in xrange(trans_count): # Iterate through each of the zones
+                for j in range(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
                         raise Exception("Vegetation height (value of %s in Landcover Data) must be greater than zero and less than 120 meters (when LiDAR = True)" % Vheight)
@@ -1139,7 +1139,7 @@ class CSVInterface(object):
         vals = [tuple([j for j in i]) for i in zip(data.height.values,data.density.values,data.k.values,data.overhang.values)]
         data = {}
 
-        for i in xrange(len(codes)):
+        for i in range(len(codes)):
             # Each code is a tuple in the form of (VHeight, VDensity, Overhang)
             data[codes[i]] = vals[i]
             

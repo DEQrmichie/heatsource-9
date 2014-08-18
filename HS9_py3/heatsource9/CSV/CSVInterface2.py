@@ -1,6 +1,6 @@
 """This is an alternative CSV interface that uses 'csv' instead of 'pandas'. it's not working right now."""
 
-from __future__ import division, print_function
+
 from os.path import exists, join, normpath
 from collections import defaultdict
 import csv
@@ -15,9 +15,9 @@ def csv_dictreader(inputdir,filename,colnames):
     data = defaultdict(list) # each value in each column is appended to a list
     with open(join(inputdir,filename), "rU") as file_object:
         reader = csv.DictReader(file_object,dialect="excel")
-        reader.next() # skip the header row
+        next(reader) # skip the header row
         for row in reader: # read a row as {column1: value1, column2: value2,...}
-                for (k,v) in row.items(): # go over each column name and value 
+                for (k,v) in list(row.items()): # go over each column name and value 
                     data[k].append(v) # append the value into the appropriate list based on column name k      
     return data
 
