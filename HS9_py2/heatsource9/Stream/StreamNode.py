@@ -248,7 +248,7 @@ class StreamNode(object):
             self.Log.write("The channel is going dry at %s, model time: %s." % (self, Chronos.TheTime))
 
     def CatchException(self, stderr, time):
-        msg = "At %s and time %s\n"%(self,ctime(time) )
+        msg = "At %s and time %s\n" % (self,ctime(time))
         if isinstance(stderr,tuple):
             msg += """%s\n\tVariables causing this affliction:
 dt: %4.0f
