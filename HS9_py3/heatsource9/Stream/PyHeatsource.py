@@ -16,8 +16,6 @@
 """PyHeatsource is the core of the model and where the 
 flux and hydrualic calculations are made."""
 
-
-
 from math import pow, sqrt, log, atan, sin, cos, pi, tan, acos, exp,radians, log10
 from random import randint
 from bisect import bisect
@@ -309,7 +307,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
             pathEmergent = W_b
         
         if BeersData == "LAI": #use LAI data
-            fraction_passed_emergent = exp(-1 * k[0][0] * LAI[0][0] * pathEmergent)
+            fraction_passed_emergent = exp(-1 * k[0][0] * VDensity[0][0] * pathEmergent)
             F_Diffuse[4] = F_Diffuse[4] * fraction_passed_emergent
         else: # Use veg density data
             if VDensity[0][0] == 1:
