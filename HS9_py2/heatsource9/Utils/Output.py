@@ -40,29 +40,29 @@ class Output(object):
 
         # Filenames and descriptions for each of the output files
         desc = {}
-        if run_type < 2:
-            desc["Heat_Cond"] = "Streambed Conduction Flux (w/sq m)"
-            desc["Heat_Conv"] = "Convection Flux (w/sq m)"
-            desc["Heat_Evap"] = "Evaporation Flux (w/sq m)"
-            desc["Heat_SR1"] = "Potential Solar Radiation Flux (w/sq m)"
-            desc["Heat_SR4"] = "Surface Solar Radiation Flux (w/sq m)"
-            desc["Heat_SR6"] = "Received Solar Radiation Flux (w/sq m)"
-            desc["Heat_TR"] = "Thermal Radiation Flux (w/sq m)"
+        if run_type in [0, 1]:
+            desc["Heat_Cond"] = "Streambed Conduction Flux (watts/square meter)"
+            desc["Heat_Conv"] = "Convection Flux (watts/square meter)"
+            desc["Heat_Evap"] = "Evaporation Flux (watts/square meter)"
+            desc["Heat_SR1"] = "Potential Solar Radiation Flux (watts/square meter)"
+            desc["Heat_SR4"] = "Surface Solar Radiation Flux (watts/square meter)"
+            desc["Heat_SR6"] = "Received Solar Radiation Flux (watts/square meter)"
+            desc["Heat_TR"] = "Thermal Radiation Flux (watts/square meter)"
             desc["Shade"] = "Effective Shade"
             desc["VTS"] = "View to Sky"
-            desc["SolarBlock"] = "Solar Flux blocked by LULC (w/sq m)"
-        if run_type != 1:
-            desc["Hyd_DA"] = "Average Depth (m)"
-            desc["Hyd_DM"] = "Max Depth (m)"
+            desc["SolarBlock"] = "Solar Flux blocked by LULC (watts/square meter)"
+        if run_type in [0, 2]:
+            desc["Hyd_DA"] = "Average Depth (meters)"
+            desc["Hyd_DM"] = "Max Depth (meters)"
             desc["Hyd_Flow"] = "Flow Rate (cms)"
             desc["Hyd_Hyp"] = "Hyporheic Exchange (cms)"
-            desc["Hyd_Vel"] = "Flow Velocity (m/s)"
-            desc["Hyd_WT"] = "Top Width (m)"
-        if not run_type:
-            desc["Rate_Evap"] = "Evaporation Rate (mm/hr)"
+            desc["Hyd_Vel"] = "Flow Velocity (meters/second)"
+            desc["Hyd_WT"] = "Top Width (meters)"
+        if run_type == 0:
+            desc["Rate_Evap"] = "Evaporation Rate (mm/hour)"
             desc["Temp_H2O"] = "Stream Temperature (*C)"
             desc["Temp_Sed"] = "Sediment Temperature (*C)"
-            desc["Hyd_Disp"] = "Hydraulic Dispersion (m2/s)"
+            desc["Hyd_Disp"] = "Hydraulic Dispersion (square meters/second)"
 
         # Storage dictionary for the data.
         self.data = {}
