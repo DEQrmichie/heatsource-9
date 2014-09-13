@@ -124,7 +124,7 @@ Row | Column -> 	[1] 	[2]							[3]
 [38] 		        38	# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)
 [39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)
 [40] 		        40	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
-[41]                    41      # USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)
+[41]                   41      # USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)
 
 ###############################################################################
 ACCRETION INPUT FILE
@@ -255,7 +255,7 @@ COLUMN
 [2] Longitude (decimal degrees)
 [3] Latitude (decimal degrees)
 [4] TopoWest (degrees)
-[4] TopoWest (degrees)
+[5] TopoWest (degrees)
 [6] TopoEast (degrees)
 [7-n] Landcover Samples (code or height meters)
 [n-n] Elevation Samples (meters)
@@ -278,9 +278,10 @@ COLUMN
 [3] Gradient (meters/meters)
 [4] Bottom Width (meters)
 [5] Channel Angle Z
-[6] Sediment Thermal Conductivity (Watts/meter/Celsius)
-[7] Sediment Thermal Diffusivity (square cm/second)
-[8] Sediment/hyporheic zone thickness (meters)
-[9] Percent Hyporheic exchange (0-1)
-[10] Porosity (0-1)
+[6] Mannings n (unitless)
+[7] Sediment Thermal Conductivity (Watts/meter/Celsius)
+[8] Sediment Thermal Diffusivity (square cm/second)
+[9] Sediment/hyporheic zone thickness (meters)
+[10] Percent Hyporheic exchange (0-1)
+[11] Porosity (0-1)
 		
