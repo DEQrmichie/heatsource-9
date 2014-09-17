@@ -112,8 +112,8 @@ class Output(object):
     def close(self):
         """This is a legacy method from writing to text files but there needs to be more testing before it is removed."""
         # Flush the rest of the values from the dataset by flushing the
-        # daily values and by calling the write() method
-        # self.write(self.run_type < 2)  #commented out this line so shade wouldn't output last day twice - DT
+        # daily values and by calling the write_to_csv() method
+        # self.write_ouputs(self.run_type < 2)  #commented out this line so shade wouldn't output last day twice - DT
         # Then close all of the file objects cleanly
         #[f.close() for f in self.files.itervalues()]
         print("Export to CSV complete")
@@ -167,7 +167,7 @@ class Output(object):
         # 24xF file accesses where F=len(self.files). Each file access
         # has quite a bit of overhead, so we lump them. It's "A Good Thing."
         if hour == 23:
-            self.write(self.run_type < 2, timestamp)
+            self.write_to_csv(self.run_type < 2, timestamp)
 
     def daily(self, timestamp):
         """Compile and store data that is collected every hour"""
@@ -178,7 +178,7 @@ class Output(object):
         # If there's no hour, we're at the beginning of a day, so we write the values
         # to a file.
 
-    def write(self, daily, timestamp):
+    def write_to_csv(self, daily, timestamp):
         if daily: # don't call for hydraulics
             self.daily(timestamp)
         # localize the
