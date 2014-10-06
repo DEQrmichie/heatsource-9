@@ -273,13 +273,13 @@ class CSVInterface(object):
 
         if IniParams["lcdatainput"] == "Values":
             if IniParams["beers_data"] == "LAI":  #Use LAI methods
-                type = ["LC","ELE","LAI","k", "OH"]
+                type = ["HT","ELE","LAI","k", "OH"]
             else:        
-                type = ["LC","ELE","CAN", "OH"]
+                type = ["HT","ELE","CAN", "OH"]
         else:
             type = ["LC","ELE"]
 
-        lcdataheaders =["km","Longitude","Latitude","TopoWest","TopoSouth","TopoEast","LC_EMERGENT"]      
+        lcdataheaders =["km","Longitude","Latitude","TopoWest","TopoSouth","TopoEast"]      
         if IniParams["heatsource8"] == True:  # use the heat source 8 methods
             dir = ["NE","E","SE","S","SW","W","NW"]
         else:        
@@ -288,14 +288,14 @@ class CSVInterface(object):
         zone = range(1,int(IniParams["transsample_count"])+1)
 
         # Concatenate the type, dir, and zone and order in the correct way
-        for t in range(0,len(type)):
+        for t in type:
             for d in range(0,len(dir)):
                 for z in range(0,len(zone)):
-                    if t >=2 and d==0 and z==0:
-                        lcdataheaders.append(type[t]+"_EMERGENT") # add emergent
-                        lcdataheaders.append(type[t]+"_"+dir[d]+"_"+str(zone[z]))
+                    if t!="ELE" and d==0 and z==0:
+                        lcdataheaders.append(t+"_EMERGENT") # add emergent
+                        lcdataheaders.append(t+"_"+dir[d]+"_"+str(zone[z]))
                     else:
-                        lcdataheaders.append(type[t]+"_"+dir[d]+"_"+str(zone[z]))
+                        lcdataheaders.append(t+"_"+dir[d]+"_"+str(zone[z]))
 
         return lcdataheaders
 
