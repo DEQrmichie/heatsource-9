@@ -24,7 +24,7 @@ from bisect import bisect
 
 class HeatSourceError(Exception): pass
 
-def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, radial_count):
+def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, heatsource8, radial_count):
     toRadians = pi/180.0
     toDegrees = 180.0/pi
     MeanObliquity = 23.0 + (26.0 + ((21.448 - JDC * (46.815 + JDC * (0.00059 - JDC * 0.001813))) / 60.0)) / 60.0
@@ -114,11 +114,11 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, radial_count):
     if Altitude > 0.0:
             Daytime = 1
     
-    if radial_count == 999:  #999 is a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
+    if heatsource8 == True:  # same as 8 directions but no north
         dir = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
     else:        
         Angle_Incr = 360.0 / radial_count
-        DirNumbers = range(1,radial_count)
+        DirNumbers = range(1, radial_count)
         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
         if Azimuth < AngleStart[0]:
             Azimuth_mod = Azimuth + 360
@@ -208,7 +208,7 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev, inputs, Q
     return Q_new, Geom
 
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFactor,
-                 ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent, VDensity, VHeight, k, ShaderList, dir):
+                 ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent, LC_Density, LC_Height, LC_k, ShaderList, dir):
     """ """
     FullSunAngle,TopoShadeAngle,BankShadeAngle,VegetationAngle = ShaderList
     F_Direct = [0]*8
@@ -270,17 +270,17 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
         #for vegangle in VegetationAngle:  #Loop to find if shading is occuring from veg. in that zone
             if Altitude < VegetationAngle[zone]:  #veg shading is occurring from this zone
                 if BeersData == "LAI": #use LAI data
-                    fraction_passed = exp(-1 * k[dir][zone] * VDensity[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+                    fraction_passed = exp(-1 * LC_k[dir][zone] * LC_Density[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                     Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
-                    Dummy1 *=exp(-1 * k[dir][zone] * VDensity[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
+                    Dummy1 *=exp(-1 * LC_k[dir][zone] * LC_Density[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                 else: # Use veg density data
                     # Calculate the riparian extinction value
                     try:
-                        RipExtinction = -log(1-VDensity[dir][zone])/ 10
-                        if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
-                        if VHeight[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
+                        RipExtinction = -log(1- LC_Density[dir][zone])/ 10
+                        if LC_Height[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
+                        if LC_Height[dir][zone] == 0: RipExtinction = 0 # Set to zero if no veg
                     except OverflowError:
-                        if VDensity[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
+                        if LC_Density[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
                     fraction_passed = (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
                     Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
                     Dummy1 *= (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
@@ -304,29 +304,29 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
 
     #Account for emergent vegetation
     if emergent:
-        pathEmergent = VHeight / sin(radians(Altitude))
+        pathEmergent = LC_Height / sin(radians(Altitude))
         if pathEmergent > W_b:
             pathEmergent = W_b
         
         if BeersData == "LAI": #use LAI data
-            fraction_passed_emergent = exp(-1 * k[0][0] * LAI[0][0] * pathEmergent)
+            fraction_passed_emergent = exp(-1 * LC_k[0][0] * LAI[0][0] * pathEmergent)
             F_Diffuse[4] = F_Diffuse[4] * fraction_passed_emergent
         else: # Use veg density data
-            if VDensity[0][0] == 1:
-                VDensity[0][0] = 0.9999
+            if LC_Density[0][0] == 1:
+                LC_Density[0][0] = 0.9999
                 RipExtinctionEmergent = 1
                 shadeDensityEmergent = 1
-            elif VDensity[0][0] == 0:
-                VDensity[0][0] = 0.00001
+            elif LC_Density[0][0] == 0:
+                LC_Density[0][0] = 0.00001
                 RipExtinctionEmergent = 0
                 shadeDensityEmergent = 0
             else:
-                RipExtinctionEmergent = -log(1 - VDensity[0][0]) / 10
+                RipExtinctionEmergent = -log(1 - LC_Density[0][0]) / 10
                 shadeDensityEmergent = 1 - exp(-RipExtinctionEmergent * pathEmergent)
             F_Direct[4] = F_Direct[4] * (1 - shadeDensityEmergent)
-            if VHeight: # if there's no VHeight, we get ZeroDivisionError because we don't need this next step
-                pathEmergent = VHeight[0][0]
-                RipExtinctionEmergent = -log(1 - VDensity[0][0]) / VHeight[0][0]
+            if LC_Height: # if there's no LC_Height, we get ZeroDivisionError because we don't need this next step
+                pathEmergent = LC_Height[0][0]
+                RipExtinctionEmergent = -log(1 - LC_Density[0][0]) / LC_Height[0][0]
                 shadeDensityEmergent = 1 - exp(-RipExtinctionEmergent * pathEmergent)
                 F_Diffuse[4] = F_Diffuse[4] * (1 - shadeDensityEmergent)
 
@@ -395,7 +395,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
     return F_Solar, Solar_blocked_byVeg
 
-def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, VHeight, ViewToSky, SedDepth, dx,
+def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, LC_Height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent, penman, wind_a,
                     wind_b, calcevap, T_prev, T_sed, Q_hyp, F_Solar5, F_Solar7):
 
@@ -453,9 +453,9 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, VHeight, ViewT
     Air_Vapor = Humidity * Sat_Vapor
     #===================================================
     #Calculate the frictional reduction in wind velocity
-    if emergent and VHeight > 0:
-        Zd = 0.7 * VHeight
-        Zo = 0.1 * VHeight
+    if emergent and LC_Height > 0:
+        Zd = 0.7 * LC_Height
+        Zo = 0.1 * LC_Height
         Zm = 2
         Friction_Velocity = Wind * 0.4 / log((Zm - Zd) / Zo) #Vertical Wind Decay Rate (Dingman p. 594)
     else:
@@ -546,11 +546,11 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up, Delta_T,
 
     return Temp, S, T_mix
 
-def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T_prev,
+def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T_prev,
                    T_sed, Q_hyp, T_dn_prev, ShaderList, dir, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev):
-    cloud, wind, humidity, T_air = ContData
-    W_b, Elevation, TopoFactor, ViewToSky, phi, VDensity, VHeight, k, \
+    cloud, wind, humidity, T_air = ClimateData
+    W_b, Elevation, TopoFactor, ViewToSky, phi, LC_Density, LC_Height, LC_k, \
         SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, T_accr, \
         has_prev, SampleDist, SampleCount, BeersData, emergent, wind_a, wind_b, calcevap, penman, calcalluv, T_alluv = C_args
 
@@ -559,7 +559,7 @@ def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T
     if daytime:
         solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b,
                     Elevation, TopoFactor, ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent,
-                    VDensity, VHeight, k, ShaderList, dir)
+                    LC_Density, LC_Height, LC_k, ShaderList, dir)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
@@ -569,7 +569,7 @@ def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T
         else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block
 
     ground = GetGroundFluxes(cloud, wind, humidity, T_air, Elevation,
-                    phi, VHeight, ViewToSky, SedDepth, dx,
+                    phi, LC_Height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv, P_w,
                     W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],

@@ -127,9 +127,9 @@ class ModelControl(object):
                 for nd in self.reachlist:
                     nd.F_DailySum = [0]*5
                     nd.Solar_Blocked = {}
-                    for i in range(IniParams["radialsample_count"]):  # Radial Sample directions
-                        nd.Solar_Blocked[i]=[0]*IniParams["transsample_count"] #A spot for each zone
-                    nd.Solar_Blocked['diffuse']=0
+                    for i in range(IniParams["trans_count"]): # Number of radial sample directions
+                        nd.Solar_Blocked[i]=[0]*IniParams["transsample_count"] # A spot for each zone
+                    nd.Solar_Blocked["diffuse"]=0
 
             # Back to every timestep level of the loop. Here we wrap the call to
             # run_all() in a try block to catch the exceptions thrown.

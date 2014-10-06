@@ -33,8 +33,8 @@ class StreamNode(object):
         __slots = ["Latitude", "Longitude", "Elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
-                "VHeight", "VDensity", "Overhang","k", #Vegetation params
-                "ContData", # Continuous data
+                "LC_Height", "LC_Density", "LC_Overhang","LC_k", # Land cover params
+                "ClimateData", # Climate data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
                 "Mix_T_Delta", #Change in temperature due to tribs, gw, points sources, accretion
@@ -92,7 +92,7 @@ class StreamNode(object):
         self.T = 0.0
         self.Mix_T_Delta = 0.0
         self.Q_mass = 0
-        self.ContData = Interpolator(dt=IniParams["dt"])
+        self.ClimateData = Interpolator(dt=IniParams["dt"])
         self.T_tribs = Interpolator(dt=IniParams["dt"])
         self.Q_tribs = Interpolator(dt=IniParams["dt"])
         # Create an internal dictionary that we can pass to the C module, this contains self.slots attributes
@@ -103,15 +103,14 @@ class StreamNode(object):
         self.F_Total = 0.0
         self.Log = Logger
         self.ShaderList = ()
-        if (IniParams["radialsample_count"] == 999):
+        if IniParams["heatsource8"] == True:
             radial_count = 7
         else:
-            radial_count = IniParams["radialsample_count"]
-        self.VHeight = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.VDensity = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.Overhang = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.k = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.LAI = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+            radial_count = IniParams["trans_count"]
+        self.LC_Height = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.LC_Density = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.LC_Overhang = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.LC_k = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
     def GetNodeData(self):
         data = {}
@@ -157,10 +156,7 @@ class StreamNode(object):
             raise Exception(msg)
 
         self.CalcDischarge = self.CalculateDischarge
-        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.VDensity, self.VHeight, self.k,
-                       self.SedDepth, self.dx, self.dt, self.SedThermCond, self.SedThermDiff, self.Q_in, self.T_in, has_prev,
-                       IniParams["transsample"], IniParams["transsample_count"], IniParams["beers_data"], IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"],
-                       IniParams["calcevap"], IniParams["penman"], IniParams["calcalluvium"], IniParams["alluviumtemp"])
+        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.LC_Density, self.LC_Height, self.LC_k, self.SedDepth, self.dx, self.dt, self.SedThermCond, self.SedThermDiff, self.Q_in, self.T_in, has_prev, IniParams["transsample_distance"], IniParams["transsample_count"], IniParams["beers_data"], IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"], IniParams["calcevap"], IniParams["penman"], IniParams["calcalluvium"], IniParams["alluviumtemp"])
 
     def CalcDischarge_Opt(self,time):
         """A Version of CalculateDischarge() that does not require checking for boundary conditions"""
@@ -278,7 +274,7 @@ c_k: %3.4f""" % stderr
             self.F_Solar, \
                 (self.F_Conduction, self.T_sed, self.F_Longwave, self.F_LW_Atm, self.F_LW_Stream, \
                  self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, (self.T, self.S1, self.Mix_T_Delta), veg_block = \
-                _HS.CalcHeatFluxes(self.ContData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
+                _HS.CalcHeatFluxes(self.ClimateData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp,self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime,Altitude, Zenith, self.prev_km.Q_prev, self.prev_km.T_prev, solar_only, self.next_km.Mix_T_Delta)
@@ -290,20 +286,20 @@ c_k: %3.4f""" % stderr
         self.F_DailySum[4] += self.F_Solar[4]
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
-        self.Solar_Blocked['diffuse'] += veg_block[-1]
+        self.Solar_Blocked["diffuse"] += veg_block[-1]
 
     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD, JDC, solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
-        Altitude, Zenith, Daytime, dir = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC, IniParams["radialsample_count"])
+        Altitude, Zenith, Daytime, dir = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC, IniParams["heatsource8"], IniParams["trans_count"])
         self.SolarPos = Altitude, Zenith, Daytime, dir
 
         try:
             self.F_Solar, \
                 (self.F_Conduction, self.T_sed, self.F_Longwave, self.F_LW_Atm, self.F_LW_Stream, \
                  self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, veg_block = \
-                _HS.CalcHeatFluxes(self.ContData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
+                _HS.CalcHeatFluxes(self.ClimateData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
                             hour, JD, Daytime, Altitude, Zenith, 0.0, 0.0, solar_only, self.next_km.Mix_T_Delta)
@@ -313,7 +309,7 @@ c_k: %3.4f""" % stderr
         self.F_DailySum[4] += self.F_Solar[4]
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
-        self.Solar_Blocked['diffuse'] += veg_block[-1]
+        self.Solar_Blocked["diffuse"] += veg_block[-1]
 
         # Check if we have interpolation on, and use the appropriate time
         self.T = self.T_bc[time]

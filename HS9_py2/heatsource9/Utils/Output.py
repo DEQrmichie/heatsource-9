@@ -91,10 +91,10 @@ class Output(object):
                 header[6] += ["Stream_KM"]
                 
                 if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
-                    dir = ['NE','E','SE','S','SW','W','NW']
+                    dir = ["NE","E","SE","S","SW","W","NW"]
                     zone = range(1,int(IniParams["transsample_count"])+1)
                 else:
-                    dir = ['D' + str(x) for x in range(1,IniParams["radialsample_count"]+ 1)]
+                    dir = ["D" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
                     zone = range(1,int(IniParams["transsample_count"])+1)
                     
                     # TODO this is a future fuction to have a landcover sample at the streamnode
@@ -106,7 +106,7 @@ class Output(object):
                 
                 header[6] += ["Diffuse_Blocked"]
             # Now create a file object in the dictionary, and write the header
-            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), 'wb'))
+            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "wb"))
             self.files[key].writerows(header)
 
     def close(self):
@@ -202,13 +202,13 @@ class Output(object):
                         if IniParams["heatsource8"] == True:
                             directions = [d for d in range(0,7)]  #Seven directions
                         else:
-                            directions = [d for d in range(IniParams["radialsample_count"])]
+                            directions = [d for d in range(IniParams["trans_count"])]
                         
                         for d in directions:
                             for zone in range(IniParams["transsample_count"]):
                                 daily_ave_blocked = x.Solar_Blocked[d][zone] / timesteps
                                 line[i] += ["%0.4f" % daily_ave_blocked]
-                        daily_ave_diffuse_blocked = x.Solar_Blocked['diffuse'] / timesteps
+                        daily_ave_diffuse_blocked = x.Solar_Blocked["diffuse"] / timesteps
                         line[i] += ["%0.4f" % daily_ave_diffuse_blocked]
                         i=i+1
                         
