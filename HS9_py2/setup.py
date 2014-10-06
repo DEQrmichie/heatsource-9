@@ -10,7 +10,7 @@ if VI < (2,7):
     raise Exception("Default Python version must be >2.7, not %s" % v)
 
 setup(name='heatsource9',
-      version='9.0.0b9',
+      version='9.0.0b10',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
