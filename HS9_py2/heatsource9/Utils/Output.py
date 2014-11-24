@@ -88,21 +88,25 @@ class Output(object):
                 # Grab a list of all the stream kilometers
                 header[6] += [("%0.3f" % x.km) for x in self.nodes]
             else:
-                header[6] += ["Stream_KM"]
+                header[6] += ["Stream_km"]
                 
                 if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
                     dir = ["NE","E","SE","S","SW","W","NW"]
                     zone = range(1,int(IniParams["transsample_count"])+1)
                 else:
-                    dir = ["D" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
+                    dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
                     zone = range(1,int(IniParams["transsample_count"])+1)
                     
                     # TODO this is a future fuction to have a landcover sample at the streamnode
                     #zone = range(0,int(IniParams["transsample_count"]))
+                if IniParams["lcdatainput"] == "Values":
+                    type = "LC"
+                else:
+                    type = "HT"
                 
                 for d in range(0,len(dir)):
                     for z in range(0,len(zone)):
-                        header[6] += ["LC_" + dir[d] +"_" + str(zone[z])]
+                        header[6] += [type+"_"+ dir[d]+"_S"+str(zone[z])]
                 
                 header[6] += ["Diffuse_Blocked"]
             # Now create a file object in the dictionary, and write the header
