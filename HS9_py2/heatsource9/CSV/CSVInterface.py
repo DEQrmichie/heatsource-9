@@ -22,6 +22,7 @@ by the Heat Source model.
 # Builtin methods
 from __future__ import division, print_function
 from itertools import ifilter, izip, chain, repeat, count
+from collections import defaultdict
 from math import ceil, log, degrees, atan
 from os.path import exists, join, normpath
 from os import unlink
@@ -30,7 +31,7 @@ from time import strptime, ctime, strftime, gmtime
 from calendar import timegm
 from datetime import datetime
 import platform
-import pandas as pd
+import csv
 
 # Heat Source Methods
 from ..Dieties.IniParamsDiety import IniParams
@@ -46,9 +47,9 @@ class CSVInterface(object):
         self.run_type = run_type
         self.log = log
         self.Reach = {}
-        
+
         self.ReadControlFile(inputdir, control_file)
-    
+        
         if run_type == 3:
             # Setup input files
             self.SetupInputFiles(inputdir, control_file)
@@ -57,7 +58,7 @@ class CSVInterface(object):
             self.flowtimelist = self.GetTimelistUNIX()
             self.continuoustimelist = self.GetTimelistUNIX()
             self.flushtimelist = self.GetTimelistFlushPeriod()         
-        
+
             # Start through the steps of building a reach full of StreamNodes
             self.GetBoundaryConditions()
             self.BuildNodes()
@@ -66,250 +67,302 @@ class CSVInterface(object):
             self.GetTributaryData()
             self.GetClimateData()
             self.SetAtmosphericData()
-            self.OrientNodes()    
+            self.OrientNodes()
+
+    def CSV_Writer(self, outputdir, filename, colnames, outlist):
+        """write the input list to csv"""
+
+        # insert column header names
+        outlist.insert(0, colnames)	
+
+        with open(join(outputdir, filename), "wb") as file_object:
+            writer = csv.writer(file_object,  dialect= "excel")
+            writer.writerows(outlist)
+
+    def CSV_Reader(self, inputdir, filenames, skipheader, skipfirstcol):
+        """This function reads a csv file into a list of lists indexed by row
+        number. If there is more than one file it adds another index for the
+        number of filesnames. The return data takes this form:
+        data[row][filenameindex][filecolumn]"""
+
+        filenames = [filenames] if isinstance(filenames, list) == False else filenames
+        i = 1
+        for filename in filenames:
+            with open(join(inputdir, filename.strip()), "rU") as file_object:
+                newfile=[row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
+            if skipheader == True:
+                del(newfile[0])
+            if skipfirstcol == True:
+                newfile = [line[+1:] for line in newfile]
+            if i == 1:
+                data = newfile
+            else:
+                data = [data[row] + newfile[row] for row in range(0,len(newfile))]
+            i = i + 1
+        return data
+
+    def CSV_DictReader(self, inputdir, filename, colnames):
+        """This function reads data into a dictionary and uses the column names as the key"""
+        data=defaultdict(list)  # each value in each column is appended to a list
+        with open(join(inputdir, filename), "rU") as file_object:
+            reader = csv.DictReader(file_object, dialect="excel")
+            reader.fieldnames = colnames # set the colnames as the dictionary key 
+            reader.next()  # skip the header row
+            for row in reader:  # read a row as {column1: value1, column2: value2,...}
+                for (k, v) in row.items():  # go over each column name and value
+                    data[k].append(v)  # append the value into the appropriate list based on column name k
+        return data    
 
     def ReadControlFile(self, inputdir, control_file):
         """Reads the initialization parameters from the control file into the Initialization dictionary {IniParams} and does some formatting"""
-    
+
         if exists(join(inputdir,control_file)) == False:
             raise Exception("HeatSource_Control.csv not found. Move the executable or place the control file in this directory: %s." % inputdir)    
-        
+
         print("Reading Control File")
-    
+
         #TODO RM fix so dict is related to numbers or text symbols
         lst = {"usertxt": "# USER TEXT",
-                    "name": "# SIMULATION NAME",
-                    "length": "# STREAM LENGTH (KILOMETERS)",
-                    "outputdir": "# OUTPUT PATH",
-                    "inputdir": "# INPUT PATH",
-                    "datastart": "# DATA START DATE (mm/dd/yyyy)",
-                    "modelstart": "# MODELING START DATE (mm/dd/yyyy)",
-                    "modelend": "# MODELING END DATE (mm/dd/yyyy)",
-                    "dataend": "# DATA END DATE (mm/dd/yyyy)",
-                    "flushdays": "# FLUSH INITIAL CONDITION (DAYS)",
-                    "offset": "# TIME OFFSET FROM UTC (HOURS)",
-                    "dt": "# MODEL TIME STEP - DT (MIN)",
-                    "dx": "# MODEL DISTANCE STEP - DX (METERS)",
-                    "longsample": "# LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)",
-                    "bcfile": "# BOUNDARY CONDITION FILE NAME",
-                    "inflowsites": "# TRIBUTARY SITES",
-                    "inflowinfiles": "# TRIBUTARY INPUT FILE NAMES",
-                    "inflowkm": "# TRIBUTARY MODEL KM",
-                    "accretionfile": "# ACCRETION INPUT FILE NAME",
-                    "climatesites": "# CLIMATE DATA SITES",
-                    "climatefiles": "# CLIMATE INPUT FILE NAMES",
-                    "climatekm": "# CLIMATE MODEL KM",
-                    "calcevap": "# INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)",
-                    "evapmethod": "# EVAPORATION METHOD (Mass Transfer/Penman)",
-                    "wind_a": "# WIND FUNCTION COEFFICIENT A",
-                    "wind_b": "# WIND FUNCTION COEFFICIENT B",
-                    "calcalluvium": "# INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)",
-                    "alluviumtemp": "# DEEP ALLUVIUM TEMPERATURE (*C)",
-                    "morphfile": "# MORPHOLOGY DATA FILE NAME",
-                    "lcdatafile": "# LANDCOVER DATA FILE NAME",
-                    "lccodefile": "# LANDCOVER CODES FILE NAME",
-                    "trans_count": "# NUMBER OF TRANSECTS PER NODE",
-                    "transsample_count": "# NUMBER OF SAMPLES PER TRANSECT",
-                    "transsample_distance": "# DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)",
-                    "emergent": "# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)",
-                    "lcdatainput": "# LANDCOVER DATA INPUT TYPE (Codes/Values)",
-                    "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)",
-                    "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",
-                    "heatsource8": "# USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)",}
-            
-        cf = pd.read_csv(join(inputdir,control_file),quotechar='"',quoting=0,header=None,na_values=None)
+               "name": "# SIMULATION NAME",
+               "length": "# STREAM LENGTH (KILOMETERS)",
+               "outputdir": "# OUTPUT PATH",
+               "inputdir": "# INPUT PATH",
+               "datastart": "# DATA START DATE (mm/dd/yyyy)",
+               "modelstart": "# MODELING START DATE (mm/dd/yyyy)",
+               "modelend": "# MODELING END DATE (mm/dd/yyyy)",
+               "dataend": "# DATA END DATE (mm/dd/yyyy)",
+               "flushdays": "# FLUSH INITIAL CONDITION (DAYS)",
+               "offset": "# TIME OFFSET FROM UTC (HOURS)",
+               "dt": "# MODEL TIME STEP - DT (MIN)",
+               "dx": "# MODEL DISTANCE STEP - DX (METERS)",
+               "longsample": "# LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)",
+               "bcfile": "# BOUNDARY CONDITION FILE NAME",
+               "inflowsites": "# TRIBUTARY SITES",
+               "inflowinfiles": "# TRIBUTARY INPUT FILE NAMES",
+               "inflowkm": "# TRIBUTARY MODEL KM",
+               "accretionfile": "# ACCRETION INPUT FILE NAME",
+               "climatesites": "# CLIMATE DATA SITES",
+               "climatefiles": "# CLIMATE INPUT FILE NAMES",
+               "climatekm": "# CLIMATE MODEL KM",
+               "calcevap": "# INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)",
+               "evapmethod": "# EVAPORATION METHOD (Mass Transfer/Penman)",
+               "wind_a": "# WIND FUNCTION COEFFICIENT A",
+               "wind_b": "# WIND FUNCTION COEFFICIENT B",
+               "calcalluvium": "# INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)",
+               "alluviumtemp": "# DEEP ALLUVIUM TEMPERATURE (*C)",
+               "morphfile": "# MORPHOLOGY DATA FILE NAME",
+               "lcdatafile": "# LANDCOVER DATA FILE NAME",
+               "lccodefile": "# LANDCOVER CODES FILE NAME",
+               "trans_count": "# NUMBER OF TRANSECTS PER NODE",
+               "transsample_count": "# NUMBER OF SAMPLES PER TRANSECT",
+               "transsample_distance": "# DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)",
+               "emergent": "# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)",
+               "lcdatainput": "# LANDCOVER DATA INPUT TYPE (Codes/Values)",
+               "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)",
+               "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",
+               "heatsource8": "# USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)",}
+
+        cf = self.CSV_Reader(inputdir, control_file, skipheader=False, skipfirstcol=False)
         # TODO put a checker in here
         #raise Exception("Control file does not have %s" % v) 
         for k,v in lst.iteritems():
             for i in range(0,len(cf)):
-                if (cf.ix[i,1] == v):
-                    if (self.isNum(cf.ix[i,2]) == True):
-                        IniParams[k] = float(str.strip(cf.ix[i,2]))
+                if (cf[i][1] == v):
+                    if (self.isNum(cf[i][2]) == True):
+                        IniParams[k] = float(str.strip(cf[i][2]))
                     else:
-                        IniParams[k] = str.strip(cf.ix[i,2])
+                        IniParams[k] = str.strip(cf[i][2])        
         del(cf)
-        
+
         # These might be blank, make them zeros # TODO check this works with new 9.0.0 implementation
         for key in ["inflowsites","flushdays","wind_a","wind_b"]:
             IniParams[key] = 0.0 if not IniParams[key] else IniParams[key]
-        
-        # Convert string TRUE/FALSE to bool. Note this defaults to false if string is not formated exactly as 'TRUE'
+
+        # Convert string TRUE/FALSE to bool. Note this defaults to false if string is not formated exactly as "TRUE"
         IniParams["calcalluvium"] = IniParams["calcalluvium"] in ("TRUE")
         IniParams["calcevap"] = IniParams["calcevap"] in ("TRUE")
         IniParams["emergent"] = IniParams["emergent"] in ("TRUE")
         IniParams["heatsource8"] = IniParams["heatsource8"] in ("TRUE")
-        
+
         # If the number of transverse sample per direction is NOT reported, assume 4 (old default)
         IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
-        
+
         # If True use heat source 8 default, same as 8 directions but no north
         if IniParams["heatsource8"] == True:
             IniParams["trans_count"] = 7 
         else:
             IniParams["trans_count"]
-        
+
         # Set the total number landcover sample count (0 = emergent)
         if IniParams["heatsource8"] == True:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
         else:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["trans_count"])
-        
+
         # Then make all of these integers because they're used later in for loops
         for key in ["inflowsites","flushdays","climatesites", "transsample_count","trans_count"]:
             IniParams[key] = int(IniParams[key])
-       
+
         # These need to be strings
         for key in ["inflowkm","climatekm"]:
             IniParams[key] = str(IniParams[key])
-        
+
         # Set up our evaporation method
         IniParams["penman"] = False
         if IniParams["calcevap"]:
             IniParams["penman"] = True if IniParams["evapmethod"] == "Penman" else False
-           
+
         # The offset should be negated to work around issues with internal date
         # representation. i.e. Pacific time is -7 from UTC, but the code needs a +7 to work.
         # TODO: This is probably a bug in ChronosDiety, not the time module.
         IniParams["offset"] = -1 * IniParams["offset"]
-        
+
         # Make the dates into datetime instances of the start/stop dates
         IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00" ,"%m/%d/%Y %H:%M:%S"))
         IniParams["dataend"] = timegm(strptime(IniParams["dataend"]+ " 23:59:59","%m/%d/%Y %H:%M:%S"))
-        
+
         if IniParams["modelstart"] is None:
             IniParams["modelstart"] = IniParams["datastart"]
         else:
             IniParams["modelstart"] = timegm(strptime(IniParams["modelstart"] + " 00:00:00","%m/%d/%Y %H:%M:%S"))
-        
+
         if IniParams["modelend"] is None:
             IniParams["modelend"] = IniParams["dataend"]
         else:
             IniParams["modelend"] = timegm(strptime(IniParams["modelend"] + " 23:59:59","%m/%d/%Y %H:%M:%S"))
-            
+
         IniParams["flushtimestart"] = IniParams["modelstart"] - IniParams["flushdays"]*86400
-        
+
         # make sure alluvium temp is present and a floating point number.
         IniParams["alluviumtemp"] = 0.0 if not IniParams["alluviumtemp"] else float(IniParams["alluviumtemp"])
-           
+
         # make sure that the timestep divides into 60 minutes, or we may not land squarely on each hour's starting point.
         #if 60%IniParams["dt"] > 1e-7:
         if float(60)/IniParams["dt"] - int(float(60)/IniParams["dt"]) > 1e-7:
             raise Exception("I'm sorry, your timestep (%0.2f) must evenly divide into 60 minutes." % IniParams["dt"])
         else:
             IniParams["dt"] = IniParams["dt"]*60 # make dt measured in seconds
-         
+
         # Make sure the output directory ends in a slash based on system platform
         if (platform.system() == "Windows" and IniParams["outputdir"][-1] != "\\"):
             raise Exception("Output directory needs to have a backslash at end of the path. ..\\outputfolder\\")
-        
+
         if (platform.system() == "Darwin" and IniParams["outputdir"][-1] != "/"):
             raise Exception("Output directory needs to have a forward slash at the end of the path. ../outputfolder/")    
-        
+
         # Set up the log file in the outputdir
         self.log.SetFile(normpath(join(IniParams["outputdir"],"outfile.log")))
-        
+
         # Make empty Dictionaries for the boundary conditions
         self.Q_bc = Interpolator()
         self.T_bc = Interpolator()
-        
+
         # List of kilometers with climate data nodes assigned.
         self.ClimateDataSites = []
-        
+
         # the distance step must be an exact, greater or equal to one, multiple of the sample rate.
         if (IniParams["dx"]%IniParams["longsample"]
             or IniParams["dx"]<IniParams["longsample"]):
             raise Exception("Distance step must be a multiple of the Longitudinal transfer rate")
         # Some convenience variables
         self.dx = IniParams["dx"]
-        self.multiple = int(self.dx/IniParams["longsample"]) #We have this many samples per distance step            
-    
+        self.multiple = int(self.dx/IniParams["longsample"]) #We have this many samples per distance step
+
     def SetupLCDataHeaders(self):
         """Generates a list of the landcover data file column header names"""
 
         if IniParams["lcdatainput"] == "Values":
             if IniParams["beers_data"] == "LAI":  #Use LAI methods
-                type = ["LC","ELE","LAI","k", "OH"]
+                type = ["HT","ELE","LAI","k", "OH"]
             else:        
-                type = ["LC","ELE","CAN", "OH"]
+                type = ["HT","ELE","CAN", "OH"]
         else:
             type = ["LC","ELE"]
 
-        lcdataheaders =["Longitude","Latitude","TopoWest","TopoSouth","TopoEast","LC_EMERGENT"]      
+        lcdataheaders =["km","Longitude","Latitude","TopoWest","TopoSouth","TopoEast"]      
         if IniParams["heatsource8"] == True:  # use the heat source 8 methods
             dir = ["NE","E","SE","S","SW","W","NW"]
         else:        
-            dir = ["D" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
+            dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
 
         zone = range(1,int(IniParams["transsample_count"])+1)
 
         # Concatenate the type, dir, and zone and order in the correct way
-        for t in range(0,len(type)):
+        for t in type:
             for d in range(0,len(dir)):
                 for z in range(0,len(zone)):
-                    if t >=2 and d==0 and z==0:
-                        lcdataheaders.append(type[t]+"_EMERGENT") # add emergent
-                        lcdataheaders.append(type[t]+"_"+dir[d]+"_"+str(zone[z]))
+                    if t!="ELE" and d==0 and z==0:
+                        #lcdataheaders.append(t+"_EMERGENT") # add emergent
+                        lcdataheaders.append(t+"_T0_S0") # add emergent                        
+                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
                     else:
-                        lcdataheaders.append(type[t]+"_"+dir[d]+"_"+str(zone[z]))
+                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
 
-        return lcdataheaders    
-    
+        return lcdataheaders
+
     def SetupInputFiles(self, inputdir, control_file):
         """Formats and writes blank input files based on settings in the control file"""
-        
+
         print("Starting input file setup")
-        
+
         now = datetime.now()    
         timestamp = now.strftime("%Y%m%d_%H%M%S")
-        timelist = self.GetTimeListString()
-        kmlist = self.GetStreamKMlist()
-        
+        timelist= self.GetTimeListString()	
+        kmlist= self.GetStreamKMlist()
+
+        bclist= [[t] for t in timelist]
+        lcdatalist= [[km] for km in kmlist]
+        acclist= [[km] for km in kmlist]
+        morphlist= [[km] for km in kmlist]	
+
         # For inflow and climate data there can be a single input file for each 
         # node OR just one input file with multiple nodes in the file
-        # This creates a list of the tirb and climate file names if there is more than one    
+        # This creates a list of the tirb and climate file names if there is more than one   
         if IniParams["inflowsites"] > 0:
             tribfiles = IniParams["inflowinfiles"].split(",")
-        climatefiles = IniParams["climatefiles"].split(",")
-        
+        climatefiles = IniParams["climatefiles"].split(",")	
+
         # Landcover data headers
-        lcdataheaders = self.SetupLCDataHeaders()        
-        
+        lcdataheaders = self.SetupLCDataHeaders()
+
         # This just repeats the header if needed based on the number of sites and files.
-        climatefile = pd.DataFrame(index=timelist, columns=["Cloudiness", "WindSpeed","RelativeHumidity","AirTemp"]*int((IniParams["climatesites"]/len(climatefiles))))
+        climateheaders=["DateTime"]+["Cloudiness", "WindSpeed", "RelativeHumidity", "AirTemp"]*int((IniParams["climatesites"]/len(climatefiles)))
         if IniParams["inflowsites"] > 0:
-            inflowfile = pd.DataFrame(index=timelist, columns=["Flow","Temp"]*int((IniParams["inflowsites"]/len(tribfiles))))
-        
-        # This sets the header names and index values for the other input files
-        bcfile = pd.DataFrame(index=timelist, columns=["Flow", "Temp"])
+            inflowheaders = ["DateTime"]+["Flow","Temp"]*int((IniParams["inflowsites"]/len(tribfiles)))
+
+        # This sets the header names for the other input files
+        bcheaders = ["DateTime","Flow", "Temp"]
         if IniParams["beers_data"] == "LAI":  #Use LAI methods
-            lccodes = pd.DataFrame(columns=["Name","Code","Height","LAI","k","Overhang"])
+            lccodesheader = ["Name","Code","Height","LAI","k","Overhang"]
         else:
-            lccodes = pd.DataFrame(columns=["Name","Code","Height","CanopyCover","k","Overhang"])
-        lcfile = pd.DataFrame(index=kmlist,columns=lcDataColHeaders)
-        accfile= pd.DataFrame(index=kmlist,columns=["Inflow","Temp","Outflow"])
-        morphfile = pd.DataFrame(index=kmlist,columns=["Elevation","Gradient","BottomWidth","ChannelAngleZ","Mannings_n","SedThermalConductivity","SedThermalDiffusivity","SedHyporheicThickness","%HyporheicExchange","Porosity"])
-        
+            lccodesheader = ["Name","Code","Height","CanopyCover","k","Overhang"]
+
+        accheaders = ["Stream_km","Inflow","Temp","Outflow"]
+        morphheaders = ["Stream_km","Elevation","Gradient","BottomWidth","ChannelAngleZ","Mannings_n","SedThermalConductivity","SedThermalDiffusivity","SedHyporheicThickness","%HyporheicExchange","Porosity"]	
+
         # This writes to csv using the file name from the control file and adds a timestamp
         print("Writing empty csv files")
-        bcfile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+IniParams["bcfile"]), sep=",", na_rep="NA",index_label="DateTime")
+        self.CSV_Writer(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["bcfile"], bcheaders, bclist)
+
         if IniParams["lcdatainput"] == "Codes":
-            lccodes.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+IniParams["lccodefile"]), sep=",", na_rep="NA",index_label="Name")
+            self.CSV_Writer(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["lccodefile"], lccodesheader, [[None]])
         else:
             print("...Landcover input type = Values. land cover codes file not written")
-        lcfile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+IniParams["lcdatafile"]), sep=",", na_rep="NA",index_label="Stream_KM")
-        accfile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+IniParams["accretionfile"]), sep=",", na_rep="NA",index_label="Stream_KM")
-        morphfile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+IniParams["morphfile"]), sep=",", na_rep="NA",index_label="Stream_KM")
+        self.CSV_Writer(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["lcdatafile"], lcdataheaders, lcdatalist)
+        self.CSV_Writer(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["accretionfile"], accheaders, acclist)
+        self.CSV_Writer(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["morphfile"], morphheaders, morphlist)
+
         for file in climatefiles:
-            climatefile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+file.strip()), sep=",", na_rep="NA",index_label="DateTime")
-        
+            self.CSV_Writer(IniParams["inputdir"],"input_"+timestamp+"_"+file.strip(), climateheaders, [[t] for t in timelist])
+
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
-                inflowfile.to_csv(join(IniParams["inputdir"],"input_"+timestamp+"_"+file.strip()), sep=",", na_rep="NA",index_label="DateTime")
+                self.CSV_Writer(IniParams["inputdir"],"input_"+timestamp+"_"+file.strip(), inflowheaders, [[t] for t in timelist])
         else:
-            print("Inflow Sites = 0 , inflow file not written")
-        
+            print("Inflow Sites = 0, inflow file not written")
+
         print("Finished input file setup")
-    
+
     def isNum(self,v):
         try:
             inNumberint = int(v)
@@ -358,14 +411,14 @@ class CSVInterface(object):
                 raise Exception ("The following reaches have zero slope. Kilometers: %s" %",".join(['%0.3f'%i for i in slope_problems]))
 
     def close(self):
-        del self.T_bc, self.Reach
+        del self.T_bc, self.Reach   
 
     def CheckEarlyQuit(self): #TODO Need to fix this RM
         """Checks a value to see whether the user wants to stop the model before we completely set everything up"""
         if exists("c:\\quit_heatsource"):
             unlink("c:\\quit_heatsource")
             self.QuitMessage()
-        
+
     def SetAtmosphericData(self):
         """For each node without climate data, use closest (up or downstream) node's data"""
         self.CheckEarlyQuit()
@@ -398,11 +451,13 @@ class CSVInterface(object):
         # Get the columns, which is faster than accessing cells
         print("Reading boundary conditions")
         timelist = self.continuoustimelist
-        
-        # the data block is a tuple of tuples, each corresponding to a timestamp.
-        data = pd.read_csv(join(IniParams["inputdir"],IniParams["bcfile"]),quotechar='"',quoting=0, index_col="DateTime")
-        data.columns = ["Flow","Temp"]
-        
+
+        # the data block is a tuple of tuples, each corresponding to a timestamp.      
+        data = self.CSV_Reader(IniParams["inputdir"], IniParams["bcfile"], skipheader=True, skipfirstcol=True)
+
+        # Convert all the values to floats
+        data = [[float(row[val]) for val in range(0, len(row))] for row in data]
+
         # Check out GetTributaryData() for details on this reformatting of the data
         # for the progress bar
         length = len(data)
@@ -411,9 +466,9 @@ class CSVInterface(object):
 
         for i in xrange(len(timelist)):
             time = timelist[i]
-            flow = data.Flow.values[i]
-            temp = data.Temp.values[i]
-            
+            flow = data[i][0]
+            temp = data[i][1]
+
             # Get the flow boundary condition
             if flow == 0 or not flow:
                 if self.run_type != 1:
@@ -442,7 +497,7 @@ class CSVInterface(object):
 
         self.Q_bc = self.Q_bc.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
         self.T_bc = self.T_bc.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-    
+
     def GetLocations(self,ini):
         """Build a list of kilometers corresponding to the tributary inflow or climate data sites"""
         # ini names that are passed: "inflowkm" or "climatekm"
@@ -455,7 +510,7 @@ class CSVInterface(object):
             kms = tuple([float(line.strip()) for line in kms]) # remove spaces and make float
         else:
             kms= tuple([])    
-    
+
         for site in xrange(0,len(kms)):
             km = kms[site]
             if km is None or not isinstance(km, float):
@@ -464,7 +519,7 @@ class CSVInterface(object):
             key = bisect(l,km)-1
             t += l[key], # Index by kilometer
         return t    
-    
+
     def GetStreamKMlist(self):
         """Build a list of stream kilometers sorted from headwaters to mouth"""
         print("Creating Stream KM list")
@@ -473,7 +528,7 @@ class CSVInterface(object):
         kmlist = [(node * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
         kmlist.sort(reverse=True)
         return kmlist    
-            
+
     def GetTimeListString(self):
         """Build a time list in string format (MM/DD/YYYY HH:MM) corresponding to the data start and end dates available in the control file"""
         print("Creating timelist")
@@ -482,13 +537,13 @@ class CSVInterface(object):
         for i in range(0,len(timelist)):
             timelist[i] = strftime("%m/%d/%Y %H:%M",gmtime(timelist[i]))
         return timelist    
-               
+
     def GetTimelistUNIX(self):
         """Build a UNIX time list of floating point time values corresponding to the data start and end dates available in the control file"""        
         timelist = []        
         timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) # hourly timestep
         return tuple(timelist)
-                        
+
     def GetTimelistFlushPeriod(self):
         """Build a UNIX time list that represents the flushing period"""
         #This assumes that data is hourly, not tested with variable input timesteps
@@ -505,29 +560,30 @@ class CSVInterface(object):
         print("Reading inflow data")
         # Get a list of the timestamps that we have data for, and use that to grab the data block
         timelist = self.flowtimelist
-        data = pd.DataFrame()
-        
+        data = []
+
         if IniParams["inflowsites"] > 0:
             tribfiles = IniParams["inflowinfiles"].split(",")
-            for file in tribfiles:
-                newfile = pd.read_csv(join(IniParams["inputdir"],file.strip()),quotechar='"',quoting=0,index_col="DateTime")
-                data = pd.concat([data,newfile],axis=1)
-               
+            data = self.CSV_Reader(IniParams["inputdir"], tribfiles, skipheader=True, skipfirstcol=True)
+
+            # Convert all the values to floats
+            data = [[float(row[val]) for val in range(0, len(row))] for row in data]
+
         # The data is being put into this format
         # | Site 1     | Site 2     | Site 3       | ...
         # [((0.3, 15.7), (0.3, 17.7), (0.02, 18.2)), (, ...))]
         # To facilitate each site having it's own two item tuple.
         # The calls to tuple() just ensure that we are not making lists, which can
         # be changed accidentally. Without them, the line is easier to understand
-        data = [tuple(zip(line[0:None:2],line[1:None:2])) for line in data.values]
-        
+        data = [tuple(zip(line[0:None:2],line[1:None:2])) for line in data]
+
         # Get a tuple of kilometers to use as keys to the location of each tributary 
         kms = self.GetLocations("inflowkm")    
-        
+
         length = len(timelist)
         tm = count() # Which datapoint time are we recording
         nodelist = [] # Quick list of nodes with flow data
-        
+
         if IniParams["inflowsites"] > 0: 
             for time in timelist:
                 line = data.pop(0)
@@ -575,19 +631,18 @@ class CSVInterface(object):
         print("Reading Continuous Data")
 
         timelist = self.continuoustimelist
-        
+
         climatefiles = IniParams["climatefiles"].split(",")
-        climatedata = pd.DataFrame()
-        
-        for file in climatefiles:
-            newfile = pd.read_csv(join(IniParams["inputdir"],file.strip()),quotechar='"',quoting=0, index_col="DateTime")
-            climatedata = pd.concat([climatedata,newfile],axis=1)
-            
-        data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata.values]
+        climatedata = self.CSV_Reader(IniParams["inputdir"], climatefiles, skipheader=True, skipfirstcol=True)
+
+        # convert all the strings to floats
+        climatedata =[[float(line[i]) for i in range(0,len(line))] for line in climatedata]
+
+        data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata]
 
         # Get a tuple of kilometers to use as keys to the location of each climate node
         kms = self.GetLocations("climatekm") 
-                
+
         tm = count() # Which datapoint time are we recording
         length = len(timelist)
         for time in timelist:
@@ -638,7 +693,7 @@ class CSVInterface(object):
             node = self.Reach[km]
             node.ClimateData = node.ClimateData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             print("Subsetting ",tm.next()+1, length)
-    
+
     def zipper(self,iterable,mul=2):
         """Zippify list by grouping <mul> consecutive elements together
 
@@ -712,50 +767,62 @@ class CSVInterface(object):
                 "SedThermDiff","SedDepth","phi", "Q_cont","d_cont","T_in"]
 
         data = {}
-        
+
         # Get all the "columnar data" from the csv files. Note Stream Km is brought in as an index file and set as data type object.
         # This is not a perfect method but it is done to avoid trailing on floating point values messing with the dictionary.
         # TODO organize the reading of this data into seperate methods so it is easier to find later.
-        lcdata = pd.read_csv(join(IniParams["inputdir"],IniParams["lcdatafile"]),quotechar='"',quoting=0)
-        morphdata = pd.read_csv(join(IniParams["inputdir"],IniParams["morphfile"]),quotechar='"',quoting=0,index_col="Stream_KM")
-        accdata = pd.read_csv(join(IniParams["inputdir"],IniParams["accretionfile"]),quotechar='"',quoting=0,index_col="Stream_KM")
-        
+        #lcdata = self.CSV_Reader(IniParams["inputdir"], IniParams["lcdatafile"], skipheader=True, skipfirstcol=False)
+        #morphdata = self.CSV_Reader(IniParams["inputdir"], IniParams["morphfile"], skipheader=True, skipfirstcol=True)
+        #accdata = self.CSV_Reader(IniParams["inputdir"], IniParams["accretionfile"], skipheader=True, skipfirstcol=True)
+
+        # Setup the headers
+        lcdataheaders = self.SetupLCDataHeaders()
+        accheaders = ["km", "Q_in", "T_in","Q_out"]
+        morphheaders = ["km","Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth","hyp_percent","phi"]
+
+        # Read data into a dictionary
+        lcdata = self.CSV_DictReader(IniParams["inputdir"], IniParams["lcdatafile"], lcdataheaders)
+        morphdata = self.CSV_DictReader(IniParams["inputdir"], IniParams["morphfile"], morphheaders)
+        accdata = self.CSV_DictReader(IniParams["inputdir"], IniParams["accretionfile"], accheaders)
+
+        # With accretion data replace NaN with zeros TODO
+
         # Add these columns to morph data since they do not exist in the input file.
-        morphdata["Q_cont"] = 0
-        morphdata["d_cont"] = 0
-        
+        kmlist= self.GetStreamKMlist()
+        morphdata["Q_cont"] = [0.0 for km in kmlist]
+        morphdata["d_cont"] = [0.0 for km in kmlist]
+
         # Check for missing values # TODO Fix this
         #if pd.isnull(morphdata):
             #raise Exception("Missing data in %s" % IniParams["morphfile"])
         #if pd.isnull(lcdata):
             #raise Exception("Missing data in %s" % IniParams["lcdatafile"])
-        
-        # With accretion data replace NaN with zeros
-        accdata = accdata.fillna(0)
-        print("Missing data in %s converted to zeros" % IniParams["accretionfile"])
-            
-        for i in xrange(len(ttools)):
-            data[ttools[i]] = list(lcdata.ix[:,i])
-        for i in xrange(len(morph)):
-            data[morph[i]] = list(morphdata.ix[:,i])
-        for i in xrange(len(flow)):
-            data[flow[i]] = list(accdata.ix[:,i])
-                    
-        #Longitude check
-        if max(data[ttools[1]]) > 180:
-            long_list = list(data[ttools[1]])
+
+        # With accretion data replace NaN with zeros # TODO
+        #print("Missing data in %s converted to zeros" % IniParams["accretionfile"])
+
+        for f in ttools:
+            data[f] = [float(i) for i in lcdata[f]]
+        for f in morph:
+            data[f] = [float(i) for i in morphdata[f]]
+        for f in flow:
+            data[f] = [float(i) for i in accdata[f]]
+
+        # Longitude check
+        if max(data["Longitude"]) > 180:
+            long_list = list(data["Longitude"])
             max1 = max(long_list)
             index1 = long_list.index(max1)
-            rkm = data[ttools[0]][index1]
+            rkm = data["km"][index1]
             raise Exception("Longitude must be less than 180 degrees. At stream km = " + str(rkm) + ", longitude = " + str(max1))
         if min(data[ttools[1]]) < -180:
-            long_list = list(data[ttools[1]])
+            long_list = list(data["Longitude"])
             min1 = min(long_list)
             index1 = long_list.index(min1)
-            rkm = data[ttools[1]][index1]
+            rkm = data["Longitude"][index1]
             raise Exception("Longitude must be greater than -180 degrees. At stream km = " + str(rkm) + ", longitude = " + str(min1))
-        #Latitude check
-        if max(data[ttools[2]]) > 90 or min(data[ttools[2]]) < -90:
+        # Latitude check
+        if max(data["Latitude"]) > 90 or min(data["Latitude"]) < -90:
             raise Exception("Latitude must be greater than -90 and less than 90 degrees")
 
         # Then sum and average things as appropriate. multiplier() takes a tuple
@@ -789,7 +856,7 @@ class CSVInterface(object):
         self.Reach[node.km] = node
         ############################################
 
-        #Figure out how many nodes we should have downstream. We use math.ceil() because
+        # Figure out how many nodes we should have downstream. We use math.ceil() because
         # if we end up with a fraction, that means that there's a node at the end that
         # is not a perfect multiple of the sample distance. We might end up ending at
         # stream kilometer 0.5, for instance, in that case
@@ -835,23 +902,23 @@ class CSVInterface(object):
             k = []
             
             for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data
-                col = list(LCdata.ix[:,i]) # LULC column
-                elev = list(LCdata.ix[:,i+radial_count*trans_count])
+                col = [LCdata[row][i] for row in range(0, len(LCdata))] # LULC row and index column 
+                elev = [float(LCdata[row][i+radial_count*trans_count]) for row in range(0, len(LCdata))]
                 # Make a list from the LC codes from the column, then send that to the multiplier
                 # with a lambda function that averages them appropriately. Note, we're averaging over
                 # the values (e.g. density) not the actual code, which would be meaningless.
                 
                 try:
-                    vheight.append(self.multiplier([LCcodes[x][0] for x in col], average))
-                    vdensity.append(self.multiplier([LCcodes[x][1] for x in col], average))
-                    k.append(self.multiplier([LCcodes[x][2] for x in col], average))
-                    overhang.append(self.multiplier([LCcodes[x][3] for x in col], average))
+                    vheight.append(self.multiplier([float(LCcodes[x][0]) for x in col], average))
+                    vdensity.append(self.multiplier([float(LCcodes[x][1]) for x in col], average))
+                    k.append(self.multiplier([float(LCcodes[x][2]) for x in col], average))
+                    overhang.append(self.multiplier([float(LCcodes[x][3]) for x in col], average))
                 except KeyError, stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
                 if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elev, average))
                 print("Translating LULC Data", i, radial_count*trans_count+7)
-                
+    
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
@@ -869,22 +936,22 @@ class CSVInterface(object):
             # using canopy cover data
             
             for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data
-                col = list(LCdata.ix[:,i]) # LULC column
-                elev = list(LCdata.ix[:,i+radial_count*trans_count])
+                col = [LCdata[row][i] for row in range(0, len(LCdata))] # LULC row and index column 
+                elev = [float(LCdata[row][i+radial_count*trans_count]) for row in range(0, len(LCdata))]
                 # Make a list from the LC codes from the column, then send that to the multiplier
                 # with a lambda function that averages them appropriately. Note, we're averaging over
                 # the values (e.g. density) not the actual code, which would be meaningless.
                 
                 try:
-                    vheight.append(self.multiplier([LCcodes[x][0] for x in col], average))
-                    vdensity.append(self.multiplier([LCcodes[x][1] for x in col], average))
-                    overhang.append(self.multiplier([LCcodes[x][2] for x in col], average))
+                    vheight.append(self.multiplier([float(LCcodes[x][0]) for x in col], average))
+                    vdensity.append(self.multiplier([float(LCcodes[x][1]) for x in col], average))
+                    overhang.append(self.multiplier([float(LCcodes[x][2]) for x in col], average))
                 except KeyError, stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
                 if i>6:  # There isn't a stream center elevation (that is in the morphology file), so we don't want to read in first elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elev, average))
                 print("Translating LULC Data", i, radial_count*trans_count+7)
-                
+    
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
@@ -895,21 +962,21 @@ class CSVInterface(object):
                         node.LC_Overhang[dir][zone] = overhang[n][i]
                         n = n + 1
                         if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
-                            break # go to the next dir
-                    
-        # Average over the topo values
-        topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
-        topo_s = self.multiplier(list(LCdata.TopoSouth.values), average)
-        topo_e = self.multiplier(list(LCdata.TopoEast.values), average)
+                            break # go to the next dir          
 
+        # Average over the topo values
+        topo_w = self.multiplier([float(LCdata[3][row]) for row in range(0, len(LCdata))], average)
+        topo_s = self.multiplier([float(LCdata[4][row]) for row in range(0, len(LCdata))], average)
+        topo_e = self.multiplier([float(LCdata[5][row]) for row in range(0, len(LCdata))], average)
+        
         # ... and you thought things were crazy earlier! Here is where we build up the
         # values for each node. This is culled from heat source version 7 VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen it earlier!
-        
+
         for h in xrange(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
-            VTS_Total = 0 #View to sky value
+            VTS_Total = 0 # View to sky value
             LC_Angle_Max = 0
             # Now we set the topographic elevations in each direction
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) # Topography factor Above Stream Surface
@@ -937,15 +1004,15 @@ class CSVInterface(object):
             for i in xrange(radial_count): # Iterate through each direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
-                W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
-                W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
-                
+                W_Vdens_num = 0.0  # Numerator for the weighted Veg density calculation
+                W_Vdens_dem = 0.0  # Denominator for the weighted Veg density calculation
+
                 for j in xrange(trans_count): # Iterate through each of the zones
                     Vheight = vheight[i*trans_count+j+1][h]
-                    Vdens = vdensity[i*trans_count+j+1][h]
+                    Vdens = vdensity[i*trans_count+j+1][h] 
                     Voverhang = overhang[i*trans_count+j+1][h]
                     Elev = elevation[i*trans_count+j][h]
-
+                    
                     if not j: # We are at the stream edge, so start over
                         LC_Angle_Max = 0 # New value for each direction
                     else:
@@ -963,13 +1030,13 @@ class CSVInterface(object):
                         adjust = 0.5
                     else:
                         adjust = 0.0
-                    
+
                     # TODO this is a future function where there is a landcover sample at the stream node   
                     if IniParams["heatsource8"] == True:
                         adjust2 = 1
                     else:  # if adjust2 = 0 there is a landcover sample at the stream node 
                         adjust2 = 1
-                    
+
                     LC_Distance = IniParams["transsample_distance"] * (j + adjust2 - adjust)
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
@@ -978,10 +1045,10 @@ class CSVInterface(object):
                         LC_Distance = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     T_Full += degrees(atan(VH/LC_Distance)), # It gets added to a tuple of full sun values
-                    
+
                     # Now get the maximum of bank shade and topographic shade for this direction
                     T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
-                    
+
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
                     if IniParams["beers_data"] == "LAI": # use LAI data
@@ -992,12 +1059,12 @@ class CSVInterface(object):
                     else:
                         W_Vdens_num += veg_angle*float(Vdens)
                     W_Vdens_dem += veg_angle
-                    
+
                     if j == trans_count - 1:
                         if max(T_Full) > 0:
                             # if bank and/or veg shade is occuring:
                             # Find weighted average the density:
-                            # Vdens_mod = (Amount of Veg shade * Veg dens) + 
+                            # Vdens_mod = (Amount of Veg shade * Veg dens) +
                             # (Amount of bank shade * bank dens, i.e. 1) / 
                             # (Sum of amount of shade)
                             if W_Vdens_dem > 0:
@@ -1030,20 +1097,20 @@ class CSVInterface(object):
         overhang = []
         elevation = []        
         
-        print("Translating LULC Data")
+        print("Translating LULC Data")       
         if IniParams["beers_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
             
             k = []
-            
-            for i in xrange(6, shiftcol+7): # For each column of LULC data
-                heightcol = list(LCdata.ix[:,i])
-                elevcol = list(LCdata.ix[:,i+1+shiftcol])
-                laicol = list(LCdata.ix[:,i+1+(shiftcol*2)])
-                kcol = list(LCdata.ix[:,i+2+(shiftcol*3)])
-                ohcol = list(LCdata.ix[:,i+3+(shiftcol*4)])               
-                
+        
+            for i in xrange(6, shiftcol+7): # For each column of LULC data                      
+                heightcol = [float(LCdata[row][i]) for row in range(0, len(LCdata))]
+                elevcol = [float(LCdata[row][i+1+shiftcol]) for row in range(0, len(LCdata))]
+                laicol = [float(LCdata[row][i+1+(shiftcol*2)]) for row in range(0, len(LCdata))]
+                kcol = [float(LCdata[row][i+2+(shiftcol*3)]) for row in range(0, len(LCdata))]
+                ohcol = [float(LCdata[row][i+3+(shiftcol*4)]) for row in range(0, len(LCdata))]
+
                 # Make a list from the LC codes from the column, then send 
                 # that to the multiplier with a lambda function that averages 
                 # them appropriately. Note, we're averaging over the values 
@@ -1074,21 +1141,21 @@ class CSVInterface(object):
                         node.LC_Overhang[dir][zone] = overhang[n][i]
                         n = n + 1
                         if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
-                            break # go to the next dir                 
-                
+                            break # go to the next dir            
+        
         else:
             # -------------------------------------------------------------
             # using canopy cover data            
-                
-            for i in xrange(6, shiftcol+7): # For each column of LULC data
-                heightcol = list(LCdata.ix[:,i])
-                elevcol = list(LCdata.ix[:,i+1+shiftcol])
-                dencol = list(LCdata.ix[:,i+1+(shiftcol*2)])
-                ohcol = list(LCdata.ix[:,i+2+(shiftcol*3)])            
-                
+            
+            for i in xrange(6, shiftcol+7): # For each column of LULC data                      
+                heightcol = [float(LCdata[row][i]) for row in range(0, len(LCdata))]
+                elevcol = [float(LCdata[row][i+1+shiftcol]) for row in range(0, len(LCdata))]
+                dencol = [float(LCdata[row][i+1+(shiftcol*2)]) for row in range(0, len(LCdata))]
+                ohcol = [float(LCdata[row][i+2+(shiftcol*3)]) for row in range(0, len(LCdata))]              
+
                 # Make a list from the LC codes from the column, then send 
-                # that to the multiplier with a lambda function that averages 
-                # them appropriately. Note, we're averaging over the values 
+                # that to the multiplier with a lambda function that averages
+                # them appropriately. Note, we're averaging over the values
                 # (e.g. density) not the actual code, which would be meaningless.
                 try:
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
@@ -1103,7 +1170,7 @@ class CSVInterface(object):
                     # elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
                 print("Reading vegetation heights", i+1, shiftcol+7)
-                
+
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
@@ -1114,17 +1181,17 @@ class CSVInterface(object):
                         node.LC_Overhang[dir][zone] = overhang[n][i]
                         n = n + 1
                         if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
-                            break # go to the next dir
-            
+                            break # go to the next dir            
+
         # Average over the topo values
-        topo_w = self.multiplier(list(LCdata.TopoWest.values), average)
-        topo_s = self.multiplier(list(LCdata.TopoSouth.values), average)
-        topo_e = self.multiplier(list(LCdata.TopoEast.values), average)
+        topo_w = self.multiplier([float(LCdata[3][row]) for row in range(0, len(LCdata))], average)
+        topo_s = self.multiplier([float(LCdata[4][row]) for row in range(0, len(LCdata))], average)
+        topo_e = self.multiplier([float(LCdata[5][row]) for row in range(0, len(LCdata))], average)
 
         # ... and you thought things were crazy earlier! Here is where we build up the
         # values for each node. This is culled from heat source version 7 VB code and discussions
         # to try to simplify it... yeah, you read that right, simplify it... you should've seen it earlier!
-        
+
         for h in xrange(len(keys)):
             print("Building VegZones", h+1, len(keys))
             node = self.Reach[keys[h]]
@@ -1163,10 +1230,10 @@ class CSVInterface(object):
                     Vheight = vheight[i*trans_count+j+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
                         raise Exception("Vegetation height (value of %s in Landcover Data) must be greater than zero and less than 120 meters" % Vheight)
-                    Vdens = vdensity[i*trans_count+j+1][h]
-                    Voverhang = overhang[i*trans_count+j+1][h]
+                    Vdens = vdensity[i*trans_count+j+1][h] 
+                    Voverhang = overhang[i*trans_count+j+1][h] 
                     Elev = elevation[i*trans_count+j][h]
-
+                    
                     if not j: # We are at the stream edge, so start over
                         LC_Angle_Max = 0 # New value for each direction
                     else:
@@ -1196,7 +1263,7 @@ class CSVInterface(object):
                     # Now get the maximum of bank shade and topographic shade for this
                     # direction
                     T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
-                    
+
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
                     if IniParams["beers_data"] == "LAI": # use LAI data
@@ -1207,13 +1274,13 @@ class CSVInterface(object):
                     else:
                         W_Vdens_num += veg_angle*float(Vdens)
                     W_Vdens_dem += veg_angle
-                    
+
                     if j == trans_count - 1:
                         if max(T_Full) > 0:
                             # if bank and/or veg shade is occuring:
                             # Find weighted average the density:
                             # Vdens_mod = (Amount of Veg shade * Veg dens) +
-                            # (Amount of bank shade * bank dens, i.e. 1) /
+                            # (Amount of bank shade * bank dens, i.e. 1) / 
                             # (Sum of amount of shade)
                             if W_Vdens_dem > 0:
                                 Vdens_ave_veg = W_Vdens_num / W_Vdens_dem
@@ -1228,28 +1295,28 @@ class CSVInterface(object):
 
     def GetLandCoverCodes(self):
         """Return the codes from the Land Cover Codes csv input file as a dictionary of dictionaries"""
-        self.CheckEarlyQuit()              
-        
-        data = pd.read_csv(join(IniParams["inputdir"],IniParams["lccodefile"]),quotechar='"')
+        self.CheckEarlyQuit()
         
         if IniParams["beers_data"] == "LAI": # using LAI data
-            data.columns = ["lc_name", "code", "height", "lai", "k", "overhang"]
-            codes = list(data.code.values)
+            colnames = ["lc_name", "code", "height", "lai", "k", "overhang"]
+            data = self.CSV_DictReader(IniParams["inputdir"], IniParams["lccodefile"], colnames)
             # make a list of lists with values: [(height[0], lai[0], k[0], over[0]), (height[1],...),...]
-            vals = [tuple([j for j in i]) for i in zip(data.height.values,data.lai.values,data.k.values,data.overhang.values)]
+            vals = [tuple([float(j) for j in i]) for i in zip(data["height"], data["lai"], data["k"], data["overhang"])]
+            codes = list(data["code"]) # CHECK
             data = {}
             
             for i in xrange(len(codes)):
                 # Each code is a tuple in the form of (LC_Height, LC_Density, LC_K, LC_Overhang)
                 data[codes[i]] = vals[i]
                 if vals[i][0] != None and (vals[i][1] < 0):
-                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])
-                
+                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])                
+            
         else:
-            data.columns = ["lc_name", "code", "height", "cover", "overhang"]
-            codes = list(data.code.values)
+            colnames = ["lc_name", "code", "height", "cover", "overhang"]
+            data = self.CSV_DictReader(IniParams["inputdir"], IniParams["lccodefile"], colnames)
             # make a list of lists with values: [(height[0], cover[0], over[0]), (height[1],...),...]
-            vals = [tuple([j for j in i]) for i in zip(data.height.values,data.cover.values,data.overhang.values)]
+            vals = [tuple([float(j) for j in i]) for i in zip(data["height"], data["cover"], data["overhang"])]
+            codes = list(data["code"]) # CHECK
             data = {}
             
             for i in xrange(len(codes)):
@@ -1258,11 +1325,11 @@ class CSVInterface(object):
                 if vals[i][0] != None and (vals[i][1] < 0 or vals[i][1] > 1):
                     raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])
         return data
-        
+
     def GetLandCoverData(self):
-        """Return all data from the Land Cover Data csv input file as a pandas dataframe"""
+        """Return all data from the Land Cover Data csv input file as a list"""
         self.CheckEarlyQuit()
-        data = pd.read_csv(join(IniParams["inputdir"],IniParams["lcdatafile"]),quotechar='"',quoting=0)
+        data = self.CSV_Reader(IniParams["inputdir"], IniParams["lcdatafile"], skipheader=True, skipfirstcol=False)
         return data
 
     def InitializeNode(self, node):
@@ -1298,7 +1365,7 @@ class CSVInterface(object):
                     setattr(node, attr, 0.01)
         node.Q_hyp = 0.0 # Assume zero hyporheic flow unless otherwise calculated
         node.E = 0 # Same for evaporation
-    
+
     def QuitMessage(self):
         b = buttonbox("Do you really want to quit Heat Source", "Quit Heat Source", ["Cancel", "Quit"])
         if b == "Quit":
