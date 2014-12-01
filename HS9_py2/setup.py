@@ -39,6 +39,4 @@ setup(name='heatsource9',
                 'heatsource9.CSV',
                 'heatsource9.Dieties',
                 'heatsource9.Stream',
-                'heatsource9.Utils'],
-      requires=['pandas','numpy','xlrd']
-      )
+                'heatsource9.Utils'])
