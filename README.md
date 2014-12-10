@@ -1,7 +1,7 @@
 heatsource-9
 ============
 
-Current Version: heatsource 9.0.0b9 (beta 9)
+Current Version: heatsource 9.0.0b10 (beta 10)
 
 ================================================================================================
 ABOUT 
@@ -22,14 +22,7 @@ INSTALL
 
 Heat Source 9 works on Windows, Mac, and Linux.
 
-Heat Source requires python 2.7 and the following python packages:
-
--numpy 1.8
--Bottleneck
--numexpr
--python-dateutil 1.5
--pytz
--pandas
+Heat Source requires python 2.7:
 
 ================================================================================================
 LICENSE
