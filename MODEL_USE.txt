@@ -97,7 +97,7 @@ Row | Column -> 	[1] 	[2]							[3]
 [11] 		        11	# TIME OFFSET FROM UTC (HOURS)
 [12] 		        12	# TIME STEP - DT (MIN)
 [13] 		        13	# DISTANCE STEP - DX (METERS)
-[14] 		        14	# LONGITUDINAL SAMPLE RATE (METERS)
+[14] 		        14	# LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)
 [15] 		        15	# BOUNDARY CONDITION FILE NAME
 [16] 		        16	# TRIBUTARY SITES
 [17] 		        17	# TRIBUTARY INPUT FILE NAMES
@@ -115,16 +115,16 @@ Row | Column -> 	[1] 	[2]							[3]
 [29] 		        29	# MORPHOLOGY DATA FILE NAME
 [30]	 	        30	# LANDCOVER DATA FILE NAME
 [31] 		        31	# LANDCOVER CODES FILE NAME
-[32] 		        32	# TRANSVERSE SAMPLE RATE (METERS)
-[33] 		        33	# NUMBER OF TRANSVERSE SAMPLES IN EACH DIRECTION
-[34] 		        34	# NUMBER OF RADIAL SAMPLES
+[32] 		        32	# NUMBER OF TRANSECTS PER NODE
+[33] 		        33	# NUMBER OF SAMPLES PER TRANSECT
+[34] 		        34	# DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)
 [37] 		        35	# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)
-[36] 		        36	# LIDAR DATA USED FOR VEG CODES (TRUE/FALSE)
+[36] 		        36	# LANDCOVER DATA INPUT TYPE (Codes/Values)
 [37] 		        37	# CANOPY COVER VALUE FOR LIDAR DATA
 [38] 		        38	# LANDCOVER STREAM OVERHANG FOR LIDAR DATA (METERS)
-[39]			39	# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)
+[39]			39	# CANOPY DATA TYPE (LAI/CanopyCover)
 [40] 		        40	# VEGETATION ANGLE CALCULATION METHOD (point/zone)
-[41]                   41      # USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)
+[41]                    41      # USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)
 
 ###############################################################################
 ACCRETION INPUT FILE
@@ -137,10 +137,12 @@ ROW
 [N] Data
 
 COLUMN
-[1] Stream_KM (headwaters at the top)
-[2] Accretion flow (cms)
-[3] Accretion flow temperature (Celsius)
-[4] withdrawal flows (cms)
+[1] Stream ID (Optional)
+[2] Node ID (Optional)
+[3] Stream kilometer (headwaters at the top)
+[4] Accretion flow (cms)
+[5] Accretion flow temperature (Celsius)
+[6] withdrawal flows (cms)
 
 ###############################################################################	
 BOUNDARY CONDITION FILE
@@ -251,13 +253,15 @@ ROW
 [N] Data
 
 COLUMN
-[1] Stream_KM
-[2] Longitude (decimal degrees)
-[3] Latitude (decimal degrees)
-[4] TopoWest (degrees)
-[5] TopoWest (degrees)
-[6] TopoEast (degrees)
-[7-n] Landcover Samples (code or height meters)
+[1] Stream ID (Optional)
+[2] Node ID (Optional)
+[3] Stream kilometer  (headwaters at the top)
+[4] Longitude (decimal degrees)
+[5] Latitude (decimal degrees)
+[6] TopoWest (degrees)
+[7] TopoWest (degrees)
+[8] TopoEast (degrees)
+[9-n] Landcover Samples (code or height meters)
 [n-n] Elevation Samples (meters)
 [n-n] Canopy/LAI Samples (NA if not used)
 [n-N] k Extinction Coefﬁcient  (dimensionless)
@@ -273,15 +277,16 @@ ROW
 [N] Data
 
 COLUMN
-[1] Stream_KM
-[2] Stream Elevation (meters)
-[3] Gradient (meters/meters)
-[4] Bottom Width (meters)
-[5] Channel Angle Z
-[6] Mannings n (unitless)
-[7] Sediment Thermal Conductivity (Watts/meter/Celsius)
-[8] Sediment Thermal Diffusivity (square cm/second)
-[9] Sediment/hyporheic zone thickness (meters)
-[10] Percent Hyporheic exchange (0-1)
-[11] Porosity (0-1)
-		
+[1] Stream ID (Optional)
+[2] Node ID (Optional)
+[3] Stream kilometer (headwaters at the top)
+[4] Stream Elevation (meters)
+[5] Gradient (meters/meters)
+[6] Bottom Width (meters)
+[7] Channel Angle Z
+[8] Mannings n (unitless)
+[8] Sediment Thermal Conductivity (Watts/meter/Celsius)
+[10] Sediment Thermal Diffusivity (square cm/second)
+[11] Sediment/hyporheic zone thickness (meters)
+[12] Percent Hyporheic exchange (0-1)
+[13] Porosity (0-1)

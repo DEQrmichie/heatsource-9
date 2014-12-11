@@ -79,10 +79,10 @@ class CSVInterface(object):
             writer = csv.writer(file_object,  dialect= "excel")
             writer.writerows(outlist)
 
-    def CSV_Reader(self, inputdir, filenames, skipheader, skipfirstcol):
+    def CSV_Reader(self, inputdir, filenames, skiprows, skipcols):
         """This function reads a csv file into a list of lists indexed by row
         number. If there is more than one file it adds another index for the
-        number of filesnames. The return data takes this form:
+        number of filenames. The return data takes this form:
         data[row][filenameindex][filecolumn]"""
 
         filenames = [filenames] if isinstance(filenames, list) == False else filenames
@@ -90,10 +90,10 @@ class CSVInterface(object):
         for filename in filenames:
             with open(join(inputdir, filename.strip()), "rU") as file_object:
                 newfile=[row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
-            if skipheader == True:
-                del(newfile[0])
-            if skipfirstcol == True:
-                newfile = [line[+1:] for line in newfile]
+            for row in range(0,skiprows):
+                del(newfile[row])
+            # skip cols
+            newfile = [line[+skipcols:] for line in newfile]
             if i == 1:
                 data = newfile
             else:
@@ -158,11 +158,11 @@ class CSVInterface(object):
                "transsample_distance": "# DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)",
                "emergent": "# ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)",
                "lcdatainput": "# LANDCOVER DATA INPUT TYPE (Codes/Values)",
-               "beers_data": "# BEER'S LAW INPUT DATA TYPE (LAI/CanopyCover)",
+               "beers_data": "# CANOPY DATA TYPE (LAI/CanopyCover)",
                "vegDistMethod": "# VEGETATION ANGLE CALCULATION METHOD (point/zone)",
                "heatsource8": "# USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)",}
 
-        cf = self.CSV_Reader(inputdir, control_file, skipheader=False, skipfirstcol=False)
+        cf = self.CSV_Reader(inputdir, control_file, skiprows=0, skipcols=0)
         # TODO put a checker in here
         #raise Exception("Control file does not have %s" % v) 
         for k,v in lst.iteritems():
@@ -273,13 +273,13 @@ class CSVInterface(object):
 
         if IniParams["lcdatainput"] == "Values":
             if IniParams["beers_data"] == "LAI":  #Use LAI methods
-                type = ["HT","ELE","LAI","k", "OH"]
+                type = ["LC","ELE","LAI","k", "OH"]
             else:        
-                type = ["HT","ELE","CAN", "OH"]
+                type = ["LC","ELE","CAN", "OH"]
         else:
             type = ["LC","ELE"]
-
-        lcdataheaders =["km","Longitude","Latitude","TopoWest","TopoSouth","TopoEast"]      
+            
+        lcdataheaders =["STREAM_ID", "NODE_ID", "STREAM_KM","LONGITUDE","LATITUDE","TOPO_W","TOPO_S","TOPO_E"]     
         if IniParams["heatsource8"] == True:  # use the heat source 8 methods
             dir = ["NE","E","SE","S","SW","W","NW"]
         else:        
@@ -310,11 +310,6 @@ class CSVInterface(object):
         timelist= self.GetTimeListString()	
         kmlist= self.GetStreamKMlist()
 
-        bclist= [[t] for t in timelist]
-        lcdatalist= [[km] for km in kmlist]
-        acclist= [[km] for km in kmlist]
-        morphlist= [[km] for km in kmlist]	
-
         # For inflow and climate data there can be a single input file for each 
         # node OR just one input file with multiple nodes in the file
         # This creates a list of the tirb and climate file names if there is more than one   
@@ -326,19 +321,27 @@ class CSVInterface(object):
         lcdataheaders = self.SetupLCDataHeaders()
 
         # This just repeats the header if needed based on the number of sites and files.
-        climateheaders=["DateTime"]+["Cloudiness", "WindSpeed", "RelativeHumidity", "AirTemp"]*int((IniParams["climatesites"]/len(climatefiles)))
+        climateheaders=["DATETIME"]+["CLOUDINESS", "WIND_SPEED", "RELATIVE_HUMIDITY", "AIR_TEMPERATURE"]*int((IniParams["climatesites"]/len(climatefiles)))
         if IniParams["inflowsites"] > 0:
-            inflowheaders = ["DateTime"]+["Flow","Temp"]*int((IniParams["inflowsites"]/len(tribfiles)))
+            inflowheaders = ["DATETIME"]+["FLOW","TEMPERATIRE"]*int((IniParams["inflowsites"]/len(tribfiles)))
 
         # This sets the header names for the other input files
-        bcheaders = ["DateTime","Flow", "Temp"]
+        bcheaders = ["DATETIME","FLOW", "TEMPERATURE"]
         if IniParams["beers_data"] == "LAI":  #Use LAI methods
-            lccodesheader = ["Name","Code","Height","LAI","k","Overhang"]
+            lccodesheader = ["NAME","CODE","HEIGHT","LAI","k","OVERHANG"]
         else:
-            lccodesheader = ["Name","Code","Height","CanopyCover","k","Overhang"]
+            lccodesheader = ["NAME","CODE","HEIGHT","CANOPY_COVER","k","OVERHANG"]
 
-        accheaders = ["Stream_km","Inflow","Temp","Outflow"]
-        morphheaders = ["Stream_km","Elevation","Gradient","BottomWidth","ChannelAngleZ","Mannings_n","SedThermalConductivity","SedThermalDiffusivity","SedHyporheicThickness","%HyporheicExchange","Porosity"]	
+        accheaders = ["STREAM_ID", "NODE_ID","STREAM_KM","INFLOW","TEMPERATURE","OUTFLOW"]
+        morphheaders = ["STREAM_ID", "NODE_ID","STREAM_KM","ELEVATION","GRADIENT","BOTTOM_WIDTH",
+                    "CHANNEL_ANGLE_Z","MANNINGS_n","SED_THERMAL_CONDUCTIVITY",
+                    "SED_THERMAL_DIFFUSIVITY","SED_HYPORHEIC_THICKNESSS",
+                    "%HYPORHEIC_EXCHANGE","POROSITY"]
+        
+        bclist= [[t] for t in timelist]
+        lcdatalist= [[None, None, km] for km in kmlist]
+        acclist= [[None, None, km] for km in kmlist]
+        morphlist= [[None, None, km] for km in kmlist]        
 
         # This writes to csv using the file name from the control file and adds a timestamp
         print("Writing empty csv files")
@@ -453,7 +456,7 @@ class CSVInterface(object):
         timelist = self.continuoustimelist
 
         # the data block is a tuple of tuples, each corresponding to a timestamp.      
-        data = self.CSV_Reader(IniParams["inputdir"], IniParams["bcfile"], skipheader=True, skipfirstcol=True)
+        data = self.CSV_Reader(IniParams["inputdir"], IniParams["bcfile"], skiprows=1, skipcols=1)
 
         # Convert all the values to floats
         data = [[float(row[val]) for val in range(0, len(row))] for row in data]
@@ -522,7 +525,7 @@ class CSVInterface(object):
 
     def GetStreamKMlist(self):
         """Build a list of stream kilometers sorted from headwaters to mouth"""
-        print("Creating Stream KM list")
+        print("Creating Stream km list")
         num_nodes = int(ceil(IniParams["length"]*1000/(IniParams["longsample"]))) +1
         kmlist = []    
         kmlist = [(node * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
@@ -564,7 +567,7 @@ class CSVInterface(object):
 
         if IniParams["inflowsites"] > 0:
             tribfiles = IniParams["inflowinfiles"].split(",")
-            data = self.CSV_Reader(IniParams["inputdir"], tribfiles, skipheader=True, skipfirstcol=True)
+            data = self.CSV_Reader(IniParams["inputdir"], tribfiles, skiprows=1, skipcols=1)
 
             # Convert all the values to floats
             data = [[float(row[val]) for val in range(0, len(row))] for row in data]
@@ -633,7 +636,7 @@ class CSVInterface(object):
         timelist = self.continuoustimelist
 
         climatefiles = IniParams["climatefiles"].split(",")
-        climatedata = self.CSV_Reader(IniParams["inputdir"], climatefiles, skipheader=True, skipfirstcol=True)
+        climatedata = self.CSV_Reader(IniParams["inputdir"], climatefiles, skiprows=1, skipcols=1)
 
         # convert all the strings to floats
         climatedata =[[float(line[i]) for i in range(0,len(line))] for line in climatedata]
@@ -777,8 +780,11 @@ class CSVInterface(object):
 
         # Setup the headers
         lcdataheaders = self.SetupLCDataHeaders()
-        accheaders = ["km", "Q_in", "T_in","Q_out"]
-        morphheaders = ["km","Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth","hyp_percent","phi"]
+        # TODO
+        # This fixes the lc headers so they are consistent with the TTools output and rest of the dict keys elsewhere.
+        lcdataheaders = ["STREAM_ID", "NODE_ID"] + ttools + lcdataheaders[5:]
+        accheaders = ["STREAM_ID", "NODE_ID", "km", "Q_in", "T_in","Q_out"]
+        morphheaders = ["STREAM_ID", "NODE_ID", "km","Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth","hyp_percent","phi"]
 
         # Read data into a dictionary
         lcdata = self.CSV_DictReader(IniParams["inputdir"], IniParams["lcdatafile"], lcdataheaders)
@@ -1329,7 +1335,8 @@ class CSVInterface(object):
     def GetLandCoverData(self):
         """Return all data from the Land Cover Data csv input file as a list"""
         self.CheckEarlyQuit()
-        data = self.CSV_Reader(IniParams["inputdir"], IniParams["lcdatafile"], skipheader=True, skipfirstcol=False)
+        data = self.CSV_Reader(IniParams["inputdir"], IniParams["lcdatafile"], skiprows=1, skipcols=2)
+        #strip out the first two col
         return data
 
     def InitializeNode(self, node):
