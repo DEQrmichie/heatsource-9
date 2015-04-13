@@ -184,7 +184,8 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
 
     # Check the celerity to ensure stability. These tests are from the VB code.
     if dt >= (2 * K * (1 - X)):  #Unstable - Decrease dt or increase dx
-        raise Exception("Unstable timestep. K=%0.3f, X=%0.3f" % (K,X))
+        dt_stable = (2 * K * (1 - X)) / 60
+        raise Exception("Unstable timestep. dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X))
 
     # These calculations are from Chow's "Applied Hydrology"
     D = K * (1 - X) + 0.5 * dt
@@ -478,7 +479,7 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, LC_Height, Vie
         P = 998.2 # kg/m3
         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/*C  Cuenca p 141
         Delta = 6.1275 * exp(17.27 * T_Air / (237.3 + T_Air)) - 6.1275 * exp(17.27 * (T_Air - 1) / (237.3 + T_Air - 1))
-        NetRadiation = F_Solar[5] + F_Longwave  #J/m2/s
+        NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
         if NetRadiation < 0:
             NetRadiation = 0 #J/m2/s
         Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
