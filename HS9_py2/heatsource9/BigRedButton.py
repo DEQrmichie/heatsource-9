@@ -22,6 +22,7 @@ module in order to run the model.
 from __future__ import with_statement, division, print_function
 
 # Built-in modules
+import logging
 from itertools import count
 from traceback import print_exc, format_tb
 from sys import exc_info
@@ -33,9 +34,17 @@ from Dieties.IniParamsDiety import IniParams
 from CSV.CSVInterface import CSVInterface
 from Dieties.ChronosDiety import Chronos
 from Utils.Logger import Logger
+from Utils.Printer import Printer as print_console
 from Utils.Output import Output as O
 from Stream.PyHeatsource import HeatSourceError
 from __version__ import version_string
+
+# set up logging
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(module)-15s %(levelname)-8s %(message)s',
+                    filename='heatsource.log',
+                    filemode='w')
+logger = logging.getLogger(__name__)
 
 class ModelControl(object):
     """Main model control class for Heat Source.
@@ -78,7 +87,9 @@ class ModelControl(object):
         elif run_type == 1: self.run_all = self.run_sh
         elif run_type == 2: self.run_all = self.run_hy
         elif run_type == 3: self.run_all = self.run_setup
-        else: raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" % run_type)
+        else:
+            logger.error("Bad run_type: {0}. Must be 0, 1, 2, or 3. Something wrong with the executable".format(run_type))
+            raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" % run_type)
         # Create a Chronos iterator that controls all model time.
         Chronos.Start(start = IniParams["modelstart"],
                       stop = IniParams["modelend"],
@@ -144,6 +155,7 @@ class ModelControl(object):
                 except TypeError:
                     msg += stderr+"\nThe model run has been halted. You may ignore any further error messages."
                 msgbox(msg)
+                logger.exception(exc_info()[2])
                 # Then just die
                 raise SystemExit
                         # If minute and second are both zero, we are at the top of the hour. Performing
@@ -154,7 +166,8 @@ class ModelControl(object):
                 ts = cnt.next() # Number of actual timesteps per tick
                 hr = 60/(IniParams["dt"]/60) # Number of timesteps in one hour
                 # This writes a line to the status bar.
-                print("%i of %i timesteps"% (ts*hr, timesteps))
+                #print("%i of %i timesteps"% (ts*hr, timesteps))
+                print_console("Timesteps:", ts*hr, timesteps)
                 
                 # Call the Output class to update the textfiles. We call this every
                 # hour and store the data, then we write to file every day. Limiting
@@ -190,7 +203,8 @@ class ModelControl(object):
         # so we do this before the final message so people don't accidentally
         # access the file and screw up the buffer)
         self.Output.close()
-        print(message)
+        #print(message)
+        print_console(message)
 
         # Hopefully, Python's cyclic garbage collection takes care of the rest :)
 
@@ -225,39 +239,33 @@ def RunHS(inputdir, control_file):
         HSP.Run()
         del HSP
     except Exception, stderr:
-        f = open("HS_Error.txt", "w")
-        print_exc(file=f)
-        f.close()
+        logger.exception(exc_info()[2])
         msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
+
 def RunSH(inputdir, control_file):
     """Run solar routines only"""
     try:
         HSP = ModelControl(inputdir, control_file, 1)
         HSP.Run()
     except Exception, stderr:
-        f = open("HS_Error.txt", "w")
-        print_exc(file=f)
-        f.close()
+        logger.exception(exc_info()[2])
         msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
+
 def RunHY(inputdir, control_file):
     """Run hydraulics only"""
     try:
         HSP = ModelControl(inputdir, control_file, 2)
         HSP.Run()
     except Exception, stderr:
-        f = open("HS_Error.txt", "w")
-        print_exc(file=f)
-        f.close()
+        logger.exception(exc_info()[2])
         msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
 
 def RunSetup(inputdir,control_file):
-    """Run setup"""
+    """Setup and write all input files based on parameterization in
+    the conrol file"""
     try:
         ErrLog = Logger
         CSVInterface(inputdir, control_file, ErrLog, 3)
     except Exception, stderr:
-        f = open("HS_Error.txt", "w")
-        print_exc(file=f)
-        f.close()
-        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")        
-        
+        logger.exception(exc_info()[2])
+        msgbox("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")

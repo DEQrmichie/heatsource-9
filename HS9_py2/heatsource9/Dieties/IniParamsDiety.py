@@ -53,10 +53,12 @@ IniParams = {"run_in_python": True,}
 #["AirTemp", "Air Temperature", "Celcius", float, -22, 266]
 #["Q_in", "In flow", "cubic meters per second", float,]
 #["Temp", "Water Temperature", "Celcius", float]
-#["Q_out", "Out Flow", "cubmic meters per second", float]
+#["Q_out", "Out Flow", "cubic meters per second", float]
 #["Name", "Land Cover Name", "unitless", str]
 #["Code", "Land Cover Code", "unitless", str]
 #["Height", "Land Cover Height", "meters", float]
 #["LAI", "Effective Leaf Area Index", float]
 #["k", "k Extinction Coeffcient", "unitless", float]
-#["Overhang" "Landcover Overhang", float]
+#["Overhang", "Landcover Overhang", float]
+
+
