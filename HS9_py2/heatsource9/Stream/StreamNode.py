@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class StreamNode(object):
                 "TopoFactor", # was Topo_W+Topo_S+Topo_E/(90*3) in original code. From Above stream surface solar flux calculations
                 "ViewToSky", # Total angle of full sun view
                 "ShaderList", # List of angles and attributes to determine sun shading.
-                "F_DailySum", "F_Total", "Solar_Blocked", # Specific sums of solar fluxes
+                "F_DailySum", "F_Total", "Solar_Blocked", "Solar_Passed", # Specific sums of solar fluxes
                 "SedThermCond", "SedThermDiff", "SedDepth", # Sediment conduction values
                 "hyp_percent", # Percent hyporheic exchange
                 "F_Solar", # List of important solar fluxes
@@ -156,7 +156,7 @@ class StreamNode(object):
             raise Exception(msg)
 
         self.CalcDischarge = self.CalculateDischarge
-        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.LC_Density, self.LC_Height, self.LC_k, self.SedDepth, self.dx, self.dt, self.SedThermCond, self.SedThermDiff, self.Q_in, self.T_in, has_prev, IniParams["transsample_distance"], IniParams["transsample_count"], IniParams["beers_data"], IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"], IniParams["calcevap"], IniParams["penman"], IniParams["calcalluvium"], IniParams["alluviumtemp"])
+        self.C_args = (self.W_b, self.Elevation, self.TopoFactor, self.ViewToSky, self.phi, self.LC_Density, self.LC_Height, self.LC_k, self.SedDepth, self.dx, self.dt, self.SedThermCond, self.SedThermDiff, self.Q_in, self.T_in, has_prev, IniParams["transsample_distance"], IniParams["transsample_count"], IniParams["canopy_data"], IniParams["emergent"], IniParams["wind_a"], IniParams["wind_b"], IniParams["calcevap"], IniParams["penman"], IniParams["calcalluvium"], IniParams["alluviumtemp"])
 
     def CalcDischarge_Opt(self,time):
         """A Version of CalculateDischarge() that does not require checking for boundary conditions"""
@@ -268,12 +268,15 @@ c_k: %3.4f""" % stderr
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
-        Altitude, Zenith, Daytime, dir = self.head.SolarPos
+        
+        # For each node we set the solar position variables to be the 
+        # same as the headwater node in order to save on processing time.
+        Altitude, Zenith, Daytime, dir, Azimuth_mod = self.head.SolarPos
 
         try:
             self.F_Solar, \
                 (self.F_Conduction, self.T_sed, self.F_Longwave, self.F_LW_Atm, self.F_LW_Stream, \
-                 self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, (self.T, self.S1, self.Mix_T_Delta), veg_block = \
+                 self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, (self.T, self.S1, self.Mix_T_Delta), veg_block, veg_passed = \
                 _HS.CalcHeatFluxes(self.ClimateData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp,self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
@@ -286,19 +289,21 @@ c_k: %3.4f""" % stderr
         self.F_DailySum[4] += self.F_Solar[4]
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
+            self.Solar_Passed[dir][i] += veg_passed[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
+        self.Solar_Passed["diffuse"] += veg_passed[-1]
 
     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD, JDC, solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
-        Altitude, Zenith, Daytime, dir = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC, IniParams["heatsource8"], IniParams["trans_count"])
-        self.SolarPos = Altitude, Zenith, Daytime, dir
+        Altitude, Zenith, Daytime, dir, Azimuth_mod = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour, min, sec, self.UTC_offset, JDC, IniParams["heatsource8"], IniParams["trans_count"])
+        self.SolarPos = Altitude, Zenith, Daytime, dir, Azimuth_mod
 
         try:
             self.F_Solar, \
                 (self.F_Conduction, self.T_sed, self.F_Longwave, self.F_LW_Atm, self.F_LW_Stream, \
-                 self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, veg_block = \
+                 self.F_LW_Veg, self.F_Evaporation, self.F_Convection, self.E), self.F_Total, self.Delta_T, veg_block, veg_passed = \
                 _HS.CalcHeatFluxes(self.ClimateData[time], self.C_args, self.d_w, self.A, self.P_w, self.W_w, self.U,
                             self.Q_tribs[time], self.T_tribs[time], self.T_prev, self.T_sed,
                             self.Q_hyp, self.next_km.T_prev, self.ShaderList[dir], dir, self.Disp,
@@ -309,7 +314,9 @@ c_k: %3.4f""" % stderr
         self.F_DailySum[4] += self.F_Solar[4]
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
+            self.Solar_Passed[dir][i] += veg_passed[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
+        self.Solar_Passed["diffuse"] += veg_passed[-1]
 
         # Check if we have interpolation on, and use the appropriate time
         self.T = self.T_bc[time]

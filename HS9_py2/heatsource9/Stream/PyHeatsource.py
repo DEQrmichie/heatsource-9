@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -114,8 +114,9 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, heatsource8, radial
     if Altitude > 0.0:
             Daytime = 1
     
-    if heatsource8 == True:  # same as 8 directions but no north
+    if heatsource8 is True:  # same as 8 directions but no north
         dir = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
+        Azimuth_mod = Azimuth
     else:        
         Angle_Incr = 360.0 / radial_count
         DirNumbers = range(1, radial_count)
@@ -125,7 +126,7 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset, JDC, heatsource8, radial
         else:
             Azimuth_mod = Azimuth
         dir = bisect(AngleStart,Azimuth_mod)-1
-    return Altitude, Zenith, Daytime, dir
+    return Altitude, Zenith, Daytime, dir, Azimuth_mod
 
 def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     Converge = 10
@@ -258,6 +259,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     
     dir = dir + 1 # need to add 1 because zero is emergent in stack data, TODO fix. this should be consistent across the codebase
     Solar_blocked_byVeg = [0]*SampleCount #amount of solar radiation blocked by each zone, plus one for diffuse appended later
+    Solar_passed_byVeg = [0]*SampleCount #amount of solar radiation passed by each zone, plus one for diffuse appended later
     if Altitude <= TopoShadeAngle:    #>Topographic Shade IS Occurring<
         F_Direct[2] = 0
         F_Diffuse[2] = F_Diffuse[1] * TopoFactor # TODO should this be 1 - TopoFactor ??
@@ -272,7 +274,8 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
             if Altitude < VegetationAngle[zone]:  #veg shading is occurring from this zone
                 if BeersData == "LAI": #use LAI data
                     fraction_passed = exp(-1 * LC_k[dir][zone] * LC_Density[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
-                    Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
+                    Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
+                    Solar_passed_byVeg[zone] = Dummy1 * fraction_passed
                     Dummy1 *=exp(-1 * LC_k[dir][zone] * LC_Density[dir][zone] * 1/SampleCount * SampleDist/cos(radians(Altitude)))
                 else: # Use veg density data
                     # Calculate the riparian extinction value
@@ -283,7 +286,8 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
                     except OverflowError:
                         if LC_Density[dir][zone] == 1: RipExtinction = 1 # cannot take log of 0, RE is full if it's zero
                     fraction_passed = (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
-                    Solar_blocked_byVeg[zone] = Dummy1 - Dummy1 * fraction_passed
+                    Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
+                    Solar_passed_byVeg[zone] = Dummy1 * fraction_passed
                     Dummy1 *= (1-(1-exp(-1* RipExtinction * (SampleDist/cos(radians(Altitude))))))
             zone -= 1
         F_Direct[3] = Dummy1
@@ -294,6 +298,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
     Solar_blocked_byVeg.append(diffuse_blocked)
+    Solar_passed_byVeg.append(F_Diffuse[3])
     #4 - Above Stream Surface (What a Solar Pathfinder measures)
     #Account for bank shade
     if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:  #Bank shade is occurring
@@ -394,7 +399,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation, TopoFac
     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
-    return F_Solar, Solar_blocked_byVeg
+    return F_Solar, Solar_blocked_byVeg,  Solar_passed_byVeg
 
 def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, LC_Height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent, penman, wind_a,
@@ -557,17 +562,18 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs
 
     solar = [0]*8
     veg_block = [0]*len(ShaderList[3])+[0] #plus one for diffuse blocked
+    veg_passed = [0]*len(ShaderList[3])+[0] #plus one for diffuse blocked
     if daytime:
-        solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b,
+        solar, veg_block, veg_passed = GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b,
                     Elevation, TopoFactor, ViewToSky, SampleDist, SampleCount, BeersData, phi, emergent,
                     LC_Density, LC_Height, LC_k, ShaderList, dir)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
         # Boundary node
-        if not has_prev: return solar, [0]*9, 0.0, 0.0, veg_block
+        if not has_prev: return solar, [0]*9, 0.0, 0.0, veg_block, veg_passed
         # regular node
-        else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block
+        else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block, veg_passed
 
     ground = GetGroundFluxes(cloud, wind, humidity, T_air, Elevation,
                     phi, LC_Height, ViewToSky, SedDepth, dx,
@@ -580,10 +586,10 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs
     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2) # Vars are Cp (J/kg *C) and P (kgS/m3)
 
     if not has_prev:
-        return solar, ground, F_Total, Delta_T, veg_block
+        return solar, ground, F_Total, Delta_T, veg_block, veg_passed
 
     Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs, T_tribs, Q_up_prev,
                 Delta_T, Disp, 0, 0.0, T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr, MixTDelta_dn_prev)
 
     #Mac includes Temp, S, T_mix
-    return solar, ground, F_Total, Delta_T, Mac, veg_block
+    return solar, ground, F_Total, Delta_T, Mac, veg_block, veg_passed
