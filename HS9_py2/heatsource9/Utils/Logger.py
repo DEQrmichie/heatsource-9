@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

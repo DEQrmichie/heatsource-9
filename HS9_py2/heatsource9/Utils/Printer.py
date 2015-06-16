@@ -1,11 +1,36 @@
+# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
+import logging
 import sys
 
+logger = logging.getLogger(__name__)
+
 class Printer(object):
-    def __init__(self, msg, current=0, total=100):
- 
-        sys.stdout.write(self.progress_bar(msg, current, total) + '\r')
+    def __init__(self, msg, progress_bar=False, current=100, total=100):
+        if progress_bar is True:
+            if int(current / total * 100) < 100:
+                logger.info('{0} {1} {2}'.format(msg, current, total))
+                sys.stdout.write(self.progress_bar(msg, current, total) + '\r')
+            else:
+                logger.info('{0} {1} {2}'.format(msg, current, total))
+                sys.stdout.write(self.progress_bar(msg, current, total) + '\n')
+        else:
+            logger.info('{0}'.format(msg))
+            sys.stdout.write(msg + '\n')            
         sys.stdout.flush()
         #time.sleep(0.05)        
                 
@@ -21,5 +46,5 @@ class Printer(object):
         amount = int(current / (total / float(bar_size)))
         remain = bar_size - amount
     
-        bar = '>' * amount + ' ' * remain
+        bar = '.' * amount + ' ' * remain
         return prefix + bar_start + bar + bar_end

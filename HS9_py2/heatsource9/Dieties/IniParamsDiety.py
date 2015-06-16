@@ -14,7 +14,7 @@ notes where no-one will ever read it."""
 
 # Some needed updates to the C module. 
 #1. Number of veg zones hard coded as 4
-#2. Output from C module does not include solar blocked and causes a crash.
+#2. Output from C module does not include solar blocked/passed.
 
 from collections import defaultdict
 

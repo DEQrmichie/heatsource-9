@@ -20,8 +20,8 @@ from time import ctime
 from ..Dieties.ChronosDiety import Chronos
 from ..Dieties.IniParamsDiety import IniParams
 from ..Utils.Logger import Logger
-from ..Utils.easygui import msgbox
 from ..Utils.Dictionaries import Interpolator
+from ..Utils.Printer import Printer as print_console
 import PyHeatsource as py_HS
 # import C_Heatsource as C_HS # TODO for the future
 
@@ -257,7 +257,7 @@ c_k: %3.4f""" % stderr
         else: msg += stderr.message
 
         msg += "\nThe model run has been halted. You may ignore any further error messages."
-        msgbox(msg)
+        print_console(msg)
         raise Exception(msg)
 
     def CalcHeat_Opt(self, time, hour, min, sec,JD,JDC,solar_only=False):
