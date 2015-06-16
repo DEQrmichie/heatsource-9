@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,8 +49,11 @@ class Output(object):
             desc["Heat_SR6"] = "Received Solar Radiation Flux (watts/square meter)"
             desc["Heat_TR"] = "Thermal Radiation Flux (watts/square meter)"
             desc["Shade"] = "Effective Shade"
-            desc["VTS"] = "View to Sky"
-            desc["SolarBlock"] = "Solar Flux blocked by LULC (watts/square meter)"
+            desc["Solar_Azimuth"] = "Solar_Azimuth. Angle of the sun along the horizon with zero degrees corresponding to true north. Values calculated at the headwater boundary condition node (degrees)"
+            desc["Solar_Elevation"] = "Solar_Elevation. Angle up from the horizon to the sun. Values calculated at the headwater boundary condition node (degrees)"            
+            desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere obscured by land cover. Same as canopy closure"
+            desc["Heat_SR4_lc_Blocked"] = "Solar Flux blocked by land cover transect (watts/square meter)"
+            desc["Heat_SR4_lc_Passed"] = "Solar Flux passed by land cover transect (watts/square meter)"
         if run_type in [0, 2]:
             desc["Hyd_DA"] = "Average Depth (meters)"
             desc["Hyd_DM"] = "Max Depth (meters)"
@@ -84,10 +87,8 @@ class Output(object):
             header += [["Output:"] + [desc[key]]]
             header += [[""]]
             header += [["Datetime"]]
-            if key != "SolarBlock":
-                # Grab a list of all the stream kilometers
-                header[6] += [("%0.3f" % x.km) for x in self.nodes]
-            else:
+            if key in ["Heat_SR4_lc_Blocked","Heat_SR4_lc_Passed"] :
+                
                 header[6] += ["Stream_km"]
                 
                 if IniParams["heatsource8"] == True: # a flag indicating the model should use the heat source 8 methods (same as 8 directions but no north)
@@ -100,15 +101,19 @@ class Output(object):
                     # TODO this is a future fuction to have a landcover sample at the streamnode
                     #zone = range(0,int(IniParams["transsample_count"]))
                 if IniParams["lcdatainput"] == "Values":
-                    type = "LC"
-                else:
                     type = "HT"
+                else:
+                    type = "LC"
                 
                 for d in range(0,len(dir)):
                     for z in range(0,len(zone)):
                         header[6] += [type+"_"+ dir[d]+"_S"+str(zone[z])]
                 
                 header[6] += ["Diffuse_Blocked"]
+            else: 
+                # Grab a list of all the stream kilometers
+                header[6] += [("%0.3f" % x.km) for x in self.nodes]
+                           
             # Now create a file object in the dictionary, and write the header
             self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "wb"))
             self.files[key].writerows(header)
@@ -151,6 +156,8 @@ class Output(object):
             data["Heat_SR4"][timestamp] = [x.F_Solar[4] for x in nodes]
             data["Heat_SR6"][timestamp] = [x.F_Solar[6] for x in nodes]
             data["Heat_TR"][timestamp] = [x.F_Longwave for x in nodes]
+            data["Solar_Azimuth"][timestamp] = [x.head.SolarPos[4] for x in nodes]
+            data["Solar_Elevation"][timestamp] = [x.head.SolarPos[0] for x in nodes]            
         # Run only with hydro
         if self.run_type != 1:
             data["Hyd_DA"][timestamp] = [(x.A / x.W_w) for x in nodes]
@@ -178,7 +185,8 @@ class Output(object):
         nodes = self.nodes
         self.data["Shade"][timestamp] = [((x.F_DailySum[1] - x.F_DailySum[4]) / x.F_DailySum[1]) for x in nodes]
         self.data["VTS"][timestamp] = [x.ViewToSky for x in nodes]
-        self.data["SolarBlock"][timestamp] = []
+        self.data["Heat_SR4_lc_Blocked"][timestamp] = []
+        self.data["Heat_SR4_lc_Passed"][timestamp] = []
         # If there's no hour, we're at the beginning of a day, so we write the values
         # to a file.
 
@@ -194,10 +202,7 @@ class Output(object):
             # append the time string to self.times
             timelist = sorted(data[name].keys())
             line = []
-            if name != "SolarBlock":
-                for timestamp in timelist:
-                    line += [[timestamp] + [("%0.4f" % x) for x in data[name][timestamp]]]
-            else:
+            if name in ["Heat_SR4_lc_Blocked", "Heat_SR4_lc_Passed"]:
                 timesteps = 86400.0/float(IniParams["dt"])
                 for timestamp in timelist:
                     i= 0
@@ -208,14 +213,26 @@ class Output(object):
                         else:
                             directions = [d for d in range(IniParams["trans_count"])]
                         
-                        for d in directions:
-                            for zone in range(IniParams["transsample_count"]):
-                                daily_ave_blocked = x.Solar_Blocked[d][zone] / timesteps
-                                line[i] += ["%0.4f" % daily_ave_blocked]
-                        daily_ave_diffuse_blocked = x.Solar_Blocked["diffuse"] / timesteps
-                        line[i] += ["%0.4f" % daily_ave_diffuse_blocked]
+                        if name == "Heat_SR4_lc_Blocked":
+                            # solar blocked
+                            for d in directions:
+                                for zone in range(IniParams["transsample_count"]):
+                                    daily_avg = x.Solar_Blocked[d][zone]  / timesteps
+                                    line[i] += ["%0.4f" % daily_avg]
+                            daily_avg_diffuse = x.Solar_Blocked["diffuse"]  / timesteps
+                        else:
+                            # solar passed
+                            for d in directions:
+                                for zone in range(IniParams["transsample_count"]):
+                                    daily_avg = x.Solar_Passed[d][zone]  / timesteps
+                                    line[i] += ["%0.4f" % daily_avg]
+                            daily_avg_diffuse = x.Solar_Passed["diffuse"]  / timesteps                            
+                        line[i] += ["%0.4f" % daily_avg_diffuse]
                         i=i+1
-                        
+            else:
+                for timestamp in timelist:
+                    line += [[timestamp] + [("%0.4f" % x) for x in data[name][timestamp]]]                        
+            
             # finally, write all the lines to the file
             fileobj.writerows(line)
         del data
