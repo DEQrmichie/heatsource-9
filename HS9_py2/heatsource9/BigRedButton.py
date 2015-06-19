@@ -68,11 +68,9 @@ class ModelControl(object):
         run_type is one of 0,1,2,3 for Heat Source (Temperature), Solar only,
         hydraulics only, or Setup, respectively.
         """
-        # TODO: Fix the logger so it actually works
-        self.ErrLog = Logger
         
         # Create a ModelSetup instance.
-        self.HS = ModelSetup(inputdir, control_file, self.ErrLog, run_type)
+        self.HS = ModelSetup(inputdir, control_file, run_type)
 
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
@@ -254,7 +252,7 @@ def run_input_setup(inputdir, control_file):
     """Setup and write all input files based on parameterization in
     the conrol file"""
     try:
-        ModelSetup(inputdir, control_file, ErrLog, 3)
+        ModelSetup(inputdir, control_file, logger, 3)
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
         
@@ -262,6 +260,6 @@ def run_cf_setup(inputdir, control_file):
     """Setup and write the conrol file"""
     try:
         ErrLog = Logger
-        ModelSetup(inputdir, control_file, ErrLog, 4)
+        ModelSetup(inputdir, control_file, logger, 4)
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")        

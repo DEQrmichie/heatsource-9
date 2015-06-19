@@ -28,6 +28,7 @@ echo ""
 ::rm setup.py
 
 ::#GIT LOCAL INSTALL
+cd ..
 cd Workspace/Github/heatsource-9/HS9_py2
 python setup.py install clean --all
 
