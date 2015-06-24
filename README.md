@@ -6,10 +6,14 @@ Current Version: heatsource 9.0.0b13 (beta 13)
 ================================================================================================
 ABOUT 
 
-Heat Source is a computer model used by the Oregon Department of Environmental Quality to simulate
-stream thermodynamics and hydraulic routing. It was originally developed by Matt Boyd in 1996 as a 
-Masters Thesis at Oregon State University in the Departments of Bioresource Engineering and Civil Engineering. 
-Since then it has grown and changed significantly. Oregon DEQ currently maintains the Heat Source methodology and computer programming. Appropriate model use and application are the sole responsibility of the user.
+Heat Source is a computer model used by the Oregon Department of 
+Environmental Quality to simulate stream thermodynamics and hydraulic 
+routing. It was originally developed by Matt Boyd in 1996 as a [Masters 
+Thesis][1] at Oregon State University in the Departments of Bioresource 
+Engineering and Civil Engineering. Since then it has grown and changed 
+significantly. Oregon DEQ currently maintains the Heat Source methodology
+and computer programming. Appropriate model use and application are 
+the sole responsibility of the user.
 
 http://www.deq.state.or.us/wq/TMDLs/tools.htm
 
@@ -17,6 +21,7 @@ Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
 
 Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
+[1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
 ================================================================================================
 INSTALL
 
@@ -25,10 +30,10 @@ Heat Source 9 works on Windows, Mac, and Linux.
 Requires python 2.7
 https://www.python.org/downloads/
 
-Download the zip file
+Download the zip file  
 ```git clone git://github.com/rmichie/heatsource-9.git```
 
-navigate to setup.py and install
+navigate to setup.py and install  
 ```python setup.py install clean --all```
 
 ================================================================================================
@@ -137,13 +142,13 @@ in the mixing calculations
 | ...      | ...     | ...        | ...    | ...         | ...     |
 | Value    | Value   | downstream | Value  | Value       | Value   |
 
-COLUMN
-[1] STREAM_ID (Optional)
-[2] NODE_ID (Optional)
-[3] STREAM_KM (headwaters at the top)
-[4] INFLOW (Accretion flow cms)
-[5] TEMPERATURE (Accretion flow temperature Celsius)
-[6] OUTFLOW (withdrawal flows cms)
+COLUMN  
+[1] STREAM_ID (Optional)  
+[2] NODE_ID (Optional)  
+[3] STREAM_KM (headwaters at the top)  
+[4] INFLOW (Accretion flow cms)  
+[5] TEMPERATURE (Accretion flow temperature Celsius)  
+[6] OUTFLOW (withdrawal flows cms)  
 
 ================================================================================================
 BOUNDARY CONDITION FILE  
@@ -158,10 +163,10 @@ The boundary condtions are defined at an hourly timestep.
 | ...      |...      | ...       |
 | end      | Value   | Value     |
 
-COLUMN
-[1] DATETIME (MM/DD/YYYY HH:MM)
-[2] FLOW (cms)
-[3] TEMPERATURE (Celsius)
+COLUMN  
+[1] DATETIME (MM/DD/YYYY HH:MM)  
+[2] FLOW (cms)  
+[3] TEMPERATURE (Celsius)  
 
 ================================================================================================
 CLIMATE INPUT FILE/S   
@@ -241,7 +246,7 @@ COLUMN
 [N] TEMPERATURE n (Celsius)  
 
 ================================================================================================
-Landcover Codes  
+LANDCOVER CODES FILE  
 UserDefinedFileName.csv  
 
 The landcover codes file contains the physical attribute information 
@@ -293,11 +298,11 @@ UserDefinedFileName.csv
 This file defines land cover information. This data can be derived 
 from geospatial data using TTools.
 
-|STREAM_ID | NODE_ID |STREAM_KM   | LONGITUDE | LATITUDE | TOPO_W | TOPO_S | TOPO_E | ...   | ...   |
-|----------|---------|------------|-----------|----------|--------|--------|--------|-------|-------|
-| Value    | Value   | upstream   | Value     | Value    | Value  | Value  | Value  | ...   | Value |
-| ...      | ...     | ...        | ...       | ...      | ...    | ...    | ...    | ...   | ...   |
-| Value    | Value   | downstream | Value     | Value    | Value  | Value  | Value  | ...   | Value |
+|STREAM_ID | NODE_ID |STREAM_KM   | LONGITUDE | LATITUDE | TOPO_W | TOPO_S | TOPO_E | ...   |
+|----------|---------|------------|-----------|----------|--------|--------|--------|-------|
+| Value    | Value   | upstream   | Value     | Value    | Value  | Value  | Value  | ...   |
+| ...      | ...     | ...        | ...       | ...      | ...    | ...    | ...    | ...   |
+| Value    | Value   | downstream | Value     | Value    | Value  | Value  | Value  | ...   |
 
 COLUMN  
 [1] STREAM_ID (Optional)  
@@ -342,7 +347,7 @@ LICENSE
 
 GNU General Public License v3 (GPLv3)
 
-Heat Source, Copyright (C) 2000-2014, Oregon Department of Environmental Quality
+Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
