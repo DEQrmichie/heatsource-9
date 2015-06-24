@@ -74,51 +74,47 @@ If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert back to 
 If FALSE, the direction for each the radial samples (n) measured in degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
 In addition the first landcover sample in each direction will be at the stream node.
 
- 
-|ROW COLUMN| [1] | [2]                                               | [3]  |
-|:---------|----:|:--------------------------------------------------|----- |
-
-|[1]       |LINE |PARAMETER                                          |VALUE |
-|:---------|----:|:--------------------------------------------------|----- |
-|[2]       |1    |USER TEXT |      |
-|[3]       |2    |SIMULATION NAME |      |
-|[4]       |3    |STREAM LENGTH (KILOMETERS) |      |
-|[5]       |4    |OUTPUT PATH |      |
-|[6]       |5    |INPUT PATH |      |
-|[7]       |6    |DATA START DATE (mm/dd/yyyy) |      |
-|[8]       |7    |MODELING START DATE (mm/dd/yyyy) |      |
-|[9]       |8    |MODELING END DATE (mm/dd/yyyy) |      |
-|[10]      |9   |DATA END DATE (mm/dd/yyyy) |      |
-|[11]      |10  |FLUSH INITIAL CONDITION (DAYS) |      |
-|[12]      |11  |TIME OFFSET FROM UTC (HOURS) |      |
-|[13]      |12  |MODEL TIME STEP - DT (MIN) |      |
-|[14]      |13  |MODEL DISTANCE STEP - DX (METERS) |      |
-|[15]      |14  |LONGITUDINAL STREAM SAMPLE DISTANCE (METERS) |      |
-|[16]      |15  |BOUNDARY CONDITION FILE NAME |      |
-|[17]      |16  |TRIBUTARY SITES |      |
-|[18]      |17  |TRIBUTARY INPUT FILE NAMES |      |
-|[19]      |18  |TRIBUTARY MODEL KM |      |
-|[20]      |19  |ACCRETION INPUT FILE NAME |      |
-|[21]      |20  |CLIMATE DATA SITES |      |
-|[22]      |21  |CLIMATE INPUT FILE NAMES |      |
-|[23]      |22  |CLIMATE MODEL KM |      |
-|[24]      |23  |INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE) |      |
-|[25]      |24  |EVAPORATION METHOD (Mass Transfer/Penman) |      |
-|[26]      |25  |WIND FUNCTION COEFFICIENT A |      |
-|[27]      |26  |WIND FUNCTION COEFFICIENT B |      |
-|[28]      |27  |INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE) |      |
-|[29]      |28  |DEEP ALLUVIUM TEMPERATURE (*C) |      |
-|[30]      |29  |MORPHOLOGY DATA FILE NAME |      |
-|[31]      |30  |LANDCOVER DATA FILE NAME |      |
-|[32]      |31  |LANDCOVER CODES FILE NAME |      |
-|[33]      |32  |NUMBER OF TRANSECTS PER NODE |      |
-|[34]      |33  |NUMBER OF SAMPLES PER TRANSECT |      |
-|[35]      |34  |DISTANCE BETWEEN TRANSESCT SAMPLES (METERS) |      |
-|[36]      |35  |ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE) |      |
-|[37]      |36  |LANDCOVER DATA INPUT TYPE (Codes/Values) |      |
-|[38]      |37  |CANOPY DATA TYPE (LAI/CanopyCover) |      |
-|[39]      |38  |VEGETATION ANGLE CALCULATION METHOD (point/zone) |      |
-|[40]      |39  |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE) |      |
+|LINE |PARAMETER                                          |VALUE |
+|----:|:--------------------------------------------------|----- |
+|1    |USER TEXT                                          |      |
+|2    |SIMULATION NAME                                    |      |
+|3    |STREAM LENGTH (KILOMETERS)                         |      |
+|4    |OUTPUT PATH                                        |      |
+|5    |INPUT PATH                                         |      |
+|6    |DATA START DATE (mm/dd/yyyy)                       |      |
+|7    |MODELING START DATE (mm/dd/yyyy)                   |      |
+|8    |MODELING END DATE (mm/dd/yyyy)                     |      |
+|9    |DATA END DATE (mm/dd/yyyy)                         |      |
+|10   |FLUSH INITIAL CONDITION (DAYS)                     |      |
+|11   |TIME OFFSET FROM UTC (HOURS)                       |      |
+|12   |MODEL TIME STEP - DT (MIN)                         |      |
+|13   |MODEL DISTANCE STEP - DX (METERS)                  |      |
+|14   |LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)       |      |
+|15   |BOUNDARY CONDITION FILE NAME                       |      |
+|16   |TRIBUTARY SITES                                    |      |
+|17   |TRIBUTARY INPUT FILE NAMES                         |      |
+|18   |TRIBUTARY MODEL KM                                 |      |
+|19   |ACCRETION INPUT FILE NAME                          |      |
+|20   |CLIMATE DATA SITES                                 |      |
+|21   |CLIMATE INPUT FILE NAMES                           |      |
+|22   |CLIMATE MODEL KM                                   |      |
+|23   |INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)  |      |
+|24   |EVAPORATION METHOD (Mass Transfer/Penman)          |      |
+|25   |WIND FUNCTION COEFFICIENT A                        |      |
+|26   |WIND FUNCTION COEFFICIENT B                        |      |
+|27   |INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)     |      |
+|28   |DEEP ALLUVIUM TEMPERATURE (*C)                     |      |
+|29   |MORPHOLOGY DATA FILE NAME                          |      |
+|30   |LANDCOVER DATA FILE NAME                           |      |
+|31   |LANDCOVER CODES FILE NAME                          |      |
+|32   |NUMBER OF TRANSECTS PER NODE                       |      |
+|33   |NUMBER OF SAMPLES PER TRANSECT                     |      |
+|34   |DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)        |      |
+|35   |ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)      |      |
+|36   |LANDCOVER DATA INPUT TYPE (Codes/Values)           |      |
+|37   |CANOPY DATA TYPE (LAI/CanopyCover)                 |      |
+|38   |VEGETATION ANGLE CALCULATION METHOD (point/zone)   |      |
+|39   |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)   |      |
 
 ================================================================================================
 ACCRETION INPUT FILE
@@ -135,20 +131,19 @@ in a model distance step, the accretion flow rates will be summed and a
 flow based average accretion temperature will be derived and used 
 in the mixing calculations
 
-|ROW/COLUMN| [1]      | [2]     | [3]      | [4]    | [5]         | [6]     |
-|:---------|----------|---------|----------|--------|-------------|---------|
-
-|[1]       |STREAM_ID | NODE_ID |STREAM_KM | INFLOW | TEMPERATURE | OUTFLOW |
-|:---------|----------|---------|----------|--------|-------------|---------|
-|[2]       | Value    | Value   | Value    | Value  | Value       | Value   |
+|STREAM_ID | NODE_ID |STREAM_KM   | INFLOW | TEMPERATURE | OUTFLOW |
+|----------|---------|------------|--------|-------------|---------|
+| Value    | Value   | upstream   | Value  | Value       | Value   |
+| ...      | ...     | ...        | ...    | ...         | ...     |
+| Value    | Value   | downstream | Value  | Value       | Value   |
 
 COLUMN
-[1] STREAM_ID (Optional)
+```[1] STREAM_ID (Optional)
 [2] NODE_ID (Optional)
 [3] STREAM_KM (headwaters at the top)
 [4] INFLOW (Accretion flow cms)
 [5] TEMPERATURE (Accretion flow temperature Celsius)
-[6] OUTFLOW (withdrawal flows cms)
+[6] OUTFLOW (withdrawal flows cms)```
 
 ================================================================================================
 BOUNDARY CONDITION FILE
@@ -157,30 +152,27 @@ UserDefinedFileName.csv
 The stream flow and temperature condtions at the upstream model boundary are defined in this file.
 The boundary condtions are defined at an hourly timestep.
 
-|ROW/COLUMN| [1]      | [2]     | [3]       |
-|:---------|----------|---------|-----------|
-
-|[1]       | DATETIME | FLOW    |TEMPERATURE|
-|:---------|----------|---------|-----------|
-|[2]       | Value    | Value   | Value     |
+| DATETIME | FLOW    |TEMPERATURE|
+|----------|---------|-----------|
+| start    | Value   | Value     |
+| ...      |...      | ...       |
+| end      | Value   | Value     |
 
 COLUMN
-[1] DATETIME (MM/DD/YYYY HH:MM)
+```[1] DATETIME (MM/DD/YYYY HH:MM)
 [2] FLOW (cms)
-[3] TEMPERATURE (Celsius)
+[3] TEMPERATURE (Celsius)```
 
 ================================================================================================
 CLIMATE INPUT FILE/S 
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
-
-|ROW/COLUMN| [1]      | [2]        | [3]       | [4]               | [5]             |
-|:---------|----------|------------|-----------|-------------------|-----------------|
-
-|[1]       | DATETIME | CLOUDINESS |WIND_SPEED | RELATIVE_HUMIDITY | AIR_TEMPERATURE |
-|:---------|----------|------------|-----------|-------------------|-----------------|
-|[2]       | Value    | Value      | Value     | Value             | Value           |
+| DATETIME | CLOUDINESS |WIND_SPEED | RELATIVE_HUMIDITY | AIR_TEMPERATURE |
+|----------|------------|-----------|-------------------|-----------------|
+| start    | Value      | Value     | Value             | Value           |
+| ...      | ...        | ...       | ...               | ...             |
+| end      | Value      | Value     | Value             | Value           |
 
 COLUMN
 [1] DATETIME (MM/DD/YYYY HH:MM)
@@ -223,12 +215,11 @@ Temperatures for outflows are not used by the model.
 The the number and stream km of the inflow/outflows is defined in the control file.
 The flow and temperature are defined at an hourly timestep.  
 
-|ROW/COLUMN| [1]      | [2]     | [3]       |
-|----------|----------|---------|-----------|
-
-|[1]       | DATETIME | FLOW    |TEMPERATURE|
-|----------|----------|---------|-----------|
-|[2]       | Value    | Value   | Value     |
+| DATETIME | FLOW    |TEMPERATURE|
+|----------|---------|-----------|
+| start    | Value   | Value     |
+| ...      |...      | ...       |
+| end      | Value   | Value     |
 
 COLUMN
 [1] DATETIME (MM/DD/YYYY HH:MM)
@@ -268,12 +259,9 @@ effective leaf area index. This option is specficed in the control file.
 
 Input file formatting when using canopy cover.
 
-|ROW/COLUMN| [1]      | [2]     | [3]      | [4]          | [5]         |
-|----------|----------|---------|----------|--------------|-------------|
-
-|[1]       | NAME     | CODE    |HEIGHT    | CANOPY_COVER | OVERHANG    |
-|----------|----------|---------|----------|--------------|-------------|
-|[2]       | Value    | Value   | Value    | Value        | Value       |
+| NAME     | CODE    |HEIGHT    | CANOPY_COVER | OVERHANG    |
+|----------|---------|----------|--------------|-------------|
+| Value    | Value   | Value    | Value        | Value       |
 
 COLUMN
 [1] NAME (Landcover Name)
@@ -284,12 +272,9 @@ COLUMN
 
 Input file formatting when using LAI.
 
-|ROW/COLUMN| [1]      | [2]     | [3]      | [4]          | [5]         | [6]      |
-|----------|----------|---------|----------|--------------|-------------|----------|
-
-|[1]       | NAME     | CODE    |HEIGHT    | LAI          | k           | OVERHANG |
-|----------|----------|---------|----------|--------------|-------------|----------|
-|[2]       | Value    | Value   | Value    | Value        | Value       | Value    |
+| NAME     | CODE    |HEIGHT    | LAI          | k           | OVERHANG |
+|----------|---------|----------|--------------|-------------|----------|
+| Value    | Value   | Value    | Value        | Value       | Value    |
 
 
 COLUMN
@@ -308,12 +293,11 @@ UserDefinedFileName.csv
 This file defines land cover information. This data can be derived 
 from geospatial data using TTools.
 
-|ROW/COLUMN| [1]      | [2]     | [3]      | [4]       | [5]      | [6]    | [7]    | [8]    | [9] -[N] |
-|----------|----------|---------|----------|-----------|----------|--------|--------|--------|----------|
-
-|[1]       |STREAM_ID | NODE_ID |STREAM_KM | LONGITUDE | LATITUDE | TOPO_W | TOPO_S | TOPO_E | ....     |
-|----------|----------|---------|----------|-----------|----------|--------|--------|--------|----------|
-|[2]       | Value    | Value   | Value    | Value     | Value    | Value  | Value  | Value  | ....     |
+|STREAM_ID | NODE_ID |STREAM_KM   | LONGITUDE | LATITUDE | TOPO_W | TOPO_S | TOPO_E | ...   | ...   |
+|----------|---------|------------|-----------|----------|--------|--------|--------|-------|-------|
+| Value    | Value   | upstream   | Value     | Value    | Value  | Value  | Value  | ...   | Value |
+| ...      | ...     | ...        | ...       | ...      | ...    | ...    | ...    | ...   | ...   |
+| Value    | Value   | downstream | Value     | Value    | Value  | Value  | Value  | ...   | Value |
 
 COLUMN
 [1] STREAM_ID (Optional)
