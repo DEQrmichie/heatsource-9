@@ -4,12 +4,12 @@
 Current Version: heatsource 9.0.0b13 (beta 13)
 
 ================================================================================================
-ABOUT 
+## ABOUT 
 
 Heat Source is a computer model used by the Oregon Department of 
 Environmental Quality to simulate stream thermodynamics and hydraulic 
-routing. It was originally developed by Matt Boyd in 1996 as a Masters 
-Thesis at Oregon State University in the Departments of Bioresource 
+routing. It was originally developed by Matt Boyd in 1996 as a [Masters 
+Thesis][1] at Oregon State University in the Departments of Bioresource 
 Engineering and Civil Engineering. Since then it has grown and changed 
 significantly. Oregon DEQ currently maintains the Heat Source methodology
 and computer programming. Appropriate model use and application are 
@@ -21,8 +21,10 @@ Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
 
 Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
+[1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
+
 ================================================================================================
-INSTALL
+## INSTALL
 
 Heat Source 9 works on Windows, Mac, and Linux.
 
@@ -36,7 +38,7 @@ navigate to setup.py and install
 ```python setup.py install clean --all```
 
 ================================================================================================
-RUNNING THE MODEL
+## RUNNING THE MODEL
 
 1. Put the control file (HeatSource_Control.csv) and the model run scripts 
    in the same directory. You can generate a template control file by double 
@@ -55,7 +57,7 @@ RUNNING THE MODEL
 7. Outputs are saved in the output directory (specified in the control file).
 
 ================================================================================================
-INPUT FILES - GENERAL INFORMATION
+## INPUT FILES - GENERAL INFORMATION
 
 1. The heat source control file must be named HeatSource_Control.csv
 2. The other input csv files can be named whatever you want (file names are specified in the control file).
@@ -69,13 +71,16 @@ INPUT FILES - GENERAL INFORMATION
    Separate file names and site stream km with commas (see below).
    
 ================================================================================================
-CONTROL FILE  
+### CONTROL FILE  
 HeatSource_Control.csv
 
 Below are all the input parameters that must be included in the control file.
-Technically the parameters can be in any row as long as the names in column 2 don't change and the parameter values are in column 3.
-If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert back to heat source 8 methods for landcover sampling methods.
-If FALSE, the direction for each the radial samples (n) measured in degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
+Technically the parameters can be in any row as long as the names in 
+column 2 don't change and the parameter values are in column 3. 
+If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert 
+back to heat source 8 methods for landcover sampling methods.
+If FALSE, the direction for each the radial samples (n) measured in 
+degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
 In addition the first landcover sample in each direction will be at the stream node.
 
 |LINE |PARAMETER                                          |VALUE |
@@ -121,7 +126,7 @@ In addition the first landcover sample in each direction will be at the stream n
 |39   |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)   |      |
 
 ================================================================================================
-ACCRETION INPUT FILE  
+### ACCRETION INPUT FILE  
 UserDefinedFileName.csv
 
 The temperature and flow rates of accretion are defined in this file. 
@@ -142,19 +147,20 @@ in the mixing calculations
 | Value    | Value   | downstream | Value  | Value       | Value   |
 
 COLUMN  
-[1] STREAM_ID (Optional)  
-[2] NODE_ID (Optional)  
-[3] STREAM_KM (headwaters at the top)  
-[4] INFLOW (Accretion flow cms)  
-[5] TEMPERATURE (Accretion flow temperature Celsius)  
-[6] OUTFLOW (withdrawal flows cms)  
+ (1) STREAM_ID (Optional)  
+ (2) NODE_ID (Optional)  
+ (3) STREAM_KM (headwaters at the top)  
+ (4) INFLOW (Accretion flow cms)  
+ (5) TEMPERATURE (Accretion flow temperature Celsius)  
+ (6) OUTFLOW (withdrawal flows cms)  
 
 ================================================================================================
-BOUNDARY CONDITION FILE  
+### BOUNDARY CONDITION FILE  
 UserDefinedFileName.csv
 
-The stream flow and temperature condtions at the upstream model boundary are defined in this file.
-The boundary condtions are defined at an hourly timestep.
+The stream flow and temperature condtions at the upstream model boundary 
+are defined in this file. The boundary condtions are defined at an 
+hourly timestep.
 
 | DATETIME | FLOW    |TEMPERATURE|
 |----------|---------|-----------|
@@ -163,12 +169,12 @@ The boundary condtions are defined at an hourly timestep.
 | end      | Value   | Value     |
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW (cms)  
-[3] TEMPERATURE (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW (cms)  
+ (3) TEMPERATURE (Celsius)  
 
 ================================================================================================
-CLIMATE INPUT FILE/S   
+### CLIMATE INPUT FILE/S   
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
@@ -179,11 +185,11 @@ UserDefinedFileName.csv
 | end      | Value      | Value     | Value             | Value           |
 
 COLUMN
-[1] DATETIME (MM/DD/YYYY HH:MM)
-[2] CLOUDINESS (0-1)
-[3] WIND_SPEED (meters/second)
-[4] RELATIVE_HUMIDITY (0-1)
-[5] AIR_TEMPERATURE (Celsius)
+ (1) DATETIME (MM/DD/YYYY HH:MM)
+ (2) CLOUDINESS (0-1)
+ (3) WIND_SPEED (meters/second)
+ (4) RELATIVE_HUMIDITY (0-1)
+ (5) AIR_TEMPERATURE (Celsius)
 
 Note - multiple csv files may be used for each set of climate inputs with the 
 format above or all data can be saved in the same file like the example below. 
@@ -191,30 +197,31 @@ This is controlled in the control file by designating the number of inputs and
 the input stream km.
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] CLOUDINESS 1 (0-1)  
-[3] WIND_SPEED 1 (meters/second)  
-[4] RELATIVE_HUMIDITY 1 (0-1)  
-[5] AIR_TEMPERATURE 1 (Celsius)  
-[6] CLOUDINESS 2 (0-1)  
-[7] WIND_SPEED 2 (meters/second)  
-[8] RELATIVE_HUMIDITY 2 (0-1)  
-[9] AIR_TEMPERATURE 2 (Celsius)  
-[n] CLOUDINESS n (0-1)  
-[n] WIND_SPEED 2 (meters/second)  
-[n] RELATIVE_HUMIDITY n (0-1)  
-[N] AIR_TEMPERATURE n (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) CLOUDINESS 1 (0-1)  
+ (3) WIND_SPEED 1 (meters/second)  
+ (4) RELATIVE_HUMIDITY 1 (0-1)  
+ (5) AIR_TEMPERATURE 1 (Celsius)  
+ (6) CLOUDINESS 2 (0-1)  
+ (7) WIND_SPEED 2 (meters/second)  
+ (8) RELATIVE_HUMIDITY 2 (0-1)  
+ (9) AIR_TEMPERATURE 2 (Celsius)  
+ (n) CLOUDINESS n (0-1)  
+ (n) WIND_SPEED 2 (meters/second)  
+ (n) RELATIVE_HUMIDITY n (0-1)  
+ (N) AIR_TEMPERATURE n (Celsius)  
 
 ================================================================================================
-TRIBUTARY INPUT FILE/S  
+### TRIBUTARY INPUT FILE/S  
 Can also be outflows. Use negative flows.  
 UserDefinedFileName.csv  
 
 The tributary input files define the inflow/outflow rates and temperatures
 at different points along the model stream. Inflows refers to localized 
-(non-accretion) type flows such as tributaries, springs, returns, point sources, etc.
-Outflows can be varous types of water withdrawals. They are input with a negative flow rate.
-Temperatures for outflows are not used by the model.
+(non-accretion) type flows such as tributaries, springs, returns, point 
+sources, etc. Outflows can be varous types of water withdrawals. They 
+are input with a negative flow rate. Temperatures for outflows are not 
+used by the model.
 
 The the number and stream km of the inflow/outflows is defined in the control file.
 The flow and temperature are defined at an hourly timestep.  
@@ -226,9 +233,9 @@ The flow and temperature are defined at an hourly timestep.
 | end      | Value   | Value     |
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW (inflow/outflow cms)  
-[3] TEMPERATURE (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW (inflow/outflow cms)  
+ (3) TEMPERATURE (Celsius)  
 
 Note - multiple csv files may be created for each tributary input with the
 format above or all data can be saved in the same file like in the example below.
@@ -236,16 +243,16 @@ This is controlled in the control file by designating the number of inputs and
 the input stream km.
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW 1 (inflow/outflow cms)  
-[3] TEMPERATURE 1 (Celsius)  
-[4] FLOW 2 (inflow/outflow cms)  
-[5] TEMPERATURE 2 (Celsius)  
-[n] FLOW n (inflow/outflow cms)  
-[N] TEMPERATURE n (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW 1 (inflow/outflow cms)  
+ (3) TEMPERATURE 1 (Celsius)  
+ (4) FLOW 2 (inflow/outflow cms)  
+ (5) TEMPERATURE 2 (Celsius)  
+ (n) FLOW n (inflow/outflow cms)  
+ (N) TEMPERATURE n (Celsius)  
 
 ================================================================================================
-LANDCOVER CODES FILE  
+### LANDCOVER CODES FILE  
 UserDefinedFileName.csv  
 
 The landcover codes file contains the physical attribute information 
@@ -256,11 +263,12 @@ There cannot be skipped rows
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
 
-Canopy Type
+#### Canopy Type
 
 land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specficed in the control file.
 
+##### Canopy Cover  
 Input file formatting when using canopy cover.
 
 | NAME     | CODE    |HEIGHT    | CANOPY_COVER | OVERHANG    |
@@ -268,12 +276,13 @@ Input file formatting when using canopy cover.
 | Value    | Value   | Value    | Value        | Value       |
 
 COLUMN  
-[1] NAME (Landcover Name)  
-[2] CODE (alpha or numeric code)  
-[3] HEIGHT (meters)  
-[4] CANOPY_COVER (0-1)  
-[5] OVERHANG (meters)  
+ (1) NAME (Landcover Name)  
+ (2) CODE (alpha or numeric code)  
+ (3) HEIGHT (meters)  
+ (4) CANOPY_COVER (0-1)  
+ (5) OVERHANG (meters)  
 
+##### LAI  
 Input file formatting when using LAI.
 
 | NAME     | CODE    |HEIGHT    | LAI          | k           | OVERHANG |
@@ -282,15 +291,15 @@ Input file formatting when using LAI.
 
 
 COLUMN  
-[1] NAME (Landcover Name)  
-[2] CODE (alpha or numeric code)  
-[3] HEIGHT (meters)  
-[4] LAI (Effective Leaf Area Index)  
-[5] k Extinction coefficient  (dimensionless)  
-[6] OVERHANG (meters)  
+ (1) NAME (Landcover Name)  
+ (2) CODE (alpha or numeric code)  
+ (3) HEIGHT (meters)  
+ (4) LAI (Effective Leaf Area Index)  
+ (5) k Extinction coefficient  (dimensionless)  
+ (6) OVERHANG (meters)  
 
 ================================================================================================
-LANDCOVER DATA  
+### LANDCOVER DATA  
 (formally called TTools in heatsource 8)  
 UserDefinedFileName.csv  
 
@@ -304,45 +313,45 @@ from geospatial data using TTools.
 | Value    | Value   | downstream | Value     | Value    | Value  | Value  | Value  | ...   |
 
 COLUMN  
-[1] STREAM_ID (Optional)  
-[2] NODE_ID (Optional)  
-[3] STREAM_KM  (headwaters at the top)  
-[4] LONGITUDE (decimal degrees)  
-[5] LATITUDE (decimal degrees)  
-[6] TOPO_W (degrees)  
-[7] TOPO_S (degrees)  
-[8] TOPO_E (degrees)  
-[9-n] Landcover Samples (code or height meters)  
-[n-n] Elevation Samples (meters)  
-[n-n] Canopy/LAI Samples (blank if not used)  
-[n-N] k Extinction Coefficient (dimensionless) blank if not used.  
+ (1) STREAM_ID (Optional)  
+ (2) NODE_ID (Optional)  
+ (3) STREAM_KM  (headwaters at the top)  
+ (4) LONGITUDE (decimal degrees)  
+ (5) LATITUDE (decimal degrees)  
+ (6) TOPO_W (degrees)  
+ (7) TOPO_S (degrees)  
+ (8) TOPO_E (degrees)  
+ (9-n) Landcover Samples (code or height meters)  
+ (n-n) Elevation Samples (meters)  
+ (n-n) Canopy/LAI Samples (blank if not used)  
+ (n-N) k Extinction Coefficient (dimensionless) blank if not used.  
 
 Note - the column numbers for the landcover, elevation, and caonpy cover/LAI samples are dependent on user specified information in the control file.
 
 ================================================================================================
-MORPHOLOGY DATA FILE  
+### MORPHOLOGY DATA FILE  
 UserDefinedFileName.csv  
 
 This file defines channel morphology and substrate information.
 Refer to the user manual for more information about each parameter.
 
 COLUMN  
-[1] Stream ID (Optional)  
-[2] Node ID (Optional)  
-[3] STREAM_KM (headwaters at the top)  
-[4] ELEVATION (meters)  
-[5] GRADIENT (meters/meters)  
-[6] BOTTOM_WIDTH (meters)  
-[7] CHANNEL_ANGLE_Z  
-[8] MANNINGS_n (unitless)  
-[8] SED_THERMAL_CONDUCTIVITY (Watts/meter/Celsius)  
-[10] SED_THERMAL_DIFFUSIVITY (square cm/second)  
-[11] SED_HYPORHEIC_THICKNESSS - Sediment/hyporheic zone thickness (meters)  
-[12] %HYPORHEIC_EXCHANGE - Percent Hyporheic exchange (0-1)  
-[13] POROSITY (0-1)  
+ (1) Stream ID (Optional)  
+ (2) Node ID (Optional)  
+ (3) STREAM_KM (headwaters at the top)  
+ (4) ELEVATION (meters)  
+ (5) GRADIENT (meters/meters)  
+ (6) BOTTOM_WIDTH (meters)  
+ (7) CHANNEL_ANGLE_Z  
+ (8) MANNINGS_n (unitless)  
+ (8) SED_THERMAL_CONDUCTIVITY (Watts/meter/Celsius)  
+ (10) SED_THERMAL_DIFFUSIVITY (square cm/second)  
+ (11) SED_HYPORHEIC_THICKNESSS - Sediment/hyporheic zone thickness (meters)  
+ (12) %HYPORHEIC_EXCHANGE - Percent Hyporheic exchange (0-1)  
+ (13) POROSITY (0-1)  
 
 ================================================================================================
-LICENSE
+## LICENSE
 
 GNU General Public License v3 (GPLv3)
 
@@ -362,7 +371,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ================================================================================================
-UPDATES
+## UPDATES
 
 - Updated for use in python 2.7
 - Now compatible with Linux and Mac OS 10.6 and above.
@@ -372,7 +381,7 @@ heatsource 8 with some minor changes.
 - Model setup, hydraulics, solar, and temperature routines are initiated via python exectuable scripts.
 - Removed psyco optimization. Psyco is no longer maintained or supported for python 2.7.
 - C module was removed although it may be reintroduced at a future date with updates.
-- Reworked __version__ to conform to PEP 386 and added documentation.
+- Reworked '__version__' to conform to PEP 386 and added documentation.
 - Heat source is now licensed under the GNU General Public License v3.
 - Outputs files get stamped with model version, simulation name, user text in addition to the output parameter, units and date/time.
 - Implements variable number of radial samples (use heatsource 8 switch in control file for version 8 method).
@@ -380,7 +389,7 @@ heatsource 8 with some minor changes.
 - Added solar azimuth and solar elevation outputs
 
 ================================================================================================
-ROADMAP
+## ROADMAP
 
 Roadmap for this version
 - Develop routines to convert heatsource v8 inputs to v9 csv format using pandas/xlrd package.
