@@ -143,12 +143,12 @@ in the mixing calculations
 | Value    | Value   | downstream | Value  | Value       | Value   |
 
 COLUMN  
-[1] STREAM_ID (Optional)  
-[2] NODE_ID (Optional)  
-[3] STREAM_KM (headwaters at the top)  
-[4] INFLOW (Accretion flow cms)  
-[5] TEMPERATURE (Accretion flow temperature Celsius)  
-[6] OUTFLOW (withdrawal flows cms)  
+ (1) STREAM_ID (Optional)  
+ (2) NODE_ID (Optional)  
+ (3) STREAM_KM (headwaters at the top)  
+ (4) INFLOW (Accretion flow cms)  
+ (5) TEMPERATURE (Accretion flow temperature Celsius)  
+ (6) OUTFLOW (withdrawal flows cms)  
 
 ================================================================================================
 BOUNDARY CONDITION FILE  
@@ -164,9 +164,9 @@ The boundary condtions are defined at an hourly timestep.
 | end      | Value   | Value     |
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW (cms)  
-[3] TEMPERATURE (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW (cms)  
+ (3) TEMPERATURE (Celsius)  
 
 ================================================================================================
 CLIMATE INPUT FILE/S   
@@ -180,11 +180,11 @@ UserDefinedFileName.csv
 | end      | Value      | Value     | Value             | Value           |
 
 COLUMN
-[1] DATETIME (MM/DD/YYYY HH:MM)
-[2] CLOUDINESS (0-1)
-[3] WIND_SPEED (meters/second)
-[4] RELATIVE_HUMIDITY (0-1)
-[5] AIR_TEMPERATURE (Celsius)
+ (1) DATETIME (MM/DD/YYYY HH:MM)
+ (2) CLOUDINESS (0-1)
+ (3) WIND_SPEED (meters/second)
+ (4) RELATIVE_HUMIDITY (0-1)
+ (5) AIR_TEMPERATURE (Celsius)
 
 Note - multiple csv files may be used for each set of climate inputs with the 
 format above or all data can be saved in the same file like the example below. 
@@ -192,19 +192,19 @@ This is controlled in the control file by designating the number of inputs and
 the input stream km.
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] CLOUDINESS 1 (0-1)  
-[3] WIND_SPEED 1 (meters/second)  
-[4] RELATIVE_HUMIDITY 1 (0-1)  
-[5] AIR_TEMPERATURE 1 (Celsius)  
-[6] CLOUDINESS 2 (0-1)  
-[7] WIND_SPEED 2 (meters/second)  
-[8] RELATIVE_HUMIDITY 2 (0-1)  
-[9] AIR_TEMPERATURE 2 (Celsius)  
-[n] CLOUDINESS n (0-1)  
-[n] WIND_SPEED 2 (meters/second)  
-[n] RELATIVE_HUMIDITY n (0-1)  
-[N] AIR_TEMPERATURE n (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) CLOUDINESS 1 (0-1)  
+ (3) WIND_SPEED 1 (meters/second)  
+ (4) RELATIVE_HUMIDITY 1 (0-1)  
+ (5) AIR_TEMPERATURE 1 (Celsius)  
+ (6) CLOUDINESS 2 (0-1)  
+ (7) WIND_SPEED 2 (meters/second)  
+ (8) RELATIVE_HUMIDITY 2 (0-1)  
+ (9) AIR_TEMPERATURE 2 (Celsius)  
+ (n) CLOUDINESS n (0-1)  
+ (n) WIND_SPEED 2 (meters/second)  
+ (n) RELATIVE_HUMIDITY n (0-1)  
+ (N) AIR_TEMPERATURE n (Celsius)  
 
 ================================================================================================
 TRIBUTARY INPUT FILE/S  
@@ -227,9 +227,9 @@ The flow and temperature are defined at an hourly timestep.
 | end      | Value   | Value     |
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW (inflow/outflow cms)  
-[3] TEMPERATURE (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW (inflow/outflow cms)  
+ (3) TEMPERATURE (Celsius)  
 
 Note - multiple csv files may be created for each tributary input with the
 format above or all data can be saved in the same file like in the example below.
@@ -237,13 +237,13 @@ This is controlled in the control file by designating the number of inputs and
 the input stream km.
 
 COLUMN  
-[1] DATETIME (MM/DD/YYYY HH:MM)  
-[2] FLOW 1 (inflow/outflow cms)  
-[3] TEMPERATURE 1 (Celsius)  
-[4] FLOW 2 (inflow/outflow cms)  
-[5] TEMPERATURE 2 (Celsius)  
-[n] FLOW n (inflow/outflow cms)  
-[N] TEMPERATURE n (Celsius)  
+ (1) DATETIME (MM/DD/YYYY HH:MM)  
+ (2) FLOW 1 (inflow/outflow cms)  
+ (3) TEMPERATURE 1 (Celsius)  
+ (4) FLOW 2 (inflow/outflow cms)  
+ (5) TEMPERATURE 2 (Celsius)  
+ (n) FLOW n (inflow/outflow cms)  
+ (N) TEMPERATURE n (Celsius)  
 
 ================================================================================================
 LANDCOVER CODES FILE  
@@ -269,11 +269,11 @@ Input file formatting when using canopy cover.
 | Value    | Value   | Value    | Value        | Value       |
 
 COLUMN  
-[1] NAME (Landcover Name)  
-[2] CODE (alpha or numeric code)  
-[3] HEIGHT (meters)  
-[4] CANOPY_COVER (0-1)  
-[5] OVERHANG (meters)  
+ (1) NAME (Landcover Name)  
+ (2) CODE (alpha or numeric code)  
+ (3) HEIGHT (meters)  
+ (4) CANOPY_COVER (0-1)  
+ (5) OVERHANG (meters)  
 
 Input file formatting when using LAI.
 
@@ -283,12 +283,12 @@ Input file formatting when using LAI.
 
 
 COLUMN  
-[1] NAME (Landcover Name)  
-[2] CODE (alpha or numeric code)  
-[3] HEIGHT (meters)  
-[4] LAI (Effective Leaf Area Index)  
-[5] k Extinction coefficient  (dimensionless)  
-[6] OVERHANG (meters)  
+ (1) NAME (Landcover Name)  
+ (2) CODE (alpha or numeric code)  
+ (3) HEIGHT (meters)  
+ (4) LAI (Effective Leaf Area Index)  
+ (5) k Extinction coefficient  (dimensionless)  
+ (6) OVERHANG (meters)  
 
 ================================================================================================
 LANDCOVER DATA  
@@ -305,18 +305,18 @@ from geospatial data using TTools.
 | Value    | Value   | downstream | Value     | Value    | Value  | Value  | Value  | ...   |
 
 COLUMN  
-[1] STREAM_ID (Optional)  
-[2] NODE_ID (Optional)  
-[3] STREAM_KM  (headwaters at the top)  
-[4] LONGITUDE (decimal degrees)  
-[5] LATITUDE (decimal degrees)  
-[6] TOPO_W (degrees)  
-[7] TOPO_S (degrees)  
-[8] TOPO_E (degrees)  
-[9-n] Landcover Samples (code or height meters)  
-[n-n] Elevation Samples (meters)  
-[n-n] Canopy/LAI Samples (blank if not used)  
-[n-N] k Extinction Coefficient (dimensionless) blank if not used.  
+ (1) STREAM_ID (Optional)  
+ (2) NODE_ID (Optional)  
+ (3) STREAM_KM  (headwaters at the top)  
+ (4) LONGITUDE (decimal degrees)  
+ (5) LATITUDE (decimal degrees)  
+ (6) TOPO_W (degrees)  
+ (7) TOPO_S (degrees)  
+ (8) TOPO_E (degrees)  
+ (9-n) Landcover Samples (code or height meters)  
+ (n-n) Elevation Samples (meters)  
+ (n-n) Canopy/LAI Samples (blank if not used)  
+ (n-N) k Extinction Coefficient (dimensionless) blank if not used.  
 
 Note - the column numbers for the landcover, elevation, and caonpy cover/LAI samples are dependent on user specified information in the control file.
 
@@ -328,19 +328,19 @@ This file defines channel morphology and substrate information.
 Refer to the user manual for more information about each parameter.
 
 COLUMN  
-[1] Stream ID (Optional)  
-[2] Node ID (Optional)  
-[3] STREAM_KM (headwaters at the top)  
-[4] ELEVATION (meters)  
-[5] GRADIENT (meters/meters)  
-[6] BOTTOM_WIDTH (meters)  
-[7] CHANNEL_ANGLE_Z  
-[8] MANNINGS_n (unitless)  
-[8] SED_THERMAL_CONDUCTIVITY (Watts/meter/Celsius)  
-[10] SED_THERMAL_DIFFUSIVITY (square cm/second)  
-[11] SED_HYPORHEIC_THICKNESSS - Sediment/hyporheic zone thickness (meters)  
-[12] %HYPORHEIC_EXCHANGE - Percent Hyporheic exchange (0-1)  
-[13] POROSITY (0-1)  
+ (1) Stream ID (Optional)  
+ (2) Node ID (Optional)  
+ (3) STREAM_KM (headwaters at the top)  
+ (4) ELEVATION (meters)  
+ (5) GRADIENT (meters/meters)  
+ (6) BOTTOM_WIDTH (meters)  
+ (7) CHANNEL_ANGLE_Z  
+ (8) MANNINGS_n (unitless)  
+ (8) SED_THERMAL_CONDUCTIVITY (Watts/meter/Celsius)  
+ (10) SED_THERMAL_DIFFUSIVITY (square cm/second)  
+ (11) SED_HYPORHEIC_THICKNESSS - Sediment/hyporheic zone thickness (meters)  
+ (12) %HYPORHEIC_EXCHANGE - Percent Hyporheic exchange (0-1)  
+ (13) POROSITY (0-1)  
 
 ================================================================================================
 LICENSE
@@ -373,7 +373,7 @@ heatsource 8 with some minor changes.
 - Model setup, hydraulics, solar, and temperature routines are initiated via python exectuable scripts.
 - Removed psyco optimization. Psyco is no longer maintained or supported for python 2.7.
 - C module was removed although it may be reintroduced at a future date with updates.
-- Reworked __version__ to conform to PEP 386 and added documentation.
+- Reworked '__version__' to conform to PEP 386 and added documentation.
 - Heat source is now licensed under the GNU General Public License v3.
 - Outputs files get stamped with model version, simulation name, user text in addition to the output parameter, units and date/time.
 - Implements variable number of radial samples (use heatsource 8 switch in control file for version 8 method).
