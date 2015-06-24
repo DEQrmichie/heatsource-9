@@ -26,10 +26,10 @@ Requires python 2.7
 https://www.python.org/downloads/
 
 Download the zip file
-"""git clone git://github.com/rmichie/heatsource-9.git"""
+```git clone git://github.com/rmichie/heatsource-9.git```
 
 navigate to setup.py and install
-"""python setup.py install clean --all"""
+```python setup.py install clean --all```
 
 ================================================================================================
 RUNNING THE MODEL
@@ -76,7 +76,6 @@ In addition the first landcover sample in each direction will be at the stream n
 
  
 |ROW COLUMN| [1] | [2]                                               | [3]  |
-|----------|---- |-------------------------------------------------- |----- |
 |[1]       |LINE |PARAMETER                                          |VALUE |
 |----------|---- |---------------------------------------------------|----- |
 |[2]       |1    |USER TEXT |      |
@@ -135,7 +134,6 @@ flow based average accretion temperature will be derived and used
 in the mixing calculations
 
 |ROW/COLUMN| [1]      | [2]     | [3]      | [4]    | [5]         | [6]     |
-|----------|----------|---------|----------|--------|-------------|---------|
 |[1]       |STREAM_ID | NODE_ID |STREAM_KM | INFLOW | TEMPERATURE | OUTFLOW |
 |----------|----------|---------|----------|--------|-------------|---------|
 |[2]       | Value    | Value   | Value    | Value  | Value       | Value   |
@@ -156,7 +154,6 @@ The stream flow and temperature condtions at the upstream model boundary are def
 The boundary condtions are defined at an hourly timestep.
 
 |ROW/COLUMN| [1]      | [2]     | [3]       |
-|----------|----------|---------|-----------|
 |[1]       | DATETIME | FLOW    |TEMPERATURE|
 |----------|----------|---------|-----------|
 |[2]       | Value    | Value   | Value     |
@@ -173,7 +170,6 @@ UserDefinedFileName.csv
 
 
 |ROW/COLUMN| [1]      | [2]        | [3]       | [4]               | [5]             |
-|----------|----------|------------|-----------|-------------------|-----------------|
 |[1]       | DATETIME | CLOUDINESS |WIND_SPEED | RELATIVE_HUMIDITY | AIR_TEMPERATURE |
 |----------|----------|------------|-----------|-------------------|-----------------|
 |[2]       | Value    | Value      | Value     | Value             | Value           |
@@ -220,7 +216,6 @@ The the number and stream km of the inflow/outflows is defined in the control fi
 The flow and temperature are defined at an hourly timestep.  
 
 |ROW/COLUMN| [1]      | [2]     | [3]       |
-|----------|----------|---------|-----------|
 |[1]       | DATETIME | FLOW    |TEMPERATURE|
 |----------|----------|---------|-----------|
 |[2]       | Value    | Value   | Value     |
@@ -264,7 +259,6 @@ effective leaf area index. This option is specficed in the control file.
 Input file formatting when using canopy cover.
 
 |ROW/COLUMN| [1]      | [2]     | [3]      | [4]          | [5]         |
-|----------|----------|---------|----------|--------------|-------------|
 |[1]       | NAME     | CODE    |HEIGHT    | CANOPY_COVER | OVERHANG    |
 |----------|----------|---------|----------|--------------|-------------|
 |[2]       | Value    | Value   | Value    | Value        | Value       |
@@ -279,7 +273,6 @@ COLUMN
 Input file formatting when using LAI.
 
 |ROW/COLUMN| [1]      | [2]     | [3]      | [4]          | [5]         | [6]      |
-|----------|----------|---------|----------|--------------|-------------|----------|
 |[1]       | NAME     | CODE    |HEIGHT    | LAI          | k           | OVERHANG |
 |----------|----------|---------|----------|--------------|-------------|----------|
 |[2]       | Value    | Value   | Value    | Value        | Value       | Value    |
@@ -302,7 +295,6 @@ This file defines land cover information. This data can be derived
 from geospatial data using TTools.
 
 |ROW/COLUMN| [1]      | [2]     | [3]      | [4]       | [5]      | [6]    | [7]    | [8]    | [9] -[N] |
-|----------|----------|---------|----------|-----------|----------|--------|--------|--------|----------|
 |[1]       |STREAM_ID | NODE_ID |STREAM_KM | LONGITUDE | LATITUDE | TOPO_W | TOPO_S | TOPO_E | ....     |
 |----------|----------|---------|----------|-----------|----------|--------|--------|--------|----------|
 |[2]       | Value    | Value   | Value    | Value     | Value    | Value  | Value  | Value  | ....     |
@@ -326,7 +318,7 @@ Note - the column numbers for the landcover, elevation, and caonpy cover/LAI sam
 MORPHOLOGY DATA FILE
 UserDefinedFileName.csv
 
-This file defines channel morphology and substrate information. 
+This file defines channel morphology and substrate information.
 Refer to the user manual for more information about each parameter.
 
 COLUMN
