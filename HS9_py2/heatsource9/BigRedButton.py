@@ -40,7 +40,7 @@ from __version__ import version_string
 
 # set up logging
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(module)-15s %(levelname)-8s %(message)s',
+                    format='%(asctime)s %(levelname)-8s %(message)s',
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
@@ -65,9 +65,13 @@ class ModelControl(object):
         """ModelControl(inputdir, control_file, run_type) -> Class instance
         inputdir is the path to directory where the control csv file is located.
         control_file is the control file name.
-        run_type is one of 0,1,2,3 for Heat Source (Temperature), Solar only,
-        hydraulics only, or Setup, respectively.
+        run_type is one of 0,1,2,3,4 for Heat Source (Temperature), Solar only,
+        hydraulics only, input setup, or control file setup respectively.
         """
+        
+        # Add heat source model version into IniParams
+        IniParams["version"] = version_string
+        print_console("Heat Source Version:  {0}".format(IniParams["version"]))
         
         # Create a ModelSetup instance.
         self.HS = ModelSetup(inputdir, control_file, run_type)
@@ -94,9 +98,6 @@ class ModelControl(object):
                       dt = IniParams["dt"],
                       spin = IniParams["flushdays"],
                       offset = IniParams["offset"])
-        
-        # Add heat source model version into IniParams
-        IniParams["version"] = version_string
         
         # This is the output class, which is essentially just a list
         # of file objects and an append method which writes to them
@@ -226,7 +227,7 @@ class ModelControl(object):
 def RunHS(inputdir, control_file):
     """Run full temperature model"""
     try:
-        HSP = ModelControl(inputdir, control_file)
+        HSP = ModelControl(inputdir, control_file, 0)
         HSP.Run()
         del HSP
     except Exception, stderr:
@@ -252,7 +253,7 @@ def run_input_setup(inputdir, control_file):
     """Setup and write all input files based on parameterization in
     the conrol file"""
     try:
-        ModelSetup(inputdir, control_file, logger, 3)
+        ModelSetup(inputdir, control_file, 3)
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
         
@@ -260,6 +261,6 @@ def run_cf_setup(inputdir, control_file):
     """Setup and write the conrol file"""
     try:
         ErrLog = Logger
-        ModelSetup(inputdir, control_file, logger, 4)
+        ModelSetup(inputdir, control_file, 4)
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")        

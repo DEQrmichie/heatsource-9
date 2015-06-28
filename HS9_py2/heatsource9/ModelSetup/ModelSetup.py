@@ -32,8 +32,9 @@ from calendar import timegm
 from datetime import datetime
 import platform
 import csv
-import logging
 import operator
+import logging
+logger = logging.getLogger(__name__)
 
 # Heat Source Methods
 from ..Dieties.IniParamsDiety import IniParams
@@ -45,9 +46,9 @@ class ModelSetup(object):
     """Generates template model input files and reads input files to
     paramaterize the model and generate a list of StreamNode instances"""
 
-    def __init__(self, inputdir, control_file, log=None, run_type=0):
+    def __init__(self, inputdir, control_file, run_type=0):
         self.run_type = run_type
-        self.log = log
+        #self.log = log
         self.Reach = {}
 
         if run_type == 4:
@@ -63,6 +64,7 @@ class ModelSetup(object):
                 # Setup for a model run
                 # Get the list of model periods times
                 print_console("Starting simulation:  {0}".format(IniParams["name"]))
+
                 self.flowtimelist = self.GetTimelistUNIX()
                 self.continuoustimelist = self.GetTimelistUNIX()
                 self.flushtimelist = self.GetTimelistFlushPeriod()         
@@ -168,7 +170,6 @@ class ModelSetup(object):
         
         print_console("writing control file")
         
-    
         cf_dict = self.create_control_file_dict()
         
         # sort so we have a list in the order of the line number
@@ -233,6 +234,7 @@ class ModelSetup(object):
 
         # This writes to csv using the file name from the control file and adds a timestamp
         print_console("Writing empty csv files")
+         
         self.write_to_csv(IniParams["inputdir"], "input_"+timestamp+"_"+IniParams["bcfile"], bcheaders, bclist)
 
         if IniParams["lcdatainput"] == "Codes":
@@ -511,7 +513,8 @@ class ModelSetup(object):
             return False
 
     def OrientNodes(self):
-        print_console("Initializing StreamNodes")
+        print_console("Initializing StreamNodes")      
+        
         # Now we manually set each nodes next and previous 
         # kilometer values by stepping through the reach
         l = sorted(self.Reach.keys(), reverse=True)
@@ -547,7 +550,7 @@ class ModelSetup(object):
 
     def SetAtmosphericData(self):
         """For each node without climate data, use closest (up or downstream) node's data"""
-        print_console("Setting Atmospheric Data",)
+        print_console("Setting Atmospheric Data")        
         sites = self.ClimateDataSites # Localize the variable for speed
         sites.sort() #Sort the climate site by km. This is necessary for the bisect module
         c = count()
@@ -577,7 +580,7 @@ class ModelSetup(object):
                     datasite = self.Reach[down]
                 self.Reach[km].ClimateData = datasite.ClimateData
             #print("Setting Atmospheric Data", c.next()+1, len(l))
-            print_console("Setting Atmospheric Data", True, c.next()+1, len(l))
+            print_console("Setting Atmospheric Data", True, c.next()+1, len(l))          
 
     def GetBoundaryConditions(self):
         """Get the boundary conditions"""
