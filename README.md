@@ -40,9 +40,9 @@ navigate to setup.py and install
 ================================================================================================
 ## RUNNING THE MODEL
 
-1. Put the control file (HeatSource_Control.csv) and the model run scripts 
-   in the same directory. You can generate a template control file by double 
-   clicking on HS9_Setup_Control_File.py.
+1. Place the control file (HeatSource_Control.csv) and the model run scripts 
+   in the same directory. You can generate a template control file by executing
+   HS9_Setup_Control_File.py.
 2. Open the control file and parameterize it with your model information.
    The control file must be named HeatSource_Control.csv
 3. Use HS9_Setup_Model_Inputs.py to build template input files (they will 
@@ -60,7 +60,8 @@ navigate to setup.py and install
 ## INPUT FILES - GENERAL INFORMATION
 
 1. The heat source control file must be named HeatSource_Control.csv
-2. The other input csv files can be named whatever you want (file names are specified in the control file).
+2. The other input csv files can be named whatever you want 
+   (file names are specified in the control file).
 3. Do not change the parameter names in the control file. Only change the VALUE column (column 3).
 4. The column header names can be changed but the data needs to be in 
    the correct column number (see below).
@@ -75,8 +76,8 @@ navigate to setup.py and install
 HeatSource_Control.csv
 
 Below are all the input parameters that must be included in the control file.
-Technically the parameters can be in any row as long as the names in 
-column 2 don't change and the parameter values are in column 3. 
+Technically the parameters can be in any row as long as the parameter names
+don't change and the parameter values are in column 3. 
 If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert 
 back to heat source 8 methods for landcover sampling methods.
 If FALSE, the direction for each the radial samples (n) measured in 
