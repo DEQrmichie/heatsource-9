@@ -391,14 +391,16 @@ class ModelSetup(object):
         
         if use_timestamp:
             bc_file = "input_"+timestamp+"_"+IniParams["bcfile"]
-            lccodes_file = "input_"+timestamp+"_"+IniParams["lccodefile"]
+            if IniParams["lcdatainput"] == "Codes":
+                lccodes_file = "input_"+timestamp+"_"+IniParams["lccodefile"]
             lcdata_file = "input_"+timestamp+"_"+IniParams["lcdatafile"]
             acc_file = "input_"+timestamp+"_"+IniParams["accretionfile"]
             morph_file = "input_"+timestamp+"_"+IniParams["morphfile"]
         else:
             # Name the files as they appear in the control file
             bc_file = IniParams["bcfile"]
-            lccodes_file = IniParams["lccodefile"]
+            if IniParams["lcdatainput"] == "Codes":
+                lccodes_file = IniParams["lccodefile"]
             lcdata_file = IniParams["lcdatafile"]
             acc_file = IniParams["accretionfile"]
             morph_file = IniParams["morphfile"]
@@ -408,7 +410,6 @@ class ModelSetup(object):
         
         if overwrite:
             # overwrite the inputs regardless if they exist or not
-            self.write_to_csv(IniParams["inputdir"], bc_file, bcheaders, bclist)
             self.write_to_csv(IniParams["inputdir"], bc_file, bcheaders, bclist)
 
             if IniParams["lcdatainput"] == "Codes":
