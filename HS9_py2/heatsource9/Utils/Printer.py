@@ -1,4 +1,5 @@
-# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2016, 
+# Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,7 +12,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>..
 
 from __future__ import division
 import logging

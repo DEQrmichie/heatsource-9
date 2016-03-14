@@ -1,4 +1,5 @@
-# Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
+# Heat Source, Copyright (C) 2000-2016, 
+# Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,12 +47,14 @@ class ChronosDiety(object):
         if not tick: return self.__current
         # First we increment the current time by dt
         self.__current += self.__dt
-        if gmtime(self.__current)[2] != gmtime(self.__thisday)[2]: #Day numbers not equal, need to recalculate julian day
+        if gmtime(self.__current)[2] != gmtime(self.__thisday)[2]:
+            # Day numbers not equal, need to recalculate julian day
             self.__thisday = self.__current
             self.CalcJulianCentury()
         # Then test whether we're still spinning up
 
-        if self.__current < self.__start: # If we're still in the spin-up period
+        if self.__current < self.__start:
+            # If we're still in the spin-up period
 #            print "True",
 #            #Make sure we don't advance to next day (i.e. just run the first day over and over)
 #            if gmtime(self.__spin_current+self.__dt)[2] != gmtime(self.__spin_start)[2]:
@@ -78,7 +81,7 @@ class ChronosDiety(object):
         Currently, this method will screw things up because it actually
         iterates through the sequence, cycling through time. This is a problem."""
         raise NotImplementedError("This needs some work- do we actually need it?")
-        return len([i for i in self])
+        #return len([i for i in self])
 
     def PrettyTime(self): return ctime(self.__current)
     def Year(self): return gmtime(self.__current)[0]
