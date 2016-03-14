@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b13 (beta 13)
+Current Version: heatsource 9.0.0b14 (beta 14)
 
 ================================================================================================
 ## ABOUT 
@@ -49,7 +49,7 @@ navigate to setup.py and install
    be saved to your input file directory that is specified in the control file).
 5. Edit the template csv files with your input data. You can use excel. 
    Save it as a csv.
-6. Run the model by double clicking one of the following model run scripts:
+6. Run the model by executing one of the following model run scripts:
    HS9_Run_Hydraulics_Only.py,
    HS9_Run_Solar_Only.py,
    HS9_Run_Temperature.py,
@@ -372,33 +372,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ================================================================================================
-## UPDATES
-
-- Updated for use in python 2.7
-- Now compatible with Linux and Mac OS 10.6 and above.
-- Removed excel interface along with ExcelDocument module.
-- All model inputs and outputs are formatted as csv files including the model control parameters. The inputs are similar to the format of  
-heatsource 8 with some minor changes.
-- Model setup, hydraulics, solar, and temperature routines are initiated via python exectuable scripts.
-- Removed psyco optimization. Psyco is no longer maintained or supported for python 2.7.
-- C module was removed although it may be reintroduced at a future date with updates.
-- Reworked '__version__' to conform to PEP 386 and added documentation.
-- Heat source is now licensed under the GNU General Public License v3.
-- Outputs files get stamped with model version, simulation name, user text in addition to the output parameter, units and date/time.
-- Implements variable number of radial samples (use heatsource 8 switch in control file for version 8 method).
-- Added effective LAI option
-- Added solar azimuth and solar elevation outputs
-
-================================================================================================
 ## ROADMAP
 
 Roadmap for this version
-- Develop routines to convert heatsource v8 inputs to v9 csv format using pandas/xlrd package.
+- Develop routines to convert heatsource v8 inputs to v9 csv format.
 - Fix/look into the Krieter bug.
 - Reformulate Muskingum calcs using updated methods such as Moramarco et al 2006.
 - Update the user manual.
 - Check elevation is a number.
-- General improvement to the QA/QC of certain inputs (see commented lines in CSVinterface).
+- General improvement to the QA/QC of certain inputs (see commented lines in ModelSetup).
 - Register heat source with pypi
 - Make a heatsource package mpkg installer for mac.
 - Decide if cloudiness is a required input for solar runs.
@@ -409,7 +391,7 @@ Future Roadmap
 - Look into issues with including evaporation losses (much higher rates in the first reach than rest of the model).
 - Review cloudiness routines.
 - Output hyporheic energy flux.
-- Consider methodology change for hyporheic to consider recent publications.
+- Consider methodology change for hyporheic
 - Output longitudinal landcover data (i.e. like vegematic in heatsource 7).
 - User control over bottom reflection.
 - Input option for solar radiation measurements.
