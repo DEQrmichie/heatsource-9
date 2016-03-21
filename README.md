@@ -35,20 +35,20 @@ Download the zip file
 ```git clone git://github.com/rmichie/heatsource-9.git```
 
 navigate to setup.py and install  
-```python setup.py install clean --all```
+```python setup.py install```
 
 ================================================================================================
 ## RUNNING THE MODEL
 
-1. Place the control file (HeatSource_Control.csv) and the model run scripts 
-   in the same directory. You can generate a template control file by executing
-   HS9_Setup_Control_File.py.
-2. Open the control file and parameterize it with your model information.
+1. Place the control file (HeatSource_Control.csv) and the model run
+   scripts in the same directory. You can generate a template control 
+   file by executing HS9_Setup_Control_File.py.
+2. Open the control file and parameterize it with your model information. 
    The control file must be named HeatSource_Control.csv
-3. Use HS9_Setup_Model_Inputs.py to build template input files (they will 
+3. Use HS9_Setup_Model_Inputs.py to build template input files (they will
    be saved to your input file directory that is specified in the control file).
 5. Edit the template csv files with your input data. You can use excel. 
-   Save it as a csv.
+ Save it as a csv.
 6. Run the model by executing one of the following model run scripts:
    HS9_Run_Hydraulics_Only.py,
    HS9_Run_Solar_Only.py,
@@ -59,18 +59,21 @@ navigate to setup.py and install
 ================================================================================================
 ## INPUT FILES - GENERAL INFORMATION
 
-1. The heat source control file must be named HeatSource_Control.csv
-2. The other input csv files can be named whatever you want 
-   (file names are specified in the control file).
-3. Do not change the parameter names in the control file. Only change the VALUE column (column 3).
-4. The column header names can be changed but the data needs to be in 
-   the correct column number (see below).
-5. Use the specified unit and unit format identified in the control files 
-   and input files. Example mm/dd/yyyy hh:mm is 07/01/2001 16:00
-6. A parameter value that is not applicable may be left blank.
-7. Tributary and climate data can have multiple files (or just one file).
-   Separate file names and site stream km with commas (see below).
-   
+1. Control and input files are ASCII comma delimited files.
+2. The heat source control file must be named HeatSource_Control.csv
+3. The other input files can be named whatever you want 
+ (file names are specified in the control file).
+4. Do not change the parameter names in the control file. Only change 
+   the VALUE column (column 3).
+5. The column header names can be changed but the data needs to be in 
+ the correct column number (see below).
+6. Use the specified unit and unit format identified in the control files 
+ and input files. Example mm/dd/yyyy hh:mm is 07/01/2001 16:00
+7. A parameter value that is not applicable may be left blank.
+8. Tributary and climate data can have multiple files (or just one file).
+ In the control file, separate file names and site stream km with 
+ commas wrapped in quotes.
+
 ================================================================================================
 ### CONTROL FILE  
 HeatSource_Control.csv
@@ -80,9 +83,12 @@ Technically the parameters can be in any row as long as the parameter names
 don't change and the parameter values are in column 3. 
 If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert 
 back to heat source 8 methods for landcover sampling methods.
-If FALSE, the direction for each the radial samples (n) measured in 
-degrees from 0 (0 = north) will correspond to (total radial samples / 360) x radial sample n. 
-In addition the first landcover sample in each direction will be at the stream node.
+If FALSE, the direction for each of the radial samples (n) measured in 
+degrees from 0 (0 = north) will correspond to 
+(total radial samples / 360) x radial sample n. 
+
+Separate tributary and climate file names and/or site stream km with 
+ commas wrapped in quotes.
 
 |LINE |PARAMETER                                          |VALUE |
 |----:|:--------------------------------------------------|----- |
@@ -135,7 +141,7 @@ The temperature and flow rates of accretion are defined in this file.
 Accretion flows are inflows that enter the stream over more than one 
 stream data node, and typically are subsurface seeps that occur over 
 longer distances than discrete subsurface inflows (i.e. a spring).  
- 
+
 When accretion flows are close enough so that more than one occurs 
 in a model distance step, the accretion flow rates will be summed and a 
 flow based average accretion temperature will be derived and used 
@@ -224,7 +230,7 @@ sources, etc. Outflows can be varous types of water withdrawals. They
 are input with a negative flow rate. Temperatures for outflows are not 
 used by the model.
 
-The the number and stream km of the inflow/outflows is defined in the control file.
+The number and stream km of the inflow/outflows is defined in the control file.
 The flow and temperature are defined at an hourly timestep.  
 
 | DATETIME | FLOW    |TEMPERATURE|
@@ -286,7 +292,7 @@ COLUMN
 ##### LAI  
 Input file formatting when using LAI.
 
-| NAME     | CODE    |HEIGHT    | LAI          | k           | OVERHANG |
+| NAME     | CODE    |HEIGHT    | LAI          | K           | OVERHANG |
 |----------|---------|----------|--------------|-------------|----------|
 | Value    | Value   | Value    | Value        | Value       | Value    |
 
@@ -296,7 +302,7 @@ COLUMN
  (2) CODE (alpha or numeric code)  
  (3) HEIGHT (meters)  
  (4) LAI (Effective Leaf Area Index)  
- (5) k Extinction coefficient  (dimensionless)  
+ (5) K Extinction coefficient  (dimensionless)  
  (6) OVERHANG (meters)  
 
 ================================================================================================
@@ -325,7 +331,7 @@ COLUMN
  (9-n) Landcover Samples (code or height meters)  
  (n-n) Elevation Samples (meters)  
  (n-n) Canopy/LAI Samples (blank if not used)  
- (n-N) k Extinction Coefficient (dimensionless) blank if not used.  
+ (n-N) K Extinction Coefficient (dimensionless) blank if not used.  
 
 Note - the column numbers for the landcover, elevation, and caonpy cover/LAI samples are dependent on user specified information in the control file.
 
@@ -337,8 +343,8 @@ This file defines channel morphology and substrate information.
 Refer to the user manual for more information about each parameter.
 
 COLUMN  
- (1) Stream ID (Optional)  
- (2) Node ID (Optional)  
+ (1) STREAM_ID (Optional)  
+ (2) NODE_ID (Optional)  
  (3) STREAM_KM (headwaters at the top)  
  (4) ELEVATION (meters)  
  (5) GRADIENT (meters/meters)  
