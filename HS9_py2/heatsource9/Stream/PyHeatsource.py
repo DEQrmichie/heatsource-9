@@ -359,28 +359,27 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
                     
                     Solar_blocked_byVeg[zone] = Dummy1 -(Dummy1 *
                                                          fraction_passed)
-                    Dummy1 *=exp(-1 *
-                                 LC_k[dir][zone] *
-                                 (LC_Density[dir][zone] / PL) *
-                                 PLz)
+                    Dummy1 *= fraction_passed
                     
                 else: # Use veg density data
                     # Calculate the riparian extinction value
                     
                     try:
                         RipExtinction = -log(1- LC_Density[dir][zone])/ 10
-                        # Set to zero if no veg
-                        if LC_Height[dir][zone] == 0: RipExtinction = 0
+                        # Set to one if no veg
+                        if LC_Height[dir][zone] == 0:
+                            fraction_passed = 1
+                        else:
+                            fraction_passed = exp(-1* RipExtinction * PLz)
                         
-                    except OverflowError:
-                        # cannot take log of 0, RE is full if it's zero
-                        if LC_Density[dir][zone] == 1: RipExtinction = 1
-                    fraction_passed = exp(-1* RipExtinction * PLz)
+                    except:
+                        # cannot take log of 0, completely blocked
+                        if LC_Density[dir][zone] == 1: fraction_passed = 0
                     
                     Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 *
                                                           fraction_passed)
                     
-                    Dummy1 *= exp(-1* RipExtinction * PLz)
+                    Dummy1 *= fraction_passed
             zone -= 1
         F_Direct[3] = Dummy1
         
@@ -405,30 +404,32 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
         # Account for emergent vegetation
                 
         # emergent path length
-        PL = LC_Height[dir][zone] / sin(radians(Altitude))        
+        PL = LC_Height[0][0] / sin(radians(Altitude))        
         
-        if PL > W_b:
-            PL = W_b
+        #if PL > W_b:
+        #    PL = W_b
         
         if BeersData == "LAI":
             # use LAI data
             fraction_passed = exp(-1 * LC_k[0][0] * LAI[0][0] * PL)
-            F_Diffuse[4] = F_Diffuse[4] * fraction_passed
         else:
             
             try:
                 RipExtinction = -log(1- LC_Density[0][0])/ PL
                 # Set to zero if no veg
-                if LC_Height[0][0] == 0: RipExtinction = 0
+                fraction_passed = exp(-1* RipExtinction * PL)
                 
-            except OverflowError:
-                # cannot take log of 0, RE is full if it's zero
-                if LC_Density[0][0] == 1: RipExtinction = 1
+            except:
+                # cannot take log of 0
+                if LC_Height[0][0] == 0:
+                    # there is no emergent veg
+                    fraction_passed = 1
+                elif LC_Density[0][0] == 1:
+                    # completely blocked
+                    fraction_passed = 0
                 
-            fraction_passed = exp(-1* RipExtinction * PL)            
-            
-            F_Direct[4] = F_Direct[4] * fraction_passed
-            F_Diffuse[4] = F_Diffuse[4] * fraction_passed                
+        F_Direct[4] = F_Direct[4] * fraction_passed
+        F_Diffuse[4] = F_Diffuse[4] * fraction_passed                
 
     #=========================================================
     # 5 - Entering Stream
