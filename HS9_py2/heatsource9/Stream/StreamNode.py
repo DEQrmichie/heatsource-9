@@ -335,7 +335,7 @@ c_k: %3.4f""" % stderr
                                    self.T_tribs[time], self.T_prev,
                                    self.T_sed, self.Q_hyp,self.next_km.T_prev,
                                    self.ShaderList[dir], dir, self.Disp,
-                                   hour, JD, Daytime,Altitude, Zenith,
+                                   hour, JD, Daytime, Altitude, Zenith,
                                    self.prev_km.Q_prev, self.prev_km.T_prev,
                                    solar_only, self.next_km.Mix_T_Delta)
 

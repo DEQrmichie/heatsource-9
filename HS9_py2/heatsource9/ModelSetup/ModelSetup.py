@@ -52,6 +52,7 @@ class ModelSetup(object):
         self.run_type = run_type
         #self.log = log
         self.Reach = {}
+        self.ID2km = {}
 
         if run_type == 4:
             # Setup control file
@@ -233,20 +234,24 @@ class ModelSetup(object):
                         IniParams[k] = str.strip(cf_list[i][2])        
         del(cf_list)
 
-        # These might be blank, make them zeros # TODO check this works with new 9.0.0 implementation
+        # These might be blank, make them zeros 
+        # # TODO check this works with new 9.0.0 implementation
         for key in ["inflowsites","flushdays","wind_a","wind_b"]:
             IniParams[key] = 0.0 if not IniParams[key] else IniParams[key]
 
-        # Convert string TRUE/FALSE to bool. Note this defaults to false if string is not formated exactly as "TRUE"
+        # Convert string TRUE/FALSE to bool. Note this defaults 
+        # to false if string is not formated exactly as "TRUE"
         IniParams["calcalluvium"] = IniParams["calcalluvium"] in ("TRUE")
         IniParams["calcevap"] = IniParams["calcevap"] in ("TRUE")
         IniParams["emergent"] = IniParams["emergent"] in ("TRUE")
         IniParams["heatsource8"] = IniParams["heatsource8"] in ("TRUE")
 
-        # If the number of transverse sample per direction is NOT reported, assume 4 (old default)
+        # If the number of transverse sample per direction 
+        # is NOT reported, assume 4 (old default)
         IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
 
-        # If True use heat source 8 default, same as 8 directions but no north
+        # If True use heat source 8 default, same 
+        # as 8 directions but no north
         if IniParams["heatsource8"] == True:
             IniParams["trans_count"] = 7 
         else:
@@ -258,7 +263,8 @@ class ModelSetup(object):
         else:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["trans_count"])
 
-        # Then make all of these integers because they're used later in for loops
+        # Then make all of these integers 
+        # because they're used later in for loops
         for key in ["inflowsites","flushdays","climatesites", "transsample_count","trans_count"]:
             IniParams[key] = int(IniParams[key])
 
@@ -291,14 +297,17 @@ class ModelSetup(object):
         # make sure alluvium temp is present and a floating point number.
         IniParams["alluviumtemp"] = 0.0 if not IniParams["alluviumtemp"] else float(IniParams["alluviumtemp"])
 
-        # make sure that the timestep divides into 60 minutes, or we may not land squarely on each hour's starting point.
+        # make sure that the timestep divides into 60 minutes, 
+        # or we may not land squarely on each hour's starting point.
         #if 60%IniParams["dt"] > 1e-7:
         if float(60)/IniParams["dt"] - int(float(60)/IniParams["dt"]) > 1e-7:
             raise Exception("I'm sorry, your timestep (%0.2f) must evenly divide into 60 minutes." % IniParams["dt"])
         else:
-            IniParams["dt"] = IniParams["dt"]*60 # make dt measured in seconds
+            # make dt measured in seconds
+            IniParams["dt"] = IniParams["dt"]*60
 
-        # Make sure the output directory ends in a slash based on system platform
+        # Make sure the output directory ends in a 
+        # slash based on system platform
         if (platform.system() == "Windows" and IniParams["outputdir"][-1] != "\\"):
             raise Exception("Output directory needs to have a backslash at end of the path. ..\\outputfolder\\")
 
@@ -315,13 +324,16 @@ class ModelSetup(object):
         # List of kilometers with climate data nodes assigned.
         self.ClimateDataSites = []
 
-        # the distance step must be an exact, greater or equal to one, multiple of the sample rate.
+        # the distance step must be an exact, greater or equal to one, 
+        # multiple of the sample rate.
         if (IniParams["dx"]%IniParams["longsample"]
             or IniParams["dx"]<IniParams["longsample"]):
             raise Exception("Distance step must be a multiple of the Longitudinal transfer rate")
         # Some convenience variables
         self.dx = IniParams["dx"]
-        self.multiple = int(self.dx/IniParams["longsample"]) #We have this many samples per distance step
+        
+        #We have this many samples per distance step
+        self.multiple = int(self.dx/IniParams["longsample"])
 
     def setup_lc_data_headers(self):
         """Generates a list of the landcover data
@@ -336,7 +348,7 @@ class ModelSetup(object):
             type = ["LC","ELE"]
             
         lcdataheaders =["STREAM_ID", "NODE_ID", "STREAM_KM","LONGITUDE","LATITUDE","TOPO_W","TOPO_S","TOPO_E"]     
-        if IniParams["heatsource8"] == True:  # use the heat source 8 methods
+        if IniParams["heatsource8"]:
             dir = ["NE","E","SE","S","SW","W","NW"]
         else:        
             dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
@@ -538,12 +550,15 @@ class ModelSetup(object):
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             # For last node (mouth) we set the downstream node equal 
             # to self, this is because we want to access the node's 
-            # temp if there's no downstream, and this safes us an if statement.
+            # temp if there's no downstream, and this saves us an 
+            # if statement.
                 self.Reach[key].next_km = self.Reach[key]
             # Set a headwater node
             self.Reach[key].head = head
             self.Reach[key].Initialize()
-            # check for a zero slope. We store all of them before checking so we can print a lengthy error that no-one will ever read.
+            # check for a zero slope. We store all of them before 
+            # checking so we can print a lengthy error that no-one 
+            # will ever read.
             if self.Reach[key].S <= 0.0: slope_problems.append(key)
         if self.run_type != 1: # zeros are alright in shade calculations
             if len(slope_problems):
@@ -554,9 +569,14 @@ class ModelSetup(object):
 
     def SetAtmosphericData(self):
         """For each node without climate data, use closest (up or downstream) node's data"""
-        print_console("Setting Atmospheric Data")        
-        sites = self.ClimateDataSites # Localize the variable for speed
-        sites.sort() #Sort the climate site by km. This is necessary for the bisect module
+        print_console("Setting Atmospheric Data")
+        
+        # Localize the variable for speed
+        sites = self.ClimateDataSites 
+        
+        # Sort the climate site by km. This is necessary for 
+        # the bisect module
+        sites.sort() 
         c = count()
         l = self.Reach.keys()
         # This routine iterates through all nodes and uses bisect to 
@@ -572,14 +592,17 @@ class ModelSetup(object):
                 lower = bisect(sites,km)-1 if bisect(sites,km)-1 > 0 else 0
                 # bisect returns the length of a list when the bisecting 
                 # number is greater than the greatest value.
-                # Here we protect by max-ing out at the length of the list.
+                # Here we protect by max-ing out at the length of the 
+                # list.
                 upper = min([bisect(sites,km),len(sites)-1])
-                # Use the indexes to get the kilometers from the sites list
+                # Use the indexes to get the kilometers from the
+                # sites list
                 down = sites[lower]
                 up = sites[upper]
                 # Initialize to upstream's climate data
                 datasite = self.Reach[up]
-                # Only if the distance to the downstream node is closer do we use that
+                # Only if the distance to the downstream node is closer 
+                # do we use that
                 if km-down < up-km: 
                     datasite = self.Reach[down]
                 self.Reach[km].ClimateData = datasite.ClimateData
@@ -592,17 +615,19 @@ class ModelSetup(object):
         print_console("Reading boundary conditions")
         timelist = self.continuoustimelist
 
-        # the data block is a tuple of tuples, each corresponding to a timestamp.      
+        # the data block is a tuple of tuples, each corresponding 
+        # to a timestamp.      
         data = self.read_csv_to_list(IniParams["inputdir"], IniParams["bcfile"], skiprows=1, skipcols=1)
 
         # Convert all the values to floats
         data = [[float(row[val]) for val in range(0, len(row))] for row in data]
 
-        # Check out GetTributaryData() for details on this reformatting of the data
-        # for the progress bar
+        # Check out GetTributaryData() for details on this
+        # reformatting of the data for the progress bar
         length = len(data)
         c = count()
-        # Now set the discharge and temperature boundary condition dictionaries.
+        # Now set the discharge and temperature 
+        # boundary condition dictionaries.
 
         for i in xrange(len(timelist)):
             time = timelist[i]
@@ -621,7 +646,8 @@ class ModelSetup(object):
             #print("Reading boundary conditions",c.next(),length)
             print_console("Reading boundary conditions", True, c.next()+1,length)
 
-        # Next we expand or revise the dictionary to account for the flush period
+        # Next we expand or revise the dictionary to account for the 
+        # flush period
         # Flush flow: model start value over entire flush period
         for i in xrange(len(self.flushtimelist)):
             time = self.flushtimelist[i]
@@ -648,8 +674,11 @@ class ModelSetup(object):
         l.sort()
 
         if ini == "climatekm" or IniParams["inflowsites"] > 0:
-            kms = IniParams[ini].split(",") # get a list of sites by km
-            kms = tuple([float(line.strip()) for line in kms]) # remove spaces and make float
+            # get a list of sites by km
+            kms = IniParams[ini].split(",") 
+        
+            # remove spaces and make float
+            kms = tuple([float(line.strip()) for line in kms]) 
         else:
             kms= tuple([])    
 
@@ -683,8 +712,9 @@ class ModelSetup(object):
         """Build a time list in string format (MM/DD/YYYY HH:MM)
         corresponding to the data start and end dates available
         in the control file"""
-        timelist = []        
-        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) # hourly timestep
+        timelist = []
+        # hourly timestep
+        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) 
         for i in range(0,len(timelist)):
             timelist[i] = strftime("%m/%d/%Y %H:%M",gmtime(timelist[i]))
         return timelist    
@@ -693,13 +723,15 @@ class ModelSetup(object):
         """Build a UNIX time list of floating point time values
         corresponding to the data start and end dates available in
         the control file"""        
-        timelist = []        
-        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) # hourly timestep
+        timelist = []
+        # hourly timestep
+        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600)
         return tuple(timelist)
 
     def GetTimelistFlushPeriod(self):
         """Build a UNIX time list that represents the flushing period"""
-        #This assumes that data is hourly, not tested with variable input timesteps
+        #This assumes that data is hourly, not tested with 
+        # variable input timesteps
         flushtimelist = []
         flushtime = IniParams["flushtimestart"]
         while flushtime < IniParams["modelstart"]:
@@ -710,7 +742,8 @@ class ModelSetup(object):
     def GetTributaryData(self):
         """Populate the tributary flow and temperature values for nodes from the Flow Data page"""
         print_console("Reading inflow data")
-        # Get a list of the timestamps that we have data for, and use that to grab the data block
+        # Get a list of the timestamps that we have data for, and use 
+        # that to grab the data block
         timelist = self.flowtimelist
         data = []
 
@@ -725,16 +758,21 @@ class ModelSetup(object):
         # | Site 1     | Site 2     | Site 3       | ...
         # [((0.3, 15.7), (0.3, 17.7), (0.02, 18.2)), (, ...))]
         # To facilitate each site having it's own two item tuple.
-        # The calls to tuple() just ensure that we are not making lists, which can
-        # be changed accidentally. Without them, the line is easier to understand
+        # The calls to tuple() just ensure that we are not making lists, 
+        # which can be changed accidentally. Without them, the line is 
+        # easier to understand
         data = [tuple(zip(line[0:None:2],line[1:None:2])) for line in data]
 
-        # Get a tuple of kilometers to use as keys to the location of each tributary 
+        # Get a tuple of kilometers to use as keys to the 
+        # location of each tributary 
         kms = self.GetLocations("inflowkm")    
 
         length = len(timelist)
-        tm = count() # Which datapoint time are we recording
-        nodelist = [] # Quick list of nodes with flow data
+        # Which datapoint time are we recording
+        tm = count()
+        
+        # Quick list of nodes with flow data
+        nodelist = [] 
 
         if IniParams["inflowsites"] > 0: 
             for time in timelist:
@@ -747,14 +785,19 @@ class ModelSetup(object):
                     if node not in nodelist or not len(nodelist): nodelist.append(node)
                     if flow is None or (flow > 0 and temp is None):
                         raise Exception("Cannot have a tributary with blank flow or temperature conditions")
-                    # Here, we actually set the tribs library, appending to a tuple. Q_ and T_tribs are
-                    # tuples of values because we may have more than one input for a given node
-                    node.Q_tribs[time] += flow, #Append to tuple
+                    # Here, we actually set the tribs library, appending 
+                    # to a tuple. Q_ and T_tribs are tuples of values 
+                    # because we may have more than one input for a 
+                    # given node
+                    
+                    #Append to tuple
+                    node.Q_tribs[time] += flow, 
                     node.T_tribs[time] += temp,
                     #print("Reading inflow data",tm.next()+1, length)
                     print_console("Reading inflow data", True, tm.next()+1, length * IniParams["inflowsites"])
 
-        # Next we expand or revise the dictionary to account for the flush period
+        # Next we expand or revise the dictionary to account for the 
+        # flush period
         # Flush flow: model start value over entire flush period
         for i in xrange(len(self.flushtimelist)):
             time = self.flushtimelist[i]
@@ -771,15 +814,17 @@ class ModelSetup(object):
             if first_day_time >= second_day:
                 first_day_time = IniParams["modelstart"]
 
-        # Now we strip out the unnecessary values from the dictionaries. This is placed here
-        # at the end so we can dispose of it easily if necessary
+        # Now we strip out the unnecessary values from the dictionaries. 
+        # This is placed here at the end so we can dispose of it 
+        # easily if necessary
         for node in nodelist:
             node.Q_tribs = node.Q_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             node.T_tribs = node.T_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
     def GetClimateData(self):
         """Get data from the input climate data csv file"""
-        # This is remarkably similar to GetInflowData. We get a block of data, then set the dictionary of the node
+        # This is remarkably similar to GetInflowData. We get a block 
+        # of data, then set the dictionary of the node
         print_console("Reading Climate Data")
 
         timelist = self.continuoustimelist
@@ -792,7 +837,8 @@ class ModelSetup(object):
 
         data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata]
 
-        # Get a tuple of kilometers to use as keys to the location of each climate node
+        # Get a tuple of kilometers to use as keys to the location of 
+        # each climate node
         kms = self.GetLocations("climatekm") 
 
         tm = count() # Which datapoint time are we recording
@@ -802,15 +848,21 @@ class ModelSetup(object):
             c = count()
             for cloud, wind, humid, air in line:
                 i = c.next()
-                node = self.Reach[kms[i]] # Index by kilometer
-                # Append this node to a list of all nodes which have climate data
+                
+                # Index by kilometer
+                node = self.Reach[kms[i]] 
+                # Append this node to a list of all nodes which 
+                # have climate data
                 if node.km not in self.ClimateDataSites:
                     self.ClimateDataSites.append(node.km)
                 # Perform some tests for data accuracy and validity
                 if cloud is None: cloud = 0.0
                 if wind is None: wind = 0.0
                 if cloud < 0 or cloud > 1:
-                    if self.run_type == 1: # Alright in shade-a-lator # TODO zeros should not get a pass in solar only runs, fix
+                    # Alright in shade-a-lator 
+                    # # TODO zeros should not get a passed in 
+                    # solar only runs, fix
+                    if self.run_type == 1:
                         cloud = 0.0
                     else: raise Exception("Cloudiness (value of '%s' in Climate Data) must be greater than zero and less than one." % cloud) # TODO RM fix this so it gives the km in exception - actualy do for all
                 if humid < 0 or humid is None or humid > 1:
@@ -837,7 +889,8 @@ class ModelSetup(object):
             if first_day_time >= second_day:
                 first_day_time = IniParams["modelstart"]
 
-        # Now we strip out the climate data outside the model period from the dictionaries. This is placed here
+        # Now we strip out the climate data outside the model period 
+        # from the dictionaries. This is placed here
         # at the end so we can dispose of it easily if necessary
         print_console("Subsetting the Continuous Data to model period")
         tm = count()
@@ -879,7 +932,8 @@ class ModelSetup(object):
         """Take a list of iterables and remove all values of None or empty strings"""
         # Remove None values at the end of each individual list
         for i in xrange(len(lst)):
-            # strip out values of None from the tuple, returning a new tuple
+            # strip out values of None from the tuple, 
+            # returning a new tuple
             lst[i] = [x for x in ifilter(lambda x: x is not None, lst[i])]
         # Remove blank strings from within the list
         for l in lst:
@@ -888,7 +942,8 @@ class ModelSetup(object):
                 if l[i] == "": n.append(i)
             n.reverse()
             for i in n: del l[i]
-        # Make sure there are no zero length lists because they'll fail if we average
+        # Make sure there are no zero length lists because they'll 
+        # fail if we average
         for i in xrange(len(lst)):
             if len(lst[i]) == 0: lst[i].append(0.0)
         return lst
@@ -919,7 +974,7 @@ class ModelSetup(object):
     def GetColumnarData(self):
         """return a dictionary of attributes that are averaged or summed as appropriate"""
         # Pages we grab columns from, and the columns that we grab
-        ttools = ["km","Longitude","Latitude"]
+        ttools = ["streamID", "nodeID", "km","Longitude","Latitude"]
         morph = ["Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth",
                  "hyp_percent","phi","Q_cont","d_cont"]
         flow = ["Q_in","T_in","Q_out"]
@@ -938,17 +993,16 @@ class ModelSetup(object):
         # TODO organize the reading of this data into seperate methods 
         # so it is easier to find later.
         
-        #lcdata = self.read_csv_to_list(IniParams["inputdir"], IniParams["lcdatafile"], skipheader=True, skipfirstcol=False)
-        #morphdata = self.read_csv_to_list(IniParams["inputdir"], IniParams["morphfile"], skipheader=True, skipfirstcol=True)
-        #accdata = self.read_csv_to_list(IniParams["inputdir"], IniParams["accretionfile"], skipheader=True, skipfirstcol=True)
-
         # Setup the headers
         lcdataheaders = self.setup_lc_data_headers()
         # TODO
-        # This fixes the lc headers so they are consistent with the TTools output and rest of the dict keys elsewhere.
-        lcdataheaders = ["STREAM_ID", "NODE_ID"] + ttools + lcdataheaders[5:]
+        # This fixes the lc headers so they are consistent with the 
+        # TTools output and rest of the dict keys elsewhere.
+        lcdataheaders = ttools + lcdataheaders[5:]
         accheaders = ["STREAM_ID", "NODE_ID", "km", "Q_in", "T_in","Q_out"]
-        morphheaders = ["STREAM_ID", "NODE_ID", "km","Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth","hyp_percent","phi"]
+        morphheaders = ["STREAM_ID", "NODE_ID", "km","Elevation","S",
+                        "W_b","z","n","SedThermCond","SedThermDiff",
+                        "SedDepth","hyp_percent","phi"]
 
         # Read data into a dictionary
         lcdata = self.read_csv_to_dict(IniParams["inputdir"],
@@ -970,16 +1024,18 @@ class ModelSetup(object):
         morphdata["d_cont"] = [0.0 for km in kmlist]
 
         # Check for missing values # TODO Fix this
-        #if pd.isnull(morphdata):
-            #raise Exception("Missing data in %s" % IniParams["morphfile"])
-        #if pd.isnull(lcdata):
-            #raise Exception("Missing data in %s" % IniParams["lcdatafile"])
 
         # With accretion data replace NaN with zeros # TODO
         #print("Missing data in %s converted to zeros" % IniParams["accretionfile"])
 
         for f in ttools:
-            data[f] = [float(i) for i in lcdata[f]]
+            if f == "streamID":
+                data[f] = [str(i) for i in lcdata[f]]
+            elif f == "nodeID":
+                data[f] = [int(float(i)) for i in lcdata[f]]
+            else:
+                data[f] = [float(i) for i in lcdata[f]]
+                
         for f in morph:
             data[f] = [float(i) for i in morphdata[f]]
         for f in flow:
@@ -1030,6 +1086,7 @@ class ModelSetup(object):
         self.InitializeNode(node)
         node.dx = IniParams["longsample"]
         self.Reach[node.km] = node
+        self.ID2km[node.nodeID] = node.km
         ############################################
 
         # Figure out how many nodes we should have downstream. We use 
@@ -1046,6 +1103,8 @@ class ModelSetup(object):
                 setattr(node,k,v[i+1])# Add one to ignore boundary node
             self.InitializeNode(node)
             self.Reach[node.km] = node
+            self.ID2km[node.nodeID] = node.km
+            
             #print("Building Stream Nodes", i+1, num_nodes)
             print_console("Building Stream Nodes", True, i+1, num_nodes)
         
@@ -1224,7 +1283,8 @@ class ModelSetup(object):
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) 
-            # This is basically a list of directions, each with one of three topographies
+            # This is basically a list of directions, each 
+            # with one of three topographies
             ElevationList = []
             Angle_Incr = 360.0 / radial_count
             DirNumbers = range(1,radial_count+1)
@@ -1359,7 +1419,8 @@ class ModelSetup(object):
             node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
 
     def BuildZones_w_Values(self):
-        """Build zones when the landcover data files contains explicit vegetation data instead of codes"""
+        """Build zones when the landcover data files contains explicit
+        vegetation data instead of codes"""
 
         LCdata = self.GetLandCoverData() # Pull the LULC Data
         
@@ -1420,7 +1481,9 @@ class ModelSetup(object):
                         node.LC_k[dir][zone] = k[n][i]
                         node.LC_Overhang[dir][zone] = overhang[n][i]
                         n = n + 1
-                        if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
+                        
+                        # 0 is emergent, there is only one value at zone = 0
+                        if dir == 0 and zone == 0:
                             break # go to the next dir            
         
         else:
@@ -1433,10 +1496,11 @@ class ModelSetup(object):
                 dencol = [float(LCdata[row][i+1+(shiftcol*2)]) for row in range(0, len(LCdata))]
                 ohcol = [float(LCdata[row][i+2+(shiftcol*3)]) for row in range(0, len(LCdata))]              
 
-                # Make a list from the LC codes from the column, then send 
-                # that to the multiplier with a lambda function that averages
-                # them appropriately. Note, we're averaging over the values
-                # (e.g. density) not the actual code, which would be meaningless.
+                # Make a list from the LC codes from the column, then s
+                # end that to the multiplier with a lambda function that
+                # averages them appropriately. Note, we're averaging over
+                # the values (e.g. density) not the actual code, which 
+                # would be meaningless.
                 try:
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
                     vdensity.append(self.multiplier([float(x) for x in dencol], average))
@@ -1445,9 +1509,10 @@ class ModelSetup(object):
                 except KeyError, stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
                 if i>6:
-                    # There isn't a stream center elevation (that is in the 
-                    # morphology file), so we don't want to read in first 
-                    # elevation value which s actually the last LULC col.
+                    # There isn't a stream center elevation (that is in 
+                    # the morphology file), so we don't want to read 
+                    # in first elevation value which s actually the 
+                    # last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
                 #print("Reading vegetation heights", i+1, shiftcol+7)
                 print_console("Reading vegetation heights", True, i+1, shiftcol+7)
@@ -1474,9 +1539,11 @@ class ModelSetup(object):
         # topo_nw = self.multiplier([float(LCdata[row][9]) for row in range(0, len(LCdata))], average)
         # topo_n = self.multiplier([float(LCdata[row][10]) for row in range(0, len(LCdata))], average)        
 
-        # ... and you thought things were crazy earlier! Here is where we build up the
-        # values for each node. This is culled from heat source version 7 VB code and discussions
-        # to try to simplify it... yeah, you read that right, simplify it... you should've seen it earlier!
+        # ... and you thought things were crazy earlier! Here is where 
+        # we build up the values for each node. This is culled from heat 
+        # source version 7 VB code and discussions to try to simplify 
+        # it... yeah, you read that right, simplify it... you should've 
+        # seen it earlier!
 
         for h in xrange(len(keys)):
             #print("Building VegZones", h+1, len(keys))
@@ -1485,8 +1552,10 @@ class ModelSetup(object):
             LC_Angle_Max = 0
             VTS_Total = 0 #View to sky value
             # Now we set the topographic elevations in each direction
-            node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) # Topography factor Above Stream Surface
-            # This is basically a list of directions, each with one of three topographies
+            # Topography factor Above Stream Surface
+            node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h])/(90*3) 
+            # This is basically a list of directions, each with one 
+            # of three topographies
             ElevationList = []
             Angle_Incr = 360.0 / radial_count
             DirNumbers = range(1,radial_count+1)

@@ -238,7 +238,7 @@ class ModelControl(object):
         message += "Outputs: {0}\n\n".format(IniParams["outputdir"])
 
         print_console(message)
-        raw_input('Press <ENTER> to close this console')
+        #raw_input('Press <ENTER> to close this console')
 
     #############################################################
     # Three different versions of the run() routine, depending on the 
