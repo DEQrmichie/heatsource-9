@@ -26,9 +26,16 @@ from ..Dieties.IniParamsDiety import IniParams
 class Output(object):
     """Data and fileobject storage class"""
     def __init__(self, reach, start_time, run_type):
-        # Store a sorted list of StreamNodes. This all could be a bit
-        # more abstracted.
-        self.nodes = sorted(reach.itervalues(),reverse=True)
+        # Store a sorted list of StreamNodes.
+        
+        if IniParams["outputkm"] == "all":
+            self.nodes = sorted(reach.itervalues(),reverse=True)
+        
+        else:
+            # specfic outputkm
+            self.nodes = sorted([reach[km] for km in reach if km in IniParams["outputkm"]],
+                                reverse= True)       
+        
         # A reference to the model's starting time 
         # (i.e. when spin-up is over)
         self.start_time = start_time

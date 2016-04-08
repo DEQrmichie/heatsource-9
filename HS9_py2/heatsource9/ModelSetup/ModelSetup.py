@@ -84,6 +84,10 @@ class ModelSetup(object):
                 self.GetClimateData()
                 self.SetAtmosphericData()
                 self.OrientNodes()
+                
+                # setup output km
+                if not IniParams["outputkm"] == "all":
+                    IniParams["outputkm"] = self.GetLocations("outputkm")
 
     def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols):
         """This function reads a csv file into a list of lists indexed
@@ -142,45 +146,47 @@ class ModelSetup(object):
         """Creates the control file dictionary."""
         
         #TODO RM fix so dict is related to numbers or text symbols
-        cf_dict = {"usertxt": [1, "USER TEXT"],
-               "name": [2, "SIMULATION NAME"],
-               "length": [3, "STREAM LENGTH (KILOMETERS)"],
-               "outputdir": [4, "OUTPUT PATH"],
-               "inputdir": [5, "INPUT PATH"],
-               "datastart": [6, "DATA START DATE (mm/dd/yyyy)"],
-               "modelstart": [7, "MODELING START DATE (mm/dd/yyyy)"],
-               "modelend": [8, "MODELING END DATE (mm/dd/yyyy)"],
-               "dataend": [9, "DATA END DATE (mm/dd/yyyy)"],
-               "flushdays": [10, "FLUSH INITIAL CONDITION (DAYS)"],
-               "offset": [11, "TIME OFFSET FROM UTC (HOURS)"],
-               "dt": [12, "MODEL TIME STEP - DT (MIN)"],
-               "dx": [13, "MODEL DISTANCE STEP - DX (METERS)"],
-               "longsample": [14, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)"],
-               "bcfile": [15, "BOUNDARY CONDITION FILE NAME"],
-               "inflowsites": [16, "TRIBUTARY SITES"],
-               "inflowinfiles": [17, "TRIBUTARY INPUT FILE NAMES"],
-               "inflowkm": [18, "TRIBUTARY MODEL KM"],
-               "accretionfile": [19, "ACCRETION INPUT FILE NAME"],
-               "climatesites": [20, "CLIMATE DATA SITES"],
-               "climatefiles": [21, "CLIMATE INPUT FILE NAMES"],
-               "climatekm": [22, "CLIMATE MODEL KM"],
-               "calcevap": [23, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)"],
-               "evapmethod": [24, "EVAPORATION METHOD (Mass Transfer/Penman)"],
-               "wind_a": [25, "WIND FUNCTION COEFFICIENT A"],
-               "wind_b": [26, "WIND FUNCTION COEFFICIENT B"],
-               "calcalluvium": [27, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)"],
-               "alluviumtemp": [28, "DEEP ALLUVIUM TEMPERATURE (*C)"],
-               "morphfile": [29, "MORPHOLOGY DATA FILE NAME"],
-               "lcdatafile": [30, "LANDCOVER DATA FILE NAME"],
-               "lccodefile": [31, "LANDCOVER CODES FILE NAME"],
-               "trans_count": [32, "NUMBER OF TRANSECTS PER NODE"],
-               "transsample_count": [33, "NUMBER OF SAMPLES PER TRANSECT"],
-               "transsample_distance": [34, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)"],
-               "emergent": [35, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)"],
-               "lcdatainput": [36, "LANDCOVER DATA INPUT TYPE (Codes/Values)"],
-               "canopy_data": [37, "CANOPY DATA TYPE (LAI/CanopyCover)"],
-               "vegDistMethod": [38, "VEGETATION ANGLE CALCULATION METHOD (point/zone)"],
-               "heatsource8": [39, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)"]}
+        cf_dict = {"usertxt": [2, "USER NOTES"],
+               "name": [3, "SIMULATION NAME"],
+               "inputdir": [4, "INPUT PATH"],
+               "outputdir": [5, "OUTPUT PATH"],
+               "length": [6, "STREAM LENGTH (KILOMETERS)"],
+               "outputkm": [7, "OUTPUT KILOMETERS"],
+               "datastart": [8, "DATA START DATE (mm/dd/yyyy)"],
+               "modelstart": [9, "MODELING START DATE (mm/dd/yyyy)"],
+               "modelend": [10, "MODELING END DATE (mm/dd/yyyy)"],
+               "dataend": [11, "DATA END DATE (mm/dd/yyyy)"],
+               "flushdays": [12, "FLUSH INITIAL CONDITION (DAYS)"],
+               "offset": [13, "TIME OFFSET FROM UTC (HOURS)"],
+               "dt": [14, "MODEL TIME STEP - DT (MIN)"],
+               "dx": [15, "MODEL DISTANCE STEP - DX (METERS)"],
+               "longsample": [16, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)"],
+               "bcfile": [17, "BOUNDARY CONDITION FILE NAME"],
+               "inflowsites": [18, "TRIBUTARY SITES"],
+               "inflowinfiles": [19, "TRIBUTARY INPUT FILE NAMES"],
+               "inflowkm": [20, "TRIBUTARY MODEL KM"],
+               "accretionfile": [21, "ACCRETION INPUT FILE NAME"],
+               "climatesites": [22, "CLIMATE DATA SITES"],
+               "climatefiles": [23, "CLIMATE INPUT FILE NAMES"],
+               "climatekm": [24, "CLIMATE MODEL KM"],
+               "calcevap": [25, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)"],
+               "evapmethod": [26, "EVAPORATION METHOD (Mass Transfer/Penman)"],
+               "wind_a": [27, "WIND FUNCTION COEFFICIENT A"],
+               "wind_b": [28, "WIND FUNCTION COEFFICIENT B"],
+               "calcalluvium": [29, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)"],
+               "alluviumtemp": [30, "DEEP ALLUVIUM TEMPERATURE (*C)"],
+               "morphfile": [31, "MORPHOLOGY DATA FILE NAME"],
+               "lcdatafile": [32, "LANDCOVER DATA FILE NAME"],
+               "lccodefile": [33, "LANDCOVER CODES FILE NAME"],
+               "trans_count": [34, "NUMBER OF TRANSECTS PER NODE"],
+               "transsample_count": [35, "NUMBER OF SAMPLES PER TRANSECT"],
+               "transsample_distance": [36, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)"],
+               "emergent": [37, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)"],
+               "lcdatainput": [38, "LANDCOVER DATA INPUT TYPE (Codes/Values)"],
+               "canopy_data": [39, "CANOPY DATA TYPE (LAI/CanopyCover)"],
+               "vegDistMethod": [40, "VEGETATION ANGLE CALCULATION METHOD (point/zone)"],
+               "heatsource8": [41, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)"],
+               }
         
         return cf_dict
     
@@ -246,19 +252,19 @@ class ModelSetup(object):
         IniParams["emergent"] = IniParams["emergent"] in ("TRUE")
         IniParams["heatsource8"] = IniParams["heatsource8"] in ("TRUE")
 
-        # If the number of transverse sample per direction 
+        # If the number of transverse samples per direction 
         # is NOT reported, assume 4 (old default)
         IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
 
         # If True use heat source 8 default, same 
         # as 8 directions but no north
-        if IniParams["heatsource8"] == True:
+        if IniParams["heatsource8"]:
             IniParams["trans_count"] = 7 
         else:
             IniParams["trans_count"]
 
         # Set the total number landcover sample count (0 = emergent)
-        if IniParams["heatsource8"] == True:
+        if IniParams["heatsource8"]:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
         else:
             IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["trans_count"])
@@ -269,9 +275,9 @@ class ModelSetup(object):
             IniParams[key] = int(IniParams[key])
 
         # These need to be strings
-        for key in ["inflowkm","climatekm"]:
+        for key in ["inflowkm","climatekm", "outputkm"]:
             IniParams[key] = str(IniParams[key])
-
+            
         # Set up our evaporation method
         IniParams["penman"] = False
         if IniParams["calcevap"]:
@@ -301,7 +307,7 @@ class ModelSetup(object):
         # or we may not land squarely on each hour's starting point.
         #if 60%IniParams["dt"] > 1e-7:
         if float(60)/IniParams["dt"] - int(float(60)/IniParams["dt"]) > 1e-7:
-            raise Exception("I'm sorry, your timestep (%0.2f) must evenly divide into 60 minutes." % IniParams["dt"])
+            raise Exception("I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]))
         else:
             # make dt measured in seconds
             IniParams["dt"] = IniParams["dt"]*60
@@ -668,12 +674,14 @@ class ModelSetup(object):
     def GetLocations(self,ini):
         """Build a list of kilometers corresponding to the tributary
         inflow or climate data sites"""
-        # ini names that are passed: "inflowkm" or "climatekm"
+        # ini names that are passed: "inflowkm" or "climatekm" or "outputkm"
         t = ()
         l = self.Reach.keys()
         l.sort()
 
-        if ini == "climatekm" or IniParams["inflowsites"] > 0:
+        if (ini == "climatekm" or
+            ini == "outputkm" or
+            IniParams["inflowsites"] > 0):
             # get a list of sites by km
             kms = IniParams[ini].split(",") 
         
@@ -1330,7 +1338,7 @@ class ModelSetup(object):
                 # Iterate through each of the zones
                 for s in xrange(transsample_count): 
                     Vheight = vheight[i*transsample_count+s+1][h]
-                    Vdens = vdensity[i*transsample_count+s+1][h] 
+                    Vdens = vdensity[i*transsample_count+s+1][h]
                     Voverhang = overhang[i*transsample_count+s+1][h]
                     Elev = elevation[i*transsample_count+s][h]
                     
@@ -1361,7 +1369,7 @@ class ModelSetup(object):
 
                     # TODO this is a future function where there is a 
                     # landcover sample at the stream node   
-                    if IniParams["heatsource8"] == True:
+                    if IniParams["heatsource8"]:
                         adjust2 = 1
                     else:
                         # if adjust2 = 0 there is a landcover sample 
@@ -1387,12 +1395,11 @@ class ModelSetup(object):
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
                     if IniParams["canopy_data"] == "LAI":
                         # use LAI data
+                        Vk = k[i*transsample_count+s+1][h]
                         
                         # Purpose here is to calculate a LAI where 
-                        # gap fraction = 0.
-                        # hardwired at 12 now. 
-                        # TODO revise this with correct equation. 
-                        LAI_den = Vdens / 12 
+                        # gap fraction = 0.01% (basically zero)
+                        LAI_den = Vdens / -log(0.001) / Vk 
                         if LAI_den > 1:
                             LAI_den = 1
                         W_Vdens_num += veg_angle*float(LAI_den)
