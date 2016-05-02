@@ -15,10 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """BigRedButton holds the main Heat Source model controls.
-The ModelControl class is basically a one-off hack that
-loads and controls the model run. The other functions are
-supplied for use by the CSVinterface, which imports this
-module in order to run the model.
+The ModelControl class loads and controls the model run.
+A model instance object is created using the ModelSetup class.
 """
 from __future__ import with_statement, division, print_function
 
@@ -61,22 +59,25 @@ class ModelControl(object):
     Reach class. Since this was essentially an interim
     solution to the problem, don't hesitate to improve it.
     """
-    def __init__(self, inputdir, control_file, run_type=0,
-                 use_timestamp=True, overwrite=True):
-        """ModelControl(inputdir, control_file, run_type) -> Class
-        instance inputdir is the path to directory where the control csv
-        file is located. control_file is the control file name.
-        run_type is one of 0,1,2,3,4 for Heat Source (Temperature),
-        Solar only, hydraulics only, input setup, or control file setup
-        respectively.
+    def __init__(self, model_dir, control_file, run_type=0):
+        """
+        model_dir is the path to the directory where the
+        control file is located.
+        
+        control_file is the control file name. It must be a comma
+        delimtted text file.
+        
+        run_type is one of 0, 1, 2, or 3 for Heat Source (Temperature),
+        Solar only, hydraulics only respectively.
         """
         
-        # Add heat source model version into IniParams
+        # Add run type and heat source model version into IniParams
         IniParams["version"] = version_string
+        IniParams["run_type"] = run_type
         print_console("Heat Source Version:  {0}".format(IniParams["version"]))
         
         # Create a ModelSetup instance.
-        self.HS = ModelSetup(inputdir, control_file, run_type)
+        self.HS = ModelSetup(model_dir, control_file, run_type)
 
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
@@ -89,11 +90,12 @@ class ModelControl(object):
         if run_type == 0: self.run_all = self.run_hs
         elif run_type == 1: self.run_all = self.run_sh
         elif run_type == 2: self.run_all = self.run_hy
-        elif run_type == 3: self.run_all = self.run_input_setup
-        elif run_type == 4: self.run_all = self.run_cf_setup
         else:
-            logger.error("Bad run_type: {0}. Must be 0, 1, 2, or 3. Something wrong with the executable".format(run_type))
-            raise Exception("Bad run_type: %i. Must be 0, 1, 2, or 3. Something wrong with the executable" % run_type)
+            logger.error("Bad run_type: {0}. Must be 0, 1, or 2.\
+            Something wrong with the executable".format(run_type))
+            raise Exception("Bad run_type: {0}. Must be 0, 1, or 2. \
+            Something wrong with the executable".format(run_type))
+        
         # Create a Chronos iterator that controls all model time.
         Chronos.Start(start = IniParams["modelstart"],
                       stop = IniParams["modelend"],
@@ -207,7 +209,7 @@ class ModelControl(object):
             # by adding the discharge of the mouth...
             out += self.reachlist[-1].Q
             # and tell Chronos that we're moving time forward.
-            time = Chronos(True)
+            time = Chronos(tick=True)
 
         # So, here we are at the end of a model run. First we 
         # calculate how long all of this took
@@ -258,43 +260,27 @@ class ModelControl(object):
         """Call solar routines for each StreamNode"""
         [x.CalcHeat(time, H, M, S, JD, JDC, True) for x in self.reachlist]
 
-def RunHS(inputdir, control_file):
+def RunHS(model_dir, control_file):
     """Run full temperature model"""
     try:
-        HSP = ModelControl(inputdir, control_file, 0)
+        HSP = ModelControl(model_dir, control_file, 0)
         HSP.Run()
         del HSP
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
 
-def RunSH(inputdir, control_file):
+def RunSH(model_dir, control_file):
     """Run solar routines only"""
     try:
-        HSP = ModelControl(inputdir, control_file, 1)
+        HSP = ModelControl(model_dir, control_file, 1)
         HSP.Run()
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
 
-def RunHY(inputdir, control_file):
+def RunHY(model_dir, control_file):
     """Run hydraulics only"""
     try:
-        HSP = ModelControl(inputdir, control_file, 2)
+        HSP = ModelControl(model_dir, control_file, 2)
         HSP.Run()
     except Exception, stderr:
         print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
-
-def run_input_setup(inputdir, control_file, use_timestamp=True, overwrite=True):
-    """Setup and write all input files based on parameterization in
-    the conrol file"""
-    try:
-        ModelSetup(inputdir, control_file, 3, use_timestamp, overwrite)
-    except Exception, stderr:
-        print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
-        
-def run_cf_setup(inputdir, control_file):
-    """Setup and write the conrol file"""
-    try:
-        ErrLog = Logger
-        ModelSetup(inputdir, control_file, 4)
-    except Exception, stderr:
-        print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")        

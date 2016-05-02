@@ -8,20 +8,20 @@ use the batch command files (which point to these files), or
 open terminal and execture manually by typing:
 python -i path/to/this/script/HS9_Setup_Control_File.py"""
 
-from heatsource9 import BigRedButton
-from os.path import dirname, exists, join, realpath, abspath
+from heatsource9.ModelSetup.Inputs import Inputs
+from os.path import abspath
+from os.path import dirname
+from os.path import join
+from os.path import realpath
 
 def getScriptPath():
     """Gets the path to the directory where the script is being executed from."""
     return abspath(join(dirname(realpath(__file__)), '.'))
 
-inputdir = getScriptPath() + '/'
+model_dir = getScriptPath() + '/'
 control_file = 'HeatSource_Control.csv'
 
-if exists(join(inputdir,control_file)) is True:
-    raise Exception("HeatSource_Control.csv already exists.")
-
-# Run control setup, run_type = 4
-BigRedButton.run_cf_setup(inputdir, control_file)
+# Write a blank control file
+Inputs.parameterize_cf(overwrite=False)
 
 

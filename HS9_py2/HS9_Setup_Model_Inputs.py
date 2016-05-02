@@ -8,20 +8,27 @@ use the batch command files (which point to these files), or
 open terminal and execture manually by typing:
 python -i path/to/this/script/HS9_Setup_Model_Inputs.py"""
 
-from heatsource9 import BigRedButton
-from os.path import dirname, exists, join, realpath, abspath
+from heatsource9.ModelSetup.Inputs import Inputs
+from os.path import abspath
+from os.path import dirname
+from os.path import exists
+from os.path import join
+from os.path import realpath
 
 def getScriptPath():
     """Gets the path to the directory where the script is being executed from."""
     return abspath(join(dirname(realpath(__file__)), '.'))
 
-inputdir = getScriptPath() + '/'
+model_dir = getScriptPath() + '/'
 control_file = 'HeatSource_Control.csv'
 
-if exists(join(inputdir,control_file)) is False:
-    raise Exception("HeatSource_Control.csv not found. Move the executable or place the control file in this directory: %s." % inputdir)
+if not exists(join(model_dir,control_file)):
+    raise Exception("HeatSource_Control.csv not found. \
+    Move the executable or place the control file in \
+    this directory: {0}.".format(model_dir))
 
-# Run Setup, run_type = 3
-BigRedButton.run_input_setup(inputdir, control_file)
+# Write blank input files,
+# Control file must already be parameterized
+Inputs.setup(use_timestamp=True, overwrite=False)
 
 

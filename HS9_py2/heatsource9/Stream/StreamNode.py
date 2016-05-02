@@ -31,10 +31,10 @@ _HS = None # Placeholder for heatsource module
 class StreamNode(object):
     """Definition of an individual stream segment"""
     def __init__(self, **kwargs):
-        __slots = ["Latitude", "Longitude", "Elevation", # Geographic params
+        __slots = ["latitude", "longitude", "elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
-                "LC_Height", "LC_Density", "LC_Overhang","LC_k", # Land cover params
+                "lc_height", "lc_canopy", "lc_oh","lc_lai", "lc_k", # Land cover params
                 "ClimateData", # Climate data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
@@ -107,14 +107,14 @@ class StreamNode(object):
         self.F_Total = 0.0
         self.Log = Logger
         self.ShaderList = ()
-        if IniParams["heatsource8"] == True:
+        if IniParams["heatsource8"]:
             radial_count = 7
         else:
             radial_count = IniParams["trans_count"]
-        self.LC_Height = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.LC_Density = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.LC_Overhang = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
-        self.LC_k = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.lc_height = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.lc_canopy = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
+        self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for dir in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
     def GetNodeData(self):
         data = {}
@@ -160,9 +160,9 @@ class StreamNode(object):
             raise Exception(msg)
 
         self.CalcDischarge = self.CalculateDischarge
-        self.C_args = (self.W_b, self.Elevation, self.TopoFactor,
-                       self.ViewToSky, self.phi, self.LC_Density,
-                       self.LC_Height, self.LC_k, self.SedDepth,
+        self.C_args = (self.W_b, self.elevation, self.TopoFactor,
+                       self.ViewToSky, self.phi, self.lc_canopy,
+                       self.lc_height, self.lc_k, self.SedDepth,
                        self.dx, self.dt, self.SedThermCond,
                        self.SedThermDiff, self.Q_in, self.T_in,
                        has_prev, IniParams["transsample_distance"],
@@ -353,7 +353,7 @@ c_k: %3.4f""" % stderr
         self.T_prev = self.T
         self.T = None
         Altitude, Zenith, Daytime, dir, Azimuth_mod \
-            = _HS.CalcSolarPosition(self.Latitude, self.Longitude, hour,
+            = _HS.CalcSolarPosition(self.latitude, self.longitude, hour,
                                     min, sec, self.UTC_offset, JDC,
                                     IniParams["heatsource8"],
                                     IniParams["trans_count"])

@@ -264,9 +264,9 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
     Geom = GetStreamGeometry(Q_new, W_b, z, n, S, D_est, dx, dt)
     return Q_new, Geom
 
-def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
+def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, phi, emergent, LC_Density, LC_Height, LC_k,
+                 BeersData, phi, emergent, lc_canopy, lc_height, lc_k,
                  ShaderList, dir):
     """ """
     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle = ShaderList
@@ -293,7 +293,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
     #======================================================
     # 1 - Above Topography
     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
-        exp(-0.0001184 * Elevation)
+        exp(-0.0001184 * elevation)
     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
     #Calculate Diffuse Fraction
     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
@@ -346,15 +346,15 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
                 PLz = transsample_distance / cos(radians(Altitude))
             
                 # total path length
-                PL = LC_Height[dir][zone] / sin(radians(Altitude))
+                PL = lc_height[dir][zone] / sin(radians(Altitude))
                 
                 # veg shading is occurring from this zone
                 if BeersData == "LAI":
                     #use LAI data
                     
                     fraction_passed = exp(-1 *
-                                          LC_k[dir][zone] *
-                                          (LC_Density[dir][zone] / PL) *
+                                          lc_k[dir][zone] *
+                                          (lc_canopy[dir][zone] / PL) *
                                           PLz)
                     
                     Solar_blocked_byVeg[zone] = Dummy1 -(Dummy1 *
@@ -365,16 +365,16 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
                     # Calculate the riparian extinction value
                     
                     try:
-                        RipExtinction = -log(1- LC_Density[dir][zone])/ 10
+                        RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
                         # Set to one if no veg
-                        if LC_Height[dir][zone] == 0:
+                        if lc_height[dir][zone] == 0:
                             fraction_passed = 1
                         else:
                             fraction_passed = exp(-1* RipExtinction * PLz)
                         
                     except:
                         # cannot take log of 0, completely blocked
-                        if LC_Density[dir][zone] == 1: fraction_passed = 0
+                        if lc_canopy[dir][zone] == 1: fraction_passed = 0
                     
                     Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 *
                                                           fraction_passed)
@@ -404,27 +404,27 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
         # Account for emergent vegetation
                 
         # emergent path length
-        PL = LC_Height[0][0] / sin(radians(Altitude))        
+        PL = lc_height[0][0] / sin(radians(Altitude))        
         
         #if PL > W_b:
         #    PL = W_b
         
         if BeersData == "LAI":
             # use LAI data
-            fraction_passed = exp(-1 * LC_k[0][0] * LAI[0][0] * PL)
+            fraction_passed = exp(-1 * lc_k[0][0] * LAI[0][0] * PL)
         else:
             
             try:
-                RipExtinction = -log(1- LC_Density[0][0])/ PL
+                RipExtinction = -log(1- lc_canopy[0][0])/ PL
                 # Set to zero if no veg
                 fraction_passed = exp(-1* RipExtinction * PL)
                 
             except:
                 # cannot take log of 0
-                if LC_Height[0][0] == 0:
+                if lc_height[0][0] == 0:
                     # there is no emergent veg
                     fraction_passed = 1
-                elif LC_Density[0][0] == 1:
+                elif lc_canopy[0][0] == 1:
                     # completely blocked
                     fraction_passed = 0
                 
@@ -528,8 +528,8 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, Elevation,
     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
     return F_Solar, Solar_blocked_byVeg
 
-def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
-                    LC_Height, ViewToSky, SedDepth, dx, dt, SedThermCond,
+def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
+                    lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
                     Q_hyp, F_Solar5, F_Solar7):
@@ -572,23 +572,23 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
     # Atmospheric variables
     
     # mbar (Chapra p. 567)
-    Sat_Vapor = 6.1275 * exp(17.27 * T_Air / (237.3 + T_Air)) 
-    Air_Vapor = Humidity * Sat_Vapor
+    Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
+    Air_Vapor = humidity * Sat_Vapor
     
     # Stefan-Boltzmann constant (W/m2 K4)    
     Sigma = 5.67e-8
     
     # Dingman p 282
     Emissivity = (1.72 * (((Air_Vapor * 0.1) /
-                           (273.2 + T_Air)) ** (1 / 7)) *
-                  (1 + 0.22 * Cloud ** 2))
+                           (273.2 + T_air)) ** (1 / 7)) *
+                  (1 + 0.22 * cloud ** 2))
     #======================================================
     # Calcualte the atmospheric longwave flux
-    F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_Air + 273.2) ** 4
+    F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
     # Calcualte the backradiation longwave flux
     F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
     # Calcualte the vegetation longwave flux
-    F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_Air + 273.2) ** 4
+    F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
     # Calcualte the net longwave flux
     F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
 
@@ -596,25 +596,25 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
     # Calculate Evaporation FLUX
     #===================================================
     # Atmospheric Variables
-    Pressure = 1013 - 0.1055 * Elevation #mbar
+    Pressure = 1013 - 0.1055 * elevation #mbar
     
     # mbar (Chapra p. 567)
     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
-    Air_Vapor = Humidity * Sat_Vapor
+    Air_Vapor = humidity * Sat_Vapor
     #===================================================
     # Calculate the frictional reduction in wind velocity
-    if emergent and LC_Height > 0:
-        Zd = 0.7 * LC_Height
-        Zo = 0.1 * LC_Height
+    if emergent and lc_height > 0:
+        Zd = 0.7 * lc_height
+        Zo = 0.1 * lc_height
         Zm = 2
         
-        # Vertical Wind Decay Rate (Dingman p. 594)
-        Friction_Velocity = Wind * 0.4 / log((Zm - Zd) / Zo)
+        # Vertical wind Decay Rate (Dingman p. 594)
+        Friction_Velocity = wind * 0.4 / log((Zm - Zd) / Zo)
     else:
         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
         Zd = 0 #Brustsaert (1982) p. 277 Dingman
         Zm = 2
-        Friction_Velocity = Wind
+        Friction_Velocity = wind
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
@@ -630,8 +630,8 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
         #Calculate Evaporation FLUX
         P = 998.2 # kg/m3
         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/*C  Cuenca p 141
-        Delta = (6.1275 * exp(17.27 * T_Air / (237.3 + T_Air)) -
-                 6.1275 * exp(17.27 * (T_Air - 1) / (237.3 + T_Air - 1)))
+        Delta = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
+                 6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
         
         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
         
@@ -644,7 +644,7 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
         F_Evap = -Evap_Rate * LHV * P #W/m2
         # Calculate Convection FLUX
         if (Sat_Vapor - Air_Vapor) != 0:
-            Bowen = Gamma * (T_prev - T_Air) / (Sat_Vapor - Air_Vapor)
+            Bowen = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)
         else:
             Bowen = 1        
     else:
@@ -655,7 +655,7 @@ def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi,
         F_Evap = -Evap_Rate * LHV * P #W/m2
         # Calculate Convection FLUX
         if (Sat_Vapor - Air_Vapor) != 0:
-            Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_Air) /
+            Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_air) /
                      (Sat_Vapor - Air_Vapor))
         else:
             Bowen = 1
@@ -726,8 +726,8 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     
     cloud, wind, humidity, T_air = ClimateData
 
-    W_b, Elevation, TopoFactor, ViewToSky, phi, LC_Density, LC_Height, \
-        LC_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
+    W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
+        lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, BeersData, emergent, \
         wind_a, wind_b, calcevap, penman, calcalluv, T_alluv = C_args
 
@@ -737,12 +737,12 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     
     if daytime:
         solar, veg_block = GetSolarFlux(hour, JD, Altitude, Zenith,
-                                        cloud, d_w, W_b, Elevation,
+                                        cloud, d_w, W_b, elevation,
                                         TopoFactor, ViewToSky,
                                         transsample_distance, transsample_count,
                                         BeersData, phi, emergent,
-                                        LC_Density, LC_Height,
-                                        LC_k, ShaderList, dir)
+                                        lc_canopy, lc_height,
+                                        lc_k, ShaderList, dir)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
@@ -751,8 +751,8 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # regular node
         else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block
 
-    ground = GetGroundFluxes(cloud, wind, humidity, T_air, Elevation,
-                    phi, LC_Height, ViewToSky, SedDepth, dx,
+    ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
+                    phi, lc_height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],

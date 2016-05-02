@@ -14,24 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Main interface class for CSV->Python conversion
-
-ModelSetup provides the single resource for converting the data
-in the CSV files into a list of StreamNode classes for use
-by the Heat Source model.
-"""
 # Builtin methods
 from __future__ import division, print_function
 from itertools import ifilter, izip, chain, repeat, count
 from collections import defaultdict
 from math import ceil, log, degrees, atan
 from os.path import exists, join, normpath, isfile
-from os import unlink
+from os import unlink,  makedirs
 from bisect import bisect
 from time import strptime, ctime, strftime, gmtime
 from calendar import timegm
 from datetime import datetime
-import platform
 import csv
 import operator
 import logging
@@ -39,500 +32,68 @@ logger = logging.getLogger(__name__)
 
 # Heat Source Methods
 from ..Dieties.IniParamsDiety import IniParams
+from ..Dieties.IniParamsDiety import head2var
+from .Inputs import Inputs
 from ..Stream.StreamNode import StreamNode
 from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
 
-class ModelSetup(object):
-    """Generates template model input files and reads input files to
-    paramaterize the model and generate a list of StreamNode instances"""
+class ModelSetup(object): 
+    """
+    ModelSetup contains methods to build a model and
+    StreamNode instances from the input data.
+    """
 
-    def __init__(self, inputdir, control_file, run_type=0,
-                 use_timestamp=True, overwrite=True):
+    def __init__(self, model_dir, control_file, run_type=0):
         self.run_type = run_type
         #self.log = log
         self.Reach = {}
         self.ID2km = {}
-
-        if run_type == 4:
-            # Setup control file
-            self.setup_control_file(inputdir, control_file) 
-        else:
-            self.ReadControlFile(inputdir, control_file)
-
-            if run_type == 3:
-                # Setup input files
-                self.setup_input_files(inputdir, control_file, use_timestamp, overwrite)
-            else:
-                # Setup for a model run
-                # Get the list of model periods times
-                print_console("Starting simulation:  {0}".format(IniParams["name"]))
-
-                self.flowtimelist = self.GetTimelistUNIX()
-                self.continuoustimelist = self.GetTimelistUNIX()
-                self.flushtimelist = self.GetTimelistFlushPeriod()         
-    
-                # Start through the steps of building a reach 
-                # full of StreamNodes
-                self.GetBoundaryConditions()
-                self.BuildNodes()
-                if IniParams["lcdatainput"] == "Values":
-                    self.BuildZones_w_Values()
-                else:
-                    self.BuildZones_w_Codes()
-                self.GetTributaryData()
-                self.GetClimateData()
-                self.SetAtmosphericData()
-                self.OrientNodes()
-                
-                # setup output km
-                if not IniParams["outputkm"] == "all":
-                    IniParams["outputkm"] = self.GetLocations("outputkm")
-
-    def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols):
-        """This function reads a csv file into a list of lists indexed
-        by row number. If there is more than one file it adds
-        another index for the number of filenames. The return data
-        takes this form: data[row][filenameindex][filecolumn]"""
-
-        filenames = [filenames] if isinstance(filenames, list) == False else filenames
-        i = 1
-        for filename in filenames:
-            with open(join(inputdir, filename.strip()), "rU") as file_object:
-                newfile=[row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
-                numcols = len(newfile[0])
-            for row in range(0,skiprows):
-                del(newfile[row])
-            # skip cols
-            newfile = [line[+skipcols:] for line in newfile]
-            # if the value is empty '' replace it with a zero
-            newfile = [['0.0' if val in ['NA', '',' '] else val for val in line] for line in newfile]            
-            if i == 1:
-                data = newfile
-            else:
-                data = [data[row] + newfile[row] for row in range(0,len(newfile))]
-            i = i + 1
-        return data
-
-    def read_csv_to_dict(self, inputdir, filename, colnames):
-        """This function reads data into a dictionary and uses the
-        column names as the key"""
         
-        # each value in each column is appended to a list
-        data=defaultdict(list)
+        # create an input object to mange the data
+        self.inputs = Inputs(model_dir, control_file)
         
-        with open(join(inputdir, filename), "rU") as file_object:
-            reader = csv.DictReader(file_object, dialect="excel")
-            
-            # set the colnames as the dictionary key 
-            reader.fieldnames = colnames
-            # skip the header row
-            reader.next()
-            # read a row as {column1: value1, column2: value2,...}
-            for row in reader:
-                # go over each column name and value
-                for (k, v) in row.items():  
-                    # if the value is empty '' replace it with a zero
-                    # TODO RM insert a routine to check the data type so
-                    # the format is correct
-                    if v in ['NA', '', ' ']:
-                        v = '0.0'
-                    # append the value into the appropriate 
-                    # list based on column name k
-                    data[k].append(v)  
-        return data
-    
-    def create_control_file_dict(self):
-        """Creates the control file dictionary."""
-        
-        #TODO RM fix so dict is related to numbers or text symbols
-        cf_dict = {"usertxt": [2, "USER NOTES"],
-               "name": [3, "SIMULATION NAME"],
-               "inputdir": [4, "INPUT PATH"],
-               "outputdir": [5, "OUTPUT PATH"],
-               "length": [6, "STREAM LENGTH (KILOMETERS)"],
-               "outputkm": [7, "OUTPUT KILOMETERS"],
-               "datastart": [8, "DATA START DATE (mm/dd/yyyy)"],
-               "modelstart": [9, "MODELING START DATE (mm/dd/yyyy)"],
-               "modelend": [10, "MODELING END DATE (mm/dd/yyyy)"],
-               "dataend": [11, "DATA END DATE (mm/dd/yyyy)"],
-               "flushdays": [12, "FLUSH INITIAL CONDITION (DAYS)"],
-               "offset": [13, "TIME OFFSET FROM UTC (HOURS)"],
-               "dt": [14, "MODEL TIME STEP - DT (MIN)"],
-               "dx": [15, "MODEL DISTANCE STEP - DX (METERS)"],
-               "longsample": [16, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)"],
-               "bcfile": [17, "BOUNDARY CONDITION FILE NAME"],
-               "inflowsites": [18, "TRIBUTARY SITES"],
-               "inflowinfiles": [19, "TRIBUTARY INPUT FILE NAMES"],
-               "inflowkm": [20, "TRIBUTARY MODEL KM"],
-               "accretionfile": [21, "ACCRETION INPUT FILE NAME"],
-               "climatesites": [22, "CLIMATE DATA SITES"],
-               "climatefiles": [23, "CLIMATE INPUT FILE NAMES"],
-               "climatekm": [24, "CLIMATE MODEL KM"],
-               "calcevap": [25, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)"],
-               "evapmethod": [26, "EVAPORATION METHOD (Mass Transfer/Penman)"],
-               "wind_a": [27, "WIND FUNCTION COEFFICIENT A"],
-               "wind_b": [28, "WIND FUNCTION COEFFICIENT B"],
-               "calcalluvium": [29, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)"],
-               "alluviumtemp": [30, "DEEP ALLUVIUM TEMPERATURE (*C)"],
-               "morphfile": [31, "MORPHOLOGY DATA FILE NAME"],
-               "lcdatafile": [32, "LANDCOVER DATA FILE NAME"],
-               "lccodefile": [33, "LANDCOVER CODES FILE NAME"],
-               "trans_count": [34, "NUMBER OF TRANSECTS PER NODE"],
-               "transsample_count": [35, "NUMBER OF SAMPLES PER TRANSECT"],
-               "transsample_distance": [36, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)"],
-               "emergent": [37, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)"],
-               "lcdatainput": [38, "LANDCOVER DATA INPUT TYPE (Codes/Values)"],
-               "canopy_data": [39, "CANOPY DATA TYPE (LAI/CanopyCover)"],
-               "vegDistMethod": [40, "VEGETATION ANGLE CALCULATION METHOD (point/zone)"],
-               "heatsource8": [41, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)"],
-               }
-        
-        return cf_dict
-    
-    def setup_control_file(self, inputdir, control_file):
-        """writes the control file to a csv. If there is a populated
-        dictionay if will output the values"""
-        
-        print_console("writing control file")
-        
-        cf_dict = self.create_control_file_dict()
-                
-        # sort so we have a list in the order of the line number
-        cf_sorted = sorted(cf_dict.items(), key=operator.itemgetter(1))
-        cf_list = [line[1] for line in cf_sorted]
-        
-        cf_header = ["LINE", "PARAMETER", "VALUE"]
-        self.write_to_csv(inputdir, control_file, cf_header, cf_list)
-      
-    def write_to_csv(self, outputdir, filename, colnames, outlist):
-        """write the input list to csv"""
-    
-        # insert column header names
-        outlist.insert(0, colnames)
-    
-        with open(join(outputdir, filename), "wb") as file_object:
-            writer = csv.writer(file_object,  dialect= "excel")
-            writer.writerows(outlist)     
-
-    def ReadControlFile(self, inputdir, control_file):
-        """Reads the initialization parameters from the control file
-        into the Initialization dictionary {IniParams} and
-        does some formatting"""
-
-        if exists(join(inputdir,control_file)) == False:
-            logging.ERROR("HeatSource_Control.csv not found {0}".format(join(inputdir,control_file)))
-            raiseException("HeatSource_Control.csv not found. Move the executable or place the control file in this directory: %s." % inputdir)    
-
-        print_console("Reading Control File")
-        
-        cf_dict = self.create_control_file_dict()
-        cf_list = self.read_csv_to_list(inputdir, control_file, skiprows=1, skipcols=0)
-        
-        # TODO put a checker in here
-        #raise Exception("Control file does not have %s" % v) 
-        for k,v in cf_dict.iteritems():
-            for i in range(0,len(cf_list)):
-                if (cf_list[i][1] == v[1]):
-                    if (self.isNum(cf_list[i][2]) == True):
-                        IniParams[k] = float(str.strip(cf_list[i][2]))
-                    else:
-                        IniParams[k] = str.strip(cf_list[i][2])        
-        del(cf_list)
-
-        # These might be blank, make them zeros 
-        # # TODO check this works with new 9.0.0 implementation
-        for key in ["inflowsites","flushdays","wind_a","wind_b"]:
-            IniParams[key] = 0.0 if not IniParams[key] else IniParams[key]
-
-        # Convert string TRUE/FALSE to bool. Note this defaults 
-        # to false if string is not formated exactly as "TRUE"
-        IniParams["calcalluvium"] = IniParams["calcalluvium"] in ("TRUE")
-        IniParams["calcevap"] = IniParams["calcevap"] in ("TRUE")
-        IniParams["emergent"] = IniParams["emergent"] in ("TRUE")
-        IniParams["heatsource8"] = IniParams["heatsource8"] in ("TRUE")
-
-        # If the number of transverse samples per direction 
-        # is NOT reported, assume 4 (old default)
-        IniParams["transsample_count"] = 4.0 if not IniParams["transsample_count"] else IniParams["transsample_count"]
-
-        # If True use heat source 8 default, same 
-        # as 8 directions but no north
-        if IniParams["heatsource8"]:
-            IniParams["trans_count"] = 7 
-        else:
-            IniParams["trans_count"]
-
-        # Set the total number landcover sample count (0 = emergent)
-        if IniParams["heatsource8"]:
-            IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
-        else:
-            IniParams["sample_count"] = int(IniParams["transsample_count"] * IniParams["trans_count"])
-
-        # Then make all of these integers 
-        # because they're used later in for loops
-        for key in ["inflowsites","flushdays","climatesites", "transsample_count","trans_count"]:
-            IniParams[key] = int(IniParams[key])
-
-        # These need to be strings
-        for key in ["inflowkm","climatekm", "outputkm"]:
-            IniParams[key] = str(IniParams[key])
-            
-        # Set up our evaporation method
-        IniParams["penman"] = False
-        if IniParams["calcevap"]:
-            IniParams["penman"] = True if IniParams["evapmethod"] == "Penman" else False
-
-        # Make the dates into datetime instances of the start/stop dates
-        IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00" ,"%m/%d/%Y %H:%M:%S"))
-        IniParams["dataend"] = timegm(strptime(IniParams["dataend"],"%m/%d/%Y")) + 86400
-        
-
-        if IniParams["modelstart"] is None:
-            IniParams["modelstart"] = IniParams["datastart"]
-        else:
-            IniParams["modelstart"] = timegm(strptime(IniParams["modelstart"] + " 00:00:00","%m/%d/%Y %H:%M:%S"))
-
-        if IniParams["modelend"] is None:
-            IniParams["modelend"] = IniParams["dataend"]
-        else:
-            IniParams["modelend"] = timegm(strptime(IniParams["modelend"],"%m/%d/%Y")) + 86400
-
-        IniParams["flushtimestart"] = IniParams["modelstart"] - IniParams["flushdays"]*86400
-
-        # make sure alluvium temp is present and a floating point number.
-        IniParams["alluviumtemp"] = 0.0 if not IniParams["alluviumtemp"] else float(IniParams["alluviumtemp"])
-
-        # make sure that the timestep divides into 60 minutes, 
-        # or we may not land squarely on each hour's starting point.
-        #if 60%IniParams["dt"] > 1e-7:
-        if float(60)/IniParams["dt"] - int(float(60)/IniParams["dt"]) > 1e-7:
-            raise Exception("I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]))
-        else:
-            # make dt measured in seconds
-            IniParams["dt"] = IniParams["dt"]*60
-
-        # Make sure the output directory ends in a 
-        # slash based on system platform
-        if (platform.system() == "Windows" and IniParams["outputdir"][-1] != "\\"):
-            raise Exception("Output directory needs to have a backslash at end of the path. ..\\outputfolder\\")
-
-        if (platform.system() == "Darwin" and IniParams["outputdir"][-1] != "/"):
-            raise Exception("Output directory needs to have a forward slash at the end of the path. ../outputfolder/")    
-
-        # Set up the log file in the outputdir
-        #self.log.SetFile(normpath(join(IniParams["outputdir"],"outfile.log")))
-        
+        # read control file and paramaterize IniParams
+        self.inputs.import_control_file()
+                        
         # Make empty Dictionaries for the boundary conditions
+
         self.Q_bc = Interpolator()
         self.T_bc = Interpolator()
-
+    
         # List of kilometers with climate data nodes assigned.
         self.ClimateDataSites = []
-
-        # the distance step must be an exact, greater or equal to one, 
-        # multiple of the sample rate.
-        if (IniParams["dx"]%IniParams["longsample"]
-            or IniParams["dx"]<IniParams["longsample"]):
-            raise Exception("Distance step must be a multiple of the Longitudinal transfer rate")
+    
         # Some convenience variables
         self.dx = IniParams["dx"]
-        
-        #We have this many samples per distance step
+    
+        # We have this many samples per distance step
         self.multiple = int(self.dx/IniParams["longsample"])
 
-    def setup_lc_data_headers(self):
-        """Generates a list of the landcover data
-        file column header names"""
+        # Setup for a model run
+        # Get the list of model periods times
+        print_console("Starting simulation:  {0}".format(IniParams["name"]))
 
+        self.flowtimelist = self.GetTimelistUNIX()
+        self.continuoustimelist = self.GetTimelistUNIX()
+        self.flushtimelist = self.GetTimelistFlushPeriod()
+
+        # Start through the steps of building a reach 
+        # full of StreamNodes
+        self.GetBoundaryConditions()
+        self.BuildNodes()
         if IniParams["lcdatainput"] == "Values":
-            if IniParams["canopy_data"] == "LAI":  #Use LAI methods
-                type = ["LC","ELE","LAI","k", "OH"]
-            else:        
-                type = ["LC","ELE","CAN", "OH"]
+            self.BuildZones_w_Values()
         else:
-            type = ["LC","ELE"]
-            
-        lcdataheaders =["STREAM_ID", "NODE_ID", "STREAM_KM","LONGITUDE","LATITUDE","TOPO_W","TOPO_S","TOPO_E"]     
-        if IniParams["heatsource8"]:
-            dir = ["NE","E","SE","S","SW","W","NW"]
-        else:        
-            dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
-
-        zone = range(1,int(IniParams["transsample_count"])+1)
-
-        # Concatenate the type, dir, and zone and order in the correct way
-        for t in type:
-            for d in range(0,len(dir)):
-                for z in range(0,len(zone)):
-                    if t!="ELE" and d==0 and z==0:
-                        #lcdataheaders.append(t+"_EMERGENT") # add emergent
-                        lcdataheaders.append(t+"_T0_S0") # add emergent                        
-                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
-                    else:
-                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
-
-        return lcdataheaders
-
-    def setup_input_files(self, inputdir, control_file, use_timestamp=True, overwrite=True):
-        """Formats and writes blank input files based on
-        settings in the control file"""
-
-        print_console("Starting input file setup")
-
-        now = datetime.now()    
-        timestamp = now.strftime("%Y%m%d_%H%M%S")
-        timelist= self.GetTimeListString()	
-        kmlist= self.GetStreamKMlist()
-
-        # For inflow and climate data there can be a single input 
-        # file for each node OR just one input file with multiple 
-        # nodes in the file, This creates a list of the tirb 
-        # and climate file names if there is more than one   
-        if IniParams["inflowsites"] > 0:
-            tribfiles = IniParams["inflowinfiles"].split(",")
-        climatefiles = IniParams["climatefiles"].split(",")	
-
-        # Landcover data headers
-        lcdataheaders = self.setup_lc_data_headers()
-
-        # This just repeats the header if needed based on the 
-        # number of sites and files.
-        climateheaders=["DATETIME"]+["CLOUDINESS", "WIND_SPEED", "RELATIVE_HUMIDITY", "AIR_TEMPERATURE"]*int((IniParams["climatesites"]/len(climatefiles)))
+            self.BuildZones_w_Codes()
+        self.GetTributaryData()
+        self.GetClimateData()
+        self.SetAtmosphericData()
+        self.OrientNodes()
         
-        if IniParams["inflowsites"] > 0:
-            inflowheaders = ["DATETIME"]+["FLOW","TEMPERATURE"]*int((IniParams["inflowsites"]/len(tribfiles)))
-            
-        # This sets the header names for the other input files
-        bcheaders = ["DATETIME","FLOW", "TEMPERATURE"]
-        if IniParams["canopy_data"] == "LAI":  #Use LAI methods
-            lccodesheader = ["NAME","CODE","HEIGHT","LAI","k","OVERHANG"]
-        else:
-            lccodesheader = ["NAME","CODE","HEIGHT","CANOPY_COVER","OVERHANG"]
-
-        accheaders = ["STREAM_ID", "NODE_ID","STREAM_KM","INFLOW","TEMPERATURE","OUTFLOW"]
-        morphheaders = ["STREAM_ID", "NODE_ID","STREAM_KM","ELEVATION","GRADIENT","BOTTOM_WIDTH",
-                    "CHANNEL_ANGLE_Z","MANNINGS_n","SED_THERMAL_CONDUCTIVITY",
-                    "SED_THERMAL_DIFFUSIVITY","SED_HYPORHEIC_THICKNESSS",
-                    "%HYPORHEIC_EXCHANGE","POROSITY"]
-        
-        bclist= [[t, None, None] for t in timelist]
-        lcdatalist= [[None, None, km]+[None]*(len(lcdataheaders)-3) for km in kmlist]
-        acclist= [[None, None, km]+[None]*3 for km in kmlist]
-        morphlist= [[None, None, km]+[None]*10 for km in kmlist]
-        
-        # This writes to csv using the file name from the control 
-        # file and adds a timestamp
-        
-        if use_timestamp:
-            bc_file = "input_"+timestamp+"_"+IniParams["bcfile"]
-            if IniParams["lcdatainput"] == "Codes":
-                lccodes_file = "input_"+timestamp+"_"+IniParams["lccodefile"]
-            lcdata_file = "input_"+timestamp+"_"+IniParams["lcdatafile"]
-            acc_file = "input_"+timestamp+"_"+IniParams["accretionfile"]
-            morph_file = "input_"+timestamp+"_"+IniParams["morphfile"]
-        else:
-            # Name the files as they appear in the control file
-            bc_file = IniParams["bcfile"]
-            if IniParams["lcdatainput"] == "Codes":
-                lccodes_file = IniParams["lccodefile"]
-            lcdata_file = IniParams["lcdatafile"]
-            acc_file = IniParams["accretionfile"]
-            morph_file = IniParams["morphfile"]
-        
-        print_console("Writing empty csv files")
-        
-        
-        if overwrite:
-            # overwrite the inputs regardless if they exist or not
-            self.write_to_csv(IniParams["inputdir"], bc_file, bcheaders, bclist)
-
-            if IniParams["lcdatainput"] == "Codes":
-                self.write_to_csv(IniParams["inputdir"], lccodes_file,
-                                  lccodesheader, [[None]])
-            else:
-                print_console("...Landcover input type = Values. land cover codes file not written")
-                
-            self.write_to_csv(IniParams["inputdir"], lcdata_file,
-                              lcdataheaders, lcdatalist)
-            self.write_to_csv(IniParams["inputdir"], acc_file,
-                              accheaders, acclist)
-            self.write_to_csv(IniParams["inputdir"], morph_file,
-                              morphheaders, morphlist)
-            
-        else:
-            # check to see if the files exists and write if not
-            if not isfile(join(IniParams["inputdir"], bc_file)):
-                self.write_to_csv(IniParams["inputdir"], bc_file,
-                                  bcheaders, bclist)
-                
-            if IniParams["lcdatainput"] == "Codes":
-                if not isfile(join(IniParams["inputdir"], lccodes_file)):
-                    self.write_to_csv(IniParams["inputdir"], lccodes_file,
-                                      lccodesheader, [[None]])
-            else:
-                print_console("...Landcover input type = Values. land cover codes file not written")
-                
-            if not isfile(join(IniParams["inputdir"], lcdata_file)):
-                self.write_to_csv(IniParams["inputdir"], lcdata_file,
-                                  lcdataheaders, lcdatalist)
-            if not isfile(join(IniParams["inputdir"], acc_file)):
-                self.write_to_csv(IniParams["inputdir"], acc_file,
-                                  accheaders, acclist)
-            if not isfile(join(IniParams["inputdir"], morph_file)):
-                self.write_to_csv(IniParams["inputdir"], morph_file,
-                                  morphheaders, morphlist)
-
-        for file in climatefiles:
-            climatelist = [[t] + [None]*4*int((IniParams["climatesites"]/len(climatefiles))) for t in timelist]
-            
-            if use_timestamp:
-                climate_filename = "input_"+timestamp+"_"+file.strip()
-            else:
-                climate_filename = file.strip()
-            
-            if overwrite:
-                self.write_to_csv(IniParams["inputdir"],climate_filename, climateheaders, climatelist)
-            else:
-                if not isfile(join(IniParams["inputdir"], climate_filename)):
-                    self.write_to_csv(IniParams["inputdir"],climate_filename, climateheaders, climatelist)
-
-        if IniParams["inflowsites"] > 0:
-            for file in tribfiles:
-                inflowlist = [[t] + [None]*2*int((IniParams["inflowsites"]/len(tribfiles))) for t in timelist]
-                
-                if use_timestamp:
-                    trib_filename = "input_"+timestamp+"_"+file.strip()
-                else:
-                    trib_filename = file.strip()
-                    
-                if overwrite:
-                    self.write_to_csv(IniParams["inputdir"],trib_filename, inflowheaders, inflowlist)
-                else:
-                    if not isfile(join(IniParams["inputdir"], trib_filename)):
-                        self.write_to_csv(IniParams["inputdir"],trib_filename, inflowheaders, inflowlist)
-        else:
-            print_console("Inflow Sites = 0, inflow file not written")
-
-        print_console("Finished input file setup")
-
-    def isNum(self,v):
-        try:
-            inNumberint = int(v)
-            isInt = True
-        except ValueError:
-            isInt = False
-            pass
-        try:
-            inNumberfloat = float(v)
-            isFloat = True
-        except ValueError:
-            isFloat = False
-            pass
-        if(isInt == True or isFloat == True):
-            return True
-        else:
-            return False
+        # setup output km
+        if not IniParams["outputkm"] == "all":
+            IniParams["outputkm"] = self.GetLocations("outputkm")
 
     def OrientNodes(self):
         print_console("Initializing StreamNodes")      
@@ -569,10 +130,7 @@ class ModelSetup(object):
         if self.run_type != 1: # zeros are alright in shade calculations
             if len(slope_problems):
                 raise Exception ("The following reaches have zero slope. Kilometers: %s" %",".join(['%0.3f'%i for i in slope_problems]))
-
-    def close(self):
-        del self.T_bc, self.Reach   
-
+ 
     def SetAtmosphericData(self):
         """For each node without climate data, use closest (up or downstream) node's data"""
         print_console("Setting Atmospheric Data")
@@ -623,10 +181,7 @@ class ModelSetup(object):
 
         # the data block is a tuple of tuples, each corresponding 
         # to a timestamp.      
-        data = self.read_csv_to_list(IniParams["inputdir"], IniParams["bcfile"], skiprows=1, skipcols=1)
-
-        # Convert all the values to floats
-        data = [[float(row[val]) for val in range(0, len(row))] for row in data]
+        data = self.inputs.import_bc()
 
         # Check out GetTributaryData() for details on this
         # reformatting of the data for the progress bar
@@ -672,9 +227,13 @@ class ModelSetup(object):
         self.T_bc = self.T_bc.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
     def GetLocations(self,ini):
-        """Build a list of kilometers corresponding to the tributary
-        inflow or climate data sites"""
-        # ini names that are passed: "inflowkm" or "climatekm" or "outputkm"
+        """Build a list of kilometers corresponding to the ini parameter
+        that is passed.
+        
+        ini can equal: "inflowkm", "climatekm", or "outputkm"
+        corresponding to tributary inflow sites, climate data sites,
+        or the model output kilometers"""
+        
         t = ()
         l = self.Reach.keys()
         l.sort()
@@ -714,18 +273,7 @@ class ModelSetup(object):
         kmlist = []    
         kmlist = [(node * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
         kmlist.sort(reverse=True)
-        return kmlist    
-
-    def GetTimeListString(self):
-        """Build a time list in string format (MM/DD/YYYY HH:MM)
-        corresponding to the data start and end dates available
-        in the control file"""
-        timelist = []
-        # hourly timestep
-        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) 
-        for i in range(0,len(timelist)):
-            timelist[i] = strftime("%m/%d/%Y %H:%M",gmtime(timelist[i]))
-        return timelist    
+        return kmlist       
 
     def GetTimelistUNIX(self):
         """Build a UNIX time list of floating point time values
@@ -748,19 +296,15 @@ class ModelSetup(object):
         return tuple(flushtimelist)
 
     def GetTributaryData(self):
-        """Populate the tributary flow and temperature values for nodes from the Flow Data page"""
+        """Populate the tributary flow and temperature values for
+        nodes from the Flow Data page"""
         print_console("Reading inflow data")
         # Get a list of the timestamps that we have data for, and use 
         # that to grab the data block
         timelist = self.flowtimelist
         data = []
-
         if IniParams["inflowsites"] > 0:
-            tribfiles = IniParams["inflowinfiles"].split(",")
-            data = self.read_csv_to_list(IniParams["inputdir"], tribfiles, skiprows=1, skipcols=1)
-
-            # Convert all the values to floats
-            data = [[float(row[val]) for val in range(0, len(row))] for row in data]
+            data = self.inputs.import_inflow()
 
         # The data is being put into this format
         # | Site 1     | Site 2     | Site 3       | ...
@@ -792,7 +336,8 @@ class ModelSetup(object):
                     node = self.Reach[kms[i]] # Index by kilometer
                     if node not in nodelist or not len(nodelist): nodelist.append(node)
                     if flow is None or (flow > 0 and temp is None):
-                        raise Exception("Cannot have a tributary with blank flow or temperature conditions")
+                        raise Exception("Cannot have a tributary with \
+                        blank flow or temperature conditions")
                     # Here, we actually set the tribs library, appending 
                     # to a tuple. Q_ and T_tribs are tuples of values 
                     # because we may have more than one input for a 
@@ -837,11 +382,7 @@ class ModelSetup(object):
 
         timelist = self.continuoustimelist
 
-        climatefiles = IniParams["climatefiles"].split(",")
-        climatedata = self.read_csv_to_list(IniParams["inputdir"], climatefiles, skiprows=1, skipcols=1)
-
-        # convert all the strings to floats
-        climatedata =[[float(line[i]) for i in range(0,len(line))] for line in climatedata]
+        climatedata = self.inputs.import_climate()
 
         data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata]
 
@@ -854,7 +395,7 @@ class ModelSetup(object):
         for time in timelist:
             line = data.pop(0)
             c = count()
-            for cloud, wind, humid, air in line:
+            for cloud, wind, humidity, T_air in line:
                 i = c.next()
                 
                 # Index by kilometer
@@ -873,15 +414,15 @@ class ModelSetup(object):
                     if self.run_type == 1:
                         cloud = 0.0
                     else: raise Exception("Cloudiness (value of '%s' in Climate Data) must be greater than zero and less than one." % cloud) # TODO RM fix this so it gives the km in exception - actualy do for all
-                if humid < 0 or humid is None or humid > 1:
+                if humidity < 0 or humidity is None or humidity > 1:
                     if self.run_type == 1: # Alright in shade-a-lator
-                        humid = 0.0
-                    else: raise Exception("Humidity (value of '%s' in Climate Data) must be greater than zero and less than one." % humid)
-                if air is None or air < -90 or air > 58:
+                        humidity = 0.0
+                    else: raise Exception("Humidity (value of '%s' in Climate Data) must be greater than zero and less than one." % humidity)
+                if T_air is None or T_air < -90 or T_air > 58:
                     if self.run_type == 1: # Alright in shade-a-lator
-                        air = 0.0
-                    else: raise Exception("Air temperature input (value of '%s' in Climate Data) outside of world records, -89 to 58 deg C." % air)
-                node.ClimateData[time] = cloud, wind, humid, air
+                        T_air = 0.0
+                    else: raise Exception("Air temperature input (value of '%s' in Climate Data) outside of world records, -89 to 58 deg C." % T_air)
+                node.ClimateData[time] = cloud, wind, humidity, T_air
             #print("Reading climate data", tm.next()+1, length)
             print_console("Reading climate data", True, tm.next()+1, length)
 
@@ -974,100 +515,69 @@ class ModelSetup(object):
         stripNone = lambda y: [i for i in ifilter(lambda x: x is not None, y)]
         return [predicate(stripNone(x)) for x in self.zipper(iterable,self.multiple)]
 
-    def zeroOutList(self, lst): # TODO Not used
-        """Replace blank values in a list with zeros"""
-        test = lambda x: 0.0 if x=="" else x
-        return [test(i) for i in lst]
-
     def GetColumnarData(self):
-        """return a dictionary of attributes that are averaged or summed as appropriate"""
-        # Pages we grab columns from, and the columns that we grab
-        ttools = ["streamID", "nodeID", "km","Longitude","Latitude"]
-        morph = ["Elevation","S","W_b","z","n","SedThermCond","SedThermDiff","SedDepth",
-                 "hyp_percent","phi","Q_cont","d_cont"]
-        flow = ["Q_in","T_in","Q_out"]
-        # Ways that we grab the columns
-        sums = ["hyp_percent","Q_in","Q_out"] # These are summed, not averaged
+        """
+        Return a dictionary of input attributes that are
+        averaged or summed as appropriate
+        """        
+        # columns from we grab from the inputs
+        lc = ["STREAM_ID", "NODE_ID", "STREAM_KM","LONGITUDE","LATITUDE"]
+        
+        morph = ["ELEVATION","GRADIENT","BOTTOM_WIDTH",
+                 "CHANNEL_ANGLE_Z","MANNINGS_n",
+                 "SED_THERMAL_CONDUCTIVITY",
+                 "SED_THERMAL_DIFFUSIVITY",
+                 "SED_HYPORHEIC_THICKNESSS","HYPORHEIC_PERCENT",
+                 "POROSITY", "Q_cont","d_cont"]
+        
+        flow = ["INFLOW","TEMPERATURE","OUTFLOW"]
+        
+        # Ways that we grab the columns (named as model variables)
+        # These are summed, not averaged
+        sums = ["hyp_percent","Q_in","Q_out"]
         mins = ["km"]
-        aves = ["Longitude","Latitude","Elevation","S","W_b","z","n","SedThermCond",
-                "SedThermDiff","SedDepth","phi", "Q_cont","d_cont","T_in"]
+        aves = ["longitude","latitude","elevation","S","W_b","z","n",
+                "SedThermCond","SedThermDiff","SedDepth","phi",
+                "Q_cont","d_cont","T_in"]        
 
+        #sums = ["HYPORHEIC_PERCENT","INFLOW","OUTFLOW"]
+        #mins = ["STREAM_KM"]
+        #aves = ["LONGITUDE","LATITUDE","ELEVATION","GRADIENT",
+                 #"BOTTOM_WIDTH","CHANNEL_ANGLE_Z","MANNINGS_n",
+                 #"SED_THERMAL_CONDUCTIVITY",
+                 #"SED_THERMAL_DIFFUSIVITY", "SED_HYPORHEIC_THICKNESSS",
+                 #"POROSITY", "Q_cont","d_cont", "TEMPERATURE"]        
+        
         data = {}
 
-        # Get all the "columnar data" from the csv files. Note Stream Km 
-        # is brought in as an index file and set as data type object.
-        # This is not a perfect method but it is done to avoid trailing 
-        # on floating point values messing with the dictionary.
-        # TODO organize the reading of this data into seperate methods 
-        # so it is easier to find later.
-        
-        # Setup the headers
-        lcdataheaders = self.setup_lc_data_headers()
-        # TODO
-        # This fixes the lc headers so they are consistent with the 
-        # TTools output and rest of the dict keys elsewhere.
-        lcdataheaders = ttools + lcdataheaders[5:]
-        accheaders = ["STREAM_ID", "NODE_ID", "km", "Q_in", "T_in","Q_out"]
-        morphheaders = ["STREAM_ID", "NODE_ID", "km","Elevation","S",
-                        "W_b","z","n","SedThermCond","SedThermDiff",
-                        "SedDepth","hyp_percent","phi"]
-
         # Read data into a dictionary
-        lcdata = self.read_csv_to_dict(IniParams["inputdir"],
-                                       IniParams["lcdatafile"],
-                                       lcdataheaders)
-        morphdata = self.read_csv_to_dict(IniParams["inputdir"],
-                                          IniParams["morphfile"],
-                                          morphheaders)
-        accdata = self.read_csv_to_dict(IniParams["inputdir"],
-                                        IniParams["accretionfile"],
-                                        accheaders)
-
-        # With accretion data replace NaN with zeros TODO
+        lcdata = self.inputs.import_lcdata(return_list=False)
+        morphdata = self.inputs.import_morph(return_list=False)
+        accdata = self.inputs.import_accretion()
 
         # Add these columns to morph data since they do not 
-        # exist in the input file.
+        # exist in the input file. 
+        # TODO
         kmlist= self.GetStreamKMlist()
         morphdata["Q_cont"] = [0.0 for km in kmlist]
         morphdata["d_cont"] = [0.0 for km in kmlist]
-
-        # Check for missing values # TODO Fix this
-
-        # With accretion data replace NaN with zeros # TODO
-        #print("Missing data in %s converted to zeros" % IniParams["accretionfile"])
-
-        for f in ttools:
-            if f == "streamID":
-                data[f] = [str(i) for i in lcdata[f]]
-            elif f == "nodeID":
-                data[f] = [int(float(i)) for i in lcdata[f]]
-            else:
-                data[f] = [float(i) for i in lcdata[f]]
-                
-        for f in morph:
-            data[f] = [float(i) for i in morphdata[f]]
-        for f in flow:
-            data[f] = [float(i) for i in accdata[f]]
-
-        # Longitude check
-        if max(data["Longitude"]) > 180:
-            long_list = list(data["Longitude"])
-            max1 = max(long_list)
-            index1 = long_list.index(max1)
-            rkm = data["km"][index1]
-            raise Exception("Longitude must be less than 180 degrees. At stream km = " + str(rkm) + ", longitude = " + str(max1))
-        if min(data[ttools[1]]) < -180:
-            long_list = list(data["Longitude"])
-            min1 = min(long_list)
-            index1 = long_list.index(min1)
-            rkm = data["Longitude"][index1]
-            raise Exception("Longitude must be greater than -180 degrees. At stream km = " + str(rkm) + ", longitude = " + str(min1))
-        # Latitude check
-        if max(data["Latitude"]) > 90 or min(data["Latitude"]) < -90:
-            raise Exception("Latitude must be greater than -90 and less than 90 degrees")
-
-        # Then sum and average things as appropriate. multiplier() takes a tuple
-        # and applies the given lambda function to that tuple.
+        
+        # Add the values into the data dictionary but
+        # we have to switch the key names because they are not 
+        # consistent with model variable names. This needs to be fixed. 
+        # TODO
+        for k in lc:
+            data[head2var[k]] = [i for i in lcdata[k]]
+            
+        for k in morph:
+            data[head2var[k]] = [i for i in morphdata[k]]
+            
+        for k in flow:
+            data[head2var[k]] = [i for i in accdata[k]]
+             
+        # Then sum and average things as appropriate. 
+        # multiplier() takes a tuple and applies the given lambda 
+        # function to that tuple.
         for attr in sums:
             data[attr] = self.multiplier(data[attr],lambda x:sum(x))
         for attr in aves:
@@ -1080,9 +590,10 @@ class ModelSetup(object):
         # This is the worst of the methods but it works. # TODO
         print_console("Building Stream Nodes")
         Q_mb = 0.0
-        # Grab all of the data in a dictionary
+        
+         # Grab all of the data in a dictionary
         data = self.GetColumnarData()
-        #################################
+
         # Build a boundary node
         node = StreamNode(run_type=self.run_type,Q_mb=Q_mb)
         # Then set the attributes for everything in the dictionary
@@ -1095,7 +606,7 @@ class ModelSetup(object):
         node.dx = IniParams["longsample"]
         self.Reach[node.km] = node
         self.ID2km[node.nodeID] = node.km
-        ############################################
+
 
         # Figure out how many nodes we should have downstream. We use 
         # math.ceil() because if we end up with a fraction, that means 
@@ -1113,7 +624,6 @@ class ModelSetup(object):
             self.Reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
             
-            #print("Building Stream Nodes", i+1, num_nodes)
             print_console("Building Stream Nodes", True, i+1, num_nodes)
         
         # Find the mouth node and calculate the actual distance
@@ -1131,7 +641,7 @@ class ModelSetup(object):
         LCcodes = self.GetLandCoverCodes()
         
         # Pull the LULC Data
-        LCdata = self.GetLandCoverData() 
+        LCdata = self.inputs.import_lcdata(return_list=True) 
         
         average = lambda x:sum(x)/len(x)
         transsample_count = IniParams["transsample_count"]
@@ -1143,7 +653,7 @@ class ModelSetup(object):
         keys.sort(reverse=True)
         
         vheight = []
-        vdensity = []
+        vcanopy = []
         overhang = []
         elevation = []        
         
@@ -1171,7 +681,7 @@ class ModelSetup(object):
                     vheight.append(self.multiplier([float(LCcodes[x][0])
                                                     for x in col],
                                                    average))
-                    vdensity.append(self.multiplier([float(LCcodes[x][1])
+                    vcanopy.append(self.multiplier([float(LCcodes[x][1])
                                                      for x in col],
                                                     average))
                     k.append(self.multiplier([float(LCcodes[x][2])
@@ -1189,7 +699,6 @@ class ModelSetup(object):
                     # the last LULC col.
                     
                     elevation.append(self.multiplier(elev, average))
-                #print("Translating LULC Data", i, radial_count*transsample_count+7)
                 print_console("Translating LULC Data", True, i, radial_count*transsample_count+7)
     
             for i in xrange(len(keys)):
@@ -1197,10 +706,10 @@ class ModelSetup(object):
                 n = 0
                 for dir in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.LC_Height[dir][zone] = vheight[n][i]
-                        node.LC_Density[dir][zone] = vdensity[n][i]
-                        node.LC_k[dir][zone] = k[n][i]
-                        node.LC_Overhang[dir][zone] = overhang[n][i]
+                        node.lc_height[dir][zone] = vheight[n][i]
+                        node.lc_canopy[dir][zone] = vcanopy[n][i]
+                        node.lc_k[dir][zone] = k[n][i]
+                        node.lc_oh[dir][zone] = overhang[n][i]
                         n = n + 1
                         # 0 is emergent, there is only one value at zone = 0
                         if dir == 0 and zone == 0:
@@ -1227,7 +736,7 @@ class ModelSetup(object):
                     vheight.append(self.multiplier([float(LCcodes[x][0])
                                                     for x in col],
                                                    average))
-                    vdensity.append(self.multiplier([float(LCcodes[x][1])
+                    vcanopy.append(self.multiplier([float(LCcodes[x][1])
                                                      for x in col],
                                                     average))
                     overhang.append(self.multiplier([float(LCcodes[x][2])
@@ -1250,9 +759,9 @@ class ModelSetup(object):
                 n = 0
                 for dir in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.LC_Height[dir][zone] = vheight[n][i]
-                        node.LC_Density[dir][zone] = vdensity[n][i]
-                        node.LC_Overhang[dir][zone] = overhang[n][i]
+                        node.lc_height[dir][zone] = vheight[n][i]
+                        node.lc_canopy[dir][zone] = vcanopy[n][i]
+                        node.lc_oh[dir][zone] = overhang[n][i]
                         n = n + 1
                         
                         # 0 is emergent, there is only one value at zone = 0
@@ -1338,7 +847,7 @@ class ModelSetup(object):
                 # Iterate through each of the zones
                 for s in xrange(transsample_count): 
                     Vheight = vheight[i*transsample_count+s+1][h]
-                    Vdens = vdensity[i*transsample_count+s+1][h]
+                    Vcan = vcanopy[i*transsample_count+s+1][h]
                     Voverhang = overhang[i*transsample_count+s+1][h]
                     Elev = elevation[i*transsample_count+s][h]
                     
@@ -1353,7 +862,7 @@ class ModelSetup(object):
                     # Calculate the relative ground elevation. This is 
                     # the vertical distance from the stream surface to 
                     # the land surface
-                    SH = Elev - node.Elevation
+                    SH = Elev - node.elevation
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
 
@@ -1399,12 +908,12 @@ class ModelSetup(object):
                         
                         # Purpose here is to calculate a LAI where 
                         # gap fraction = 0.01% (basically zero)
-                        LAI_den = Vdens / -log(0.001) / Vk 
+                        LAI_den = Vcan / -log(0.001) / Vk 
                         if LAI_den > 1:
                             LAI_den = 1
                         W_Vdens_num += veg_angle*float(LAI_den)
                     else:
-                        W_Vdens_num += veg_angle*float(Vdens)
+                        W_Vdens_num += veg_angle*float(Vcan)
                     W_Vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
@@ -1429,7 +938,8 @@ class ModelSetup(object):
         """Build zones when the landcover data files contains explicit
         vegetation data instead of codes"""
 
-        LCdata = self.GetLandCoverData() # Pull the LULC Data
+        # Pull the LULC Data
+        LCdata = self.inputs.import_lcdata(return_list=True)   
         
         average = lambda x:sum(x)/len(x)
         transsample_count = IniParams["transsample_count"]
@@ -1440,7 +950,7 @@ class ModelSetup(object):
         keys.sort(reverse=True) # Downstream sorted list of stream kilometers        
         
         vheight = []
-        vdensity = []
+        vcanopy = []
         overhang = []
         elevation = []        
         
@@ -1464,7 +974,7 @@ class ModelSetup(object):
                 # (e.g. density) not the actual code, which would be meaningless.
                 try:
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
-                    vdensity.append(self.multiplier([float(x) for x in laicol], average))
+                    vcanopy.append(self.multiplier([float(x) for x in laicol], average))
                     k.append(self.multiplier([float(x) for x in kcol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
                     
@@ -1483,10 +993,10 @@ class ModelSetup(object):
                 n = 0
                 for dir in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.LC_Height[dir][zone] = vheight[n][i]
-                        node.LC_Density[dir][zone] = vdensity[n][i]
-                        node.LC_k[dir][zone] = k[n][i]
-                        node.LC_Overhang[dir][zone] = overhang[n][i]
+                        node.lc_height[dir][zone] = vheight[n][i]
+                        node.lc_canopy[dir][zone] = vcanopy[n][i]
+                        node.lc_k[dir][zone] = k[n][i]
+                        node.lc_oh[dir][zone] = overhang[n][i]
                         n = n + 1
                         
                         # 0 is emergent, there is only one value at zone = 0
@@ -1510,7 +1020,7 @@ class ModelSetup(object):
                 # would be meaningless.
                 try:
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
-                    vdensity.append(self.multiplier([float(x) for x in dencol], average))
+                    vcanopy.append(self.multiplier([float(x) for x in dencol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
                     
                 except KeyError, stderr:
@@ -1529,9 +1039,9 @@ class ModelSetup(object):
                 n = 0
                 for dir in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.LC_Height[dir][zone] = vheight[n][i]
-                        node.LC_Density[dir][zone] = vdensity[n][i]
-                        node.LC_Overhang[dir][zone] = overhang[n][i]
+                        node.lc_height[dir][zone] = vheight[n][i]
+                        node.lc_canopy[dir][zone] = vcanopy[n][i]
+                        node.lc_oh[dir][zone] = overhang[n][i]
                         n = n + 1
                         if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
                             break # go to the next dir            
@@ -1593,7 +1103,7 @@ class ModelSetup(object):
                     Vheight = vheight[i*transsample_count+s+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
                         raise Exception("Vegetation height (value of %s in Landcover Data) must be greater than zero and less than 120 meters" % Vheight)
-                    Vdens = vdensity[i*transsample_count+s+1][h] 
+                    Vcan = vcanopy[i*transsample_count+s+1][h] 
                     Voverhang = overhang[i*transsample_count+s+1][h] 
                     Elev = elevation[i*transsample_count+s][h]
                     
@@ -1604,7 +1114,7 @@ class ModelSetup(object):
                     ##########################################################
                     # Calculate the relative ground elevation. This is the
                     # vertical distance from the stream surface to the land surface
-                    SH = Elev - node.Elevation
+                    SH = Elev - node.elevation
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
 
@@ -1629,13 +1139,20 @@ class ModelSetup(object):
 
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
-                    if IniParams["canopy_data"] == "LAI": # use LAI data
-                        LAI_den = Vdens / 12 #  Purpose here is to deveop a density. A LAI of 12 is pretty much closed canopy
+                    if IniParams["canopy_data"] == "LAI":
+                        # use LAI data
+                        
+                        Vk = k[i*transsample_count+s+1][h]
+                        # use LAI data
+                        # Purpose here is to calculate a LAI where 
+                        # gap fraction = 0.01% (basically zero)
+                        LAI_den = Vcan / -log(0.001) / Vk
+                 
                         if LAI_den > 1:
                             LAI_den = 1
                         W_Vdens_num += veg_angle*float(LAI_den)
                     else:
-                        W_Vdens_num += veg_angle*float(Vdens)
+                        W_Vdens_num += veg_angle*float(Vcan)
                     W_Vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
@@ -1657,45 +1174,37 @@ class ModelSetup(object):
             node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
 
     def GetLandCoverCodes(self):
-        """Return the codes from the Land Cover Codes csv input file as a dictionary of dictionaries"""
+        """Return the codes from the Land Cover Codes csv input file
+        as a dictionary of dictionaries"""
         
+        data = self.inputs.import_lccodes()
         if IniParams["canopy_data"] == "LAI": # using LAI data
-            colnames = ["lc_name", "code", "height", "lai", "k", "overhang"]
-            data = self.read_csv_to_dict(IniParams["inputdir"], IniParams["lccodefile"], colnames)
+            
             # make a list of lists with values: [(height[0], lai[0], k[0], over[0]), (height[1],...),...]
-            vals = [tuple([float(j) for j in i]) for i in zip(data["height"], data["lai"], data["k"], data["overhang"])]
-            codes = list(data["code"]) # CHECK
+            vals = [tuple([float(j) for j in i]) for i in zip(data["HEIGHT"], data["LAI"], data["k"], data["OVERHANG"])]
+            codes = list(data["CODE"]) # CHECK
             data = {}
             
-            for i in xrange(len(codes)):
-                # Each code is a tuple in the form of (LC_Height, LC_Density, LC_K, LC_Overhang)
-                data[codes[i]] = vals[i]
-                if vals[i][0] != None and (vals[i][1] < 0):
-                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])                
+            for i, code in enumerate(codes):
+                # Each code is a tuple in the form of (lc_height, lc_canopy, lc_K, lc_oh)
+                data[code] = vals[i]
             
         else:
-            colnames = ["lc_name", "code", "height", "cover", "overhang"]
-            data = self.read_csv_to_dict(IniParams["inputdir"], IniParams["lccodefile"], colnames)
-            # make a list of lists with values: [(height[0], cover[0], over[0]), (height[1],...),...]
-            vals = [tuple([float(j) for j in i]) for i in zip(data["height"], data["cover"], data["overhang"])]
-            codes = list(data["code"]) # CHECK
+            # make a list of lists with values: [(height[0], canopy[0], over[0]), (height[1],...),...]
+            vals = [tuple([float(j) for j in i]) for i in zip(data["HEIGHT"], data["CANOPY"], data["OVERHANG"])]
+            codes = list(data["CODE"]) # CHECK
             data = {}
             
-            for i in xrange(len(codes)):
-                # Each code is a tuple in the form of (LC_Height, LC_Density, LC_Overhang)
-                data[codes[i]] = vals[i]
+            for i, code in enumerate(codes):
+                # Each code is a tuple in the form of (lc_height, lc_canopy, lc_oh)
+                data[code] = vals[i]
                 if vals[i][0] != None and (vals[i][1] < 0 or vals[i][1] > 1):
-                    raise Exception("Vegetation Density (value of %s in Land Cover Codes) must be >= 0.0 and <= 1.0" % vals[i][1])
-        return data
-
-    def GetLandCoverData(self):
-        """Return all data from the Land Cover Data csv input file as a list"""
-        data = self.read_csv_to_list(IniParams["inputdir"], IniParams["lcdatafile"], skiprows=1, skipcols=2)
-        #strip out the first two col
+                    raise ValueError("Canopy value of {0} in Land Cover Codes) must be >= 0.0 and <= 1.0".format(vals[i][1]))
         return data
 
     def InitializeNode(self, node):
-        """Perform some initialization of the StreamNode, and write some values to spreadsheet"""
+        """Perform some initialization of the StreamNode,
+        and write some values to spreadsheet"""
         # Initialize each nodes tribs dictionary to a tuple
         for time in self.flowtimelist:
             node.Q_tribs[time] = ()

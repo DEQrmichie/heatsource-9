@@ -24,7 +24,7 @@ import csv
 from ..Dieties.IniParamsDiety import IniParams
 
 class Output(object):
-    """Data and fileobject storage class"""
+    """Data and file object storage class"""
     def __init__(self, reach, start_time, run_type):
         # Store a sorted list of StreamNodes.
         
