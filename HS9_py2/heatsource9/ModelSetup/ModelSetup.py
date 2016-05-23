@@ -907,7 +907,7 @@ class ModelSetup(object):
                         Vk = k[i*transsample_count+s+1][h]
                         
                         # Purpose here is to calculate a LAI where 
-                        # gap fraction = 0.01% (basically zero)
+                        # gap fraction = 0.1% (basically zero)
                         LAI_den = Vcan / -log(0.001) / Vk 
                         if LAI_den > 1:
                             LAI_den = 1
