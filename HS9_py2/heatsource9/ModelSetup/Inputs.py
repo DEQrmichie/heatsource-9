@@ -1,9 +1,9 @@
-import arcpy
 import csv
 import platform
-from os.path import join
+from os import makedirs
 from os.path import exists
 from os.path import isfile
+from os.path import join
 from math import ceil
 from time import gmtime
 from time import strptime
@@ -11,7 +11,7 @@ from time import strftime
 from collections import defaultdict
 from calendar import timegm
 from datetime import datetime
-from operator import itemgetter 
+from operator import itemgetter
 
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import iniRange
@@ -20,6 +20,14 @@ from ..Utils.Printer import Printer as print_console
 import logging
 logger = logging.getLogger(__name__)
 
+# try to import arcpy but don't stop
+try:
+    import arcpy
+except:
+    print_console("ImportError: No module named arcpy. " \
+                  "Inputs.parameterize_from_nodes_fc() will not work. "\
+                  "To use this method ESRI ArcGIS must be installed")
+    
 class Inputs(object):
     """
     The Inputs class contains methods to read, parameterize, and write
@@ -32,11 +40,7 @@ class Inputs(object):
 
         control_file: the control file name. It must be a comma
         delimtted text file.
-        
-        use_timestamp: if True appends a timestamp to the end of the
-        output file.
-        
-        overwrite: if True overwrites existing files.
+
         """
         
         # make these local
@@ -76,16 +80,19 @@ class Inputs(object):
             return self.headers_lccodes()
     
     def headers_accretion(self):
-        """Column headers for the accretion input file."""
+        """Returns a list of column headers for
+        the accretion input file."""
         return ["STREAM_ID", "NODE_ID","STREAM_KM",
                 "INFLOW","TEMPERATURE","OUTFLOW"]
     
     def headers_bc(self):
-        """Column headers for the boundary condition file."""
+        """Returns a list of column headers for
+        the boundary condition file."""
         return ["DATETIME", "INFLOW", "TEMPERATURE"]
     
     def headers_climate(self):
-        """Column headers for the climate input file(s)."""
+        """Returns a list of column headers for
+        the climate input file(s)."""
         ncols = int((IniParams["climatesites"] /
                     len(IniParams["climatefiles"].split(","))))
         return ["DATETIME"]+["CLOUDINESS",
@@ -94,8 +101,8 @@ class Inputs(object):
                              "AIR_TEMPERATURE"] * ncols
     def headers_lcdata(self):
         """
-        Generates a list of the landcover data
-        file column header names
+        Returns a list of column headers for
+        the land cover data file.
         """
     
         if IniParams["lcdatainput"] == "Values":
@@ -132,7 +139,8 @@ class Inputs(object):
     
     def headers_lccodes(self):
         """
-        Column headers for the land cover codes input file.
+        Returns a list of column headers for
+        the land cover codes input file.
         """
         if IniParams["lcdatainput"] == "Codes":
             if IniParams["canopy_data"] == "LAI":
@@ -144,13 +152,15 @@ class Inputs(object):
         
     def headers_cf(self):
         """
-        Column headers for the control file.
+        Returns a list of column headers for
+        the control file.
         """        
         return ["LINE", "PARAMETER", "VALUE"]
     
     def headers_inflow(self):
         """
-        Column headers for the tributary inflow input file(s).
+        Returns a list of column headers for
+        the tributary inflow input file(s).
         """
         if IniParams["inflowsites"] > 0:
             ncols = int(IniParams["inflowsites"] /
@@ -161,7 +171,8 @@ class Inputs(object):
         
     def headers_morph(self):
         """
-        Column headers for the channel morphology input file.
+        Returns a list of column headers for
+        the channel morphology input file.
         """
         return ["STREAM_ID", "NODE_ID","STREAM_KM","ELEVATION",
                 "GRADIENT","BOTTOM_WIDTH", "CHANNEL_ANGLE_Z",
@@ -288,37 +299,37 @@ class Inputs(object):
             # This is a setup call, None is ok for all of them
             none_ok = IniParams.keys()
         
-            # This is so the iteration happens in descending order
-            # so some of the keys are parameterized earlier for the
-            # none list. 
-            keys = cf_dict.keys()
-            keys.sort(reverse=True)
+        # This is so the iteration happens in descending order
+        # so some of the keys are parameterized earlier for the
+        # none list. 
+        keys = cf_dict.keys()
+        keys.sort(reverse=True)
             
-            for k in keys:
-                v = cf_dict[k]        
-                for line in cf_list:
-                    if (line[1] == v[1]):
-                        # check for missing values
-                        if str.strip(line[2]) in ["", None]:
-                            if k in none_ok:
-                                IniParams[k] = None
-                            elif (k == "lccodefile" and
-                                IniParams["lcdatainput"] == "Values"):
-                                # None ok because lccodes file is not needed
-                                IniParams[k] = None
-                                
-                            elif (k in ["inflowinfiles","inflowkm"] and
-                                  IniParams["inflowsites"] == 0):
-                                # None ok because there are no inflow sites
-                                IniParams[k] = None
-                                
-                            elif (k == "alluviumtemp" and
-                                  IniParams["calcalluvium"] is False):
-                                # None ok because not including 
-                                # deep alluvium temps
-                                IniParams[k] = None
-                            else:
-                                raise TypeError("Value in control file line {0} is missing".format(line[0]))
+        for k in keys:
+            v = cf_dict[k]        
+            for line in cf_list:
+                if (line[1] == v[1]):
+                    # check for missing values
+                    if str.strip(line[2]) in ["", None]:
+                        if k in none_ok:
+                            IniParams[k] = None
+                        elif (k == "lccodefile" and
+                            IniParams["lcdatainput"] == "Values"):
+                            # None ok because lccodes file is not needed
+                            IniParams[k] = None
+                            
+                        elif (k in ["inflowinfiles","inflowkm"] and
+                              IniParams["inflowsites"] == 0):
+                            # None ok because there are no inflow sites
+                            IniParams[k] = None
+                            
+                        elif (k == "alluviumtemp" and
+                              IniParams["calcalluvium"] is False):
+                            # None ok because not including 
+                            # deep alluvium temps
+                            IniParams[k] = None
+                        else:
+                            raise TypeError("Value in control file line {0} is missing".format(line[0]))
                     # now make sure it's the correct data type
                     elif dtype[k] is basestring:
                         IniParams[k] = str.strip(line[2])
@@ -334,7 +345,7 @@ class Inputs(object):
                             
                     elif dtype[k] is float:
                         IniParams[k] = float(str.strip(line[2]))
-                        
+                    
         # Make dates into seconds since UTC epoch
         IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00" ,"%m/%d/%Y %H:%M:%S"))
         IniParams["dataend"] = timegm(strptime(IniParams["dataend"],"%m/%d/%Y")) + 86400
@@ -527,6 +538,8 @@ class Inputs(object):
         contains the group_val.
         
         """
+        print_console("Writting control file from nodes fc")
+        
         # get the headers
         if input_file == "lcdatafile":
             headers = self.headers_lcdata()
@@ -534,7 +547,7 @@ class Inputs(object):
             headers = self.headers_morph()
         else:
             logging.ERROR("input_file = {0}, should be \
-            'lcdatafile' or 'morphfile'".format(inpu_file))
+            'lcdatafile' or 'morphfile'".format(input_file))
                 
         # Get all the column headers in the nodes fc
         nodes_fc_headers = [field.name for field in arcpy.Describe(nodes_fc).fields]
@@ -567,7 +580,7 @@ class Inputs(object):
         
         self.write_to_csv(IniParams["inputdir"],
                           IniParams[input_file],
-                          headers, data)
+                          outlist, headers)
         
     def nested_dict(self): 
         """
@@ -592,6 +605,7 @@ class Inputs(object):
         Writes the control file. Any keyword arguments
         passed will be parameterized into the control file.
         """
+        print_console("Writting control file")
         cf_dict = self.control_file_dict()
         
         for k, v in kwargs.items():
@@ -898,7 +912,7 @@ class Inputs(object):
         # is correct.        
         num_nodes = int(ceil(round(IniParams["length"]*1000/(IniParams["longsample"]), 4))) +1
         kmlist = []    
-        kmlist = [(node * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
+        kmlist = [(float(node) * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
         kmlist.sort(reverse=True)
         return kmlist
     
