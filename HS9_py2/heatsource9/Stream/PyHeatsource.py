@@ -338,22 +338,53 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         Dummy1 = F_Direct[2]
-        zone = transsample_count - 1
-        while zone >= 0:
-            if Altitude < VegetationAngle[zone]:
-                
-                # zonal path length
-                PLz = transsample_distance / cos(radians(Altitude))
+        
+        # zonal sun path length
+        PLz = transsample_distance / cos(radians(Altitude))
+    
+        # Calculate the total sun path length through the canopy
+        # start with zero
+        PL = 0
+        PLe = 0
+        
+        if emergent and lc_height[0][0] > 0:
+            # emergent veg
+            # PLe is the path distance through the vegetation 
+            # in emergent zone
+            PLe +=  lc_height[0][0] / sin(radians(Altitude))
+
+            # PLe can't be longer than the path thru the zone.
+            # this happens when altitude is lower than height of veg.
+            if PLe >  PLz: PLe = PLz
             
-                # total path length
-                PL = lc_height[dir][zone] / sin(radians(Altitude))
+            PL += PLe        
+            
+        for z in range(transsample_count): 
+            if Altitude < VegetationAngle[z]:
+                # sun vector is passing through the canopy
+                PL += PLz
                 
-                # veg shading is occurring from this zone
+        # Now calculate the fraction of radiation passed through the canopy
+        zone = transsample_count - 1
+        while zone > 0:
+            if Altitude < VegetationAngle[zone]:
+                # shading is occurring from this zone
+                
                 if BeersData == "LAI":
-                    #use LAI data
+                    # use LAI data
                     
+                    # k as an input
+                    RipExtinction = lc_k[dir][zone]
+                    
+                    # Assumption here is that LAI is for the whole canopy.
+                    # Since we are calculating the fraction passed for a 
+                    # portion of the canopy (zone) I take the approach 
+                    # described by Norman and Welles 1983.
+                    # Use total path length to calculate foliage 
+                    # density, then calculate fraction passed for the 
+                    # zonal path length.
                     fraction_passed = exp(-1 *
-                                          lc_k[dir][zone] *
+                                          RipExtinction *
                                           (lc_canopy[dir][zone] / PL) *
                                           PLz)
                     
@@ -361,15 +392,27 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                                                          fraction_passed)
                     Dummy1 *= fraction_passed
                     
-                else: # Use veg density data
-                    # Calculate the riparian extinction value
+                else:
+                    # Use canopy closure to calculate 
+                    # the riparian extinction value
                     
                     try:
-                        RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
                         # Set to one if no veg
                         if lc_height[dir][zone] == 0:
                             fraction_passed = 1
                         else:
+                            #---------  Boyd and Kasper 2007
+                            #RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
+                            
+                            #--------- Chen 1998
+                            #RipExtinction = -log(1- lc_canopy[dir][zone])/lc_height[dir][zone]
+                                
+                                
+                            #--------- (Norman and Welles 1983)
+                            # here the extinction coefficent 
+                            # represents the foliage density * k 
+                            RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
+                            
                             fraction_passed = exp(-1* RipExtinction * PLz)
                         
                     except:
@@ -390,6 +433,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     #=========================================================
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
     # What a Solar Pathfinder measures
+    
     if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:
         # Bank shade is occurring
         F_Direct[4] = 0
@@ -402,22 +446,65 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     if emergent:
         # Account for emergent vegetation
-                
-        # emergent path length
-        PL = lc_height[0][0] / sin(radians(Altitude))        
         
-        #if PL > W_b:
-        #    PL = W_b
+        # zonal sun path length
+        PLz = transsample_distance / cos(radians(Altitude))
+        
+        # Calculate the total sun path length through the canopy
+        # start with zero
+        PL = 0
+        PLe = 0
+    
+        if emergent and lc_height[0][0] > 0:
+            # emergent veg
+            # PLe is the path distance through the vegetation 
+            # in emergent zone
+            PLe +=  lc_height[0][0] / sin(radians(Altitude))
+
+            # PLe can't be longer than the path thru the zone.
+            # this happens when altitude is lower than height of veg.
+            if PLe >  PLz: PLe = PLz
+            
+            PL += PLe 
+            
+        for z in range(transsample_count):
+            if Altitude < VegetationAngle[z]:
+                # sun vector is passing through the canopy
+                PL += PLz        
+    
+                      
+        #if PLe > W_b:
+        #    PLe = W_b
         
         if BeersData == "LAI":
             # use LAI data
-            fraction_passed = exp(-1 * lc_k[0][0] * LAI[0][0] * PL)
+            
+            # k calculated from LAD using Norman and Campbell (1989)
+            #RipExtinction = (sqrt(tan(radians(90-Altitude)) **2) /
+                             #lc_k[0][0] + 1.774 *
+                             #(lc_k[0][0] + 1.182) ** -0.733)
+            
+            # k as an input
+            RipExtinction = lc_k[0][0]
+            
+            fraction_passed = exp(-1 *
+                                  RipExtinction *
+                                  (lc_canopy[0][0]/ PL) *
+                                  PLe)            
         else:
             
             try:
-                RipExtinction = -log(1- lc_canopy[0][0])/ PL
-                # Set to zero if no veg
-                fraction_passed = exp(-1* RipExtinction * PL)
+                # Set to one if no veg
+                if lc_height[0][0] == 0:
+                    fraction_passed = 1
+                else:
+                    #--------- Chen and Boyd and Kasper
+                    #RipExtinction = -log(1- lc_canopy[0][0])/lc_height[0][0]
+                
+                    #---------  Oke 1978 (HS9)
+                    RipExtinction = -log(1- lc_canopy[0][0])/ PL
+                    
+                    fraction_passed = exp(-1* RipExtinction * PLe)
                 
             except:
                 # cannot take log of 0
@@ -518,6 +605,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # 5 - Entering Stream
     # 6 - Received by Water Column
     # 7 - Received by Bed
+    
     F_Solar[0] = F_Diffuse[0] + F_Direct[0]
     F_Solar[1] = F_Diffuse[1] + F_Direct[1]
     F_Solar[2] = F_Diffuse[2] + F_Direct[2]
@@ -526,7 +614,8 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
-    return F_Solar, Solar_blocked_byVeg
+    
+    return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
 def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
@@ -728,18 +817,25 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
         lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
-        T_accr, has_prev, transsample_distance, transsample_count, BeersData, emergent, \
-        wind_a, wind_b, calcevap, penman, calcalluv, T_alluv = C_args
+        T_accr, has_prev, transsample_distance, transsample_count, \
+        BeersData, emergent, wind_a, wind_b, calcevap, penman, \
+        calcalluv, T_alluv = C_args
 
     solar = [0]*8
+    diffuse = [0]*8
+    direct = [0]*8
+    
     # plus one for diffuse blocked
     veg_block = [0]*len(ShaderList[3])+[0]
     
     if daytime:
-        solar, veg_block = GetSolarFlux(hour, JD, Altitude, Zenith,
+        
+        (solar, diffuse,
+        direct, veg_block) = GetSolarFlux(hour, JD, Altitude, Zenith,
                                         cloud, d_w, W_b, elevation,
                                         TopoFactor, ViewToSky,
-                                        transsample_distance, transsample_count,
+                                        transsample_distance,
+                                        transsample_count,
                                         BeersData, phi, emergent,
                                         lc_canopy, lc_height,
                                         lc_k, ShaderList, dir)
@@ -747,9 +843,9 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     # We're only running shade, so return solar and some empty calories
     if solar_only:
         # Boundary node
-        if not has_prev: return solar, [0]*9, 0.0, 0.0, veg_block
+        if not has_prev: return solar, diffuse, direct, veg_block, [0]*9, 0.0, 0.0,
         # regular node
-        else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block
+        else: return solar, diffuse, direct, veg_block, [0]*9, 0.0, 0.0, [0]*3
 
     ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
                     phi, lc_height, ViewToSky, SedDepth, dx,
@@ -764,7 +860,7 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2) 
 
     if not has_prev:
-        return solar, ground, F_Total, Delta_T, veg_block
+        return solar, veg_block, ground, F_Total, Delta_T
 
     Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
@@ -772,4 +868,4 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                          MixTDelta_dn_prev)
 
     # Mac includes Temp, S, T_mix
-    return solar, ground, F_Total, Delta_T, Mac, veg_block
+    return solar, veg_block, ground, F_Total, Delta_T, Mac
