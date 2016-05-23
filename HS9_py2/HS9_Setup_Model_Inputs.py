@@ -27,8 +27,10 @@ if not exists(join(model_dir,control_file)):
     Move the executable or place the control file in \
     this directory: {0}.".format(model_dir))
 
-# Write blank input files,
 # Control file must already be parameterized
-Inputs.setup(use_timestamp=True, overwrite=False)
+inputs = Inputs(model_dir, control_file)
+
+# Write blank input files,
+inputs.setup(use_timestamp=True, overwrite=False)
 
 
