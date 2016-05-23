@@ -44,9 +44,11 @@ class StreamNode(object):
                 "ViewToSky", # Total angle of full sun view
                 "ShaderList", # List of angles and attributes to determine sun shading.
                 "F_DailySum", "F_Total", "Solar_Blocked", # Specific sums of solar fluxes
-                "SedThermCond", "SedThermDiff", "SedDepth", # Sediment conduction values
-                "hyp_percent", # Percent hyporheic exchange
                 "F_Solar", # List of important solar fluxes
+                "F_Direct", 
+                "F_Diffuse",
+                "SedThermCond", "SedThermDiff", "SedDepth", # Sediment conduction values
+                "hyp_percent", # Percent hyporheic exchange                
                 "S",        # Slope
                 "n",        # Manning's n
                 "z", # z factor: Ration of run to rise of the side of a trapazoidal channel
@@ -104,6 +106,8 @@ class StreamNode(object):
         for attr in ["F_Conduction","F_Convection","F_Longwave","F_Evaporation"]:
             setattr(self, attr, 0)
         self.F_Solar = [0]*8
+        self.F_Direct = [0]*8
+        self.F_Diffuse = [0]*8
         self.F_Total = 0.0
         self.Log = Logger
         self.ShaderList = ()
@@ -173,7 +177,7 @@ class StreamNode(object):
                        IniParams["calcalluvium"],
                        IniParams["alluviumtemp"])
 
-    def CalcDischarge_Opt(self,time):
+    def CalcDischarge_Opt(self, time):
         """A Version of CalculateDischarge() that does not require
         checking for boundary conditions"""
         inputs = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
@@ -279,7 +283,7 @@ class StreamNode(object):
                                       self.d_cont, 0.0, 0.0, 0.0,
                                       inputs, Q_bc)
                 
-            except _HS.HeatSourceError:
+            except:
                 self.CatchException(stderr, time)
             self.CalcDischarge = self.CalcDischarge_BoundaryNode
 
@@ -292,23 +296,24 @@ class StreamNode(object):
             self.Log.write("The channel is going dry at %s, model time: %s." % (self, Chronos.TheTime))
 
     def CatchException(self, stderr, time):
-        msg = "At %s and time %s\n" % (self,ctime(time))
+        msg = "{0} and time {1}\n".format(self,ctime(time))
         if isinstance(stderr,tuple):
             msg += """%s\n\tVariables causing this affliction:
-dt: %4.0f
-dx: %4.0f
-K: %4.4f
-X: %3.4f
-c_k: %3.4f""" % stderr
+            dt: %4.0f
+            dx: %4.0f
+            K: %4.4f
+            X: %3.4f
+            c_k: %3.4f""" % stderr
         elif isinstance(stderr, str):
             msg += stderr
         else: msg += stderr.message
 
-        msg += "\nThe model run has been halted. You may ignore any further error messages."
+        msg += "\Error: The model run has been halted."
         print_console(msg)
-        raise Exception(msg)
+        raise Exception(stderr, msg)
 
-    def CalcHeat_Opt(self, time, hour, min, sec,JD,JDC,solar_only=False):
+    def CalcHeat_Opt(self, time, hour, min, sec, JD,
+                     JDC, solar_only=False):
         """Inlined version of CalcHeat optimized for non-boundary nodes
         (removes a bunch of if/else statements)"""
         # The solar_only keyword is a kludge to turn off calculation of the
@@ -323,32 +328,47 @@ c_k: %3.4f""" % stderr
         Altitude, Zenith, Daytime, dir, Azimuth_mod = self.head.SolarPos
 
         try:
-            self.F_Solar, \
-                (self.F_Conduction, self.T_sed, self.F_Longwave,
-                 self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-                 self.F_Evaporation, self.F_Convection, self.E), \
-                self.F_Total, self.Delta_T, (self.T, self.S1, self.Mix_T_Delta), \
-            veg_block = \
-                _HS.CalcHeatFluxes(self.ClimateData[time], self.C_args,
-                                   self.d_w, self.A, self.P_w, self.W_w,
-                                   self.U, self.Q_tribs[time],
-                                   self.T_tribs[time], self.T_prev,
-                                   self.T_sed, self.Q_hyp,self.next_km.T_prev,
-                                   self.ShaderList[dir], dir, self.Disp,
-                                   hour, JD, Daytime, Altitude, Zenith,
-                                   self.prev_km.Q_prev, self.prev_km.T_prev,
-                                   solar_only, self.next_km.Mix_T_Delta)
-
-        except _HS.HeatSourceError:
-            self.CatchException(stderr, time)
+            
+            (self.F_Solar,
+             self.F_Diffuse,
+             self.F_Direct,
+             veg_block,
+             ground,
+             F_Total,
+             Delta_T,
+             Mac) = _HS.CalcHeatFluxes(self.ClimateData[time],
+                                       self.C_args, self.d_w, self.A,
+                                       self.P_w, self.W_w, self.U,
+                                       self.Q_tribs[time],
+                                       self.T_tribs[time], self.T_prev,
+                                       self.T_sed, self.Q_hyp,
+                                       self.next_km.T_prev,
+                                       self.ShaderList[dir], dir,
+                                       self.Disp, hour, JD, Daytime,
+                                       Altitude, Zenith,
+                                       self.prev_km.Q_prev,
+                                       self.prev_km.T_prev,
+                                       solar_only,
+                                       self.next_km.Mix_T_Delta)
+            
+            (self.F_Conduction, self.T_sed, self.F_Longwave,
+             self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
+             self.F_Evaporation, self.F_Convection, self.E) = ground
+            
+            (self.T, self.S1, self.Mix_T_Delta) = Mac
+        
+        except Exception, stderr:  
+            self.CatchException(stderr, time)      
 
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
+        
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
 
-    def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD, JDC, solar_only=False):
+    def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
+                              JDC, solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
@@ -361,26 +381,37 @@ c_k: %3.4f""" % stderr
         self.SolarPos = Altitude, Zenith, Daytime, dir, Azimuth_mod
 
         try:
-            self.F_Solar, \
-                (self.F_Conduction, self.T_sed, self.F_Longwave,
-                 self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-                 self.F_Evaporation, self.F_Convection, self.E), \
-                self.F_Total, self.Delta_T, \
-                veg_block = _HS.CalcHeatFluxes(self.ClimateData[time],
+            (self.F_Solar,
+             self.F_Diffuse,
+             self.F_Direct,
+             veg_block,
+             ground,
+             F_Total,
+             Delta_T) = _HS.CalcHeatFluxes(self.ClimateData[time],
                                            self.C_args, self.d_w, self.A,
                                            self.P_w, self.W_w, self.U,
-                                           self.Q_tribs[time], self.T_tribs[time],
-                                           self.T_prev, self.T_sed,
-                                           self.Q_hyp, self.next_km.T_prev,
-                                           self.ShaderList[dir], dir, self.Disp,
-                                           hour, JD, Daytime, Altitude,
-                                           Zenith, 0.0, 0.0, solar_only,
+                                           self.Q_tribs[time],
+                                           self.T_tribs[time], self.T_prev,
+                                           self.T_sed, self.Q_hyp,
+                                           self.next_km.T_prev,
+                                           self.ShaderList[dir], dir,
+                                           self.Disp, hour, JD, Daytime,
+                                           Altitude, Zenith,
+                                           0.0,
+                                           0.0,
+                                           solar_only,
                                            self.next_km.Mix_T_Delta)
             
-        except _HS.HeatSourceError, stderr:
-            self.CatchException(stderr)
+            (self.F_Conduction, self.T_sed, self.F_Longwave,
+             self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
+             self.F_Evaporation, self.F_Convection, self.E) = ground    
+
+        except Exception, stderr:       
+            self.CatchException(stderr, time)
+        
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
+        
         for i in range(len(self.Solar_Blocked[dir])):
             self.Solar_Blocked[dir][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]

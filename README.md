@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b14 (beta 14)
+Current Version: heatsource 9.0.0b17 (beta 17)
 
 ================================================================================================
 ## ABOUT 
@@ -92,45 +92,46 @@ Separate tributary and climate file names and/or site stream km with
 
 |LINE |PARAMETER                                          |VALUE |
 |----:|:--------------------------------------------------|----- |
-|1    |USER TEXT                                          |      |
-|2    |SIMULATION NAME                                    |      |
-|3    |STREAM LENGTH (KILOMETERS)                         |      |
-|4    |OUTPUT PATH                                        |      |
-|5    |INPUT PATH                                         |      |
-|6    |DATA START DATE (mm/dd/yyyy)                       |      |
-|7    |MODELING START DATE (mm/dd/yyyy)                   |      |
-|8    |MODELING END DATE (mm/dd/yyyy)                     |      |
-|9    |DATA END DATE (mm/dd/yyyy)                         |      |
-|10   |FLUSH INITIAL CONDITION (DAYS)                     |      |
-|11   |TIME OFFSET FROM UTC (HOURS)                       |      |
-|12   |MODEL TIME STEP - DT (MIN)                         |      |
-|13   |MODEL DISTANCE STEP - DX (METERS)                  |      |
-|14   |LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)       |      |
-|15   |BOUNDARY CONDITION FILE NAME                       |      |
-|16   |TRIBUTARY SITES                                    |      |
-|17   |TRIBUTARY INPUT FILE NAMES                         |      |
-|18   |TRIBUTARY MODEL KM                                 |      |
-|19   |ACCRETION INPUT FILE NAME                          |      |
-|20   |CLIMATE DATA SITES                                 |      |
-|21   |CLIMATE INPUT FILE NAMES                           |      |
-|22   |CLIMATE MODEL KM                                   |      |
-|23   |INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)  |      |
-|24   |EVAPORATION METHOD (Mass Transfer/Penman)          |      |
-|25   |WIND FUNCTION COEFFICIENT A                        |      |
-|26   |WIND FUNCTION COEFFICIENT B                        |      |
-|27   |INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)     |      |
-|28   |DEEP ALLUVIUM TEMPERATURE (*C)                     |      |
-|29   |MORPHOLOGY DATA FILE NAME                          |      |
-|30   |LANDCOVER DATA FILE NAME                           |      |
-|31   |LANDCOVER CODES FILE NAME                          |      |
-|32   |NUMBER OF TRANSECTS PER NODE                       |      |
-|33   |NUMBER OF SAMPLES PER TRANSECT                     |      |
-|34   |DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)        |      |
-|35   |ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)      |      |
-|36   |LANDCOVER DATA INPUT TYPE (Codes/Values)           |      |
-|37   |CANOPY DATA TYPE (LAI/CanopyCover)                 |      |
-|38   |VEGETATION ANGLE CALCULATION METHOD (point/zone)   |      |
-|39   |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)   |      |
+|2    |USER NOTES                                         |      |
+|3    |SIMULATION NAME                                    |      |
+|4    |INPUT PATH                                         |      |
+|5    |OUTPUT PATH                                        |      |
+|6    |STREAM LENGTH (KILOMETERS)                         |      |
+|7    |OUTPUT KILOMETERS                                  |      |
+|8    |DATA START DATE (mm/dd/yyyy)                       |      |
+|9    |MODELING START DATE (mm/dd/yyyy)                   |      |
+|10   |MODELING END DATE (mm/dd/yyyy)                     |      |
+|11   |DATA END DATE (mm/dd/yyyy)                         |      |
+|12   |FLUSH INITIAL CONDITION (DAYS)                     |      |
+|13   |TIME OFFSET FROM UTC (HOURS)                       |      |
+|14   |MODEL TIME STEP - DT (MIN)                         |      |
+|15   |MODEL DISTANCE STEP - DX (METERS)                  |      |
+|16   |LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)       |      |
+|17   |BOUNDARY CONDITION FILE NAME                       |      |
+|18   |TRIBUTARY SITES                                    |      |
+|19   |TRIBUTARY INPUT FILE NAMES                         |      |
+|20   |TRIBUTARY MODEL KM                                 |      |
+|21   |ACCRETION INPUT FILE NAME                          |      |
+|22   |CLIMATE DATA SITES                                 |      |
+|23   |CLIMATE INPUT FILE NAMES                           |      |
+|24   |CLIMATE MODEL KM                                   |      |
+|25   |INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)  |      |
+|26   |EVAPORATION METHOD (Mass Transfer/Penman)          |      |
+|27   |WIND FUNCTION COEFFICIENT A                        |      |
+|28   |WIND FUNCTION COEFFICIENT B                        |      |
+|29   |INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)     |      |
+|30   |DEEP ALLUVIUM TEMPERATURE (*C)                     |      |
+|31   |MORPHOLOGY DATA FILE NAME                          |      |
+|32   |LANDCOVER DATA FILE NAME                           |      |
+|33   |LANDCOVER CODES FILE NAME                          |      |
+|34   |NUMBER OF TRANSECTS PER NODE                       |      |
+|35   |NUMBER OF SAMPLES PER TRANSECT                     |      |
+|36   |DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)        |      |
+|37   |ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)      |      |
+|38   |LANDCOVER DATA INPUT TYPE (Codes/Values)           |      |
+|39   |CANOPY DATA TYPE (LAI/CanopyCover)                 |      |
+|40   |VEGETATION ANGLE CALCULATION METHOD (point/zone)   |      |
+|41   |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)   |      |
 
 ================================================================================================
 ### ACCRETION INPUT FILE  
@@ -385,11 +386,8 @@ Roadmap for this version
 - Fix/look into the Krieter bug.
 - Reformulate Muskingum calcs using updated methods such as Moramarco et al 2006.
 - Update the user manual.
-- Check elevation is a number.
-- General improvement to the QA/QC of certain inputs (see commented lines in ModelSetup).
 - Register heat source with pypi
 - Make a heatsource package mpkg installer for mac.
-- Decide if cloudiness is a required input for solar runs.
 
 Future Roadmap
 - Allow variable timeseries input and utilize pandas interpolation methods.
@@ -407,7 +405,7 @@ Future Roadmap
 - Post processing tools (graphing, analysis, etc). Some already written in R. Consider pandas and matplotlib for this as part of heatsource.
 - Better output messages on errors.
 - Allow user specified output dT or sub-hourly time step.
-- Simplify the ModelSetup class by separating read methods from node building methods.
+
 - Implement seamless transition to different watershed/stream network scales.
 - Scope implementing solar routines as a separate independent package or something less complex so it can be accessed via GIS routines.
 - Consider using long format for landcover data as opposed to the current wide format (for GIS based solar modeling).

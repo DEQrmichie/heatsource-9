@@ -52,6 +52,20 @@ class Output(object):
 
         # Filenames and descriptions for each of the output files
         desc = {}
+        
+        if (run_type in [0, 1] and False):
+            # The control file will hold a switch to turn these on
+            desc["Heat_DR1"] = "Direct Solar Radiation Flux above Topographic Features (watts/square meter)"
+            desc["Heat_DR2"] = "Direct Solar Radiation Flux below Topographic Features (watts/square meter)"
+            desc["Heat_DR4"] = "Direct Solar Radiation Flux above the Stream (watts/square meter)"
+            desc["Heat_DR5"] = "Direct Solar Radiation Flux Entering Stream (watts/square meter)"
+            desc["Heat_DF1"] = "Diffuse Solar Radiation Flux above Topographic Features (watts/square meter)"
+            desc["Heat_DF2"] = "Diffuse Solar Radiation Flux below Topographic Features (watts/square meter)"
+            desc["Heat_DF4"] = "Diffuse Solar Radiation Flux above the Stream (watts/square meter)"
+            desc["Heat_DF5"] = "Diffuse Solar Radiation Flux Entering Stream (watts/square meter)"
+            desc["Solar_Azimuth"] = "Solar Azimuth (degrees). Angle of the sun along the horizon with zero degrees corresponding to true north."
+            desc["Solar_Elevation"] = "Solar Elevation (degrees). Angle up from the horizon to the sun."            
+        
         if run_type in [0, 1]:
             # Solar, Temperature
             desc["Heat_SR1"] = "Solar Radiation Flux above Topographic Features (watts/square meter)"
@@ -61,8 +75,6 @@ class Output(object):
             desc["Heat_SR4"] = "Solar Radiation Flux above the Stream (watts/square meter)"
             desc["Heat_SR5"] = "Solar Radiation Flux Entering Stream (watts/square meter)"
             desc["Shade"] = "Effective Shade"
-            desc["Solar_Azimuth"] = "Solar Azimuth (degrees). Angle of the sun along the horizon with zero degrees corresponding to true north."
-            desc["Solar_Elevation"] = "Solar Elevation (degrees). Angle up from the horizon to the sun."
             desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere obscured by land cover."
 
         if run_type in [0, 2]:
@@ -160,15 +172,29 @@ class Output(object):
         # are generally fast (more optimized by the underlying C code)
         # than for loops.
 
+        if (self.run_type < 2 and False):
+            # The control file will hold a switch to turn these on.
+            data["Solar_Elevation"][timestamp] = [x.head.SolarPos[0] for x in nodes]
+            data["Solar_Azimuth"][timestamp] = [x.head.SolarPos[4] for x in nodes]
+            data["Heat_DF1"][timestamp] = [x.F_Diffuse[1] for x in nodes]
+            data["Heat_DF2"][timestamp] = [x.F_Diffuse[2] for x in nodes]
+            data["Heat_DF3"][timestamp] = [x.F_Diffuse[3] for x in nodes]
+            data["Heat_DF4"][timestamp] = [x.F_Diffuse[4] for x in nodes]
+            data["Heat_DF5"][timestamp] = [x.F_Diffuse[5] for x in nodes]            
+            data["Heat_DR1"][timestamp] = [x.F_Direct[1] for x in nodes]
+            data["Heat_DR2"][timestamp] = [x.F_Direct[2] for x in nodes]
+            data["Heat_DR3"][timestamp] = [x.F_Direct[3] for x in nodes]
+            data["Heat_DR4"][timestamp] = [x.F_Direct[4] for x in nodes]
+            data["Heat_DR5"][timestamp] = [x.F_Direct[5] for x in nodes]
+            
         # Run only with solar
-        if self.run_type < 2:
+        if self.run_type < 2:         
             data["Heat_SR1"][timestamp] = [x.F_Solar[1] for x in nodes]
             data["Heat_SR2"][timestamp] = [x.F_Solar[2] for x in nodes]
             data["Heat_SR3"][timestamp] = [x.F_Solar[3] for x in nodes]
             data["Heat_SR4"][timestamp] = [x.F_Solar[4] for x in nodes]
             data["Heat_SR5"][timestamp] = [x.F_Solar[5] for x in nodes]
-            data["Solar_Elevation"][timestamp] = [x.head.SolarPos[0] for x in nodes]
-            data["Solar_Azimuth"][timestamp] = [x.head.SolarPos[4] for x in nodes]
+            
         # Run only with hydro
         if self.run_type != 1:
             data["Hyd_DA"][timestamp] = [(x.A / x.W_w) for x in nodes]
@@ -177,6 +203,7 @@ class Output(object):
             data["Hyd_Hyp"][timestamp] = [x.Q_hyp for x in nodes]
             data["Hyd_Vel"][timestamp] = [x.U for x in nodes]
             data["Hyd_WT"][timestamp] = [x.W_w for x in nodes]
+            
         # Run only with both solar and hydro
         if not self.run_type:
             data["Heat_SR6"][timestamp] = [x.F_Solar[6] for x in nodes]
