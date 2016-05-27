@@ -20,14 +20,6 @@ from ..Utils.Printer import Printer as print_console
 import logging
 logger = logging.getLogger(__name__)
 
-# try to import arcpy but don't stop
-try:
-    import arcpy
-except:
-    print_console("ImportError: No module named arcpy. " \
-                  "Inputs.parameterize_from_nodes_fc() will not work. "\
-                  "To use this method ESRI ArcGIS must be installed")
-    
 class Inputs(object):
     """
     The Inputs class contains methods to read, parameterize, and write
@@ -538,6 +530,14 @@ class Inputs(object):
         contains the group_val.
         
         """
+        # try to import arcpy but don't stop
+        try:
+            import arcpy
+        except:
+            print_console("ImportError: No module named arcpy. " \
+                          "To use this method ESRI ArcGIS must be installed")
+            SystemExit
+        
         print_console("Writting control file from nodes fc")
         
         # get the headers
