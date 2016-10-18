@@ -23,10 +23,13 @@ logger = logging.getLogger(__name__)
 # try to import arcpy but don't stop
 try:
     import arcpy
-except:
-    print_console("ImportError: No module named arcpy. " \
+except: 
+    msg = "ImportError: No module named arcpy. " \
                   "Inputs.parameterize_from_nodes_fc() will not work. "\
-                  "To use this method ESRI ArcGIS must be installed")
+                  "To use this method ESRI ArcGIS must be installed"
+    
+    logging.warning(msg)
+    print_console(msg)       
     
 class Inputs(object):
     """
@@ -268,7 +271,9 @@ class Inputs(object):
             Move the executable or place the control file in \
             this directory: {0}.".format(self.model_dir))
         
-        print_console("Reading control file")
+        msg = "Reading control file"
+        logging.info(msg)
+        print_console(msg)           
         
         cf_dict = self.control_file_dict()
         cf_list = self.read_to_list(self.model_dir,
@@ -538,8 +543,11 @@ class Inputs(object):
         contains the group_val.
         
         """
-        print_console("Writting control file from nodes fc")
+        msg = "Writting control file from nodes fc"
+        logger.info(msg)
+        print_console(msg)
         
+
         # get the headers
         if input_file == "lcdatafile":
             headers = self.headers_lcdata()
@@ -605,7 +613,9 @@ class Inputs(object):
         Writes the control file. Any keyword arguments
         passed will be parameterized into the control file.
         """
-        print_console("Writting control file")
+        msg = "Writting control file"
+        logger.info(msg)
+        print_console(msg)
         cf_dict = self.control_file_dict()
         
         for k, v in kwargs.items():
@@ -751,8 +761,10 @@ class Inputs(object):
         """
         Writes blank input files based on settings in the control file
         """
-
-        print_console("Starting input file setup")
+        
+        msg = "Starting input file setup"
+        logging.info(msg)
+        print_console(msg)
         
         # check if the input/output dirctories exist and 
         # create them if not
@@ -800,7 +812,9 @@ class Inputs(object):
                 lccodes_file = IniParams["lccodefile"]
             morph_file = IniParams["morphfile"]
         
-        print_console("Writing empty csv files")
+        msg = "Writing empty csv files"
+        logging.info(msg)
+        print_console(msg)        
         
         if overwrite:
             # overwrite the inputs regardless if they exist or not

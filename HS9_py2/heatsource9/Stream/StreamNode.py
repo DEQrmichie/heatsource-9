@@ -17,6 +17,8 @@
 from __future__ import division, print_function
 from math import sqrt
 from time import ctime
+import logging
+logger = logging.getLogger(__name__)
 
 from ..Dieties.ChronosDiety import Chronos
 from ..Dieties.IniParamsDiety import IniParams
@@ -161,6 +163,7 @@ class StreamNode(object):
         else:
             #_HS = C_HS  # TODO place holder for C module
             msg = "run_in_python is not True. Something is very wrong"
+            logger.error(msg)
             raise Exception(msg)
 
         self.CalcDischarge = self.CalculateDischarge
@@ -183,15 +186,15 @@ class StreamNode(object):
         inputs = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
         self.Q_mass += inputs
         up = self.prev_km
-        try:
-            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
-                self.Disp) = \
-                _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
-                              self.dx, self.dt, self.z, self.n,
-                              self.d_cont, self.Q, up.Q, up.Q_prev,
-                              inputs, -1)
-        except _HS.HeatSourceError:
-            self.CatchException(stderr, time)
+        #try:
+        Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
+            self.Disp) = \
+            _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+                          self.dx, self.dt, self.z, self.n,
+                          self.d_cont, self.Q, up.Q, up.Q_prev,
+                          inputs, -1)
+        #except Exception:
+            #self.CatchException(msg, time)
 
         self.Q_prev = self.Q
         self.Q = Q
@@ -297,7 +300,7 @@ class StreamNode(object):
 
     def CatchException(self, stderr, time):
         msg = "{0} and time {1}\n".format(self,ctime(time))
-        if isinstance(stderr,tuple):
+        if isinstance(stderr, tuple):
             msg += """%s\n\tVariables causing this affliction:
             dt: %4.0f
             dx: %4.0f
@@ -327,38 +330,38 @@ class StreamNode(object):
         # same as the headwater node in order to save on processing time.
         Altitude, Zenith, Daytime, dir, Azimuth_mod = self.head.SolarPos
 
-        try:
-            
-            (self.F_Solar,
-             self.F_Diffuse,
-             self.F_Direct,
-             veg_block,
-             ground,
-             F_Total,
-             Delta_T,
-             Mac) = _HS.CalcHeatFluxes(self.ClimateData[time],
-                                       self.C_args, self.d_w, self.A,
-                                       self.P_w, self.W_w, self.U,
-                                       self.Q_tribs[time],
-                                       self.T_tribs[time], self.T_prev,
-                                       self.T_sed, self.Q_hyp,
-                                       self.next_km.T_prev,
-                                       self.ShaderList[dir], dir,
-                                       self.Disp, hour, JD, Daytime,
-                                       Altitude, Zenith,
-                                       self.prev_km.Q_prev,
-                                       self.prev_km.T_prev,
-                                       solar_only,
-                                       self.next_km.Mix_T_Delta)
-            
-            (self.F_Conduction, self.T_sed, self.F_Longwave,
-             self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-             self.F_Evaporation, self.F_Convection, self.E) = ground
-            
-            (self.T, self.S1, self.Mix_T_Delta) = Mac
+        #try:
         
-        except Exception, stderr:  
-            self.CatchException(stderr, time)      
+        (self.F_Solar,
+         self.F_Diffuse,
+         self.F_Direct,
+         veg_block,
+         ground,
+         self.F_Total,
+         self.Delta_T,
+         Mac) = _HS.CalcHeatFluxes(self.ClimateData[time],
+                                   self.C_args, self.d_w, self.A,
+                                   self.P_w, self.W_w, self.U,
+                                   self.Q_tribs[time],
+                                   self.T_tribs[time], self.T_prev,
+                                   self.T_sed, self.Q_hyp,
+                                   self.next_km.T_prev,
+                                   self.ShaderList[dir], dir,
+                                   self.Disp, hour, JD, Daytime,
+                                   Altitude, Zenith,
+                                   self.prev_km.Q_prev,
+                                   self.prev_km.T_prev,
+                                   solar_only,
+                                   self.next_km.Mix_T_Delta)
+        
+        (self.F_Conduction, self.T_sed, self.F_Longwave,
+         self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
+         self.F_Evaporation, self.F_Convection, self.E) = ground
+        
+        (self.T, self.S1, self.Mix_T_Delta) = Mac
+        
+        #except Exception, stderr:
+        #    self.CatchException(stderr, time)      
 
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
@@ -380,34 +383,35 @@ class StreamNode(object):
         
         self.SolarPos = Altitude, Zenith, Daytime, dir, Azimuth_mod
 
-        try:
-            (self.F_Solar,
-             self.F_Diffuse,
-             self.F_Direct,
-             veg_block,
-             ground,
-             F_Total,
-             Delta_T) = _HS.CalcHeatFluxes(self.ClimateData[time],
-                                           self.C_args, self.d_w, self.A,
-                                           self.P_w, self.W_w, self.U,
-                                           self.Q_tribs[time],
-                                           self.T_tribs[time], self.T_prev,
-                                           self.T_sed, self.Q_hyp,
-                                           self.next_km.T_prev,
-                                           self.ShaderList[dir], dir,
-                                           self.Disp, hour, JD, Daytime,
-                                           Altitude, Zenith,
-                                           0.0,
-                                           0.0,
-                                           solar_only,
-                                           self.next_km.Mix_T_Delta)
+        #try:
             
-            (self.F_Conduction, self.T_sed, self.F_Longwave,
-             self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-             self.F_Evaporation, self.F_Convection, self.E) = ground    
+        (self.F_Solar,
+         self.F_Diffuse,
+         self.F_Direct,
+         veg_block,
+         ground,
+         self.F_Total,
+         self.Delta_T) = _HS.CalcHeatFluxes(self.ClimateData[time],
+                                       self.C_args, self.d_w, self.A,
+                                       self.P_w, self.W_w, self.U,
+                                       self.Q_tribs[time],
+                                       self.T_tribs[time], self.T_prev,
+                                       self.T_sed, self.Q_hyp,
+                                       self.next_km.T_prev,
+                                       self.ShaderList[dir], dir,
+                                       self.Disp, hour, JD, Daytime,
+                                       Altitude, Zenith,
+                                       0.0,
+                                       0.0,
+                                       solar_only,
+                                       self.next_km.Mix_T_Delta)
+        
+        (self.F_Conduction, self.T_sed, self.F_Longwave,
+         self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
+         self.F_Evaporation, self.F_Convection, self.E) = ground    
 
-        except Exception, stderr:       
-            self.CatchException(stderr, time)
+        #except Exception, stderr:       
+        #    self.CatchException(stderr, time)
         
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
@@ -495,7 +499,8 @@ class StreamNode(object):
                 T = self.T_prev
         else: T = self.T_prev
         if T > 50 or T < 0:
-            raise Exception("Unstable model")
+            logger.error("Unstable model")
+            raise Exception()
         return T
 
     def MixItUp(self, time, Q_up, T_up):

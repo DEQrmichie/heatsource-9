@@ -72,7 +72,9 @@ class ModelSetup(object):
 
         # Setup for a model run
         # Get the list of model periods times
-        print_console("Starting simulation:  {0}".format(IniParams["name"]))
+        msg = "Starting simulation:  {0}".format(IniParams["name"])
+        logger.info(msg)
+        print_console(msg)
 
         self.flowtimelist = self.GetTimelistUNIX()
         self.continuoustimelist = self.GetTimelistUNIX()
@@ -170,8 +172,10 @@ class ModelSetup(object):
                 if km-down < up-km: 
                     datasite = self.Reach[down]
                 self.Reach[km].ClimateData = datasite.ClimateData
-            #print("Setting Atmospheric Data", c.next()+1, len(l))
-            print_console("Setting Atmospheric Data", True, c.next()+1, len(l))          
+            msg = "Setting Atmospheric Data"
+            current = c.next()+1
+            logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
+            print_console(msg, True, current, len(l))
 
     def GetBoundaryConditions(self):
         """Get the boundary conditions"""
@@ -204,8 +208,10 @@ class ModelSetup(object):
             # Temperature boundary condition
             t_val = temp if temp is not None else 0.0
             self.T_bc[time] = t_val
-            #print("Reading boundary conditions",c.next(),length)
-            print_console("Reading boundary conditions", True, c.next()+1,length)
+            msg = "Reading boundary conditions"
+            current = c.next()+1
+            logger.info('{0} {1} {2}'.format(msg, current, length))
+            print_console(msg, True, current, length)
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
@@ -346,8 +352,10 @@ class ModelSetup(object):
                     #Append to tuple
                     node.Q_tribs[time] += flow, 
                     node.T_tribs[time] += temp,
-                    #print("Reading inflow data",tm.next()+1, length)
-                    print_console("Reading inflow data", True, tm.next()+1, length * IniParams["inflowsites"])
+                    msg = "Reading inflow data"
+                    current = tm.next()+1
+                    logger.info('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
+                    print_console(msg, True, current, length * IniParams["inflowsites"])
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
@@ -423,8 +431,11 @@ class ModelSetup(object):
                         T_air = 0.0
                     else: raise Exception("Air temperature input (value of '%s' in Climate Data) outside of world records, -89 to 58 deg C." % T_air)
                 node.ClimateData[time] = cloud, wind, humidity, T_air
-            #print("Reading climate data", tm.next()+1, length)
-            print_console("Reading climate data", True, tm.next()+1, length)
+            
+            msg = "Reading climate data"
+            current = tm.next()+1
+            logger.info('{0} {1} {2}'.format(msg, current, length))
+            print_console(msg, True, current, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
@@ -441,14 +452,16 @@ class ModelSetup(object):
         # Now we strip out the climate data outside the model period 
         # from the dictionaries. This is placed here
         # at the end so we can dispose of it easily if necessary
-        print_console("Subsetting the Continuous Data to model period")
+        print_console("Subsetting the continuous data to model period")
         tm = count()
         length = len(self.ClimateDataSites)
         for km in self.ClimateDataSites:
             node = self.Reach[km]
             node.ClimateData = node.ClimateData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-            #print("Subsetting ",tm.next()+1, length)
-            print_console("Subsetting ", True, tm.next()+1, length)
+            msg = "Subsetting"
+            current = tm.next()+1
+            logger.info('{0} {1} {2}'.format(msg, current, length))
+            print_console(msg, True, current, length)
 
     def zipper(self,iterable,mul=2):
         """Zippify list by grouping <mul> consecutive elements together
@@ -623,8 +636,9 @@ class ModelSetup(object):
             self.InitializeNode(node)
             self.Reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
-            
-            print_console("Building Stream Nodes", True, i+1, num_nodes)
+            msg = "Building Stream Nodes"
+            logger.info('{0} {1} {2}'.format(msg, i+1, num_nodes))
+            print_console(msg, True, i+1, num_nodes)
         
         # Find the mouth node and calculate the actual distance
         mouth = self.Reach[min(self.Reach.keys())]
@@ -657,7 +671,7 @@ class ModelSetup(object):
         overhang = []
         elevation = []        
         
-        print_console("Translating LULC Data")
+        print_console("Translating landcover Data")
         if IniParams["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
@@ -699,7 +713,9 @@ class ModelSetup(object):
                     # the last LULC col.
                     
                     elevation.append(self.multiplier(elev, average))
-                print_console("Translating LULC Data", True, i, radial_count*transsample_count+7)
+                msg = "Translating Landcover Data"
+                logger.info('{0} {1} {2}'.format(msg, i, radial_count*transsample_count+7))
+                print_console(msg, True, i, radial_count*transsample_count+7)
     
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
@@ -751,8 +767,10 @@ class ModelSetup(object):
                     # the last LULC col.
                     
                     elevation.append(self.multiplier(elev, average))
-                #print("Translating LULC Data", i, radial_count*transsample_count+7)
-                print_console("Translating LULC Data", True, i, radial_count*transsample_count+7)
+                
+                msg = "Translating Landcover Data"
+                logger.info('{0} {1} {2}'.format(msg, i, radial_count*transsample_count+7))
+                print_console(msg, True, i, radial_count*transsample_count+7)                
     
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
@@ -792,8 +810,9 @@ class ModelSetup(object):
         # should've seen it earlier!
 
         for h in xrange(len(keys)):
-            #print("Building VegZones", h+1, len(keys))
-            print_console("Building VegZones", True, h+1, len(keys))
+            msg = "Building landcover zones"
+            logger.info('{0} {1} {2}'.format(msg, h+1, len(keys)))
+            print_console(msg, True, h+1, len(keys))
             node = self.Reach[keys[h]]
             VTS_Total = 0 # View to sky value
             LC_Angle_Max = 0
@@ -954,7 +973,7 @@ class ModelSetup(object):
         overhang = []
         elevation = []        
         
-        print_console("Translating LULC Data")       
+        print_console("Translating Landcover Data")       
         if IniParams["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
@@ -985,8 +1004,9 @@ class ModelSetup(object):
                     # the morphology file), so we don't want to read in first 
                     # elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
-                #print("Reading vegetation heights", i+1, shiftcol+7)
-                print_console("Reading vegetation heights", True, i+1, shiftcol+7)
+                msg = "Reading vegetation heights"
+                logger.info('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
+                print_console(msg, True, i+1, shiftcol+7)
                 
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
@@ -1031,8 +1051,10 @@ class ModelSetup(object):
                     # in first elevation value which s actually the 
                     # last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
-                #print("Reading vegetation heights", i+1, shiftcol+7)
-                print_console("Reading vegetation heights", True, i+1, shiftcol+7)
+                
+                msg = "Reading vegetation heights"
+                logger.info('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
+                print_console(msg, True, i+1, shiftcol+7)
 
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
@@ -1063,8 +1085,10 @@ class ModelSetup(object):
         # seen it earlier!
 
         for h in xrange(len(keys)):
-            #print("Building VegZones", h+1, len(keys))
-            print_console("Building VegZones", True, h+1, len(keys))
+            msg = "Building VegZones"
+            logger.info('{0} {1} {2}'.format(msg, h+1, len(keys)))
+            print_console(msg, True, h+1, len(keys))
+            
             node = self.Reach[keys[h]]
             LC_Angle_Max = 0
             VTS_Total = 0 #View to sky value

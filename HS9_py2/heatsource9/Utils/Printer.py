@@ -21,16 +21,14 @@ import sys
 logger = logging.getLogger(__name__)
 
 class Printer(object):
+    """Class to print messages to the console"""
     def __init__(self, msg, progress_bar=False, current=100, total=100):
         if progress_bar is True:
             if int(current / total * 100) < 100:
-                logger.info('{0} {1} {2}'.format(msg, current, total))
                 sys.stdout.write(self.progress_bar(msg, current, total) + '\r')
             else:
-                logger.info('{0} {1} {2}'.format(msg, current, total))
                 sys.stdout.write(self.progress_bar(msg, current, total) + '\n')
         else:
-            logger.info('{0}'.format(msg))
             sys.stdout.write(msg + '\n')            
         sys.stdout.flush()
         #time.sleep(0.05)        

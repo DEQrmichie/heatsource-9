@@ -38,7 +38,7 @@ from __version__ import version_string
 
 # set up logging
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    format='%(asctime)s %(levelname)-8s %(module)s %(funcName)s %(lineno)d %(message)s',
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
@@ -74,7 +74,9 @@ class ModelControl(object):
         # Add run type and heat source model version into IniParams
         IniParams["version"] = version_string
         IniParams["run_type"] = run_type
-        print_console("Heat Source Version:  {0}".format(IniParams["version"]))
+        msg = "Heat Source Version:  {0}".format(IniParams["version"])
+        print_console(msg)
+        logger.info(msg)
         
         # Create a ModelSetup instance.
         self.HS = ModelSetup(model_dir, control_file, run_type)
@@ -175,6 +177,7 @@ class ModelControl(object):
             # Shit, there's a problem
             except:
                 msg = "Error at %s and time %s\n"%(self, Chronos.PrettyTime())
+                logging.error(msg)
                 print_console(msg)
                 
                 # Then just die
@@ -188,7 +191,9 @@ class ModelControl(object):
                 # Number of timesteps in one hour
                 hr = 60/(IniParams["dt"]/60) 
                 # This writes a line to the status bar.
-                print_console("Timesteps:", True, (ts)*hr, timesteps)
+                msg = "Timesteps:"
+                logger.info('{0} {1} {2}'.format(msg, (ts)*hr, timesteps))
+                print_console(msg, True, (ts)*hr, timesteps)
                 
                 # Call the Output class to update the textfiles. We call
                 # this every hour and store the data, then we write to 
@@ -199,7 +204,9 @@ class ModelControl(object):
             # ---- 
             # Uncomment to output every timestep and 
             # comment section above
-            #ts = cnt.next()    
+            #ts = cnt.next()
+            #msg = "Timesteps:"
+            #logger.info('{0} {1} {2}'.format(msg, ts, timesteps))
             #print_console("Timesteps:", True, ts, timesteps)
             #self.Output(time, hour, minute, second)
             # ---- 
@@ -239,6 +246,7 @@ class ModelControl(object):
         message += "Simulation: {0}\n".format(IniParams["name"])
         message += "Outputs: {0}\n\n".format(IniParams["outputdir"])
 
+        logger.info(message)
         print_console(message)
         #raw_input('Press <ENTER> to close this console')
 
@@ -267,7 +275,9 @@ def RunHS(model_dir, control_file):
         HSP.Run()
         del HSP
     except Exception, stderr:
-        print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
+        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
+        logger.error(msg)
+        print_console(msg)
 
 def RunSH(model_dir, control_file):
     """Run solar routines only"""
@@ -275,7 +285,9 @@ def RunSH(model_dir, control_file):
         HSP = ModelControl(model_dir, control_file, 1)
         HSP.Run()
     except Exception, stderr:
-        print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
+        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
+        logger.error(msg)
+        print_console(msg)
 
 def RunHY(model_dir, control_file):
     """Run hydraulics only"""
@@ -283,4 +295,6 @@ def RunHY(model_dir, control_file):
         HSP = ModelControl(model_dir, control_file, 2)
         HSP.Run()
     except Exception, stderr:
-        print_console("".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error")
+        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
+        logger.error(msg)
+        print_console(msg)
