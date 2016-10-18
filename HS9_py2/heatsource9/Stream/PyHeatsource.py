@@ -23,6 +23,11 @@ from math import atan, sin, cos, tan, acos, radians
 from random import randint
 from bisect import bisect
 
+import logging
+logger = logging.getLogger(__name__)
+
+from ..Utils.Printer import Printer as print_console
+
 def CalcSolarPosition(lat, lon, hour, min, sec, offset,
                       JDC, heatsource8, radial_count):
     toRadians = pi/180.0
@@ -237,9 +242,12 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
     # Check the celerity to ensure stability. These tests are 
     # from the VB code.
     if dt >= (2 * K * (1 - X)):
-        # Unstable - Decrease dt or increase dx
+        # Unstable: Decrease dt or increase dx
         dt_stable = (2 * K * (1 - X)) / 60
-        raise Exception("Unstable timestep. dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X))
+        msg = "Unstable timestep. Decrease dt or increase dx. \
+        dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
+        logger.error(msg)
+        raise Exception()
 
     # These calculations are from Chow's "Applied Hydrology"
     D = K * (1 - X) + 0.5 * dt
@@ -652,8 +660,9 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
     T_sed_new = T_sed + DT_Sed
     if T_sed_new > 50 or T_sed_new < 0:
-        print(T_sed_new)
-        raise Exception("Sediment temperature not bounded in 0<=temp<=50") # TODO RM
+        msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
+        logger.error(msg)
+        raise Exception() # TODO RM
 
     #=====================================================
     # Calculate Longwave FLUX
@@ -692,13 +701,22 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     Air_Vapor = humidity * Sat_Vapor
     #===================================================
     # Calculate the frictional reduction in wind velocity
-    if emergent and lc_height > 0:
-        Zd = 0.7 * lc_height
-        Zo = 0.1 * lc_height
+    if emergent and lc_height[0][0] > 0:
+        
         Zm = 2
         
-        # Vertical wind Decay Rate (Dingman p. 594)
-        Friction_Velocity = wind * 0.4 / log((Zm - Zd) / Zo)
+        # zm > Zd + Zo
+        if lc_height[0][0] < 2.5:
+            Zd = 0.7 * lc_height[0][0]
+            Zo = 0.1 * lc_height[0][0]
+
+        else:
+            Zd = 1.75
+            Zo = 0.25
+
+        # Vertical wind Decay Rate using Prandtl-von-Karman 
+        # universal velocity istribution (Dingman 2002 p. 594)
+        Friction_Velocity = (1 / 0.4) * wind * log((Zm - Zd) / Zo)
     else:
         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
         Zd = 0 #Brustsaert (1982) p. 277 Dingman
@@ -842,10 +860,16 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
+        ground = [0]*9
+        F_Total =  0.0
+        Delta_T = 0.0
+        Mac = [0]*3
+        
         # Boundary node
-        if not has_prev: return solar, diffuse, direct, veg_block, [0]*9, 0.0, 0.0,
+        if not has_prev: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
+        
         # regular node
-        else: return solar, diffuse, direct, veg_block, [0]*9, 0.0, 0.0, [0]*3
+        else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
     ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
                     phi, lc_height, ViewToSky, SedDepth, dx,
@@ -860,7 +884,8 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2) 
 
     if not has_prev:
-        return solar, veg_block, ground, F_Total, Delta_T
+        # Boundary node
+        return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
 
     Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
@@ -868,4 +893,4 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                          MixTDelta_dn_prev)
 
     # Mac includes Temp, S, T_mix
-    return solar, veg_block, ground, F_Total, Delta_T, Mac
+    return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
