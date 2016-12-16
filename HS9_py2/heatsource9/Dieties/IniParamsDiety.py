@@ -22,7 +22,7 @@ IniParams = {"run_in_python": True,
              "flushdays" : None, 
              "offset" : None, 
              "dt" : 1, 
-             "dx" : None, 
+             "dx" : 50, 
              "longsample" : None, 
              "bcfile" : "bc.csv", 
              "inflowsites" : None, 
@@ -44,11 +44,11 @@ IniParams = {"run_in_python": True,
              "trans_count" : None, 
              "transsample_count" : None, 
              "transsample_distance" : None, 
-             "emergent" : None, 
+             "emergent" : "TRUE", 
              "lcdatainput" : None, 
              "canopy_data" : None, 
              "vegDistMethod" : "point", 
-             "heatsource8" : None, }
+             "heatsource8" : "FALSE",}
 
 # dype is a dictionary holding the data type for every input. Includes 
 # model variable names and input file names. Note the datetime inputs
@@ -97,9 +97,9 @@ dtype = {"run_in_python": bool,
          "lcdatainput" : basestring, 
          "canopy_data" : basestring, 
          "vegDistMethod" : basestring, 
-         "heatsource8" : bool, 
+         "heatsource8" : bool,
          "penman": bool,
-         "nodeID" : int,  # TODO this should prob be a long
+         "nodeID" : int,  # TODO this might need to be a long with lots of nodes
          "streamID": basestring,
          "km" : float,
          "longitude" : float,

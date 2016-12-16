@@ -18,9 +18,15 @@ from ..Dieties.IniParamsDiety import iniRange
 from ..Dieties.IniParamsDiety import dtype
 from ..Utils.Printer import Printer as print_console
 import logging
+# set up logging
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(module)s %(funcName)s %(lineno)d %(message)s',
+                    filename='heatsource.log',
+                    filemode='w')
 logger = logging.getLogger(__name__)
 
 # try to import arcpy but don't stop
+# future is to use gdal.
 try:
     import arcpy
 except: 
@@ -419,46 +425,46 @@ class Inputs(object):
         
         #TODO RM fix so dict is related to numbers or text symbols
         cf_dict = {"usertxt": [2, "USER NOTES", None],
-               "name": [3, "SIMULATION NAME", None],
-               "inputdir": [4, "INPUT PATH", None],
-               "outputdir": [5, "OUTPUT PATH", None],
-               "length": [6, "STREAM LENGTH (KILOMETERS)", None],
-               "outputkm": [7, "OUTPUT KILOMETERS", None],
-               "datastart": [8, "DATA START DATE (mm/dd/yyyy)", None],
-               "modelstart": [9, "MODELING START DATE (mm/dd/yyyy)", None],
-               "modelend": [10, "MODELING END DATE (mm/dd/yyyy)", None],
-               "dataend": [11, "DATA END DATE (mm/dd/yyyy)", None],
-               "flushdays": [12, "FLUSH INITIAL CONDITION (DAYS)", None],
-               "offset": [13, "TIME OFFSET FROM UTC (HOURS)", None],
-               "dt": [14, "MODEL TIME STEP - DT (MIN)", None],
-               "dx": [15, "MODEL DISTANCE STEP - DX (METERS)", None],
-               "longsample": [16, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)", None],
-               "bcfile": [17, "BOUNDARY CONDITION FILE NAME", None],
-               "inflowsites": [18, "TRIBUTARY SITES", None],
-               "inflowinfiles": [19, "TRIBUTARY INPUT FILE NAMES", None],
-               "inflowkm": [20, "TRIBUTARY MODEL KM", None],
-               "accretionfile": [21, "ACCRETION INPUT FILE NAME", None],
-               "climatesites": [22, "CLIMATE DATA SITES", None],
-               "climatefiles": [23, "CLIMATE INPUT FILE NAMES", None],
-               "climatekm": [24, "CLIMATE MODEL KM", None],
-               "calcevap": [25, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)", None],
-               "evapmethod": [26, "EVAPORATION METHOD (Mass Transfer/Penman)", None],
-               "wind_a": [27, "WIND FUNCTION COEFFICIENT A", None],
-               "wind_b": [28, "WIND FUNCTION COEFFICIENT B", None],
-               "calcalluvium": [29, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)", None],
-               "alluviumtemp": [30, "DEEP ALLUVIUM TEMPERATURE (*C)", None],
-               "morphfile": [31, "MORPHOLOGY DATA FILE NAME", None],
-               "lcdatafile": [32, "LANDCOVER DATA FILE NAME", None],
-               "lccodefile": [33, "LANDCOVER CODES FILE NAME", None],
-               "trans_count": [34, "NUMBER OF TRANSECTS PER NODE", None],
-               "transsample_count": [35, "NUMBER OF SAMPLES PER TRANSECT", None],
-               "transsample_distance": [36, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)", None],
-               "emergent": [37, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)", None],
-               "lcdatainput": [38, "LANDCOVER DATA INPUT TYPE (Codes/Values)", None],
-               "canopy_data": [39, "CANOPY DATA TYPE (LAI/CanopyCover)", None],
-               "vegDistMethod": [40, "VEGETATION ANGLE CALCULATION METHOD (point/zone)", None],
-               "heatsource8": [41, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)", None],
-               }
+                   "name": [3, "SIMULATION NAME", None],
+                   "inputdir": [4, "INPUT PATH", None],
+                   "outputdir": [5, "OUTPUT PATH", None],
+                   "length": [6, "STREAM LENGTH (KILOMETERS)", None],
+                   "outputkm": [7, "OUTPUT KILOMETERS", None],
+                   "datastart": [8, "DATA START DATE (mm/dd/yyyy)", None],
+                   "modelstart": [9, "MODELING START DATE (mm/dd/yyyy)", None],
+                   "modelend": [10, "MODELING END DATE (mm/dd/yyyy)", None],
+                   "dataend": [11, "DATA END DATE (mm/dd/yyyy)", None],
+                   "flushdays": [12, "FLUSH INITIAL CONDITION (DAYS)", None],
+                   "offset": [13, "TIME OFFSET FROM UTC (HOURS)", None],
+                   "dt": [14, "MODEL TIME STEP - DT (MIN)", None],
+                   "dx": [15, "MODEL DISTANCE STEP - DX (METERS)", None],
+                   "longsample": [16, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)", None],
+                   "bcfile": [17, "BOUNDARY CONDITION FILE NAME", None],
+                   "inflowsites": [18, "TRIBUTARY SITES", None],
+                   "inflowinfiles": [19, "TRIBUTARY INPUT FILE NAMES", None],
+                   "inflowkm": [20, "TRIBUTARY MODEL KM", None],
+                   "accretionfile": [21, "ACCRETION INPUT FILE NAME", None],
+                   "climatesites": [22, "CLIMATE DATA SITES", None],
+                   "climatefiles": [23, "CLIMATE INPUT FILE NAMES", None],
+                   "climatekm": [24, "CLIMATE MODEL KM", None],
+                   "calcevap": [25, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)", None],
+                   "evapmethod": [26, "EVAPORATION METHOD (Mass Transfer/Penman)", None],
+                   "wind_a": [27, "WIND FUNCTION COEFFICIENT A", None],
+                   "wind_b": [28, "WIND FUNCTION COEFFICIENT B", None],
+                   "calcalluvium": [29, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)", None],
+                   "alluviumtemp": [30, "DEEP ALLUVIUM TEMPERATURE (*C)", None],
+                   "morphfile": [31, "MORPHOLOGY DATA FILE NAME", None],
+                   "lcdatafile": [32, "LANDCOVER DATA FILE NAME", None],
+                   "lccodefile": [33, "LANDCOVER CODES FILE NAME", None],
+                   "trans_count": [34, "NUMBER OF TRANSECTS PER NODE", None],
+                   "transsample_count": [35, "NUMBER OF SAMPLES PER TRANSECT", None],
+                   "transsample_distance": [36, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)", None],
+                   "emergent": [37, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)", None],
+                   "lcdatainput": [38, "LANDCOVER DATA INPUT TYPE (Codes/Values)", None],
+                   "canopy_data": [39, "CANOPY DATA TYPE (LAI/CanopyCover)", None],
+                   "vegDistMethod": [40, "VEGETATION ANGLE CALCULATION METHOD (point/zone)", None],
+                   "heatsource8": [41, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)", None],
+                   }
         
         return cf_dict    
         
@@ -522,11 +528,37 @@ class Inputs(object):
         """Returns the channel morphology data"""
         return self.read_to_dict(IniParams["inputdir"],
                                  IniParams["morphfile"],
-                                 self.headers_morph())    
+                                 self.headers_morph())
+    
+    def lookup_lccode(self, code, lookup_list):
+        """
+        Returns a value based on a range provided in thelookup list.
+        If the value does not fall within the range None is returned.
+        
+        lccode: numeric or string value to lookup in the lookup list.
+        
+        lookup_list: A list of tuples with the form [(min code, max code, return value),].
+        The return value is returend if min code <= lccode <= max code.
+        If the code is a string the min and max are equal to the code.
+        """
+        
+        if lookup_list is None:
+            return None
+        
+        # sort the list
+        lookup_list.sort()
+                
+        for row in lookup_list:
+            if row[0] <= float(code) <= row[1]:
+                return row[2]
+        
+        # Not in range, return None
+        return None
             
     def parameterize_from_nodes_fc(self, input_file, nodes_fc,
                                    group_val=None,
-                                   grouping_field="STREAM_ID"):
+                                   grouping_field="STREAM_ID",
+                                   cont_stream_km=False):
         """
         Paramaterize the input file using data from the TTools
         node feature class.
@@ -541,6 +573,9 @@ class Inputs(object):
             
         grouping_field: the attribute field in the nodes_fc that
         contains the group_val.
+        
+        cont_stream_km=: if True uses overwrites the nodes km so it is
+        continuous based on node_dx over all the nodes in each group
         
         """
         msg = "Writting control file from nodes fc"
@@ -571,18 +606,25 @@ class Inputs(object):
         # build a list of the data to pass to paramaterize()
         outlist = []
         nodeIDs = self.nodeDict.keys()
-        nodeIDs.sort()                 
-        for nodeID in nodeIDs:
+        nodeIDs.sort()
+        
+        if cont_stream_km:
+            kmlist= self.stream_kms()        
+        
+        for i, nodeID in enumerate(nodeIDs):
             row_list = []
             for header in headers:
                 if header in self.nodeDict[nodeID].keys():
                     val = self.nodeDict[nodeID][header]
-                    row_list.append(val)
+                    if cont_stream_km and header == "STREAM_KM":
+                        row_list.append(kmlist[i])
+                    else:
+                        row_list.append(val)
                 else:
                     # use None when there is no matching key
                     row_list.append(None)
             outlist.append(row_list)
-                
+
         # sort by stream km with headwaters on top
         outlist = sorted(outlist, key=itemgetter(2), reverse=True)
         
@@ -634,46 +676,82 @@ class Inputs(object):
                 self.write_to_csv(self.model_dir, self.control_file,
                                   cf_list, self.headers_cf())
             else:
-                raise Exception("HeatSource_Control.csv already exists.")
+                logger.warning("Will not overwrite HeatSource_Control.csv. It already exists.")
+                print_console("Will not overwrite HeatSource_Control.csv. It already exists.")
         
-    def parameterize_lccodes(self, lcdata=None, code_as_ht=False, can=None,
-                             lai=None, k=None, oh=None):
+    def parameterize_lccodes(self, lccodes=None, code_as_ht=False,
+                             ht_list=None, can_list=None,
+                             lai_list=None, k_list=None, oh_list=None):
         """
-        This function identifes unique codes from the land cover
-        data file and generates the land cover code file
-        based on all the unique codes. If a list of the land cover data
-        is not passed as an agrument the file identifed in the cotrol file
-        will be read instead. Optional default values can
-        be based for the other parameters.
+        Parameterize and writes the land cover codes file.
+        
+        lccodes: Optional list of tuples with the landcover code
+        information. List takes the form:
+        [(landcover name, code, ht, canopy, overhang),] or
+        [(landcover name, code, ht, lai, k, overhang),]
+        
+        If lccodes=None the lcdata file identifed in
+        the control file will be read instead to identify the unique codes.
+        
+        The other input parameters including height (ht), canopy (can),
+        lai, k, and overhang (oh) are paramaterized using a range
+        provided in list of tuples for each parameter.
+        
+        The parameter lookup list must take form
+        [(min code, max code, return value),]
+        where the return value is returend if min code <= lccode <= max code,
+        
+        code_as_ht: if True uses the landcover code as the height when
+        the code is not found within a range of values passed to ht_list
+        or when the ht_list is None.
+        
         """
         
-        if lcdata is None:
+        if lccodes is None:
             # read the land cover data
             lcdata = self.import_lcdata(return_list=True,
                                     skiprows=1, skipcols=0)      
         
-        codes = set()
+            codes = set()
         
-        for row in lcdata:
-            for col in range(8, (IniParams["trans_count"] *
-                                 IniParams["transsample_count"]) + 9):
-                codes.add(str(row[col]))
-        
-        codes = list(codes)
-        codes.sort()
-        
-        if IniParams["canopy_data"] == "LAI":
+            for row in lcdata:
+                for col in range(8, (IniParams["trans_count"] *
+                                     IniParams["transsample_count"]) + 9):
+                    codes.add(str(row[col]))
             
-            if code_as_ht:
-                lccodes = [[None, code, float(code), lai, k, oh] for code in codes]
-            else:
-                lccodes = [[None, code, None, lai, k, oh] for code in codes]
+            codes = list(codes)
+            codes.sort()
             
-        else:
-            if code_as_ht:
-                lccodes = [[None, code, float(code), can, oh] for code in codes]
+            lccodes = []
+        
+            if IniParams["canopy_data"] == "LAI":
+                for code in codes:
+                    ht = self.lookup_lccode(code, ht_list)
+                    if code_as_ht and ht is None:
+                        ht = float(code)
+                    lai = self.lookup_lccode(code, lai_list)
+                    k = self.lookup_lccode(code, k_list)
+                    oh = self.lookup_lccode(code, oh_list)
+                    lccodes.append([None, code, ht, lai, k, oh])
+                        
             else:
-                lccodes = [[None, code, None, can, oh] for code in codes]
+                for code in codes:
+                    ht = self.lookup_lccode(code, ht_list)
+                    if code_as_ht and ht is None:
+                        ht = float(code)
+                    can = self.lookup_lccode(code, can_list)
+                    oh = self.lookup_lccode(code, oh_list)
+                    lccodes.append([None, code, ht, can, oh])
+                        
+                    
+                    #lccodes = [[None, code, float(code), lai, k, oh] for code in codes]
+                #else:
+                    #lccodes = [[None, code, ht, lai, k, oh] for code in codes]
+            #else:
+                #if code_as_ht:
+                    #lccodes = [[None, code, float(code), can, oh] for code in codes]
+                #else:
+                    #lccodes = [[None, code, ht, can, oh] for code in codes]
             
         self.write_to_csv(IniParams["inputdir"],
                           IniParams["lccodefile"],
@@ -724,9 +802,8 @@ class Inputs(object):
                     #if there is more than one cl
                     data[k].append(v)
                     
-        return self.validate(data)    
-    
-        
+        return self.validate(data)
+
     def read_to_list(self, inputdir, filenames, skiprows, skipcols):
         """Reads a comma delimtted text file into a
         list of lists indexed by row number. If there is more than

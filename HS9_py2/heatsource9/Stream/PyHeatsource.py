@@ -275,7 +275,7 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, phi, emergent, lc_canopy, lc_height, lc_k,
-                 ShaderList, dir):
+                 ShaderList, dir, heatsource8):
     """ """
     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle = ShaderList
     F_Direct = [0]*8
@@ -409,17 +409,16 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         if lc_height[dir][zone] == 0:
                             fraction_passed = 1
                         else:
-                            #---------  Boyd and Kasper 2007
-                            #RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
                             
-                            #--------- Chen 1998
-                            #RipExtinction = -log(1- lc_canopy[dir][zone])/lc_height[dir][zone]
+                            if heatsource8:
+                                #---------  Boyd and Kasper 2007
+                                RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
                                 
-                                
-                            #--------- (Norman and Welles 1983)
-                            # here the extinction coefficent 
-                            # represents the foliage density * k 
-                            RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
+                            else:
+                                #--------- (Norman and Welles 1983)
+                                # here the extinction coefficent 
+                                # represents the foliage density * k 
+                                RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
                             
                             fraction_passed = exp(-1* RipExtinction * PLz)
                         
@@ -503,20 +502,22 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
             
             try:
                 # Set to one if no veg
-                if lc_height[0][0] == 0:
+                if lc_height[0][0] <= 0:
                     fraction_passed = 1
                 else:
-                    #--------- Chen and Boyd and Kasper
-                    #RipExtinction = -log(1- lc_canopy[0][0])/lc_height[0][0]
-                
-                    #---------  Oke 1978 (HS9)
-                    RipExtinction = -log(1- lc_canopy[0][0])/ PL
+                    if heatsource8:
+                        #--------- Chen and Boyd and Kasper
+                        RipExtinction = -log(1- lc_canopy[0][0])/lc_height[0][0]
+                        
+                    else:
+                        #---------  Oke 1978 (HS9)
+                        RipExtinction = -log(1- lc_canopy[0][0])/ PL
                     
                     fraction_passed = exp(-1* RipExtinction * PLe)
                 
             except:
                 # cannot take log of 0
-                if lc_height[0][0] == 0:
+                if lc_height[0][0] <= 0:
                     # there is no emergent veg
                     fraction_passed = 1
                 elif lc_canopy[0][0] == 1:
@@ -829,7 +830,8 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
 def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    dir, Disp, hour, JD, daytime, Altitude, Zenith,
-                   Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev):
+                   Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
+                   heatsource8):
     
     cloud, wind, humidity, T_air = ClimateData
 
@@ -856,7 +858,8 @@ def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                                         transsample_count,
                                         BeersData, phi, emergent,
                                         lc_canopy, lc_height,
-                                        lc_k, ShaderList, dir)
+                                        lc_k, ShaderList, dir,
+                                        heatsource8)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:

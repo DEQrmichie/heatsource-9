@@ -352,7 +352,8 @@ class StreamNode(object):
                                    self.prev_km.Q_prev,
                                    self.prev_km.T_prev,
                                    solar_only,
-                                   self.next_km.Mix_T_Delta)
+                                   self.next_km.Mix_T_Delta,
+                                   IniParams["heatsource8"])
         
         (self.F_Conduction, self.T_sed, self.F_Longwave,
          self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
@@ -404,7 +405,8 @@ class StreamNode(object):
                                        0.0,
                                        0.0,
                                        solar_only,
-                                       self.next_km.Mix_T_Delta)
+                                       self.next_km.Mix_T_Delta,
+                                       IniParams["heatsource8"])
         
         (self.F_Conduction, self.T_sed, self.F_Longwave,
          self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,

@@ -71,7 +71,7 @@ class Output(object):
             desc["Heat_SR1"] = "Solar Radiation Flux above Topographic Features (watts/square meter)"
             desc["Heat_SR2"] = "Solar Radiation Flux below Topographic Features (watts/square meter)"
             desc["Heat_SR3"] = "Solar Radiation Flux below Land Cover (watts/square meter)"
-            desc["Heat_SR3b"] = "Solar Raditation Flux blocked by Land Cover (watts/square meter)"
+            desc["Heat_SR3b"] = "Solar Radiation Flux blocked by Land Cover (watts/square meter)"
             desc["Heat_SR4"] = "Solar Radiation Flux above the Stream (watts/square meter)"
             desc["Heat_SR5"] = "Solar Radiation Flux Entering Stream (watts/square meter)"
             desc["Shade"] = "Effective Shade"
@@ -120,7 +120,7 @@ class Output(object):
             header += [["Datetime"]]
             if key in ["Heat_SR3b"] :
                 
-                header[6] += ["Stream_km"]
+                header[6] += ["STREAM_KM"]
                 
                 if IniParams["heatsource8"]:
                     # Same as 8 directions but no north
