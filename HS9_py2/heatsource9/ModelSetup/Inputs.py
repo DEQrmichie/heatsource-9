@@ -25,18 +25,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w')
 logger = logging.getLogger(__name__)
 
-# try to import arcpy but don't stop
-# future is to use gdal.
-try:
-    import arcpy
-except: 
-    msg = "ImportError: No module named arcpy. " \
-                  "Inputs.parameterize_from_nodes_fc() will not work. "\
-                  "To use this method ESRI ArcGIS must be installed"
-    
-    logging.warning(msg)
-    print_console(msg)       
-    
 class Inputs(object):
     """
     The Inputs class contains methods to read, parameterize, and write
@@ -578,10 +566,17 @@ class Inputs(object):
         continuous based on node_dx over all the nodes in each group
         
         """
-        msg = "Writting control file from nodes fc"
+        
+        msg = "Parameterize from nodes fc"
         logger.info(msg)
         print_console(msg)
-        
+        # try to import arcpy but don't stop
+        try:
+            import arcpy
+        except:
+            print_console("ImportError: No module named arcpy. " \
+                          "To use this method ESRI ArcGIS must be installed")
+            SystemExit
 
         # get the headers
         if input_file == "lcdatafile":
