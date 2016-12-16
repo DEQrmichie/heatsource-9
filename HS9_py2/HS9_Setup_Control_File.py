@@ -21,7 +21,10 @@ def getScriptPath():
 model_dir = getScriptPath() + '/'
 control_file = 'HeatSource_Control.csv'
 
+# create an input object
+inputs = Inputs(model_dir, control_file)
+
 # Write a blank control file
-Inputs.parameterize_cf(overwrite=False)
+inputs.parameterize_cf(overwrite=False)
 
 
