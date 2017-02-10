@@ -15,7 +15,8 @@ significantly. Oregon DEQ currently maintains the Heat Source methodology
 and computer programming. Appropriate model use and application are 
 the sole responsibility of the user.
 
-http://www.deq.state.or.us/wq/TMDLs/tools.htm
+Heat Source 8 and user manual:
+http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
 
 Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
 
