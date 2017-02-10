@@ -31,7 +31,7 @@ Heat Source 9 works on Windows, Mac, and Linux.
 Requires python 2.7
 https://www.python.org/downloads/
 
-Download the zip file  
+Download  
 ```git clone git://github.com/rmichie/heatsource-9.git```
 
 navigate to setup.py and install  
