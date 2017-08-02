@@ -50,6 +50,10 @@ class ModelSetup(object):
         self.Reach = {}
         self.ID2km = {}
         
+        msg = "Starting Model Initialization"
+        logger.info(msg)
+        print_console(msg)
+        
         # create an input object to mange the data
         self.inputs = Inputs(model_dir, control_file)
         
@@ -61,8 +65,8 @@ class ModelSetup(object):
         self.Q_bc = Interpolator()
         self.T_bc = Interpolator()
     
-        # List of kilometers with climate data nodes assigned.
-        self.ClimateDataSites = []
+        # List of kilometers with met data nodes assigned.
+        self.metDataSites= []
     
         # Some convenience variables
         self.dx = IniParams["dx"]
@@ -72,10 +76,6 @@ class ModelSetup(object):
 
         # Setup for a model run
         # Get the list of model periods times
-        msg = "Starting simulation:  {0}".format(IniParams["name"])
-        logger.info(msg)
-        print_console(msg)
-
         self.flowtimelist = self.GetTimelistUNIX()
         self.continuoustimelist = self.GetTimelistUNIX()
         self.flushtimelist = self.GetTimelistFlushPeriod()
@@ -89,17 +89,19 @@ class ModelSetup(object):
         else:
             self.BuildZones_w_Codes()
         self.GetTributaryData()
-        self.GetClimateData()
+        self.GetMetData()
         self.SetAtmosphericData()
         self.OrientNodes()
         
         # setup output km
         if not IniParams["outputkm"] == "all":
             IniParams["outputkm"] = self.GetLocations("outputkm")
+        
+        msg = "Model Initialization Complete"
+        logger.info(msg)
+        print_console(msg)
 
     def OrientNodes(self):
-        print_console("Initializing StreamNodes")      
-        
         # Now we manually set each nodes next and previous 
         # kilometer values by stepping through the reach
         l = sorted(self.Reach.keys(), reverse=True)
@@ -113,6 +115,7 @@ class ModelSetup(object):
             if i == 0: pass
             # At first node, there's no previous
             else: self.Reach[key].prev_km = self.Reach[l[i-1]] 
+            
             try:
                 self.Reach[key].next_km = self.Reach[l[i+1]]
             except IndexError:
@@ -129,29 +132,30 @@ class ModelSetup(object):
             # checking so we can print a lengthy error that no-one 
             # will ever read.
             if self.Reach[key].S <= 0.0: slope_problems.append(key)
+        
         if self.run_type != 1: # zeros are alright in shade calculations
             if len(slope_problems):
                 raise Exception ("The following reaches have zero slope. Kilometers: %s" %",".join(['%0.3f'%i for i in slope_problems]))
  
     def SetAtmosphericData(self):
-        """For each node without climate data, use closest (up or downstream) node's data"""
-        print_console("Setting Atmospheric Data")
+        """For each node without met data, use closest (up or downstream) node's data"""
+        print_console("Assigning Meteorological Data to Nodes")
         
         # Localize the variable for speed
-        sites = self.ClimateDataSites 
+        sites = self.metDataSites
         
-        # Sort the climate site by km. This is necessary for 
+        # Sort the met site by km. This is necessary for 
         # the bisect module
         sites.sort() 
         c = count()
         l = self.Reach.keys()
         # This routine iterates through all nodes and uses bisect to 
-        # determine which climate site is closest to the node and 
-        # initializes that node with the climate data that is closest 
+        # determine which met site is closest to the node and 
+        # initializes that node with the met data that is closest 
         # (up or downstream)
         for km, node in self.Reach.iteritems():
             if km not in sites: # if we are not on the node where the 
-                # climate data is assigned we have t
+                # met data is assigned we have t
                 # Kilometer's downstream and upstream
                 
                 # zero is the lowest (protect against value of -1)
@@ -165,14 +169,14 @@ class ModelSetup(object):
                 # sites list
                 down = sites[lower]
                 up = sites[upper]
-                # Initialize to upstream's climate data
+                # Initialize to upstream's met data
                 datasite = self.Reach[up]
                 # Only if the distance to the downstream node is closer 
                 # do we use that
                 if km-down < up-km: 
                     datasite = self.Reach[down]
-                self.Reach[km].ClimateData = datasite.ClimateData
-            msg = "Setting Atmospheric Data"
+                self.Reach[km].metData = datasite.metData
+            msg = "Assining Node"
             current = c.next()+1
             logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
@@ -236,15 +240,15 @@ class ModelSetup(object):
         """Build a list of kilometers corresponding to the ini parameter
         that is passed.
         
-        ini can equal: "inflowkm", "climatekm", or "outputkm"
-        corresponding to tributary inflow sites, climate data sites,
+        ini can equal: "inflowkm", "metkm", or "outputkm"
+        corresponding to tributary inflow sites, met data sites,
         or the model output kilometers"""
         
         t = ()
         l = self.Reach.keys()
         l.sort()
 
-        if (ini == "climatekm" or
+        if (ini == "metkm" or
             ini == "outputkm" or
             IniParams["inflowsites"] > 0):
             # get a list of sites by km
@@ -382,21 +386,21 @@ class ModelSetup(object):
             node.Q_tribs = node.Q_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             node.T_tribs = node.T_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
-    def GetClimateData(self):
-        """Get data from the input climate data csv file"""
+    def GetMetData(self):
+        """Get data from the input met data csv file"""
         # This is remarkably similar to GetInflowData. We get a block 
         # of data, then set the dictionary of the node
-        print_console("Reading Climate Data")
+        print_console("Reading meteorological data")
 
         timelist = self.continuoustimelist
 
-        climatedata = self.inputs.import_climate()
+        metdata = self.inputs.import_met()
 
-        data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata]
+        data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in metdata]
 
         # Get a tuple of kilometers to use as keys to the location of 
-        # each climate node
-        kms = self.GetLocations("climatekm") 
+        # each met node
+        kms = self.GetLocations("metkm") 
 
         tm = count() # Which datapoint time are we recording
         length = len(timelist)
@@ -409,9 +413,9 @@ class ModelSetup(object):
                 # Index by kilometer
                 node = self.Reach[kms[i]] 
                 # Append this node to a list of all nodes which 
-                # have climate data
-                if node.km not in self.ClimateDataSites:
-                    self.ClimateDataSites.append(node.km)
+                # have met data
+                if node.km not in self.metDataSites:
+                    self.metDataSites.append(node.km)
                 # Perform some tests for data accuracy and validity
                 if cloud is None: cloud = 0.0
                 if wind is None: wind = 0.0
@@ -421,18 +425,18 @@ class ModelSetup(object):
                     # solar only runs, fix
                     if self.run_type == 1:
                         cloud = 0.0
-                    else: raise Exception("Cloudiness (value of '%s' in Climate Data) must be greater than zero and less than one." % cloud) # TODO RM fix this so it gives the km in exception - actualy do for all
+                    else: raise Exception("Cloudiness (value of '%s' in Meteorological Data) must be greater than zero and less than one." % cloud) # TODO RM fix this so it gives the km in exception - actualy do for all
                 if humidity < 0 or humidity is None or humidity > 1:
                     if self.run_type == 1: # Alright in shade-a-lator
                         humidity = 0.0
-                    else: raise Exception("Humidity (value of '%s' in Climate Data) must be greater than zero and less than one." % humidity)
+                    else: raise Exception("Humidity (value of '%s' in Meteorological Data) must be greater than zero and less than one." % humidity)
                 if T_air is None or T_air < -90 or T_air > 58:
                     if self.run_type == 1: # Alright in shade-a-lator
                         T_air = 0.0
-                    else: raise Exception("Air temperature input (value of '%s' in Climate Data) outside of world records, -89 to 58 deg C." % T_air)
-                node.ClimateData[time] = cloud, wind, humidity, T_air
+                    else: raise Exception("Air temperature input (value of '%s' in Meteorological Data) outside of world records, -89 to 58 deg C." % T_air)
+                node.metData[time] = cloud, wind, humidity, T_air
             
-            msg = "Reading climate data"
+            msg = "Reading meteorological data"
             current = tm.next()+1
             logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
@@ -442,23 +446,23 @@ class ModelSetup(object):
         second_day = IniParams["modelstart"] + 86400
         for i in xrange(len(self.flushtimelist)):
             time = self.flushtimelist[i]
-            for km in self.ClimateDataSites:
+            for km in self.metDataSites:
                 node = self.Reach[km]
-                node.ClimateData[time] = node.ClimateData[first_day_time]
+                node.metData[time] = node.metData[first_day_time]
             first_day_time += 3600
             if first_day_time >= second_day:
                 first_day_time = IniParams["modelstart"]
 
-        # Now we strip out the climate data outside the model period 
+        # Now we strip out the met data outside the model period 
         # from the dictionaries. This is placed here
         # at the end so we can dispose of it easily if necessary
-        print_console("Subsetting the continuous data to model period")
+
         tm = count()
-        length = len(self.ClimateDataSites)
-        for km in self.ClimateDataSites:
+        length = len(self.metDataSites)
+        for km in self.metDataSites:
             node = self.Reach[km]
-            node.ClimateData = node.ClimateData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-            msg = "Subsetting"
+            node.metData = node.metData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            msg = "Subsetting met data"
             current = tm.next()+1
             logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
@@ -885,12 +889,12 @@ class ModelSetup(object):
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
 
-                    # If vegDistMethod = point we assume you are sampling 
+                    # If lcsampmethod = point we assume you are sampling 
                     # a tree at a specific location rather than a veg 
                     # zone which represents the vegetation between two 
                     # sample points
                     
-                    if IniParams["vegDistMethod"] == "zone":
+                    if IniParams["lcsampmethod"] == "zone":
                         adjust = 0.5
                     else:
                         adjust = 0.0
@@ -1142,10 +1146,13 @@ class ModelSetup(object):
                     # Then calculate the relative vegetation height
                     VH = Vheight + SH
 
-                    # Calculate the node distance.
-                    # If vegDistMethod = point we assume you are sampling a tree at a specific location
-                    # rather than a veg zone which represents the vegetation between two sample points
-                    if IniParams["vegDistMethod"] == "zone":
+                    # Calculate the distance to the node from the 
+                    # current landcover sample location.
+                    # If lcsampmethod = point we assume you are sampling 
+                    # a tree at a specific location rather than within a 
+                    # zone which represents the vegetation between two 
+                    #sample points
+                    if IniParams["lcsampmethod"] == "zone":
                         adjust = 0.5
                     else:
                         adjust = 0.0
