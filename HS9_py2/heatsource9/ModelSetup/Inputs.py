@@ -49,7 +49,7 @@ class Inputs(object):
         if input_file == "all":
             return (self.headers_accretion(),
                     self.headers_bc(),
-                    self.headers_climate(),
+                    self.headers_met(),
                     self.headers_inflow(),
                     self.headers_lcdata(),
                     self.headers_morph(),
@@ -61,8 +61,8 @@ class Inputs(object):
         if input_file == "bcfile":
             return self.headers_bc()
         
-        if input_file == "climatefiles":
-            return self.headers_climate()
+        if input_file == "metfiles":
+            return self.headers_met()
         
         if input_file == "inflowinfiles":
             return self.headers_inflow()
@@ -87,11 +87,11 @@ class Inputs(object):
         the boundary condition file."""
         return ["DATETIME", "INFLOW", "TEMPERATURE"]
     
-    def headers_climate(self):
+    def headers_met(self):
         """Returns a list of column headers for
-        the climate input file(s)."""
-        ncols = int((IniParams["climatesites"] /
-                    len(IniParams["climatefiles"].split(","))))
+        the met input file(s)."""
+        ncols = int((IniParams["metsites"] /
+                    len(IniParams["metfiles"].split(","))))
         return ["DATETIME"]+["CLOUDINESS",
                              "WIND_SPEED",
                              "RELATIVE_HUMIDITY",
@@ -152,7 +152,7 @@ class Inputs(object):
         Returns a list of column headers for
         the control file.
         """        
-        return ["LINE", "PARAMETER", "VALUE"]
+        return ["LINE", "PARAMETER", "KEY", "VALUE"]
     
     def headers_inflow(self):
         """
@@ -187,7 +187,7 @@ class Inputs(object):
         if input_file == "all":
             return (self.import_accretion(),
                     self.import_bc(),
-                    self.import_climate(),
+                    self.import_met(),
                     self.import_inflow(),
                     self.import_lcdata(),
                     self.import_morph(),
@@ -199,8 +199,8 @@ class Inputs(object):
         if input_file == "bcfile":
             return self.import_bc()
         
-        if input_file == "climatefiles":
-            return self.import_climate()
+        if input_file == "metfiles":
+            return self.import_met()
         
         if input_file == "inflowinfiles":
             return self.import_inflow()
@@ -233,19 +233,19 @@ class Inputs(object):
         else:
             return data
     
-    def import_climate(self, skiprows=1, skipcols=1):
-        """Returns the  climate input data"""
+    def import_met(self, skiprows=1, skipcols=1):
+        """Returns the  met input data"""
         # split by comma if multiple files
-        filenames = IniParams["climatefiles"].split(",")
+        filenames = IniParams["metfiles"].split(",")
     
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         
         for i, filename in enumerate(filenames):
             d1 = self.read_to_dict(IniParams["inputdir"],
                                      filename,
-                                     self.headers_climate())
+                                     self.headers_met())
             
-            d2 = self.dict2list(d1, self.headers_climate(),
+            d2 = self.dict2list(d1, self.headers_met(),
                                    skiprows, skipcols)
                 
             if i == 0:
@@ -292,7 +292,7 @@ class Inputs(object):
             none_ok = ["usertxt", "name","lcdatafile", "lccodefile",
                        "trans_count", "transsample_count",
                        "transsample_distance", "emergent",
-                       "lcdatainput", "canopy_data", "vegDistMethod",
+                       "lcdatainput", "canopy_data", "lcsampmethod",
                        "point"]
         else:
             # This is a setup call, None is ok for all of them
@@ -305,11 +305,10 @@ class Inputs(object):
         keys.sort(reverse=True)
             
         for k in keys:
-            v = cf_dict[k]        
             for line in cf_list:
-                if (line[1] == v[1]):
+                if (line[2] == k):
                     # check for missing values
-                    if str.strip(line[2]) in ["", None]:
+                    if str.strip(line[3]) in ["", None]:
                         if k in none_ok:
                             IniParams[k] = None
                         elif (k == "lccodefile" and
@@ -331,19 +330,19 @@ class Inputs(object):
                             raise TypeError("Value in control file line {0} is missing".format(line[0]))
                     # now make sure it's the correct data type
                     elif dtype[k] is basestring:
-                        IniParams[k] = str.strip(line[2])
+                        IniParams[k] = str.strip(line[3])
                     
                     elif dtype[k] is int:
-                        IniParams[k] = int(float(str.strip(line[2])))
+                        IniParams[k] = int(float(str.strip(line[3])))
                         
                     elif dtype[k] is bool:
-                        if str.strip(line[2]).upper() in ["TRUE", "FALSE"]:
-                            IniParams[k] = str.strip(line[2]).upper() == "TRUE"
+                        if str.strip(line[3]).upper() in ["TRUE", "FALSE"]:
+                            IniParams[k] = str.strip(line[3]).upper() == "TRUE"
                         else:
-                            raise TypeError("Control file line {0} must be TRUE or FALSE".format(line[0]))
+                            raise TypeError("Control file line {0} must be True or False".format(line[0]))
                             
                     elif dtype[k] is float:
-                        IniParams[k] = float(str.strip(line[2]))
+                        IniParams[k] = float(str.strip(line[3]))
                     
         # Make dates into seconds since UTC epoch
         IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00" ,"%m/%d/%Y %H:%M:%S"))
@@ -368,14 +367,12 @@ class Inputs(object):
     
         # Format for heat source 8 methods same 
         # as 8 directions but no north
-        if IniParams["heatsource8"]:
-            IniParams["trans_count"] = 7
-            IniParams["sample_count"] = int(IniParams["transsample_count"] * 7)
-        else:
-            # Set the total number landcover sample count (0 = emergent)
-            IniParams["sample_count"] = int(IniParams["transsample_count"]
-                                            * IniParams["trans_count"])
-            
+        if IniParams["heatsource8"]:IniParams["trans_count"] = 7
+
+        # Set the total number landcover sample count (0 = emergent)
+        IniParams["sample_count"] = int(IniParams["transsample_count"]
+                                        * IniParams["trans_count"])
+        
         # Set up our evaporation method
         IniParams["penman"] = False
         if IniParams["calcevap"]:
@@ -411,47 +408,46 @@ class Inputs(object):
         keys in IniParams.
         """
         
-        #TODO RM fix so dict is related to numbers or text symbols
-        cf_dict = {"usertxt": [2, "USER NOTES", None],
-                   "name": [3, "SIMULATION NAME", None],
-                   "inputdir": [4, "INPUT PATH", None],
-                   "outputdir": [5, "OUTPUT PATH", None],
-                   "length": [6, "STREAM LENGTH (KILOMETERS)", None],
-                   "outputkm": [7, "OUTPUT KILOMETERS", None],
-                   "datastart": [8, "DATA START DATE (mm/dd/yyyy)", None],
-                   "modelstart": [9, "MODELING START DATE (mm/dd/yyyy)", None],
-                   "modelend": [10, "MODELING END DATE (mm/dd/yyyy)", None],
-                   "dataend": [11, "DATA END DATE (mm/dd/yyyy)", None],
-                   "flushdays": [12, "FLUSH INITIAL CONDITION (DAYS)", None],
-                   "offset": [13, "TIME OFFSET FROM UTC (HOURS)", None],
-                   "dt": [14, "MODEL TIME STEP - DT (MIN)", None],
-                   "dx": [15, "MODEL DISTANCE STEP - DX (METERS)", None],
-                   "longsample": [16, "LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)", None],
-                   "bcfile": [17, "BOUNDARY CONDITION FILE NAME", None],
-                   "inflowsites": [18, "TRIBUTARY SITES", None],
-                   "inflowinfiles": [19, "TRIBUTARY INPUT FILE NAMES", None],
-                   "inflowkm": [20, "TRIBUTARY MODEL KM", None],
-                   "accretionfile": [21, "ACCRETION INPUT FILE NAME", None],
-                   "climatesites": [22, "CLIMATE DATA SITES", None],
-                   "climatefiles": [23, "CLIMATE INPUT FILE NAMES", None],
-                   "climatekm": [24, "CLIMATE MODEL KM", None],
-                   "calcevap": [25, "INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)", None],
-                   "evapmethod": [26, "EVAPORATION METHOD (Mass Transfer/Penman)", None],
-                   "wind_a": [27, "WIND FUNCTION COEFFICIENT A", None],
-                   "wind_b": [28, "WIND FUNCTION COEFFICIENT B", None],
-                   "calcalluvium": [29, "INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)", None],
-                   "alluviumtemp": [30, "DEEP ALLUVIUM TEMPERATURE (*C)", None],
-                   "morphfile": [31, "MORPHOLOGY DATA FILE NAME", None],
-                   "lcdatafile": [32, "LANDCOVER DATA FILE NAME", None],
-                   "lccodefile": [33, "LANDCOVER CODES FILE NAME", None],
-                   "trans_count": [34, "NUMBER OF TRANSECTS PER NODE", None],
-                   "transsample_count": [35, "NUMBER OF SAMPLES PER TRANSECT", None],
-                   "transsample_distance": [36, "DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)", None],
-                   "emergent": [37, "ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)", None],
-                   "lcdatainput": [38, "LANDCOVER DATA INPUT TYPE (Codes/Values)", None],
-                   "canopy_data": [39, "CANOPY DATA TYPE (LAI/CanopyCover)", None],
-                   "vegDistMethod": [40, "VEGETATION ANGLE CALCULATION METHOD (point/zone)", None],
-                   "heatsource8": [41, "USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)", None],
+        cf_dict = {"usertxt": [2, "Model Description/User Notes", "usertxt", None],
+                   "name": [3, "Simulation Name", "name", None],
+                   "inputdir": [4, "Input Directory Path", "inputdir", None],
+                   "outputdir": [5, "Output Directory Path", "outputdir", None],
+                   "length": [6, "Stream Length (kilometers)", "length", None],
+                   "outputkm": [7, "Output Stream Kilometers", "outputkm", None],
+                   "datastart": [8, "Data Start Date (mm/dd/yyyy)", "datastart", None],
+                   "modelstart": [9, "Modeling Start Date (mm/dd/yyyy)", "modelstart", None],
+                   "modelend": [10, "Modeling End Date (mm/dd/yyyy)", "modelend", None],
+                   "dataend": [11, "Data End Date (mm/dd/yyyy)", "dataend", None],
+                   "flushdays": [12, "Flush Initial Condition (days)", "flushdays", None],
+                   "offset": [13, "Time Offset From UTC (hours)", "offset", None],
+                   "dt": [14, "Model Time Step (minutes)", "dt", None],
+                   "dx": [15, "Model Distance Step (meters)", "dx", None],
+                   "longsample": [16, "Longitudinal Stream Sample Distance (meters)", "longsample", None],
+                   "bcfile": [17, "Boundary Condition Input File Name", "bcfile", None],
+                   "inflowsites": [18, "Tributary Inflow Sites", "inflowsites", None],
+                   "inflowinfiles": [19, "Tributary Inflow Input File Name", "inflowinfiles", None],
+                   "inflowkm": [20, "Tributary Inflow Model kilometers", "inflowkm", None],
+                   "accretionfile": [21, "Accrection Input File Name", "accretionfile", None],
+                   "metsites": [22, "Meteorological Data Sites", "metsites", None],
+                   "metfiles": [23, "Meteorological Data Input File Name", "metfiles", None],
+                   "metkm": [24, "Meteorological Data Model kilometers", "metkm", None],
+                   "calcevap": [25, "Include Evaporation Losses From Flow (True/False)", "calcevap", None],
+                   "evapmethod": [26, "Evaporation Method (Mass Transfer/Penman)", "evapmethod", None],
+                   "wind_a": [27, "Wind Function Coefficient a", "wind_a", None],
+                   "wind_b": [28, "Wind Function Coefficient b", "wind_b", None],
+                   "calcalluvium": [29, "Include Deep Alluvium Temperature (True/False)", "calcalluvium", None],
+                   "alluviumtemp": [30, "Deep Alluvium Temperature (Celcius)", "alluviumtemp", None],
+                   "morphfile": [31, "Morphology Input Data File Name", "morphfile", None],
+                   "lcdatafile": [32, "Land Cover Input Data File Name", "lcdatafile", None],
+                   "lccodefile": [33, "Land Cover Codes Input File Name", "lccodefile", None],
+                   "trans_count": [34, "Number Of Transects Per Node", "trans_count", None],
+                   "transsample_count": [35, "Number Of Samples Per Transect", "transsample_count", None],
+                   "transsample_distance": [36, "Distance Between Transesct Samples (meters)", "transsample_distance", None],
+                   "emergent": [37, "Account For Emergent Veg Shading (True/False)", "emergent", None],
+                   "lcdatainput": [38, "Land Cover Data Input Type (Codes/Values)", "lcdatainput", None],
+                   "canopy_data": [39, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
+                   "lcsampmethod": [40, "Land Cover Sample Method (point/zone)", "lcsampmethod", None],
+                   "heatsource8": [41, "Use Heat Source 8 Land Cover Methods (True/False)", "heatsource8", None],
                    }
         
         return cf_dict    
@@ -530,8 +526,13 @@ class Inputs(object):
         If the code is a string the min and max are equal to the code.
         """
         
-        if lookup_list is None:
+        if lookup_list is None or code is None:
             return None
+        
+        try:
+            float(code)
+        except:
+            return None        
         
         # sort the list
         lookup_list.sort()
@@ -546,7 +547,7 @@ class Inputs(object):
     def parameterize_from_nodes_fc(self, input_file, nodes_fc,
                                    group_val=None,
                                    grouping_field="STREAM_ID",
-                                   cont_stream_km=False):
+                                   cont_stream_km=False, overwrite=False):
         """
         Paramaterize the input file using data from the TTools
         node feature class.
@@ -562,20 +563,24 @@ class Inputs(object):
         grouping_field: the attribute field in the nodes_fc that
         contains the group_val.
         
-        cont_stream_km=: if True uses overwrites the nodes km so it is
+        cont_stream_km: if True overwrites the nodes km so it is
         continuous based on node_dx over all the nodes in each group
+        
+        overwrite: if True overwrites an existing file.
         
         """
         
         msg = "Parameterize from nodes fc"
         logger.info(msg)
         print_console(msg)
-        # try to import arcpy but don't stop
+        
+        # try to import arcpy
         try:
             import arcpy
         except:
-            print_console("ImportError: No module named arcpy. " \
-                          "To use this method ESRI ArcGIS must be installed")
+            msg = "ImportError: No module named arcpy. To use this method ESRI ArcGIS must be installed"
+            logger.error(msg)
+            print_console(msg)
             SystemExit
 
         # get the headers
@@ -586,7 +591,15 @@ class Inputs(object):
         else:
             logging.ERROR("input_file = {0}, should be \
             'lcdatafile' or 'morphfile'".format(input_file))
-                
+        
+        # check to see if the file exists before moving on
+        if not overwrite and isfile(join(IniParams["inputdir"],
+                                         IniParams[input_file])):
+            msg = "{0} already exists and will not be overwritten".format(IniParams[input_file])
+            logger.warning(msg)
+            print_console(msg)
+            return
+
         # Get all the column headers in the nodes fc
         nodes_fc_headers = [field.name for field in arcpy.Describe(nodes_fc).fields]
     
@@ -650,33 +663,33 @@ class Inputs(object):
         Writes the control file. Any keyword arguments
         passed will be parameterized into the control file.
         """
-        msg = "Writting control file"
+        # check to see if the file exists 
+        if not overwrite and isfile(join(self.model_dir, self.control_file)):
+            msg = "HeatSource_Control.csv already exists. It will not be overwritten"
+            logger.warning(msg)
+            print_console(msg)
+            return
+        
+        msg = "Writing control file"
         logger.info(msg)
         print_console(msg)
         cf_dict = self.control_file_dict()
         
         for k, v in kwargs.items():
-            cf_dict[k][2] = v
+            cf_dict[k][3] = v
             
         # sort the list is in the order of the line number
         cf_sorted = sorted(cf_dict.items(), key=itemgetter(1))
         cf_list = [line[1] for line in cf_sorted]        
 
-        if overwrite:
-            self.write_to_csv(self.model_dir, self.control_file,
-                              cf_list, self.headers_cf())
-        else:
-            # check to see if the file exists and write if not
-            if not isfile(join(self.model_dir, self.control_file)):
-                self.write_to_csv(self.model_dir, self.control_file,
-                                  cf_list, self.headers_cf())
-            else:
-                logger.warning("Will not overwrite HeatSource_Control.csv. It already exists.")
-                print_console("Will not overwrite HeatSource_Control.csv. It already exists.")
+        self.write_to_csv(self.model_dir, self.control_file,
+                          cf_list, self.headers_cf())
+
         
     def parameterize_lccodes(self, lccodes=None, code_as_ht=False,
                              ht_list=None, can_list=None,
-                             lai_list=None, k_list=None, oh_list=None):
+                             lai_list=None, k_list=None, oh_list=None,
+                             overwrite=False):
         """
         Parameterize and writes the land cover codes file.
         
@@ -701,6 +714,16 @@ class Inputs(object):
         or when the ht_list is None.
         
         """
+        msg = "Parameterize lccodes"
+        logger.info(msg)
+        print_console(msg)        
+        
+        # check to see if the file exists 
+        if not overwrite and isfile(join(self.model_dir, IniParams["lccodefile"])):
+            msg = "{0} already exists. It will not be overwritten".format(IniParams["lccodefile"])
+            logger.warning(msg)
+            print_console(msg)
+            return   
         
         if lccodes is None:
             # read the land cover data
@@ -750,13 +773,22 @@ class Inputs(object):
             
         self.write_to_csv(IniParams["inputdir"],
                           IniParams["lccodefile"],
-                          lccodes, self.headers_lccodes())    
-        
+                          lccodes, self.headers_lccodes())
+
     def read_nodes_fc(self, nodes_fc, readfields, whereclause):
         """
         Reads an input point file and returns the fields as a
         nested dictionary
         """
+        # try to import arcpy
+        try:
+            import arcpy
+        except:
+            msg = "ImportError: No module named arcpy. To use this method ESRI ArcGIS must be installed"
+            logger.error(msg)
+            print_console(msg)
+            SystemExit        
+        
         nodeDict = self.nested_dict()
         incursorFields = ["NODE_ID"] + readfields
         # Determine input point spatial units
@@ -851,13 +883,13 @@ class Inputs(object):
         timelist= self.datetime_string()	
         kmlist= self.stream_kms()
 
-        # For inflow and climate data there can be a single input 
+        # For inflow and met data there can be a single input 
         # file for each node OR just one input file with multiple 
         # nodes in the file, This creates a list of the trib 
-        # and climate file names if there is more than one   
+        # and met file names if there is more than one   
         if IniParams["inflowsites"] > 0:
             tribfiles = IniParams["inflowinfiles"].split(",")
-        climatefiles = IniParams["climatefiles"].split(",")	
+        metfiles = IniParams["metfiles"].split(",")	
         
         acclist= [[None, None, km]+[None]*3 for km in kmlist]
         bclist= [[t, None, None] for t in timelist]
@@ -933,23 +965,23 @@ class Inputs(object):
                 self.write_to_csv(IniParams["inputdir"], morph_file,
                                   morphlist, self.headers_morph())
 
-        for file in climatefiles:
-            climatelist = [[t] + [None]*4*int((IniParams["climatesites"]/len(climatefiles))) for t in timelist]
+        for file in metfiles:
+            metlist = [[t] + [None]*4*int((IniParams["metsites"]/len(metfiles))) for t in timelist]
             
             if use_timestamp:
-                climate_filename = "input_"+timestamp+"_"+file.strip()
+                met_filename = "input_"+timestamp+"_"+file.strip()
             else:
-                climate_filename = file.strip()
+                met_filename = file.strip()
             
             if overwrite:
                 self.write_to_csv(IniParams["inputdir"],
-                                  climate_filename,
-                                  climatelist, self.headers_climate())
+                                  met_filename,
+                                  metlist, self.headers_met())
             else:
-                if not isfile(join(IniParams["inputdir"], climate_filename)):
+                if not isfile(join(IniParams["inputdir"], met_filename)):
                     self.write_to_csv(IniParams["inputdir"],
-                                      climate_filename,
-                                      climatelist, self.headers_climate())
+                                      met_filename,
+                                      metlist, self.headers_met())
 
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
