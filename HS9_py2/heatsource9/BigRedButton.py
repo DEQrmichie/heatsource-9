@@ -23,7 +23,7 @@ from __future__ import with_statement, division, print_function
 # Built-in modules
 import logging
 from itertools import count
-from traceback import print_exc, format_tb
+import traceback
 from sys import exc_info
 from time import time as Time
 
@@ -74,7 +74,20 @@ class ModelControl(object):
         # Add run type and heat source model version into IniParams
         IniParams["version"] = version_string
         IniParams["run_type"] = run_type
-        msg = "Heat Source Version:  {0}".format(IniParams["version"])
+        
+        msg = ("\n")
+        
+        msg += ("Heat Source, Copyright (C) 2000-2016, "
+                "Oregon Department of Environmental Quality\n\n"
+                "This program comes with ABSOLUTELY NO WARRANTY. "
+                "Appropriate model \n"
+                "use and application are the sole responsibility "
+                "of the user. \n"
+                "This is free software, and you are welcome to "
+                "redistribute it under \n"
+                "certain conditions described in the License.\n\n")
+        msg += "Heat Source Version:  {0}\n".format(IniParams["version"])
+        
         print_console(msg)
         logger.info(msg)
         
@@ -116,6 +129,10 @@ class ModelControl(object):
         Use the Chronos instance and list of StreamNodes to cycle
         through each timestep and spacestep, calling the appropriate
         StreamNode functions to calculate heat and hydraulics."""
+        
+        msg = "Starting Simulation:  {0}".format(IniParams["name"])
+        logger.info(msg)
+        print_console(msg)
         
         # Current time of the Chronos clock (i.e. this timestep)
         time = Chronos.TheTime
@@ -173,10 +190,12 @@ class ModelControl(object):
             try:
                 # Note that all of the run methods have to have 
                 # the same signature
+                #if time == 1056951360.0:
+                #   print_console(msg="error timestep")                
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem
             except:
-                msg = "Error at %s and time %s\n"%(self, Chronos.PrettyTime())
+                msg = "Error while working on {0} on {1} {2}".format(nd, Chronos.PrettyTime(), traceback.format_exc())
                 logging.error(msg)
                 print_console(msg)
                 
@@ -230,16 +249,10 @@ class ModelControl(object):
         # Ideally, for performance and impatience reasons, we want this
         # to be somewhere around or less than 1 microsecond.
         microseconds = (total_time/timesteps/len(self.reachlist))*1e6
-        message = ("\nHeat Source, Copyright (C) 2000-2016, "
-                   "Oregon Department of Environmental Quality\n\n"
-                   "This program comes with ABSOLUTELY NO WARRANTY. "
-                   "Appropriate model \n"
-                   "use and application are the sole responsibility "
-                   "of the user. \n"
-                   "This is free software, and you are welcome to "
-                   "redistribute it under \n"
-                   "certain conditions described in the License.\n\n")
-        message += "Finished in {0:0.1f} minutes ".format(total_time)
+        
+        message = "Simulation Complete."
+        
+        message += "\nFinished in {0:0.1f} minutes ".format(total_time)
         message += "(spent {0:0.3f} microseconds ".format(microseconds)
         message += "in each stream node).\n"
         message += "Water Balance: {0:0.3f}/{1:0.3f}\n".format(total_inflow, out)
@@ -274,9 +287,9 @@ def RunHS(model_dir, control_file):
         HSP = ModelControl(model_dir, control_file, 0)
         HSP.Run()
         del HSP
-    except Exception, stderr:
-        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
-        logger.error(msg)
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
         print_console(msg)
 
 def RunSH(model_dir, control_file):
@@ -284,17 +297,17 @@ def RunSH(model_dir, control_file):
     try:
         HSP = ModelControl(model_dir, control_file, 1)
         HSP.Run()
-    except Exception, stderr:
-        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
-        logger.error(msg)
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
         print_console(msg)
-
+        
 def RunHY(model_dir, control_file):
     """Run hydraulics only"""
     try:
         HSP = ModelControl(model_dir, control_file, 2)
         HSP.Run()
-    except Exception, stderr:
-        msg = "".join(format_tb(exc_info()[2]))+"\nSynopsis: %s" % stderr, "Heat Source Error"
-        logger.error(msg)
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
         print_console(msg)
