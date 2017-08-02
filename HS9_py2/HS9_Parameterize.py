@@ -4,13 +4,8 @@ in this script can be used as an alternative to the more generic
 HS9_Setup_... scripts.
 
 This script must be located in the same
-directory as HeatSource_control.csv. NOTE that executing this script
-from Python shell (IDLE) will not identify __file__ correctly and will
-result in an error. It must be executed from a command prompt. Your
-options are to double click on this file and execute using python.exe,
-use a batch command file (which points to this files), or
-open terminal and execture manually by typing:
-python -i path/to/this/script/HS9_Parameterize.py"""
+directory as HeatSource_control.csv.
+"""
 
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
@@ -61,14 +56,14 @@ inputs.parameterize_cf(overwrite=False,
                        inflowinfiles = "inflow_01.csv, inflow_02.csv, inflow_03.csv, inflow_04.csv", 
                        inflowkm = "1.65, 1.5, 1.3, 0.85", 
                        accretionfile = "accretion.csv", 
-                       climatesites = 4, 
-                       climatefiles = "climate_01.csv, climate_02.csv, climate_03.csv, climate_04.csv", 
-                       climatekm = "1.75, 1.45, 1.10, 0.9", 
-                       calcevap = "TRUE", 
+                       metsites = 4, 
+                       metfiles = "met_01.csv, met_02.csv, met_03.csv, met_04.csv", 
+                       metkm = "1.75, 1.45, 1.10, 0.9", 
+                       calcevap = "False", 
                        evapmethod = "Mass Transfer", 
                        wind_a = 1.51E-09, 
                        wind_b = 1.6E-09, 
-                       calcalluvium = "TRUE", 
+                       calcalluvium = "True", 
                        alluviumtemp = 12.0, 
                        morphfile = "morphology.csv", 
                        lcdatafile = "lcdata.csv", 
@@ -76,11 +71,11 @@ inputs.parameterize_cf(overwrite=False,
                        trans_count = 8, 
                        transsample_count = 4, 
                        transsample_distance = 8, 
-                       emergent = "TRUE", 
+                       emergent = "True", 
                        lcdatainput = "Codes", 
                        canopy_data = "Canopy", 
-                       vegDistMethod = "point", 
-                       heatsource8 = "FALSE")
+                       lcsamplemethod = "point", 
+                       heatsource8 = "False")
 
 # imports the control file into input object
 inputs.import_control_file()
@@ -94,11 +89,11 @@ inputs.setup(use_timestamp=False, overwrite=True)
 # ArcGIS Desktop license
 inputs.parameterize_from_nodes_fc(input_file="lcdatafile", nodes_fc=nodes_fc,
                                   group_val="Example Model", grouping_field="STREAM_ID",
-                                  cont_stream_km=False)
+                                  cont_stream_km=False, overwrite=False)
 
 inputs.parameterize_from_nodes_fc(input_file="morphfile", nodes_fc=nodes_fc,
                                   group_val="Example Model", grouping_field="STREAM_ID",
-                                  cont_stream_km=False
+                                  cont_stream_km=False, overwrite=False)
 
 # Paramaterize the lccodes input 
 lccodes = [('Active River Channel',100,0,0,0), 
