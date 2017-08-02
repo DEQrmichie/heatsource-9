@@ -151,7 +151,7 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
         Daytime = 1
     
     # Determine which landcover direction corresponds to the sun azimuth
-    if heatsource8 is True:  # same as 8 directions but no north
+    if heatsource8:  # same as 8 directions but no north
         dir = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
         Azimuth_mod = Azimuth
     else:        
@@ -327,10 +327,8 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
     dir = dir + 1
+    Solar_blocked_byVeg = [0]*transsample_count
     
-    # Amount of solar radiation blocked by each zone, plus one for 
-    # diffuse appended later
-    Solar_blocked_byVeg = [0]*transsample_count 
     if Altitude <= TopoShadeAngle:
         # Topographic Shade is occurring
         F_Direct[2] = 0
@@ -342,45 +340,45 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         F_Direct[3] = F_Direct[2]    
     else:
+        #======================================================
         # Partial shade from veg
+        # 3 - Below Landcover (Above Bank Shade & Emergent)
+        
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         Dummy1 = F_Direct[2]
         
+        zone = transsample_count - 1
+        
         # zonal sun path length
         PLz = transsample_distance / cos(radians(Altitude))
-    
-        # Calculate the total sun path length through the canopy
-        # start with zero
-        PL = 0
-        PLe = 0
         
-        if emergent and lc_height[0][0] > 0:
-            # emergent veg
-            # PLe is the path distance through the vegetation 
-            # in emergent zone
-            PLe +=  lc_height[0][0] / sin(radians(Altitude))
-
-            # PLe can't be longer than the path thru the zone.
-            # this happens when altitude is lower than height of veg.
-            if PLe >  PLz: PLe = PLz
+        if heatsource8:
+            #---------  Boyd and Kasper 2007
+            PL = 10
+        else:
+            #--------- (Norman and Welles 1983)
+            # here the extinction coefficent 
+            # represents the foliage density * k
+            # Calculate the path length as the total sun vector distance
+            # through all the canopy zones
+            # start with zero
+            PL = 0
+        
+            for z in range(transsample_count): 
+                if Altitude < VegetationAngle[z]:
+                    # sun vector is passing through the canopy
+                    PL += PLz
             
-            PL += PLe        
-            
-        for z in range(transsample_count): 
-            if Altitude < VegetationAngle[z]:
-                # sun vector is passing through the canopy
-                PL += PLz
-                
+            # Just testing hs8 methods
+            #PL = 10
+        
         # Now calculate the fraction of radiation passed through the canopy
-        zone = transsample_count - 1
         while zone > 0:
             if Altitude < VegetationAngle[zone]:
                 # shading is occurring from this zone
-                
                 if BeersData == "LAI":
                     # use LAI data
-                    
                     # k as an input
                     RipExtinction = lc_k[dir][zone]
                     
@@ -395,48 +393,26 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                                           RipExtinction *
                                           (lc_canopy[dir][zone] / PL) *
                                           PLz)
-                    
-                    Solar_blocked_byVeg[zone] = Dummy1 -(Dummy1 *
-                                                         fraction_passed)
-                    Dummy1 *= fraction_passed
-                    
                 else:
                     # Use canopy closure to calculate 
                     # the riparian extinction value
-                    
-                    try:
-                        # Set to one if no veg
-                        if lc_height[dir][zone] == 0:
-                            fraction_passed = 1
-                        else:
-                            
-                            if heatsource8:
-                                #---------  Boyd and Kasper 2007
-                                RipExtinction = -log(1- lc_canopy[dir][zone])/ 10
-                                
-                            else:
-                                #--------- (Norman and Welles 1983)
-                                # here the extinction coefficent 
-                                # represents the foliage density * k 
-                                RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
-                            
-                            fraction_passed = exp(-1* RipExtinction * PLz)
-                        
-                    except:
-                        # cannot take log of 0, completely blocked
-                        if lc_canopy[dir][zone] == 1: fraction_passed = 0
-                    
-                    Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 *
-                                                          fraction_passed)
-                    
-                    Dummy1 *= fraction_passed
+                    if (lc_height[dir][zone] <= 0) or (lc_canopy[dir][zone] == 0):
+                        # Set to one if no veg or no canopy
+                        fraction_passed = 1
+                    else:
+                        RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
+                        fraction_passed = exp(-1* RipExtinction * PLz)
+                
+                Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 *
+                                                      fraction_passed)
+                
+                Dummy1 *= fraction_passed
             zone -= 1
-        F_Direct[3] = Dummy1
-        
+            
     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
-    Solar_blocked_byVeg.append(diffuse_blocked)
-
+    Solar_blocked_byVeg.append(diffuse_blocked)            
+            
     #=========================================================
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
     # What a Solar Pathfinder measures
@@ -450,82 +426,43 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         F_Direct[4] = F_Direct[3]
         F_Diffuse[4] = F_Diffuse[3]
 
-    
     if emergent:
         # Account for emergent vegetation
+        if (lc_height[0][0] <= 0) or (lc_canopy[0][0] == 0):
+            # Set to one if no veg or no canopy
+            fraction_passed = 1
         
-        # zonal sun path length
-        PLz = transsample_distance / cos(radians(Altitude))
-        
-        # Calculate the total sun path length through the canopy
-        # start with zero
-        PL = 0
-        PLe = 0
-    
-        if emergent and lc_height[0][0] > 0:
-            # emergent veg
-            # PLe is the path distance through the vegetation 
-            # in emergent zone
-            PLe +=  lc_height[0][0] / sin(radians(Altitude))
-
-            # PLe can't be longer than the path thru the zone.
-            # this happens when altitude is lower than height of veg.
-            if PLe >  PLz: PLe = PLz
-            
-            PL += PLe 
-            
-        for z in range(transsample_count):
-            if Altitude < VegetationAngle[z]:
-                # sun vector is passing through the canopy
-                PL += PLz        
-    
-                      
-        #if PLe > W_b:
-        #    PLe = W_b
-        
-        if BeersData == "LAI":
-            # use LAI data
-            
-            # k calculated from LAD using Norman and Campbell (1989)
-            #RipExtinction = (sqrt(tan(radians(90-Altitude)) **2) /
-                             #lc_k[0][0] + 1.774 *
-                             #(lc_k[0][0] + 1.182) ** -0.733)
-            
-            # k as an input
-            RipExtinction = lc_k[0][0]
-            
-            fraction_passed = exp(-1 *
-                                  RipExtinction *
-                                  (lc_canopy[0][0]/ PL) *
-                                  PLe)            
         else:
-            
-            try:
-                # Set to one if no veg
-                if lc_height[0][0] <= 0:
-                    fraction_passed = 1
-                else:
-                    if heatsource8:
-                        #--------- Chen and Boyd and Kasper
-                        RipExtinction = -log(1- lc_canopy[0][0])/lc_height[0][0]
-                        
-                    else:
-                        #---------  Oke 1978 (HS9)
-                        RipExtinction = -log(1- lc_canopy[0][0])/ PL
-                    
-                    fraction_passed = exp(-1* RipExtinction * PLe)
+            if heatsource8:
+                #---------  Boyd and Kasper 2007
+                PLe = 10
+            else:
+                #--------- (Norman and Welles 1983)
+                # PLe is the path length of the sun vector through 
+                # the vegetation in the emergent zone
+                PLe =  lc_height[0][0] / sin(radians(Altitude))
                 
-            except:
-                # cannot take log of 0
-                if lc_height[0][0] <= 0:
-                    # there is no emergent veg
-                    fraction_passed = 1
-                elif lc_canopy[0][0] == 1:
-                    # completely blocked
-                    fraction_passed = 0
+                # PLe can't be longer than the wetted width.
+                # this happens when altitude is lower than height of veg.
+                # if this is a solar only run the wetted width is not 
+                # calculated so W_b = 0. The zone width is used instead.
+                if W_b == 0: W_b = transsample_distance
+                if PLe >  W_b: PLe = W_b
+
+            if BeersData == "LAI":
+                # use LAI data
+                # k as an input
+                RipExtinction = lc_k[0][0]
+                fraction_passed = exp(-1* lc_canopy[0][0] * RipExtinction * PLe)
+                
+            else:
+                # Use canopy closure to calculate 
+                # the riparian extinction value
+                RipExtinction = -log(1- lc_canopy[0][0]) / PLe
+                fraction_passed = exp(-1* RipExtinction * PLe)
                 
         F_Direct[4] = F_Direct[4] * fraction_passed
-        F_Diffuse[4] = F_Diffuse[4] * fraction_passed                
+        F_Diffuse[4] = F_Diffuse[4] * fraction_passed
 
     #=========================================================
     # 5 - Entering Stream
@@ -827,13 +764,13 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
 
     return Temp, S, T_mix
 
-def CalcHeatFluxes(ClimateData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
+def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    dir, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     
-    cloud, wind, humidity, T_air = ClimateData
+    cloud, wind, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
         lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
