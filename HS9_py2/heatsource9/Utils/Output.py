@@ -28,7 +28,7 @@ class Output(object):
     def __init__(self, reach, start_time, run_type):
         # Store a sorted list of StreamNodes.
         
-        if IniParams["outputkm"] == "all":
+        if IniParams["outputkm"].lower() == "all":
             self.nodes = sorted(reach.itervalues(),reverse=True)
         
         else:
