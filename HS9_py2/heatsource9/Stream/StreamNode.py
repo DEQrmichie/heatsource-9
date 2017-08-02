@@ -37,7 +37,7 @@ class StreamNode(object):
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
                 "lc_height", "lc_canopy", "lc_oh","lc_lai", "lc_k", # Land cover params
-                "ClimateData", # Climate data
+                "metData", # Meteorological data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
                 "Mix_T_Delta", #Change in temperature due to tribs, gw, points sources, accretion
@@ -99,7 +99,7 @@ class StreamNode(object):
         self.T = 0.0
         self.Mix_T_Delta = 0.0
         self.Q_mass = 0
-        self.ClimateData = Interpolator(dt=IniParams["dt"])
+        self.metData = Interpolator(dt=IniParams["dt"])
         self.T_tribs = Interpolator(dt=IniParams["dt"])
         self.Q_tribs = Interpolator(dt=IniParams["dt"])
         # Create an internal dictionary that we can pass to the C module,
@@ -328,8 +328,13 @@ class StreamNode(object):
         
         # For each node we set the solar position variables to be the 
         # same as the headwater node in order to save on processing time.
-        Altitude, Zenith, Daytime, dir, Azimuth_mod = self.head.SolarPos
+        (Altitude, 
+         Zenith, 
+         Daytime, 
+         dir, 
+         Azimuth_mod) = self.head.SolarPos
 
+        
         #try:
         
         (self.F_Solar,
@@ -339,25 +344,42 @@ class StreamNode(object):
          ground,
          self.F_Total,
          self.Delta_T,
-         Mac) = _HS.CalcHeatFluxes(self.ClimateData[time],
-                                   self.C_args, self.d_w, self.A,
-                                   self.P_w, self.W_w, self.U,
+         Mac) = _HS.CalcHeatFluxes(self.metData[time],
+                                   self.C_args,
+                                   self.d_w,
+                                   self.A,
+                                   self.P_w,
+                                   self.W_w,
+                                   self.U,
                                    self.Q_tribs[time],
-                                   self.T_tribs[time], self.T_prev,
-                                   self.T_sed, self.Q_hyp,
+                                   self.T_tribs[time],
+                                   self.T_prev,
+                                   self.T_sed,
+                                   self.Q_hyp,
                                    self.next_km.T_prev,
-                                   self.ShaderList[dir], dir,
-                                   self.Disp, hour, JD, Daytime,
-                                   Altitude, Zenith,
+                                   self.ShaderList[dir],
+                                   dir,
+                                   self.Disp, 
+                                   hour,
+                                   JD,
+                                   Daytime,
+                                   Altitude,
+                                   Zenith,
                                    self.prev_km.Q_prev,
                                    self.prev_km.T_prev,
                                    solar_only,
                                    self.next_km.Mix_T_Delta,
                                    IniParams["heatsource8"])
         
-        (self.F_Conduction, self.T_sed, self.F_Longwave,
-         self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-         self.F_Evaporation, self.F_Convection, self.E) = ground
+        (self.F_Conduction,
+         self.T_sed,
+         self.F_Longwave,
+         self.F_LW_Atm,
+         self.F_LW_Stream,
+         self.F_LW_Veg,
+         self.F_Evaporation,
+         self.F_Convection,
+         self.E) = ground
         
         (self.T, self.S1, self.Mix_T_Delta) = Mac
         
@@ -376,11 +398,19 @@ class StreamNode(object):
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
-        Altitude, Zenith, Daytime, dir, Azimuth_mod \
-            = _HS.CalcSolarPosition(self.latitude, self.longitude, hour,
-                                    min, sec, self.UTC_offset, JDC,
-                                    IniParams["heatsource8"],
-                                    IniParams["trans_count"])
+        
+        (Altitude,
+         Zenith,
+         Daytime,
+         dir,
+         Azimuth_mod) = _HS.CalcSolarPosition(self.latitude, 
+                                              self.longitude,hour,
+                                              min,
+                                              sec,
+                                              self.UTC_offset,
+                                              JDC,
+                                              IniParams["heatsource8"],
+                                              IniParams["trans_count"])
         
         self.SolarPos = Altitude, Zenith, Daytime, dir, Azimuth_mod
 
@@ -392,25 +422,42 @@ class StreamNode(object):
          veg_block,
          ground,
          self.F_Total,
-         self.Delta_T) = _HS.CalcHeatFluxes(self.ClimateData[time],
-                                       self.C_args, self.d_w, self.A,
-                                       self.P_w, self.W_w, self.U,
+         self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
+                                       self.C_args,
+                                       self.d_w,
+                                       self.A,
+                                       self.P_w,
+                                       self.W_w,
+                                       self.U,
                                        self.Q_tribs[time],
-                                       self.T_tribs[time], self.T_prev,
-                                       self.T_sed, self.Q_hyp,
+                                       self.T_tribs[time],
+                                       self.T_prev,
+                                       self.T_sed,
+                                       self.Q_hyp,
                                        self.next_km.T_prev,
-                                       self.ShaderList[dir], dir,
-                                       self.Disp, hour, JD, Daytime,
-                                       Altitude, Zenith,
+                                       self.ShaderList[dir],
+                                       dir,
+                                       self.Disp,
+                                       hour,
+                                       JD,
+                                       Daytime,
+                                       Altitude,
+                                       Zenith,
                                        0.0,
                                        0.0,
                                        solar_only,
                                        self.next_km.Mix_T_Delta,
                                        IniParams["heatsource8"])
         
-        (self.F_Conduction, self.T_sed, self.F_Longwave,
-         self.F_LW_Atm, self.F_LW_Stream, self.F_LW_Veg,
-         self.F_Evaporation, self.F_Convection, self.E) = ground    
+        (self.F_Conduction, 
+         self.T_sed,
+         self.F_Longwave,
+         self.F_LW_Atm,
+         self.F_LW_Stream,
+         self.F_LW_Veg,
+         self.F_Evaporation,
+         self.F_Convection,
+         self.E) = ground    
 
         #except Exception, stderr:       
         #    self.CatchException(stderr, time)
