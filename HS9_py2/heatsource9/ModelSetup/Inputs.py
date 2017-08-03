@@ -275,7 +275,7 @@ class Inputs(object):
                                  skiprows=1, skipcols=0)
         
         # set up a list to check if a missing value in
-        # the contorl file is ok
+        # the control file is ok
         if IniParams["run_type"] == 0:
             # For temperature runs None is ok for these inputs
             none_ok = ["usertxt", "name"]
@@ -404,7 +404,7 @@ class Inputs(object):
     def control_file_dict(self, **kwargs):
         """
         Returns a dictionary of the control file lines
-        with empty values. Dictionary keys coorespond to the
+        with empty values. Dictionary keys correspond to the
         keys in IniParams.
         """
         
@@ -427,7 +427,7 @@ class Inputs(object):
                    "inflowsites": [18, "Tributary Inflow Sites", "inflowsites", None],
                    "inflowinfiles": [19, "Tributary Inflow Input File Name", "inflowinfiles", None],
                    "inflowkm": [20, "Tributary Inflow Model kilometers", "inflowkm", None],
-                   "accretionfile": [21, "Accrection Input File Name", "accretionfile", None],
+                   "accretionfile": [21, "Accretion Input File Name", "accretionfile", None],
                    "metsites": [22, "Meteorological Data Sites", "metsites", None],
                    "metfiles": [23, "Meteorological Data Input File Name", "metfiles", None],
                    "metkm": [24, "Meteorological Data Model kilometers", "metkm", None],
@@ -442,7 +442,7 @@ class Inputs(object):
                    "lccodefile": [33, "Land Cover Codes Input File Name", "lccodefile", None],
                    "trans_count": [34, "Number Of Transects Per Node", "trans_count", None],
                    "transsample_count": [35, "Number Of Samples Per Transect", "transsample_count", None],
-                   "transsample_distance": [36, "Distance Between Transesct Samples (meters)", "transsample_distance", None],
+                   "transsample_distance": [36, "Distance Between Transect Samples (meters)", "transsample_distance", None],
                    "emergent": [37, "Account For Emergent Veg Shading (True/False)", "emergent", None],
                    "lcdatainput": [38, "Land Cover Data Input Type (Codes/Values)", "lcdatainput", None],
                    "canopy_data": [39, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
@@ -479,7 +479,7 @@ class Inputs(object):
         return [None]
     
     def import_k(self):
-        """Returns k, the riparian extintion coeffcient data."""
+        """Returns k, the riparian extinction coefficient data."""
         return [None]     
     
     def import_inflow(self, return_list=True, skiprows=1, skipcols=1):
@@ -516,13 +516,13 @@ class Inputs(object):
     
     def lookup_lccode(self, code, lookup_list):
         """
-        Returns a value based on a range provided in thelookup list.
+        Returns a value based on a range provided in the lookup list.
         If the value does not fall within the range None is returned.
         
         lccode: numeric or string value to lookup in the lookup list.
         
         lookup_list: A list of tuples with the form [(min code, max code, return value),].
-        The return value is returend if min code <= lccode <= max code.
+        The return value is returned if min code <= lccode <= max code.
         If the code is a string the min and max are equal to the code.
         """
         
@@ -549,12 +549,12 @@ class Inputs(object):
                                    grouping_field="STREAM_ID",
                                    cont_stream_km=False, overwrite=False):
         """
-        Paramaterize the input file using data from the TTools
+        Parameterize the input file using data from the TTools
         node feature class.
         
-        input_file: The input to be paramatierized. Can be either:
+        input_file: The input to be parameterized. Can be either:
         "lcdatafile" or "morphfile". Other inputs must use
-        paramaterize() with the input data supplied as a list.
+        parameterize() with the input data supplied as a list.
         
         nodes_fc: TTools derived point feature class
             
@@ -611,7 +611,7 @@ class Inputs(object):
         self.nodeDict = self.read_nodes_fc(nodes_fc, nodes_fc_headers,
                                            whereclause)        
         
-        # build a list of the data to pass to paramaterize()
+        # build a list of the data to pass to parameterize()
         outlist = []
         nodeIDs = self.nodeDict.keys()
         nodeIDs.sort()
@@ -698,16 +698,16 @@ class Inputs(object):
         [(landcover name, code, ht, canopy, overhang),] or
         [(landcover name, code, ht, lai, k, overhang),]
         
-        If lccodes=None the lcdata file identifed in
+        If lccodes=None the lcdata file identified in
         the control file will be read instead to identify the unique codes.
         
         The other input parameters including height (ht), canopy (can),
-        lai, k, and overhang (oh) are paramaterized using a range
+        lai, k, and overhang (oh) are parameterized using a range
         provided in list of tuples for each parameter.
         
         The parameter lookup list must take form
         [(min code, max code, return value),]
-        where the return value is returend if min code <= lccode <= max code,
+        where the return value is returned if min code <= lccode <= max code,
         
         code_as_ht: if True uses the landcover code as the height when
         the code is not found within a range of values passed to ht_list
@@ -832,7 +832,7 @@ class Inputs(object):
         return self.validate(data)
 
     def read_to_list(self, inputdir, filenames, skiprows, skipcols):
-        """Reads a comma delimtted text file into a
+        """Reads a comma delimited text file into a
         list of lists indexed by row number. If there is more than
         one file it appends the data to the row.
         
@@ -870,7 +870,7 @@ class Inputs(object):
         logging.info(msg)
         print_console(msg)
         
-        # check if the input/output dirctories exist and 
+        # check if the input/output directories exist and 
         # create them if not
         if not exists(IniParams["inputdir"]):
             makedirs(IniParams["inputdir"])
@@ -1024,7 +1024,7 @@ class Inputs(object):
         # Since the stream length is formatted as a floating point number 
         # we can sometimes run into trouble when calculating the number 
         # of nodes with dx due to ceil function rounding up on 
-        # floating points that are not exact representaitons of the 
+        # floating points that are not exact representations of the 
         # input value. Therefore we enforce a precision only up to the 
         # ten thousandths decimal place to make sure the number of nodes
         # is correct.        
@@ -1077,7 +1077,7 @@ class Inputs(object):
         return data_v
         
     def write_to_csv(self, outputdir, filenames, outlist, colnames=None):
-        """Write the outlist to a comma delimitted text file
+        """Write the outlist to a comma delimited text file
         colnames are optional.
         """
         

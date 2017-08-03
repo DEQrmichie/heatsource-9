@@ -53,7 +53,7 @@ class StreamNode(object):
                 "hyp_percent", # Percent hyporheic exchange                
                 "S",        # Slope
                 "n",        # Manning's n
-                "z", # z factor: Ration of run to rise of the side of a trapazoidal channel
+                "z", # z factor: Ration of run to rise of the side of a trapezoidal channel
                 "d_w", # Wetted depth. Calculated in GetWettedDepth()
                 "d_w_prev", # Wetted depth for the previous timestep
                 "d_cont", # Control depth
@@ -70,7 +70,7 @@ class StreamNode(object):
                 "V", # Total volume, based on current flow
                 "Q_tribs", # Inputs from tribs.
                 "Q_in", # Inputs from "accretion" in cubic meters per second
-                "Q_out", # Withdrawls from the stream, in cubic meters per second
+                "Q_out", # Withdrawals from the stream, in cubic meters per second
                 "Q_hyp", # Hyporheic flow
                 "km", # River kilometer, from mouth
                 "nodeID",  # Node ID
@@ -243,7 +243,7 @@ class StreamNode(object):
         for the given node, and that this is only True if this node has
         no upstream channel. Two is that the values for Q_tribs is a
         TimeList instance or None, that Q_in and Q_out are values in
-        cubic meters per second of inputs and withdrawls or None. The
+        cubic meters per second of inputs and withdrawals or None. The
         argument t is for a Python datetime object and can (should) be
         None if we are not at a spatial boundary. dt is the timestep in
         minutes, which cannot be None.
@@ -561,7 +561,7 @@ class StreamNode(object):
 
         # Hyporheic flows if available
         Q_hyp = self.Q_hyp or 0
-        # And accretionary flows
+        # And accretion flows
         Q_accr = self.Q_in or 0
         T_accr = self.T_in or 0
         #Calculate temperature change from mass transfer from point inflows

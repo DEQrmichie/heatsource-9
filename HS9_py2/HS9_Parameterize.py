@@ -1,10 +1,15 @@
 """Example script to demonstrate how to use some of the Input class
-methods for finer control during setup and paramaterization. The methods
+methods for finer control during setup and parameterization. The methods
 in this script can be used as an alternative to the more generic
 HS9_Setup_... scripts.
 
 This script must be located in the same
-directory as HeatSource_control.csv.
+directory as HeatSource_control.csv. NOTE that executing this script
+from Python shell (IDLE) will not identify __file__ correctly and will
+result in an error. It must be executed from a command prompt. Your
+options are to try to double click on this file and execute it 
+using python.exe, or to open a command prompt and execute manually 
+by typing:  python -i path/to/this/script/HS9_Run_Parameterize.py
 """
 
 from heatsource9.ModelSetup.Inputs import Inputs
@@ -34,7 +39,7 @@ if not exists(join(model_dir,control_file)):
 # create an input object
 inputs = Inputs(model_dir, control_file)
 
-# Setup control file and paramaterize it
+# Setup control file and parameterize it
 inputs.parameterize_cf(overwrite=False,
                        usertxt = "This model is an example model",
                        name = "example model", 
@@ -83,7 +88,7 @@ inputs.import_control_file()
 # write blank inputs
 inputs.setup(use_timestamp=False, overwrite=True)
 
-# Paramaterize the lcdata and morph inputs directly 
+# Parameterize the lcdata and morph inputs directly 
 # from nodes feature class. 
 # NOTE this method currently requires use of arcpy and an active 
 # ArcGIS Desktop license
@@ -95,7 +100,7 @@ inputs.parameterize_from_nodes_fc(input_file="morphfile", nodes_fc=nodes_fc,
                                   group_val="Example Model", grouping_field="STREAM_ID",
                                   cont_stream_km=False, overwrite=False)
 
-# Paramaterize the lccodes input 
+# Parameterize the lccodes input 
 lccodes = [('Active River Channel',100,0,0,0), 
            ('Barren - Clearcut',127,0,0,0), 
            ('Brush',128,1,0.4,0), 

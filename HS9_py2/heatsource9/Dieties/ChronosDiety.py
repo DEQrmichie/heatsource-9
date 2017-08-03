@@ -41,7 +41,7 @@ class ChronosDiety(object):
         Returns the current time float if called with no arguments. If tick=True,
         advances the clock one timestep and returns new current time. If we are
         in a spin-up period, it tests whether the advance would move us to the
-        next day and if so it reverts to the begining of the spin-up day, thus
+        next day and if so it reverts to the beginning of the spin-up day, thus
         running a single day over and over until the spin-up time is complete."""
         # Quickly return if we're not moving forward in time
         if not tick: return self.__current

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """PyHeatsource is the core of the model and where the 
-flux and hydrualic calculations are made."""
+flux and hydraulic calculations are made."""
 
 from __future__ import division, print_function
 from math import pow, sqrt, log, log10, exp, pi
@@ -358,7 +358,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
             PL = 10
         else:
             #--------- (Norman and Welles 1983)
-            # here the extinction coefficent 
+            # here the extinction coefficient 
             # represents the foliage density * k
             # Calculate the path length as the total sun vector distance
             # through all the canopy zones
@@ -619,13 +619,13 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
                            (273.2 + T_air)) ** (1 / 7)) *
                   (1 + 0.22 * cloud ** 2))
     #======================================================
-    # Calcualte the atmospheric longwave flux
+    # Calculate the atmospheric longwave flux
     F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
-    # Calcualte the backradiation longwave flux
+    # Calculate the backradiation longwave flux
     F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
-    # Calcualte the vegetation longwave flux
+    # Calculate the vegetation longwave flux
     F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
-    # Calcualte the net longwave flux
+    # Calculate the net longwave flux
     F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
 
     #===================================================
@@ -653,7 +653,7 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
             Zo = 0.25
 
         # Vertical wind Decay Rate using Prandtl-von-Karman 
-        # universal velocity istribution (Dingman 2002 p. 594)
+        # universal velocity distribution (Dingman 2002 p. 594)
         Friction_Velocity = (1 / 0.4) * wind * log((Zm - Zd) / Zo)
     else:
         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
@@ -720,7 +720,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         # make sure there's a value for discharge. Temp can be 
-        # blank if discharge is negative (withdrawl)
+        # blank if discharge is negative (withdrawal)
         if Qitem is None or (Qitem > 0 and Titem is None):
             raise HeatSourceError("Problem with null value in tributary discharge or temperature")
         if Qitem > 0:
@@ -747,7 +747,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     T_mix -= T_up
     
     # We need to adjust the upstream temperature by the tributary mixing
-    # so the longitidunal slope of change in T is not over predicted.
+    # so the longitudinal slope of change in T is not over predicted.
     T0 += T_mix
 
     # Similarly we need to adjust the downstream temperature (T2) 

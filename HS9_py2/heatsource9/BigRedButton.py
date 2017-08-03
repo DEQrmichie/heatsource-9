@@ -65,7 +65,7 @@ class ModelControl(object):
         control file is located.
         
         control_file is the control file name. It must be a comma
-        delimtted text file.
+        delimited text file.
         
         run_type is one of 0, 1, 2, or 3 for Heat Source (Temperature),
         Solar only, hydraulics only respectively.
@@ -181,7 +181,7 @@ class ModelControl(object):
                     # Number of radial sample directions
                     for i in range(IniParams["trans_count"]):
                         
-                        # A spot for each lancover sample
+                        # A spot for each land cover sample
                         nd.Solar_Blocked[i]=[0]*IniParams["transsample_count"]
                     nd.Solar_Blocked["diffuse"]=0
 

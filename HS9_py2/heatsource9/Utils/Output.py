@@ -32,7 +32,7 @@ class Output(object):
             self.nodes = sorted(reach.itervalues(),reverse=True)
         
         else:
-            # specfic outputkm
+            # specific outputkm
             self.nodes = sorted([reach[km] for km in reach if km in IniParams["outputkm"]],
                                 reverse= True)       
         
@@ -130,7 +130,7 @@ class Output(object):
                     dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
                     zone = range(1,int(IniParams["transsample_count"])+1)
                     
-                    # TODO this is a future fuction to have a landcover 
+                    # TODO this is a future function to have a landcover 
                     # sample at the streamnode
                     #zone = range(0,int(IniParams["transsample_count"]))
                 if IniParams["lcdatainput"] == "Values":

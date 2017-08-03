@@ -6,7 +6,7 @@ It is located here so be they can be accessed globally.
 from collections import defaultdict
 
 # IniParms mostly holds the control file info.
-# A couple intial values are suggested to make life easy.
+# A couple initial values are suggested to make life easy.
 IniParams = {"run_in_python": True,
              "run_type": None,
              "usertxt" : None,
@@ -52,8 +52,8 @@ IniParams = {"run_in_python": True,
 
 # dype is a dictionary holding the data type for every input. Includes 
 # model variable names and input file names. Note the datetime inputs
-# are identifed as basestring here but are converted to integers 
-# after import. And not to be confusing but the variables identifed as 
+# are identified as basestring here but are converted to integers 
+# after import. And not to be confusing but the variables identified as 
 # bool type here are basestring in the input files and converted to bool 
 # upon import. See Inputs class validate() and import_control_file() 
 # for details.
@@ -249,10 +249,10 @@ iniRange = {"STREAM_KM": [0, 999999],
 #["Gradient", "Gradient", "meters/meters", float, 0.00001, 2]
 #["BottomWidth", "Stream Bottom Width", "meters", float, 0, 3000]
 #["ChannelAngleZ", "Stream Channel Angle Z", "degrees", float, 0, 90]
-#["Mannings_n", "Mannings n coeffcient", "unitless", float, 0, 2]
+#["Mannings_n", "Mannings n coefficient", "unitless", float, 0, 2]
 #["SedThermalConductivity", "Sediment Thermal Conductivity", "Watts/meter/Celsius", float]
 #["SedThermalDiffusivity", "Sediment Thermal Diffusivity", "square cm/second", float]
-#["SedHyporheicThickness", "Sediment Hyporheic Zone Thicknes", "meters", float, 0, 5]
+#["SedHyporheicThickness", "Sediment Hyporheic Zone Thickness", "meters", float, 0, 5]
 #["%HyporheicExchange", "Percent Hyporheic exchange", "percent", float, 0, 1]
 #["Porosity", "Porosity", "unitless", "float", 0, 1]
 #["Q_cont", ]
@@ -264,15 +264,15 @@ iniRange = {"STREAM_KM": [0, 999999],
 #["Cloudiness", "Percent Cloudiness", "Percent", float, 0, 1]
 #["WindSpeed" "Wind Speed", "meters per second", float, 0, 120]
 #["RelativeHumidity", "Relative Humidity", "unitless", float, 0, 1]
-#["AirTemp", "Air Temperature", "Celcius", float, -22, 266]
+#["AirTemp", "Air Temperature", "Celsius", float, -22, 266]
 #["Q_in", "In flow", "cubic meters per second", float,]
-#["Temp", "Water Temperature", "Celcius", float]
+#["Temp", "Water Temperature", "Celsius", float]
 #["Q_out", "Out Flow", "cubic meters per second", float]
 #["Name", "Land Cover Name", "unitless", str]
 #["Code", "Land Cover Code", "unitless", str]
 #["Height", "Land Cover Height", "meters", float]
 #["LAI", "Effective Leaf Area Index", float]
-#["k", "k Extinction Coeffcient", "unitless", float]
+#["k", "k Extinction Coefficient", "unitless", float]
 #["Overhang", "Landcover Overhang", float]
 
 

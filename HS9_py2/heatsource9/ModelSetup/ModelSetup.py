@@ -57,7 +57,7 @@ class ModelSetup(object):
         # create an input object to mange the data
         self.inputs = Inputs(model_dir, control_file)
         
-        # read control file and paramaterize IniParams
+        # read control file and parameterize IniParams
         self.inputs.import_control_file()
                         
         # Make empty Dictionaries for the boundary conditions
@@ -176,7 +176,7 @@ class ModelSetup(object):
                 if km-down < up-km: 
                     datasite = self.Reach[down]
                 self.Reach[km].metData = datasite.metData
-            msg = "Assining Node"
+            msg = "Assigning Node"
             current = c.next()+1
             logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
@@ -275,7 +275,7 @@ class ModelSetup(object):
         # Since the stream length is formatted as a floating point number 
         # we can sometimes run into trouble when calculating the number 
         # of nodes with dx due to ceil function rounding up on 
-        # floating points that are not exact representaitons of the 
+        # floating points that are not exact representations of the 
         # input value. Therefore we enforce a precision only up to the 
         # ten thousandths decimal place to make sure the number of nodes
         # is correct.        
@@ -717,7 +717,7 @@ class ModelSetup(object):
                     # the last LULC col.
                     
                     elevation.append(self.multiplier(elev, average))
-                msg = "Translating Landcover Data"
+                msg = "Translating Land Cover Data"
                 logger.info('{0} {1} {2}'.format(msg, i, radial_count*transsample_count+7))
                 print_console(msg, True, i, radial_count*transsample_count+7)
     
@@ -772,7 +772,7 @@ class ModelSetup(object):
                     
                     elevation.append(self.multiplier(elev, average))
                 
-                msg = "Translating Landcover Data"
+                msg = "Translating Land Cover Data"
                 logger.info('{0} {1} {2}'.format(msg, i, radial_count*transsample_count+7))
                 print_console(msg, True, i, radial_count*transsample_count+7)                
     
@@ -814,7 +814,7 @@ class ModelSetup(object):
         # should've seen it earlier!
 
         for h in xrange(len(keys)):
-            msg = "Building landcover zones"
+            msg = "Building land cover zones"
             logger.info('{0} {1} {2}'.format(msg, h+1, len(keys)))
             print_console(msg, True, h+1, len(keys))
             node = self.Reach[keys[h]]
@@ -941,7 +941,7 @@ class ModelSetup(object):
 
                     if s == transsample_count - 1:
                         if max(T_Full) > 0:
-                            # if bank and/or veg shade is occuring:
+                            # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # Vdens_mod = (Amount of Veg shade * Veg dens) +
                             # (Amount of bank shade * bank dens, i.e. 1) / 
@@ -977,7 +977,7 @@ class ModelSetup(object):
         overhang = []
         elevation = []        
         
-        print_console("Translating Landcover Data")       
+        print_console("Translating Land Cover Data")       
         if IniParams["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
@@ -1130,7 +1130,7 @@ class ModelSetup(object):
                 for s in xrange(transsample_count): # Iterate through each of the zones
                     Vheight = vheight[i*transsample_count+s+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
-                        raise Exception("Vegetation height (value of %s in Landcover Data) must be greater than zero and less than 120 meters" % Vheight)
+                        raise Exception("Vegetation height (value of %s in Land Cover Data) must be greater than zero and less than 120 meters" % Vheight)
                     Vcan = vcanopy[i*transsample_count+s+1][h] 
                     Voverhang = overhang[i*transsample_count+s+1][h] 
                     Elev = elevation[i*transsample_count+s][h]
@@ -1188,7 +1188,7 @@ class ModelSetup(object):
 
                     if s == transsample_count - 1:
                         if max(T_Full) > 0:
-                            # if bank and/or veg shade is occuring:
+                            # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # Vdens_mod = (Amount of Veg shade * Veg dens) +
                             # (Amount of bank shade * bank dens, i.e. 1) / 
