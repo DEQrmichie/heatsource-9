@@ -94,8 +94,8 @@ class Output(object):
             desc["Heat_Conv"] = "Convection Flux (watts/square meter)"
             desc["Heat_Evap"] = "Evaporation Flux (watts/square meter)"
             desc["Rate_Evap"] = "Evaporation Rate (mm/hour)"
-            desc["Temp_H2O"] = "Stream Temperature (*C)"
-            desc["Temp_Sed"] = "Sediment Temperature (*C)"
+            desc["Temp_H2O"] = "Stream Temperature (Celsius)"
+            desc["Temp_Sed"] = "Sediment Temperature (Celsius)"
             desc["Hyd_Disp"] = "Hydraulic Dispersion (square meters/second)"
 
         # Storage dictionary for the data.
