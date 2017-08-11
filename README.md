@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b18 (beta 19)
+Current Version: heatsource 9.0.0b20 (beta 20)
 
 ================================================================================================
 ## ABOUT 
@@ -79,60 +79,66 @@ navigate to setup.py and install
 ### CONTROL FILE  
 HeatSource_Control.csv
 
+The control file is where most of the model operation and initial parameterization is set.
+
+
+```
+control_file = 'HeatSource_Control.csv'
+model_dir = r'C://path/to/model_directory/'
+
+# create an input object
+inputs = Inputs(model_dir, control_file)
+
+# Write a blank control file
+inputs.parameterize_cf(overwrite=False)```
+
 Below are all the input parameters that must be included in the control file.
-Technically the parameters can be in any row as long as the parameter names
-don't change and the parameter values are in column 3. 
-If "USE HEAT SOURCE 8 LANDCOVER METHODS" is TRUE, the model will revert 
-back to heat source 8 methods for landcover sampling methods.
-If FALSE, the direction for each of the radial samples (n) measured in 
-degrees from 0 (0 = north) will correspond to 
-(total radial samples / 360) x radial sample n. 
 
 Separate tributary and climate file names and/or site stream km with 
  commas wrapped in quotes.
 
-|LINE |PARAMETER                                          |VALUE |
-|----:|:--------------------------------------------------|----- |
-|2    |USER NOTES                                         |      |
-|3    |SIMULATION NAME                                    |      |
-|4    |INPUT PATH                                         |      |
-|5    |OUTPUT PATH                                        |      |
-|6    |STREAM LENGTH (KILOMETERS)                         |      |
-|7    |OUTPUT KILOMETERS                                  |      |
-|8    |DATA START DATE (mm/dd/yyyy)                       |      |
-|9    |MODELING START DATE (mm/dd/yyyy)                   |      |
-|10   |MODELING END DATE (mm/dd/yyyy)                     |      |
-|11   |DATA END DATE (mm/dd/yyyy)                         |      |
-|12   |FLUSH INITIAL CONDITION (DAYS)                     |      |
-|13   |TIME OFFSET FROM UTC (HOURS)                       |      |
-|14   |MODEL TIME STEP - DT (MIN)                         |      |
-|15   |MODEL DISTANCE STEP - DX (METERS)                  |      |
-|16   |LONGITUDINAL STREAM SAMPLE DISTANCE (METERS)       |      |
-|17   |BOUNDARY CONDITION FILE NAME                       |      |
-|18   |TRIBUTARY SITES                                    |      |
-|19   |TRIBUTARY INPUT FILE NAMES                         |      |
-|20   |TRIBUTARY MODEL KM                                 |      |
-|21   |ACCRETION INPUT FILE NAME                          |      |
-|22   |CLIMATE DATA SITES                                 |      |
-|23   |CLIMATE INPUT FILE NAMES                           |      |
-|24   |CLIMATE MODEL KM                                   |      |
-|25   |INCLUDE EVAPORATION LOSSES FROM FLOW (TRUE/FALSE)  |      |
-|26   |EVAPORATION METHOD (Mass Transfer/Penman)          |      |
-|27   |WIND FUNCTION COEFFICIENT A                        |      |
-|28   |WIND FUNCTION COEFFICIENT B                        |      |
-|29   |INCLUDE DEEP ALLUVIUM TEMPERATURE (TRUE/FALSE)     |      |
-|30   |DEEP ALLUVIUM TEMPERATURE (*C)                     |      |
-|31   |MORPHOLOGY DATA FILE NAME                          |      |
-|32   |LANDCOVER DATA FILE NAME                           |      |
-|33   |LANDCOVER CODES FILE NAME                          |      |
-|34   |NUMBER OF TRANSECTS PER NODE                       |      |
-|35   |NUMBER OF SAMPLES PER TRANSECT                     |      |
-|36   |DISTANCE BETWEEN TRANSESCT SAMPLES (METERS)        |      |
-|37   |ACCOUNT FOR EMERGENT VEG SHADING (TRUE/FALSE)      |      |
-|38   |LANDCOVER DATA INPUT TYPE (Codes/Values)           |      |
-|39   |CANOPY DATA TYPE (LAI/CanopyCover)                 |      |
-|40   |VEGETATION ANGLE CALCULATION METHOD (point/zone)   |      |
-|41   |USE HEAT SOURCE 8 LANDCOVER METHODS (TRUE/FALSE)   |      |
+|LINE |PARAMETER                                          |KEY    |VALUE |
+|----:|:--------------------------------------------------|-------|----- |
+|    2|Model Description/User Notes						  |usertxt|	     |
+|	 3|Simulation Name            						  | name  |	 	 |
+|	 4|Input Directory Path|inputdir|	|
+|	 5|Output Directory Path|outputdir|	|
+|	 6|Stream Length (kilometers)|length|	|
+|	 7|Output Stream Kilometers|outputkm|	|
+|	 8|Data Start Date (mm/dd/yyyy)|datastart|	|
+|	 9|Modeling Start Date (mm/dd/yyyy)|modelstart|	|
+|	10|Modeling End Date (mm/dd/yyyy)|modelend|	|
+|	11|Data End Date (mm/dd/yyyy)|dataend|	|
+|	12|Flush Initial Condition (days)|flushdays|	|
+|	13|Time Offset From UTC (hours)|offset|	|
+|	14|Model Time Step (minutes)|dt|	|
+|	15|Model Distance Step (meters)|dx|	|
+|	16|Longitudinal Stream Sample Distance (meters)|longsample|	|
+|	17|Boundary Condition Input File Name|bcfile|	|
+|	18|Tributary Inflow Sites|inflowsites|	|
+|	19|Tributary Inflow Input File Name|inflowinfiles|	|
+|	20|Tributary Inflow Model kilometers|inflowkm|	|
+|	21|Accretion Input File Name|accretionfile|	|
+|	22|Meteorological Data Sites|metsites|	|
+|	23|Meteorological Data Input File Name|metfiles|	|
+|	24|Meteorological Data Model kilometers|metkm|	|
+|	25|Include Evaporation Losses From Flow (True/False)|calcevap|	|
+|	26|Evaporation Method (Mass Transfer/Penman)|evapmethod|	|
+|	27|Wind Function Coefficient a|wind_a|	|
+|	28|Wind Function Coefficient b|wind_b|	|
+|	29|Include Deep Alluvium Temperature (True/False)|calcalluvium|	|
+|	30|Deep Alluvium Temperature (Celsius)|alluviumtemp|	|
+|	31|Morphology Input Data File Name|morphfile|	|
+|	32|Land Cover Input Data File Name|lcdatafile|	|
+|	33|Land Cover Codes Input File Name|lccodefile|	|
+|	34|Number Of Transects Per Node|trans_count|	|
+|	35|Number Of Samples Per Transect|transsample_count|	|
+|	36|Distance Between Transect Samples (meters)|transsample_distance|	|
+|	37|Account For Emergent Veg Shading (True/False)|emergent|	|
+|	38|Land Cover Data Input Type (Codes/Values)|lcdatainput|	|
+|	39|Canopy Data Type (LAI/CanopyCover)|canopy_data|	|
+|	40|Land Cover Sample Method (point/zone)|lcsampmethod|	|
+|	41|Use Heat Source 8 Land Cover Methods (True/False)|heatsource8|	|
 
 ================================================================================================
 ### ACCRETION INPUT FILE  
@@ -167,8 +173,8 @@ COLUMN
 ### BOUNDARY CONDITION FILE  
 UserDefinedFileName.csv
 
-The stream flow and temperature condtions at the upstream model boundary 
-are defined in this file. The boundary condtions are defined at an 
+The stream flow and temperature conditions at the upstream model boundary 
+are defined in this file. The boundary conditions are defined at an 
 hourly timestep.
 
 | DATETIME | FLOW    |TEMPERATURE|
@@ -187,11 +193,11 @@ COLUMN
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
-| DATETIME | CLOUDINESS |WIND_SPEED | RELATIVE_HUMIDITY | AIR_TEMPERATURE |
-|----------|------------|-----------|-------------------|-----------------|
-| start    | Value      | Value     | Value             | Value           |
-| ...      | ...        | ...       | ...               | ...             |
-| end      | Value      | Value     | Value             | Value           |
+| DATETIME | CLOUDINESS1 |WIND_SPEED1 | RELATIVE_HUMIDITY1 | AIR_TEMPERATURE1 |
+|----------|-------------|------------|--------------------|------------------|
+| start    | Value       | Value      | Value              | Value            |
+| ...      | ...         | ...        | ...                | ...              |
+| end      | Value       | Value      | Value              | Value            |
 
 COLUMN
  (1) DATETIME (MM/DD/YYYY HH:MM)
@@ -228,18 +234,18 @@ UserDefinedFileName.csv
 The tributary input files define the inflow/outflow rates and temperatures
 at different points along the model stream. Inflows refers to localized 
 (non-accretion) type flows such as tributaries, springs, returns, point 
-sources, etc. Outflows can be varous types of water withdrawals. They 
+sources, etc. Outflows can be various types of water withdrawals. They 
 are input with a negative flow rate. Temperatures for outflows are not 
 used by the model.
 
 The number and stream km of the inflow/outflows is defined in the control file.
 The flow and temperature are defined at an hourly timestep.  
 
-| DATETIME | FLOW    |TEMPERATURE|
-|----------|---------|-----------|
-| start    | Value   | Value     |
-| ...      |...      | ...       |
-| end      | Value   | Value     |
+| DATETIME | FLOW1   | TEMPERATURE1 |
+|----------|---------|--------------|
+| start    | Value   | Value        |
+| ...      |...      | ...          |
+| end      | Value   | Value        |
 
 COLUMN  
  (1) DATETIME (MM/DD/YYYY HH:MM)  
@@ -275,7 +281,7 @@ because the model routines see a blank row as the end of the data sequence.
 #### Canopy Type
 
 land cover canopy information can be input as either canopy cover or 
-effective leaf area index. This option is specficed in the control file.
+effective leaf area index. This option is specified in the control file.
 
 ##### Canopy Cover  
 Input file formatting when using canopy cover.
@@ -335,7 +341,7 @@ COLUMN
  (n-n) Canopy/LAI Samples (blank if not used)  
  (n-N) K Extinction Coefficient (dimensionless) blank if not used.  
 
-Note - the column numbers for the landcover, elevation, and caonpy cover/LAI samples are dependent on user specified information in the control file.
+Note - the column numbers for the landcover, elevation, and canopy cover/LAI samples are dependent on user specified information in the control file.
 
 ================================================================================================
 ### MORPHOLOGY DATA FILE  
