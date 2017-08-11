@@ -150,9 +150,9 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
     if Altitude > 0.0:
         Daytime = 1
     
-    # Determine which landcover direction corresponds to the sun azimuth
+    # Determine which landcover transect direction corresponds to the sun azimuth
     if heatsource8:  # same as 8 directions but no north
-        dir = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
+        tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
         Azimuth_mod = Azimuth
     else:        
         Angle_Incr = 360.0 / radial_count
@@ -162,8 +162,8 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
             Azimuth_mod = Azimuth + 360
         else:
             Azimuth_mod = Azimuth
-        dir = bisect(AngleStart,Azimuth_mod)-1
-    return Altitude, Zenith, Daytime, dir, Azimuth_mod
+        tran = bisect(AngleStart,Azimuth_mod)-1
+    return Altitude, Zenith, Daytime, tran, Azimuth_mod
 
 def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     Converge = 10
@@ -275,7 +275,7 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, phi, emergent, lc_canopy, lc_height, lc_k,
-                 ShaderList, dir, heatsource8):
+                 ShaderList, tran, heatsource8):
     """ """
     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle = ShaderList
     F_Direct = [0]*8
@@ -326,11 +326,11 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
-    dir = dir + 1
+    tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
     
     if Altitude <= TopoShadeAngle:
-        # Topographic Shade is occurring
+        # Topographic shade is occurring
         F_Direct[2] = 0
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         F_Direct[3] = 0
@@ -338,14 +338,15 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         # Full sun
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
-        F_Direct[3] = F_Direct[2]    
+        F_Direct[3] = F_Direct[2]
     else:
         #======================================================
+        # Topographic Shade is not occurring and
         # Partial shade from veg
-        # 3 - Below Landcover (Above Bank Shade & Emergent)
-        
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
+        
+        # 3 - Below Landcover (Above Bank Shade & Emergent)
         Dummy1 = F_Direct[2]
         
         zone = transsample_count - 1
@@ -374,13 +375,16 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
             #PL = 10
         
         # Now calculate the fraction of radiation passed through the canopy
-        while zone > 0:
-            if Altitude < VegetationAngle[zone]:
+        while zone >= 0:
+            if Altitude >= VegetationAngle[zone]:
+                # no shading
+                fraction_passed = 1
+            else:
                 # shading is occurring from this zone
                 if BeersData == "LAI":
                     # use LAI data
                     # k as an input
-                    RipExtinction = lc_k[dir][zone]
+                    RipExtinction = lc_k[tran][zone]
                     
                     # Assumption here is that LAI is for the whole canopy.
                     # Since we are calculating the fraction passed for a 
@@ -391,27 +395,26 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     # zonal path length.
                     fraction_passed = exp(-1 *
                                           RipExtinction *
-                                          (lc_canopy[dir][zone] / PL) *
+                                          (lc_canopy[tran][zone] / PL) *
                                           PLz)
                 else:
                     # Use canopy closure to calculate 
                     # the riparian extinction value
-                    if (lc_height[dir][zone] <= 0) or (lc_canopy[dir][zone] == 0):
+                    if (lc_height[tran][zone] <= 0) or (lc_canopy[tran][zone] == 0):
                         # Set to one if no veg or no canopy
                         fraction_passed = 1
                     else:
-                        RipExtinction = -log(1- lc_canopy[dir][zone])/ PL
+                        RipExtinction = -log(1- lc_canopy[tran][zone])/ PL
                         fraction_passed = exp(-1* RipExtinction * PLz)
-                
-                Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 *
-                                                      fraction_passed)
-                
-                Dummy1 *= fraction_passed
+                        
+            Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
+            Dummy1 *= fraction_passed
             zone -= 1
-            
+        F_Direct[3] = Dummy1
+        
     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
-    Solar_blocked_byVeg.append(diffuse_blocked)            
+    Solar_blocked_byVeg.append(diffuse_blocked)
             
     #=========================================================
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
@@ -766,7 +769,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
 
 def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
-                   dir, Disp, hour, JD, daytime, Altitude, Zenith,
+                   tran, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     
@@ -795,7 +798,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                                         transsample_count,
                                         BeersData, phi, emergent,
                                         lc_canopy, lc_height,
-                                        lc_k, ShaderList, dir,
+                                        lc_k, ShaderList, tran,
                                         heatsource8)
 
     # We're only running shade, so return solar and some empty calories
