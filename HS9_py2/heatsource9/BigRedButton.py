@@ -31,14 +31,13 @@ from time import time as Time
 from Dieties.IniParamsDiety import IniParams
 from ModelSetup.ModelSetup import ModelSetup
 from Dieties.ChronosDiety import Chronos
-from Utils.Logger import Logger
 from Utils.Printer import Printer as print_console
 from Utils.Output import Output as O
 from __version__ import version_string
 
 # set up logging
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(module)s %(funcName)s %(lineno)d %(message)s',
+                    format='%(asctime)s %(levelname)-8s %(message)s',
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
@@ -195,7 +194,8 @@ class ModelControl(object):
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem
             except:
-                msg = "Error while working on {0} on {1} {2}".format(nd, Chronos.PrettyTime(), traceback.format_exc())
+                msg = "Error while working on {0} on {1} {2}".format(nd, Chronos.PrettyTime(), 
+                                                                     traceback.format_exc())
                 logging.error(msg)
                 print_console(msg)
                 
@@ -250,9 +250,9 @@ class ModelControl(object):
         # to be somewhere around or less than 1 microsecond.
         microseconds = (total_time/timesteps/len(self.reachlist))*1e6
         
-        message = "Simulation Complete."
+        message = "Simulation Complete"
         
-        message += "\nFinished in {0:0.1f} minutes ".format(total_time)
+        message += "\n\nFinished in {0:0.1f} minutes ".format(total_time)
         message += "(spent {0:0.3f} microseconds ".format(microseconds)
         message += "in each stream node).\n"
         message += "Water Balance: {0:0.3f}/{1:0.3f}\n".format(total_inflow, out)
