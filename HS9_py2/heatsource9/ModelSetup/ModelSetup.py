@@ -724,16 +724,16 @@ class ModelSetup(object):
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
-                for dir in xrange(radial_count+1):
+                for tran in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.lc_height[dir][zone] = vheight[n][i]
-                        node.lc_canopy[dir][zone] = vcanopy[n][i]
-                        node.lc_k[dir][zone] = k[n][i]
-                        node.lc_oh[dir][zone] = overhang[n][i]
+                        node.lc_height[tran][zone] = vheight[n][i]
+                        node.lc_canopy[tran][zone] = vcanopy[n][i]
+                        node.lc_k[tran][zone] = k[n][i]
+                        node.lc_oh[tran][zone] = overhang[n][i]
                         n = n + 1
                         # 0 is emergent, there is only one value at zone = 0
-                        if dir == 0 and zone == 0:
-                            # go to the next dir 
+                        if tran == 0 and zone == 0:
+                            # go to the next tran 
                             break            
         else:
             # -------------------------------------------------------------
@@ -779,16 +779,16 @@ class ModelSetup(object):
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
-                for dir in xrange(radial_count+1):
+                for tran in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.lc_height[dir][zone] = vheight[n][i]
-                        node.lc_canopy[dir][zone] = vcanopy[n][i]
-                        node.lc_oh[dir][zone] = overhang[n][i]
+                        node.lc_height[tran][zone] = vheight[n][i]
+                        node.lc_canopy[tran][zone] = vcanopy[n][i]
+                        node.lc_oh[tran][zone] = overhang[n][i]
                         n = n + 1
                         
                         # 0 is emergent, there is only one value at zone = 0
-                        if dir == 0 and zone == 0:
-                            # go to the next dir 
+                        if tran == 0 and zone == 0:
+                            # go to the next tran 
                             break          
 
         # Average over the topo values
@@ -830,7 +830,7 @@ class ModelSetup(object):
             DirNumbers = range(1,radial_count+1)
             AngleMid = [x*Angle_Incr for x in DirNumbers]
             
-            # Iterate through each direction
+            # Iterate through each transect direction
             for i in xrange(radial_count):
                 DirAngle = AngleMid[i]
                 if DirAngle < 135:
@@ -848,11 +848,11 @@ class ModelSetup(object):
             # (top of trees), and the maximum angle at which full shade 
             # is calculated (top of topography). Anything in between 
             # these is an angle for which sunlight is passing through 
-            # trees. So, for each direction, we want to calculate these
+            # trees. So, for each transect direction, we want to calculate these
             # two angles so that late we can test whether we are between 
             # them, and only do the shading calculations if that is true.
 
-            # Iterate through each direction            
+            # Iterate through each transect direction            
             for i in xrange(radial_count):
                 
                 # lowest angle necessary for full sun
@@ -876,7 +876,7 @@ class ModelSetup(object):
                     
                     if not s:
                         # We are at the stream edge, so start over
-                        # New value for each direction
+                        # New value for each transect direction
                         LC_Angle_Max = 0 
                     else:
                         # No overhang away from the stream
@@ -919,7 +919,7 @@ class ModelSetup(object):
                     T_Full += degrees(atan(VH/LC_Distance)), 
 
                     # Now get the maximum of bank shade and topographic 
-                    # shade for this direction.
+                    # shade for this transect direction.
                     # likewise, a tuple of values
                     T_None += degrees(atan(SH/LC_Distance)), 
 
@@ -1015,17 +1015,17 @@ class ModelSetup(object):
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
-                for dir in xrange(radial_count+1):
+                for tran in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.lc_height[dir][zone] = vheight[n][i]
-                        node.lc_canopy[dir][zone] = vcanopy[n][i]
-                        node.lc_k[dir][zone] = k[n][i]
-                        node.lc_oh[dir][zone] = overhang[n][i]
+                        node.lc_height[tran][zone] = vheight[n][i]
+                        node.lc_canopy[tran][zone] = vcanopy[n][i]
+                        node.lc_k[tran][zone] = k[n][i]
+                        node.lc_oh[tran][zone] = overhang[n][i]
                         n = n + 1
                         
                         # 0 is emergent, there is only one value at zone = 0
-                        if dir == 0 and zone == 0:
-                            break # go to the next dir            
+                        if tran == 0 and zone == 0:
+                            break # go to the next tran            
         
         else:
             # -------------------------------------------------------------
@@ -1063,14 +1063,14 @@ class ModelSetup(object):
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
-                for dir in xrange(radial_count+1):
+                for tran in xrange(radial_count+1):
                     for zone in xrange(transsample_count):
-                        node.lc_height[dir][zone] = vheight[n][i]
-                        node.lc_canopy[dir][zone] = vcanopy[n][i]
-                        node.lc_oh[dir][zone] = overhang[n][i]
+                        node.lc_height[tran][zone] = vheight[n][i]
+                        node.lc_canopy[tran][zone] = vcanopy[n][i]
+                        node.lc_oh[tran][zone] = overhang[n][i]
                         n = n + 1
-                        if dir == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
-                            break # go to the next dir            
+                        if tran == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
+                            break # go to the next tran            
 
         # Average over the topo values
         # topo_ne = self.multiplier([float(LCdata[row][3]) for row in range(0, len(LCdata))], average)
@@ -1105,7 +1105,7 @@ class ModelSetup(object):
             Angle_Incr = 360.0 / radial_count
             DirNumbers = range(1,radial_count+1)
             AngleMid = [x*Angle_Incr for x in DirNumbers]
-            for i in xrange(radial_count): # Iterate through each direction
+            for i in xrange(radial_count): # Iterate through each transect direction
                 DirAngle = AngleMid[i]
                 if DirAngle < 135:
                     ElevationList.append(topo_e[h])
@@ -1121,7 +1121,7 @@ class ModelSetup(object):
             # two angles so that late we can test whether we are between them, and only do the shading calculations
             # if that is true.
 
-            for i in xrange(radial_count): # Iterate through each direction
+            for i in xrange(radial_count): # Iterate through each transect direction
                 T_Full = () # lowest angle necessary for full sun
                 T_None = () # Highest angle necessary for full shade
                 W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
@@ -1136,7 +1136,7 @@ class ModelSetup(object):
                     Elev = elevation[i*transsample_count+s][h]
                     
                     if not s: # We are at the stream edge, so start over
-                        LC_Angle_Max = 0 # New value for each direction
+                        LC_Angle_Max = 0 # New value for each transect direction
                     else:
                         Voverhang = 0 # No overhang away from the stream
                     ##########################################################
@@ -1165,7 +1165,7 @@ class ModelSetup(object):
                     # Calculate the minimum sun angle needed for full sun
                     T_Full += degrees(atan(VH/LC_Distance)), # It gets added to a tuple of full sun values
                     # Now get the maximum of bank shade and topographic shade for this
-                    # direction
+                    # transect direction
                     T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
 
                     # Calculate View To Sky
