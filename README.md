@@ -90,7 +90,8 @@ model_dir = r'C://path/to/model_directory/'
 inputs = Inputs(model_dir, control_file)
 
 # Write a blank control file
-inputs.parameterize_cf(overwrite=False)```
+inputs.parameterize_cf(overwrite=False)
+```
 
 Below are all the input parameters that must be included in the control file.
 
