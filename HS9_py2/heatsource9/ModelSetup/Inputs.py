@@ -8,6 +8,7 @@ from math import ceil
 from time import gmtime
 from time import strptime
 from time import strftime
+from string import digits
 from collections import defaultdict
 from calendar import timegm
 from datetime import datetime
@@ -20,7 +21,7 @@ from ..Utils.Printer import Printer as print_console
 import logging
 # set up logging
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(module)s %(funcName)s %(lineno)d %(message)s',
+                    format='%(asctime)s %(levelname)-8s %(message)s',
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
@@ -92,10 +93,14 @@ class Inputs(object):
         the met input file(s)."""
         ncols = int((IniParams["metsites"] /
                     len(IniParams["metfiles"].split(","))))
-        return ["DATETIME"]+["CLOUDINESS",
-                             "WIND_SPEED",
-                             "RELATIVE_HUMIDITY",
-                             "AIR_TEMPERATURE"] * ncols
+        header = ["DATETIME"]
+        for n in range(1, ncols+1):
+            header.append("CLOUDINESS"+str(n))
+            header.append("WIND_SPEED"+str(n))
+            header.append("RELATIVE_HUMIDITY"+str(n))
+            header.append("AIR_TEMPERATURE"+str(n))
+        return header
+
     def headers_lcdata(self):
         """
         Returns a list of column headers for
@@ -105,32 +110,32 @@ class Inputs(object):
         if IniParams["lcdatainput"] == "Values":
             if IniParams["canopy_data"] == "LAI":
                 #Use LAI methods
-                type = ["HT","ELE","LAI","k", "OH"]
+                prefix = ["HT","ELE","LAI","k", "OH"]
             else:        
-                type = ["HT","ELE","CAN", "OH"]
+                prefix = ["HT","ELE","CAN", "OH"]
         else:
-            type = ["LC","ELE"]
+            prefix = ["LC","ELE"]
     
         lcdataheaders =["STREAM_ID", "NODE_ID", "STREAM_KM","LONGITUDE",
                         "LATITUDE","TOPO_W","TOPO_S","TOPO_E"]
         
         if IniParams["heatsource8"]:
-            dir = ["NE","E","SE","S","SW","W","NW"]
+            tran = ["NE","E","SE","S","SW","W","NW"]
         else:        
-            dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
+            tran = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
     
         zone = range(1,int(IniParams["transsample_count"])+1)
     
-        # Concatenate the type, dir, and zone and order in the correct way
-        for t in type:
-            for d in range(0,len(dir)):
+        # Concatenate the prefix, transect, and zone and order in the correct way
+        for p in prefix:
+            for t in range(0,len(tran)):
                 for z in range(0,len(zone)):
-                    if t!="ELE" and d==0 and z==0:
+                    if p!="ELE" and t==0 and z==0:
                         # add emergent
-                        lcdataheaders.append(t+"_T0_S0")                        
-                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
+                        lcdataheaders.append(p+"_T0_S0")                        
+                        lcdataheaders.append(p+"_"+tran[t]+"_S"+str(zone[z]))
                     else:
-                        lcdataheaders.append(t+"_"+dir[d]+"_S"+str(zone[z]))
+                        lcdataheaders.append(p+"_"+tran[t]+"_S"+str(zone[z]))
     
         return lcdataheaders     
     
@@ -162,9 +167,13 @@ class Inputs(object):
         if IniParams["inflowsites"] > 0:
             ncols = int(IniParams["inflowsites"] /
                         len(IniParams["inflowinfiles"].split(",")))
-            return ["DATETIME"]+["FLOW","TEMPERATURE"] * ncols
+            header = ["DATETIME"]
+            for n in range(1, ncols+1):
+                header.append("FLOW"+str(n))
+                header.append("TEMPERATURE"+str(n))
+            return header
         else:
-            return[None]        
+            return[None]
         
     def headers_morph(self):
         """
@@ -543,108 +552,6 @@ class Inputs(object):
         
         # Not in range, return None
         return None
-            
-    def parameterize_from_nodes_fc(self, input_file, nodes_fc,
-                                   group_val=None,
-                                   grouping_field="STREAM_ID",
-                                   cont_stream_km=False, overwrite=False):
-        """
-        Parameterize the input file using data from the TTools
-        node feature class.
-        
-        input_file: The input to be parameterized. Can be either:
-        "lcdatafile" or "morphfile". Other inputs must use
-        parameterize() with the input data supplied as a list.
-        
-        nodes_fc: TTools derived point feature class
-            
-        group_val: Unique ID to group into a model instance.
-            
-        grouping_field: the attribute field in the nodes_fc that
-        contains the group_val.
-        
-        cont_stream_km: if True overwrites the nodes km so it is
-        continuous based on node_dx over all the nodes in each group
-        
-        overwrite: if True overwrites an existing file.
-        
-        """
-        
-        msg = "Parameterize from nodes fc"
-        logger.info(msg)
-        print_console(msg)
-        
-        # try to import arcpy
-        try:
-            import arcpy
-        except:
-            msg = "ImportError: No module named arcpy. To use this method ESRI ArcGIS must be installed"
-            logger.error(msg)
-            print_console(msg)
-            SystemExit
-
-        # get the headers
-        if input_file == "lcdatafile":
-            headers = self.headers_lcdata()
-        elif input_file == "morphfile":
-            headers = self.headers_morph()
-        else:
-            logging.ERROR("input_file = {0}, should be \
-            'lcdatafile' or 'morphfile'".format(input_file))
-        
-        # check to see if the file exists before moving on
-        if not overwrite and isfile(join(IniParams["inputdir"],
-                                         IniParams[input_file])):
-            msg = "{0} already exists and will not be overwritten".format(IniParams[input_file])
-            logger.warning(msg)
-            print_console(msg)
-            return
-
-        # Get all the column headers in the nodes fc
-        nodes_fc_headers = [field.name for field in arcpy.Describe(nodes_fc).fields]
-    
-        # find the unique values in the grouping field
-        whereclause = """{0} = '{1}'""".format(grouping_field,
-                                               group_val)
-    
-        # read the node fc into the nodes dict
-        self.nodeDict = self.read_nodes_fc(nodes_fc, nodes_fc_headers,
-                                           whereclause)        
-        
-        # build a list of the data to pass to parameterize()
-        outlist = []
-        nodeIDs = self.nodeDict.keys()
-        nodeIDs.sort()
-        
-        if cont_stream_km:
-            kmlist= self.stream_kms()        
-        
-        for i, nodeID in enumerate(nodeIDs):
-            row_list = []
-            for header in headers:
-                if header in self.nodeDict[nodeID].keys():
-                    val = self.nodeDict[nodeID][header]
-                    if cont_stream_km and header == "STREAM_KM":
-                        row_list.append(kmlist[i])
-                    else:
-                        row_list.append(val)
-                else:
-                    # use None when there is no matching key
-                    row_list.append(None)
-            outlist.append(row_list)
-
-        # sort by stream km with headwaters on top
-        outlist = sorted(outlist, key=itemgetter(2), reverse=True)
-        
-        self.write_to_csv(IniParams["inputdir"],
-                          IniParams[input_file],
-                          outlist, headers)
-        
-    def nested_dict(self): 
-        """
-        Build a nested dictionary
-        """
-        return defaultdict(self.nested_dict)
     
     def dict2list(self, data, colnames, skiprows=0, skipcols=0):
         
@@ -774,32 +681,7 @@ class Inputs(object):
         self.write_to_csv(IniParams["inputdir"],
                           IniParams["lccodefile"],
                           lccodes, self.headers_lccodes())
-
-    def read_nodes_fc(self, nodes_fc, readfields, whereclause):
-        """
-        Reads an input point file and returns the fields as a
-        nested dictionary
-        """
-        # try to import arcpy
-        try:
-            import arcpy
-        except:
-            msg = "ImportError: No module named arcpy. To use this method ESRI ArcGIS must be installed"
-            logger.error(msg)
-            print_console(msg)
-            SystemExit        
         
-        nodeDict = self.nested_dict()
-        incursorFields = ["NODE_ID"] + readfields
-        # Determine input point spatial units
-        proj = arcpy.Describe(nodes_fc).spatialReference
-                
-        with arcpy.da.SearchCursor(nodes_fc, incursorFields, whereclause, proj) as Inrows:
-            for row in Inrows:
-                for f in xrange(0,len(readfields)):
-                    nodeDict[row[0]][readfields[f]] = row[1+f]
-        return nodeDict              
-    
     def read_to_dict(self, inputdir, filename, colnames):
         """
         Reads a comma delimited text file and returns the data
@@ -1042,8 +924,9 @@ class Inputs(object):
         """
         data_v = {}
         for key, v in data.iteritems():
-                        
-            if key not in dtype.keys():
+            
+            # tranlsate removes numbers from the key, e.g. TEMPERATURE2
+            if key.translate(None, digits) not in dtype.keys():
                 # This is to find the correct landcover data 
                 # key since they are all different
                 if "LC" in key:
@@ -1053,7 +936,7 @@ class Inputs(object):
                     # float
                     k = "ELE"
             else:
-                k = key
+                k = key.translate(None, digits)
             
             # -- 
                     
