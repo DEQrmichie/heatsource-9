@@ -65,12 +65,13 @@ navigate to setup.py and install
 3. The other input files can be named whatever you want 
  (file names are specified in the control file).
 4. Do not change the parameter names in the control file. Only change 
-   the VALUE column (column 3).
+   the VALUE column (column 4).
 5. The column header names can be changed but the data needs to be in 
  the correct column number (see below).
-6. Use the specified unit and unit format identified in the control files 
+6. Use the specified unit and data format identified in the control files 
  and input files. Example mm/dd/yyyy hh:mm is 07/01/2001 16:00
-7. A parameter value that is not applicable may be left blank.
+7. A parameter value that is not applicable may be left blank although all values with float
+	data type will be assigned as zero.
 8. Tributary and climate data can have multiple files (or just one file).
  In the control file, separate file names and site stream km with 
  commas wrapped in quotes.
@@ -97,6 +98,8 @@ Below are all the input parameters that must be included in the control file.
 
 Separate tributary and climate file names and/or site stream km with 
  commas wrapped in quotes.
+```"inflow1.csv, inflow2.csv"```
+
 
 |LINE |PARAMETER                                          |KEY    |VALUE |
 |----:|:--------------------------------------------------|-------|----- |
@@ -163,8 +166,8 @@ in the mixing calculations
 | Value    | Value   | downstream | Value  | Value       | Value   |
 
 COLUMN  
- (1) STREAM_ID (Optional)  
- (2) NODE_ID (Optional)  
+ (1) STREAM_ID (Optional)
+ (2) NODE_ID (Optional)
  (3) STREAM_KM (headwaters at the top)  
  (4) INFLOW (Accretion flow cms)  
  (5) TEMPERATURE (Accretion flow temperature Celsius)  
@@ -190,7 +193,7 @@ COLUMN
  (3) TEMPERATURE (Celsius)  
 
 ================================================================================================
-### CLIMATE INPUT FILE/S   
+### METEOROLOGICAL INPUT FILE/S   
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
@@ -207,7 +210,7 @@ COLUMN
  (4) RELATIVE_HUMIDITY (0-1)
  (5) AIR_TEMPERATURE (Celsius)
 
-Note - multiple csv files may be used for each set of climate inputs with the 
+Note - multiple csv files may be used for each set of meteorological inputs with the 
 format above or all data can be saved in the same file like the example below. 
 This is controlled in the control file by designating the number of inputs and 
 the input stream km.
@@ -371,7 +374,7 @@ COLUMN
 
 GNU General Public License v3 (GPLv3)
 
-Heat Source, Copyright (C) 2000-2015, Oregon Department of Environmental Quality
+Heat Source, Copyright (C) 2000-2017, Oregon Department of Environmental Quality
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
