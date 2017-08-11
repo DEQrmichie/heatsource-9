@@ -445,7 +445,7 @@ class Inputs(object):
                    "wind_a": [27, "Wind Function Coefficient a", "wind_a", None],
                    "wind_b": [28, "Wind Function Coefficient b", "wind_b", None],
                    "calcalluvium": [29, "Include Deep Alluvium Temperature (True/False)", "calcalluvium", None],
-                   "alluviumtemp": [30, "Deep Alluvium Temperature (Celcius)", "alluviumtemp", None],
+                   "alluviumtemp": [30, "Deep Alluvium Temperature (Celsius)", "alluviumtemp", None],
                    "morphfile": [31, "Morphology Input Data File Name", "morphfile", None],
                    "lcdatafile": [32, "Land Cover Input Data File Name", "lcdatafile", None],
                    "lccodefile": [33, "Land Cover Codes Input File Name", "lccodefile", None],
