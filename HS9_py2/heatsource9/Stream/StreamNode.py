@@ -185,18 +185,12 @@ class StreamNode(object):
         self.Q_mass += inputs
         up = self.prev_km
         
-        try:
-            
-            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
-                self.Disp) = \
-                _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
-                              self.dx, self.dt, self.z, self.n,
-                              self.d_cont, self.Q, up.Q, up.Q_prev,
-                              inputs, -1)
-        except:
-            msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-            logger.error(msg)
-            raise Exception(msg)
+        Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
+            self.Disp) = \
+            _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+                          self.dx, self.dt, self.z, self.n,
+                          self.d_cont, self.Q, up.Q, up.Q_prev,
+                          inputs, -1)
         
         self.Q_prev = self.Q
         self.Q = Q
@@ -214,25 +208,21 @@ class StreamNode(object):
         self.Q_mass += Q_bc
         # We fill the discharge arguments with 0 because it is 
         # unused in the boundary case
-        try:
-            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
-                self.U, self.Disp) = \
-                    _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
-                                  self.dx, self.dt, self.z, self.n,
-                                  self.d_cont,
-                                  0.0, 0.0, 0.0, 0.0, Q_bc)
-        except:
-            msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-            logger.error(msg)
-            raise Exception(msg)
-
+        
+        Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
+            self.U, self.Disp) = \
+                _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+                              self.dx, self.dt, self.z, self.n,
+                              self.d_cont,
+                              0.0, 0.0, 0.0, 0.0, Q_bc)
+        
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
         self.Q_prev = self.Q
         self.Q = Q
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
         if Q < 0.003: 
             #Channel is going dry
-            print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.TheTime))
+            print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
 
     def CalculateDischarge(self, time):
         """Return the discharge for the current timestep
@@ -263,17 +253,13 @@ class StreamNode(object):
             # Add upstream node's discharge at THIS 
             # timestep- prev_km.Q would be next timestep.
             Q = self.prev_km.Q_prev + inputs 
-            try:
-                Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
-                    self.U, self.Disp) = \
-                        _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
-                                      self.dt, self.z, self.n,
-                                      self.d_cont, 0.0, 0.0, 0.0,
-                                      inputs, Q)
-            except:
-                msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-                logger.error(msg)
-                raise Exception(msg)
+            
+            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
+                self.U, self.Disp) = \
+                    _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+                                  self.dt, self.z, self.n,
+                                  self.d_cont, 0.0, 0.0, 0.0,
+                                  inputs, Q)
             
             # If we hit this once, we remap so we can avoid the 
             # if statements in the future.
@@ -286,19 +272,14 @@ class StreamNode(object):
             self.Q_mass += Q_bc
             # We pad the arguments with 0 because some are 
             # unused (or currently None) in the boundary case
-            try:
-                Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
-                    self.U, self.Disp) = \
-                        _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
-                                      self.dx, self.dt, self.z, self.n,
-                                      self.d_cont, 0.0, 0.0, 0.0,
-                                      inputs, Q_bc)
-                
-            except:
-                msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-                logger.error(msg)
-                raise Exception(msg)
-                
+            
+            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
+                self.U, self.Disp) = \
+                    _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+                                  self.dx, self.dt, self.z, self.n,
+                                  self.d_cont, 0.0, 0.0, 0.0,
+                                  inputs, Q_bc)
+            
             self.CalcDischarge = self.CalcDischarge_BoundaryNode
 
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
@@ -307,7 +288,7 @@ class StreamNode(object):
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
 
         if Q < 0.003: #Channel is going dry
-            msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.TheTime)
+            msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.PrettyTime())
             logger.warning(msg)
 
     def CalcHeat_Opt(self, time, hour, min, sec, JD,
@@ -329,15 +310,87 @@ class StreamNode(object):
          tran, 
          Azimuth_mod) = self.head.SolarPos
         
-        try:
-            (self.F_Solar,
-             self.F_Diffuse,
-             self.F_Direct,
-             veg_block,
-             ground,
-             self.F_Total,
-             self.Delta_T,
-             Mac) = _HS.CalcHeatFluxes(self.metData[time],
+        (self.F_Solar,
+         self.F_Diffuse,
+         self.F_Direct,
+         veg_block,
+         ground,
+         self.F_Total,
+         self.Delta_T,
+         Mac) = _HS.CalcHeatFluxes(self.metData[time],
+                                   self.C_args,
+                                   self.d_w,
+                                   self.A,
+                                   self.P_w,
+                                   self.W_w,
+                                   self.U,
+                                   self.Q_tribs[time],
+                                   self.T_tribs[time],
+                                   self.T_prev,
+                                   self.T_sed,
+                                   self.Q_hyp,
+                                   self.next_km.T_prev,
+                                   self.ShaderList[tran],
+                                   tran,
+                                   self.Disp, 
+                                   hour,
+                                   JD,
+                                   Daytime,
+                                   Altitude,
+                                   Zenith,
+                                   self.prev_km.Q_prev,
+                                   self.prev_km.T_prev,
+                                   solar_only,
+                                   self.next_km.Mix_T_Delta,
+                                   IniParams["heatsource8"])
+        
+        (self.F_Conduction,
+         self.T_sed,
+         self.F_Longwave,
+         self.F_LW_Atm,
+         self.F_LW_Stream,
+         self.F_LW_Veg,
+         self.F_Evaporation,
+         self.F_Convection,
+         self.E) = ground
+        
+        (self.T, self.S1, self.Mix_T_Delta) = Mac
+        
+        self.F_DailySum[1] += self.F_Solar[1]
+        self.F_DailySum[4] += self.F_Solar[4]
+        
+        for i in range(len(self.Solar_Blocked[tran])):
+            self.Solar_Blocked[tran][i] += veg_block[i]
+        self.Solar_Blocked["diffuse"] += veg_block[-1]
+
+    def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
+                              JDC, solar_only=False):
+        # Reset temperatures
+        self.T_prev = self.T
+        self.T = None
+        
+        (Altitude,
+         Zenith,
+         Daytime,
+         tran,
+         Azimuth_mod) = _HS.CalcSolarPosition(self.latitude, 
+                                              self.longitude,hour,
+                                              min,
+                                              sec,
+                                              self.UTC_offset,
+                                              JDC,
+                                              IniParams["heatsource8"],
+                                              IniParams["trans_count"])
+        
+        self.SolarPos = Altitude, Zenith, Daytime, tran, Azimuth_mod
+        
+        (self.F_Solar,
+         self.F_Diffuse,
+         self.F_Direct,
+         veg_block,
+         ground,
+         self.F_Total,
+         self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
                                        self.C_args,
                                        self.d_w,
                                        self.A,
@@ -352,111 +405,27 @@ class StreamNode(object):
                                        self.next_km.T_prev,
                                        self.ShaderList[tran],
                                        tran,
-                                       self.Disp, 
+                                       self.Disp,
                                        hour,
                                        JD,
                                        Daytime,
                                        Altitude,
                                        Zenith,
-                                       self.prev_km.Q_prev,
-                                       self.prev_km.T_prev,
+                                       0.0,
+                                       0.0,
                                        solar_only,
                                        self.next_km.Mix_T_Delta,
                                        IniParams["heatsource8"])
-            
-            (self.F_Conduction,
-             self.T_sed,
-             self.F_Longwave,
-             self.F_LW_Atm,
-             self.F_LW_Stream,
-             self.F_LW_Veg,
-             self.F_Evaporation,
-             self.F_Convection,
-             self.E) = ground
-            
-            (self.T, self.S1, self.Mix_T_Delta) = Mac
         
-        except:
-            msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-            logger.error(msg)
-            raise Exception(msg)
-
-        self.F_DailySum[1] += self.F_Solar[1]
-        self.F_DailySum[4] += self.F_Solar[4]
-        
-        for i in range(len(self.Solar_Blocked[tran])):
-            self.Solar_Blocked[tran][i] += veg_block[i]
-        self.Solar_Blocked["diffuse"] += veg_block[-1]
-
-    def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
-                              JDC, solar_only=False):
-        # Reset temperatures
-        self.T_prev = self.T
-        self.T = None
-        
-        try:
-            (Altitude,
-             Zenith,
-             Daytime,
-             tran,
-             Azimuth_mod) = _HS.CalcSolarPosition(self.latitude, 
-                                                  self.longitude,hour,
-                                                  min,
-                                                  sec,
-                                                  self.UTC_offset,
-                                                  JDC,
-                                                  IniParams["heatsource8"],
-                                                  IniParams["trans_count"])
-            
-            self.SolarPos = Altitude, Zenith, Daytime, tran, Azimuth_mod
-            
-            (self.F_Solar,
-             self.F_Diffuse,
-             self.F_Direct,
-             veg_block,
-             ground,
-             self.F_Total,
-             self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
-                                           self.C_args,
-                                           self.d_w,
-                                           self.A,
-                                           self.P_w,
-                                           self.W_w,
-                                           self.U,
-                                           self.Q_tribs[time],
-                                           self.T_tribs[time],
-                                           self.T_prev,
-                                           self.T_sed,
-                                           self.Q_hyp,
-                                           self.next_km.T_prev,
-                                           self.ShaderList[tran],
-                                           tran,
-                                           self.Disp,
-                                           hour,
-                                           JD,
-                                           Daytime,
-                                           Altitude,
-                                           Zenith,
-                                           0.0,
-                                           0.0,
-                                           solar_only,
-                                           self.next_km.Mix_T_Delta,
-                                           IniParams["heatsource8"])
-            
-            (self.F_Conduction, 
-             self.T_sed,
-             self.F_Longwave,
-             self.F_LW_Atm,
-             self.F_LW_Stream,
-             self.F_LW_Veg,
-             self.F_Evaporation,
-             self.F_Convection,
-             self.E) = ground
-
-        except:
-            msg = "Unknown error at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
-            logger.error(msg)
-            raise Exception(msg)
+        (self.F_Conduction, 
+         self.T_sed,
+         self.F_Longwave,
+         self.F_LW_Atm,
+         self.F_LW_Stream,
+         self.F_LW_Veg,
+         self.F_Evaporation,
+         self.F_Convection,
+         self.E) = ground
         
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
@@ -464,11 +433,10 @@ class StreamNode(object):
         for i in range(len(self.Solar_Blocked[tran])):
             self.Solar_Blocked[tran][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
-
+        
         # Check if we have interpolation on, and use the appropriate time
         self.T = self.T_bc[time]
         self.T_prev = self.T_bc[time]
-
 
     def MacCormick2(self, time):
         #===================================================

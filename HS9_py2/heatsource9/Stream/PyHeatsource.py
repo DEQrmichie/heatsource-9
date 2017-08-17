@@ -400,12 +400,19 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 else:
                     # Use canopy closure to calculate 
                     # the riparian extinction value
-                    if (lc_height[tran][zone] <= 0) or (lc_canopy[tran][zone] == 0):
-                        # Set to one if no veg or no canopy
-                        fraction_passed = 1
-                    else:
+                    try:
                         RipExtinction = -log(1- lc_canopy[tran][zone])/ PL
                         fraction_passed = exp(-1* RipExtinction * PLz)
+                    except:
+                        if lc_canopy[tran][zone] >= 1:
+                            # can't take log of zero
+                            fraction_passed = 0
+                        else:
+                            # some other error
+                            msg="Unknown error when calculating riparian extinction value. transect={0} zone={1} canopy={2} PL={3} ".format(tran,zone,lc_canopy[tran][zone],PL)
+                            logger.error(msg)
+                            print_console(msg)
+                            raise
                         
             Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
@@ -459,10 +466,21 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 fraction_passed = exp(-1* lc_canopy[0][0] * RipExtinction * PLe)
                 
             else:
-                # Use canopy closure to calculate 
-                # the riparian extinction value
-                RipExtinction = -log(1- lc_canopy[0][0]) / PLe
-                fraction_passed = exp(-1* RipExtinction * PLe)
+                try:
+                    # Use canopy closure to calculate 
+                    # the riparian extinction value
+                    RipExtinction = -log(1- lc_canopy[0][0]) / PLe
+                    fraction_passed = exp(-1* RipExtinction * PLe)
+                except:
+                    if lc_canopy[0][0] >= 1:
+                        # can't take log of zero
+                        fraction_passed = 0
+                    else:
+                        # some other error
+                        msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)
+                        logger.error(msg)
+                        print_console(msg)
+                        raise Exception
                 
         F_Direct[4] = F_Direct[4] * fraction_passed
         F_Diffuse[4] = F_Diffuse[4] * fraction_passed

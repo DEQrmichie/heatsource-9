@@ -194,8 +194,7 @@ class ModelControl(object):
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem
             except:
-                msg = "Error while working on {0} on {1} {2}".format(nd, Chronos.PrettyTime(), 
-                                                                     traceback.format_exc())
+                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.PrettyTime(), Chronos.TheTime, traceback.format_exc())
                 logging.error(msg)
                 print_console(msg)
                 
