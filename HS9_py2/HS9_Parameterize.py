@@ -79,7 +79,7 @@ inputs.parameterize_cf(overwrite=False,
                        emergent = "True", 
                        lcdatainput = "Codes", 
                        canopy_data = "Canopy", 
-                       lcsamplemethod = "point", 
+                       lcsampmethod = "point", 
                        heatsource8 = "False")
 
 # imports the control file into input object
