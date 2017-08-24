@@ -46,7 +46,6 @@ class ModelSetup(object):
 
     def __init__(self, model_dir, control_file, run_type=0):
         self.run_type = run_type
-        #self.log = log
         self.Reach = {}
         self.ID2km = {}
         
