@@ -44,7 +44,13 @@ class Inputs(object):
         # make these local
         self.model_dir = model_dir
         self.control_file = control_file
-                    
+
+        # For when reading and writing from excel is availiable
+        self.read_to_list = self.read_csv_to_list
+        self.read_to_dict = self.read_csv_to_dict
+        self.write_out = self.write_to_csv
+        self.setup = self.setup_csv
+        
     def headers(self, input_file="all"):
         """Returns the input file column headers"""
         if input_file == "all":
@@ -132,7 +138,7 @@ class Inputs(object):
                 for z in range(0,len(zone)):
                     if p!="ELE" and t==0 and z==0:
                         # add emergent
-                        lcdataheaders.append(p+"_T0_S0")                        
+                        lcdataheaders.append(p+"_T0_S0")
                         lcdataheaders.append(p+"_"+tran[t]+"_S"+str(zone[z]))
                     else:
                         lcdataheaders.append(p+"_"+tran[t]+"_S"+str(zone[z]))
@@ -266,6 +272,7 @@ class Inputs(object):
 
     def import_control_file(self):
         """Returns the control file"""
+        
         if not exists(join(self.model_dir, self.control_file)):
             logging.ERROR("HeatSource_Control.csv not \
             found {0}".format(join(self.model_dir,self.control_file)))
@@ -276,7 +283,7 @@ class Inputs(object):
         
         msg = "Reading control file"
         logging.info(msg)
-        print_console(msg)           
+        print_console(msg)
         
         cf_dict = self.control_file_dict()
         cf_list = self.read_to_list(self.model_dir,
@@ -454,12 +461,12 @@ class Inputs(object):
                    "transsample_distance": [36, "Distance Between Transect Samples (meters)", "transsample_distance", None],
                    "emergent": [37, "Account For Emergent Veg Shading (True/False)", "emergent", None],
                    "lcdatainput": [38, "Land Cover Data Input Type (Codes/Values)", "lcdatainput", None],
-                   "canopy_data": [39, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
+                   "canopy_data": [39, "Canopy Data Type (LAI/CanopyClosure)", "canopy_data", None],
                    "lcsampmethod": [40, "Land Cover Sample Method (point/zone)", "lcsampmethod", None],
                    "heatsource8": [41, "Use Heat Source 8 Land Cover Methods (True/False)", "heatsource8", None],
                    }
         
-        return cf_dict    
+        return cf_dict
         
     def import_lccodes(self):
         """Returns the land cover codes data."""
@@ -515,7 +522,7 @@ class Inputs(object):
             return data
             
         else:
-            return []        
+            return []
         
     def import_morph(self, return_list=False):
         """Returns the channel morphology data"""
@@ -589,7 +596,7 @@ class Inputs(object):
         cf_sorted = sorted(cf_dict.items(), key=itemgetter(1))
         cf_list = [line[1] for line in cf_sorted]        
 
-        self.write_to_csv(self.model_dir, self.control_file,
+        self.write_to_output(self.model_dir, self.control_file,
                           cf_list, self.headers_cf())
 
         
@@ -678,11 +685,11 @@ class Inputs(object):
                 #else:
                     #lccodes = [[None, code, ht, can, oh] for code in codes]
             
-        self.write_to_csv(IniParams["inputdir"],
+        self.write_to_output(IniParams["inputdir"],
                           IniParams["lccodefile"],
                           lccodes, self.headers_lccodes())
         
-    def read_to_dict(self, inputdir, filename, colnames):
+    def read_csv_to_dict(self, inputdir, filename, colnames):
         """
         Reads a comma delimited text file and returns the data
         as a dictionary with the column header as the key.
@@ -713,7 +720,7 @@ class Inputs(object):
                     
         return self.validate(data)
 
-    def read_to_list(self, inputdir, filenames, skiprows, skipcols):
+    def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols):
         """Reads a comma delimited text file into a
         list of lists indexed by row number. If there is more than
         one file it appends the data to the row.
@@ -743,9 +750,9 @@ class Inputs(object):
             i = i + 1
         return data
     
-    def setup(self, use_timestamp=True, overwrite=True):
+    def setup_csv(self, use_timestamp=True, overwrite=True):
         """
-        Writes blank input files based on settings in the control file
+        Writes blank input csv files based on settings in the control file
         """
         
         msg = "Starting input file setup"
@@ -758,11 +765,11 @@ class Inputs(object):
             makedirs(IniParams["inputdir"])
             
         if not exists(IniParams["outputdir"]):
-            makedirs(IniParams["outputdir"])         
+            makedirs(IniParams["outputdir"])
 
         now = datetime.now()    
         timestamp = now.strftime("%Y%m%d_%H%M%S")
-        timelist= self.datetime_string()	
+        timelist= self.datetime_string()
         kmlist= self.stream_kms()
 
         # For inflow and met data there can be a single input 
@@ -771,7 +778,7 @@ class Inputs(object):
         # and met file names if there is more than one   
         if IniParams["inflowsites"] > 0:
             tribfiles = IniParams["inflowinfiles"].split(",")
-        metfiles = IniParams["metfiles"].split(",")	
+        metfiles = IniParams["metfiles"].split(",")
         
         acclist= [[None, None, km]+[None]*3 for km in kmlist]
         bclist= [[t, None, None] for t in timelist]
@@ -800,7 +807,7 @@ class Inputs(object):
         
         msg = "Writing empty csv files"
         logging.info(msg)
-        print_console(msg)        
+        print_console(msg)
         
         if overwrite:
             # overwrite the inputs regardless if they exist or not
@@ -965,7 +972,7 @@ class Inputs(object):
         """
         
         # split by comma if multiple files
-        filenames = filenames.split(",")        
+        filenames = filenames.split(",")
         
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         
