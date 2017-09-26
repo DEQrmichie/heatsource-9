@@ -78,7 +78,7 @@ inputs.parameterize_cf(overwrite=False,
                        transsample_distance = 8, 
                        emergent = "True", 
                        lcdatainput = "Codes", 
-                       canopy_data = "Canopy", 
+                       canopy_data = "CanopyClosure", 
                        lcsampmethod = "point", 
                        heatsource8 = "False")
 
