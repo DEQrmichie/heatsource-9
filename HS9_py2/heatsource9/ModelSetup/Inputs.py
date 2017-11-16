@@ -48,7 +48,7 @@ class Inputs(object):
         # For when reading and writing from excel is availiable
         self.read_to_list = self.read_csv_to_list
         self.read_to_dict = self.read_csv_to_dict
-        self.write_out = self.write_to_csv
+        self.write_to_output = self.write_to_csv
         self.setup = self.setup_csv
         
     def headers(self, input_file="all"):
@@ -143,7 +143,7 @@ class Inputs(object):
                     else:
                         lcdataheaders.append(p+"_"+tran[t]+"_S"+str(zone[z]))
     
-        return lcdataheaders     
+        return lcdataheaders
     
     def headers_lccodes(self):
         """
@@ -652,7 +652,9 @@ class Inputs(object):
                     codes.add(str(row[col]))
             
             codes = list(codes)
-            codes.sort()
+            if code_as_ht:
+                codes.sort(key=float)
+            else: codes.sort()
             
             lccodes = []
         
@@ -684,7 +686,7 @@ class Inputs(object):
                     #lccodes = [[None, code, float(code), can, oh] for code in codes]
                 #else:
                     #lccodes = [[None, code, ht, can, oh] for code in codes]
-            
+        
         self.write_to_output(IniParams["inputdir"],
                           IniParams["lccodefile"],
                           lccodes, self.headers_lccodes())
