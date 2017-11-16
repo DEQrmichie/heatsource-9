@@ -34,7 +34,7 @@ class Output(object):
         else:
             # specific outputkm
             self.nodes = sorted([reach[km] for km in reach if km in IniParams["outputkm"]],
-                                reverse= True)       
+                                reverse= True)
         
         # A reference to the model's starting time 
         # (i.e. when spin-up is over)

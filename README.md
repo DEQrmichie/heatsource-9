@@ -172,9 +172,8 @@ in a model distance step, the accretion flow rates will be summed and a
 flow based average accretion temperature will be derived and used 
 in the mixing calculations
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|STREAM_ID|Stream ID|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|NODE_ID|Node ID|N/A|integer|Required|Required|Required|
 |3|STREAM_KM|Stream km|kilometers|float|Required Testing|Required|Required|
@@ -191,9 +190,8 @@ The stream flow and temperature conditions at the upstream model boundary
 are defined in this file. The boundary conditions are defined at an 
 hourly timestep.
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|DATETIME|DateTime|date time (mm/dd/yyyy hh:mm)|string|Optional 1|Required|Required|
 |2|FLOW|Boundary condition flow|cubic meters/second|float|Optional 1|Required|Required|
 |3|TEMPERATURE|Boundary condition temperature|degrees Celsius|float|Optional 1|Required|Required|
@@ -204,9 +202,8 @@ hourly timestep.
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|DATETIME|DateTime|date time (mm/dd/yyyy hh:mm)|string|Optional 1|Required|Required|
 |2|CLOUDINESS1|Cloudiness|proportion|float|Optional 1|Optional 2|Optional 2|
 |3|WIND_SPEED1|Wind Speed|meters/second|float|Optional 1|Optional 2|Optional 2|
@@ -218,9 +215,8 @@ format above or all data can be saved in the same file like the example below.
 This is controlled in the control file by designating the number of inputs and 
 the input stream km.
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|DATETIME|DateTime|date time (mm/dd/yyyy hh:mm)|string|Optional 1|Required|Required|
 |2|CLOUDINESS1|Cloudiness at site 1|proportion|float|Optional 1|Optional 2|Optional 2|
 |3|WIND_SPEED1|Wind Speed at site 1|meters/second|float|Optional 1|Optional 2|Optional 2|
@@ -246,9 +242,8 @@ used by the model.
 The number and stream km of the inflow/outflows is defined in the control file.
 The flow and temperature are defined at an hourly timestep.  
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|DATETIME|DateTime|date time (mm/dd/yyyy hh:mm)|string|Optional 1|Required|Required|
 |2|FLOW1|Tributary flow|cubic meters/second|float|Optional 1|Required|Required|
 |3|TEMPERATURE1|Tributary Temperature|degrees Celsius|float|Optional 1|Required|Required|
@@ -258,9 +253,8 @@ format above or all data can be saved in the same file like in the example below
 This is controlled in the control file by designating the number of inputs and
 the input stream km.
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|DATETIME|DateTime|date time (mm/dd/yyyy hh:mm)|string|Optional 1|Required|Required|
 |2|FLOW1|Tributary 1 flow|cubic meters/second|float|Optional 1|Required|Required|
 |3|TEMPERATURE1|Tributary 1 Temperature|degrees Celsius|float|Optional 1|Required|Required|
@@ -282,14 +276,13 @@ because the model routines see a blank row as the end of the data sequence.
 #### Canopy Type
 
 land cover canopy information can be input as either canopy closure or 
-effective leaf area index. This option is specified in the control file using "canopy_type".
+effective leaf area index. This option is specified in the control file using ```canopy_type```.
 
 ##### Canopy Closure 
-Input file formatting when canopy_type = "CanopyClosure".
+Input file formatting when ```canopy_type = CanopyClosure```.
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|NAME|Land cover Name|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|CODE|Land cover code|N/A|string|Required|Required (Not Used)|Required|
 |3|HEIGHT|Land cover height|meters|float|Required|Required (Not Used)|Required|
@@ -298,11 +291,10 @@ Input file formatting when canopy_type = "CanopyClosure".
 
 
 ##### LAI
-Input file formatting when canopy_type = "LAI"
+Input file formatting when ```canopy_type = LAI```
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|NAME|Land cover Name|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|CODE|Land cover code|N/A|string|Required|Required (Not Used)|Required|
 |3|HEIGHT|Land cover height|meters|float|Required|Required (Not Used)|Required|
@@ -317,9 +309,8 @@ UserDefinedFileName.csv
 This file defines land cover information. This data can be derived 
 from geospatial data using TTools.
 
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |1|STREAM_ID|Stream ID|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|NODE_ID|Node ID|N/A|integer|Required|Required|Required|
 |3|STREAM_KM|Stream km|kilometer|float|Required|Required (Not Used)|Required|
@@ -338,27 +329,24 @@ If using values, the land cover attribute information for each transect sample i
 The land cover data input type is identified in the control file.
 
 ##### Codes
-If lcdatainput = 'Codes', the following columns will be used after column 8:
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+When ```lcdatainput = Codes```, the following columns will be used after column 8:
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |multiple|LC_T_S|Landcover code on transect T for sample S|N/A|string|Required|Required (Not Used)|Required|
 |multiple|ELE_T_S|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
 ##### Values
-If lcdatainput = 'Values', and canopy_type = "CanopyClosure" the following columns will be used after column 8:
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+If ```lcdatainput = Values```, and ```canopy_type = CanopyClosure``` the following columns will be used after column 8:
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |multiple|HT_T_S |Land cover height on transect T for sample S|N/A|string|Required|Required (Not Used)|Required|
 |multiple|ELE_T_S|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 |multiple|CAN_T_S|Canopy closure on transect T for sample S|proportion (0-1)|float|Required|Required (Not Used)|Required|
 |multiple|OH_T_S|Overhang on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
-If lcdatainput = 'Values', and canopy_type = "LAI" the following columns will be used after column 8:
-|                                                              |     MODEL DATA REQUIREMENT      |
-| COLUMN NUMBER | COLUMN NAME |DESCRIPTION | UNITS | DATA TYPE | SOLAR | HYDRAULIC | TEMPERATURE |
-|---------------|-------------|------------|-------|-----------|-------|-----------|-------------|
+If ```lcdatainput = Values```, and ```canopy_type = LAI``` the following columns will be used after column 8:
+|COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNs |
+|-------------:|:-----------|:-----------|:-----|:---------|-----------|--------------|-----------------|
 |multiple|HT_T_S |Land cover height on transect T for sample S|N/A|string|Required|Required (Not Used)|Required|
 |multiple|ELE_T_S|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 |multiple|LAI_T_S|Effective Leaf Area Index on transect T for sample S|dimensionless|float|Required|Required (Not Used)|Required|
