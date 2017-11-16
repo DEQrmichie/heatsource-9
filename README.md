@@ -3,7 +3,7 @@ Heat Source 9
 
 Current Version: heatsource 9.0.0b22 (beta 22)
 
-================================================================================================
+=========================================================================
 ## ABOUT 
 
 Heat Source is a computer model used by the Oregon Department of 
@@ -15,7 +15,7 @@ significantly. Oregon DEQ currently maintains the Heat Source methodology
 and computer programming. Appropriate model use and application are 
 the sole responsibility of the user.
 
-Heat Source 8 and user manual:
+Heat Source 7-8 and user manual:
 http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
 
 Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
@@ -24,7 +24,7 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 [1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
 
-================================================================================================
+=========================================================================
 ## INSTALL
 
 Heat Source 9 should work on Windows, Mac, and Linux.
@@ -43,7 +43,7 @@ Python installation is not required.
 
 https://github.com/rmichie/heatsource-9/releases
 
-================================================================================================
+=========================================================================
 ## RUNNING THE MODEL
 
 1. Place the control file (HeatSource_Control.csv) and the model run
@@ -62,11 +62,11 @@ https://github.com/rmichie/heatsource-9/releases
    A console should open and you should see the model running.
 7. Outputs are saved in the output directory (specified in the control file).
 
-================================================================================================
+=========================================================================
 ## INPUT FILES - GENERAL INFORMATION
 
 1. Control and input files are ASCII comma delimited files.
-2. The heat source control file must be named HeatSource_Control.csv
+2. The heat source control file must be named `HeatSource_Control.csv`
 3. The other input files can be named whatever you want 
  (file names are specified in the control file).
 4. Do not change the key names in the control file. Only change 
@@ -77,9 +77,6 @@ https://github.com/rmichie/heatsource-9/releases
  and input files. Example mm/dd/yyyy hh:mm is 07/01/2001 16:00
 7. An input parameter value that is not applicable may be left blank although all values with float
 	data type will be assigned as zero.
-8. Tributary and meteorological data inputs can be organized into single input files or separated base on each model km input).
- In the control file, separate file names and site stream km with 
- commas wrapped in quotes.
 
 Key to model input information:
 Required:  Input value required
@@ -87,15 +84,23 @@ Required (Not Used):  Input value required but not used other than for model set
 Optional 1:  Input value optional (can be left blank)
 Optional 2:  Input value may be optional based on control file paramaterization
 
+```
+# write blank inputs
+inputs.setup(use_timestamp=False, overwrite=True)
+```
 
-================================================================================================
+=========================================================================
 ### CONTROL FILE  
 HeatSource_Control.csv
 
 The control file is where most of the model operation and initial parameterization is set.
 
-
+To write a blank template control file from script:
 ```
+from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import dtype
+
 control_file = 'HeatSource_Control.csv'
 model_dir = r'C://path/to/model_directory/'
 
@@ -103,8 +108,64 @@ model_dir = r'C://path/to/model_directory/'
 inputs = Inputs(model_dir, control_file)
 
 # Write a blank control file
-# Supoorts **kwargs. Any control file key arguments passed will be parameterized into the control file.
 inputs.parameterize_cf(overwrite=False)
+```
+
+
+You can also parameterize the control file directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
+```
+from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import dtype
+
+control_file = 'HeatSource_Control.csv'
+model_dir = r'C://path/to/model_directory/'
+
+# create an input object
+inputs = Inputs(model_dir, control_file)
+
+# Parameterize and write to csv
+inputs.parameterize_cf(overwrite=False,
+                       usertxt = "This model is an example model",
+                       name = "example model", 
+                       inputdir = model_dir + r"inputs/", 
+                       outputdir = model_dir + r"outputs/", 
+                       length = 1.8, 
+                       outputkm = "all", 
+                       datastart = "05/06/2003", 
+                       modelstart = "07/01/2003", 
+                       modelend = "07/14/2003", 
+                       dataend = "09/21/2003", 
+                       flushdays = 1, 
+                       offset = -7, 
+                       dt = 1, 
+                       dx = 30, 
+                       longsample = 50, 
+                       bcfile = "bc.csv", 
+                       inflowsites = 4, 
+                       inflowinfiles = "inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv", 
+                       inflowkm = "1.65, 1.5, 1.3, 0.85", 
+                       accretionfile = "accretion.csv", 
+                       metsites = 4, 
+                       metfiles = "met1.csv, met2.csv, met3.csv, met4.csv", 
+                       metkm = "1.75, 1.45, 1.10, 0.9", 
+                       calcevap = "False", 
+                       evapmethod = "Mass Transfer", 
+                       wind_a = 1.51E-09, 
+                       wind_b = 1.6E-09, 
+                       calcalluvium = "True", 
+                       alluviumtemp = 12.0, 
+                       morphfile = "morphology.csv", 
+                       lcdatafile = "lcdata.csv", 
+                       lccodefile = "lccodes.csv", 
+                       trans_count = 8, 
+                       transsample_count = 4, 
+                       transsample_distance = 8, 
+                       emergent = "True", 
+                       lcdatainput = "Codes", 
+                       canopy_data = "CanopyClosure", 
+                       lcsampmethod = "point", 
+                       heatsource8 = "False")
 ```
 
 Below are all the input parameters that must be included in the control file.
@@ -156,7 +217,7 @@ Separate tributary and climate file names and/or site stream km with
 |	40|Land Cover Sample Method (point/zone)|lcsampmethod|	|
 |	41|Use Heat Source 8 Land Cover Methods (True/False)|heatsource8|	|
 
-================================================================================================
+=========================================================================
 ### ACCRETION INPUT FILE  
 UserDefinedFileName.csv
 
@@ -181,7 +242,7 @@ in the mixing calculations
 |6|`OUTFLOW`|Withdrawal flow|cubic meters/second|float|Optional 1|Required|Required|
 
 
-================================================================================================
+=========================================================================
 ### BOUNDARY CONDITION FILE  
 UserDefinedFileName.csv
 
@@ -196,7 +257,7 @@ hourly timestep.
 |3|`TEMPERATURE`|Boundary condition temperature|degrees Celsius|float|Optional 1|Required|Required|
 
 
-================================================================================================
+=========================================================================
 ### METEOROLOGICAL INPUT FILE/S
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
@@ -226,7 +287,7 @@ the input stream km.
 |8|`RELATIVE_HUMIDITY2`|Relative Humidity at site 2|proportion|float|Optional 1|Optional 2|Optional 2|
 |9|`AIR_TEMPERATURE2`|Air Temperature at site 2|degrees Celsius|float|Optional 1|Optional 2|Optional 2|
 
-================================================================================================
+=========================================================================
 ### TRIBUTARY INPUT FILE/S  
 Can also be outflows. Use negative flows.  
 UserDefinedFileName.csv  
@@ -260,7 +321,7 @@ the input stream km.
 |4|`FLOW2`|Tributary 2 flow|cubic meters/second|float|Optional 1|Required|Required|
 |5|`TEMPERATURE2`|Tributary 2 Temperature|degrees Celsius|float|Optional 1|Required|Required|
 
-================================================================================================
+=========================================================================
 ### LANDCOVER CODES FILE  
 UserDefinedFileName.csv  
 
@@ -275,10 +336,10 @@ because the model routines see a blank row as the end of the data sequence.
 #### Canopy Type
 
 land cover canopy information can be input as either canopy closure or 
-effective leaf area index. This option is specified in the control file using ```canopy_type```.
+effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
 ##### Canopy Closure 
-Input file formatting when ```canopy_type = CanopyClosure``` in the control file.
+Input file formatting when ```canopy_data = "CanopyClosure"``` in the control file.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -290,7 +351,7 @@ Input file formatting when ```canopy_type = CanopyClosure``` in the control file
 
 
 ##### LAI
-Input file formatting when ```canopy_type = LAI``` in the control file.
+Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -300,7 +361,34 @@ Input file formatting when ```canopy_type = LAI``` in the control file.
 |4|`LAI`|Effective Leaf Area Index|dimensionless|float|Optional 2|Optional 2|Optional 2|
 |5|`k`|k extinction coefficient|dimensionless|float|Optional 2|Optional 2|Optional 2|
 
-================================================================================================
+The landcover codes file can be paramaterized from script.
+```
+from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import dtype
+
+control_file = 'HeatSource_Control.csv'
+model_dir = r'C://path/to/model_directory/'
+
+# create an input object
+inputs = Inputs(model_dir, control_file)
+
+# imports the control file into input object
+inputs.import_control_file()
+
+# Parameterize the lccodes input. Uses canopy closure data.
+lccodes = [('Active River Channel',100,0,0,0), 
+           ('Barren - Clearcut',127,0,0,0), 
+           ('Brush',128,1,0.4,0), 
+           ('Dominate Coniferous',133,32,0.7,1.5), 
+           ('Dominate Broadleaf (Riparian)',149,32,0.5,2), 
+           ('Dominate Broadleaf (Upland)',150,32,0.5,2), 
+           ('Road Unpaved',255,0,0,0)]
+
+inputs.parameterize_lccodes(lccodes, overwrite=True)
+```
+
+=========================================================================
 ### LANDCOVER DATA  
 (formally called TTools in heatsource 8)  
 UserDefinedFileName.csv  
@@ -328,7 +416,7 @@ If using values, the land cover attribute information for each transect sample i
 The land cover data input type is identified in the control file.
 
 ##### Codes
-When ```lcdatainput = Codes```, the following columns will be used after column 8:
+When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -336,7 +424,7 @@ When ```lcdatainput = Codes```, the following columns will be used after column 
 |multiple|`ELE_T_S`|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
 ##### Values
-If ```lcdatainput = Values```, and ```canopy_type = CanopyClosure``` the following columns will be used after column 8:
+If ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -345,7 +433,7 @@ If ```lcdatainput = Values```, and ```canopy_type = CanopyClosure``` the followi
 |multiple|`CAN_T_S`|Canopy closure on transect T for sample S|proportion (0-1)|float|Required|Required (Not Used)|Required|
 |multiple|`OH_T_S`|Overhang on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
-If ```lcdatainput = Values```, and ```canopy_type = LAI``` the following columns will be used after column 8:
+If ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -357,7 +445,7 @@ If ```lcdatainput = Values```, and ```canopy_type = LAI``` the following columns
 
 Note - the number of columns are dependent on the number of transects and samples specified information in the control file.
 
-================================================================================================
+=========================================================================
 ### MORPHOLOGY DATA FILE  
 UserDefinedFileName.csv  
 
@@ -380,7 +468,7 @@ Refer to the user manual for more information about each parameter.
 |12|`HYPORHEIC_PERCENT`|Percent Hyporheic Exchange|proportion (0-1)|float|Optional 1|Required|Required|
 |13|`POROSITY`|Porosity|proportion (0-1)|float|Optional 1|Required|Required|
 
-================================================================================================
+=========================================================================
 ## LICENSE
 
 GNU General Public License v3 (GPLv3)
@@ -400,7 +488,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-================================================================================================
+=========================================================================
 ## ROADMAP
 
 Roadmap for this version
