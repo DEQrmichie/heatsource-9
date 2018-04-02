@@ -38,7 +38,8 @@ Download
 navigate to setup.py and install  
 ```python setup.py install```
 
-Alternatively you can download compiled windows executables to run the model.
+*Windows Executables*
+You run the model on windows by installing the compiled windows executables. 
 Python installation is not required.
 
 https://github.com/rmichie/heatsource-9/releases
@@ -84,7 +85,7 @@ Required (Not Used):  Input value required but not used other than for model set
 Optional 1:  Input value optional (can be left blank)
 Optional 2:  Input value may be optional based on control file paramaterization
 
-```
+```python
 # write blank inputs
 inputs.setup(use_timestamp=False, overwrite=True)
 ```
@@ -96,7 +97,7 @@ HeatSource_Control.csv
 The control file is where most of the model operation and initial parameterization is set.
 
 To write a blank template control file from script:
-```
+```python
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
@@ -111,9 +112,8 @@ inputs = Inputs(model_dir, control_file)
 inputs.parameterize_cf(overwrite=False)
 ```
 
-
 You can also parameterize the control file directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
-```
+```python
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
@@ -169,10 +169,6 @@ inputs.parameterize_cf(overwrite=False,
 ```
 
 Below are all the input parameters that must be included in the control file.
-
-Separate tributary and climate file names and/or site stream km with 
- commas wrapped in quotes.
-```"inflow1.csv, inflow2.csv"```
 
 |LINE |PARAMETER                                          |KEY    |VALUE |
 |----:|:--------------------------------------------------|-------|----- |
@@ -236,7 +232,7 @@ in the mixing calculations
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
 |1|`STREAM_ID`|Stream ID|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|`NODE_ID`|Node ID|N/A|integer|Required|Required|Required|
-|3|`STREAM_KM`|Stream km|kilometers|float|Required Testing|Required|Required|
+|3|`STREAM_KM`|Stream km|kilometers|float|Required|Required|Required|
 |4|`INFLOW`|Accrection Inflow|cubic meters/second|float|Optional 1|Required|Required|
 |5|`TEMPERATURE`|Accrection Temperature|degrees Celsius|float|Optional 1|Required|Required|
 |6|`OUTFLOW`|Withdrawal flow|cubic meters/second|float|Optional 1|Required|Required|
@@ -255,7 +251,6 @@ hourly timestep.
 |1|`DATETIME`|The date/time|mm/dd/yyyy hh:mm|string|Optional 1|Required|Required|
 |2|`FLOW`|Boundary condition flow|cubic meters/second|float|Optional 1|Required|Required|
 |3|`TEMPERATURE`|Boundary condition temperature|degrees Celsius|float|Optional 1|Required|Required|
-
 
 =========================================================================
 ### METEOROLOGICAL INPUT FILE/S
@@ -362,7 +357,7 @@ Input file formatting when ```canopy_data = "LAI"``` in the control file.
 |5|`k`|k extinction coefficient|dimensionless|float|Optional 2|Optional 2|Optional 2|
 
 The landcover codes file can be paramaterized from script.
-```
+```python
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
@@ -424,7 +419,7 @@ When ```lcdatainput = "Codes"```, the following columns will be used after colum
 |multiple|`ELE_T_S`|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
 ##### Values
-If ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the following columns will be used after column 8:
+When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -433,7 +428,7 @@ If ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the fol
 |multiple|`CAN_T_S`|Canopy closure on transect T for sample S|proportion (0-1)|float|Required|Required (Not Used)|Required|
 |multiple|`OH_T_S`|Overhang on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
-If ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
+When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -443,7 +438,7 @@ If ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following col
 |multiple|`k_T_S`|k extinction coefficient on transect T for sample S|dimensionless|float|Required|Required (Not Used)|Required|
 |multiple|`OH_T_S`|Overhang on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
-Note - the number of columns are dependent on the number of transects and samples specified information in the control file.
+Note - the number of columns are dependent on the number of transects and samples specified in the control file.
 
 =========================================================================
 ### MORPHOLOGY DATA FILE  
