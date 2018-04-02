@@ -1,0 +1,9 @@
+HS9_py2/dist/**
+HS9_py2/build/**
+example_model/**
+parking_lot.py
+*.txt
+*.log
+*.exe
+*.pyc
+*.spec
