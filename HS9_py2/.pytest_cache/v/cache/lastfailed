@@ -1,0 +1,11 @@
+{
+  "heatsource9/Tests/test_pyheatsource.py::TestFlowCalcs": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestFlowCalcs::()::test_geom": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestFlowCalcs::()::test_q_new": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestMuskingum": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestMuskingum::()::test_C1": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestMuskingum::()::test_C2": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestMuskingum::()::test_C3": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestSolarPosition": true,
+  "heatsource9/Tests/test_pyheatsource.py::TestStreamGeometry": true
+}

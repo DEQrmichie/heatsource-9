@@ -247,7 +247,7 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
         msg = "Unstable timestep. Decrease dt or increase dx. \
         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
-        raise Exception()
+        raise Exception(msg)
 
     # These calculations are from Chow's "Applied Hydrology"
     D = K * (1 - X) + 0.5 * dt
