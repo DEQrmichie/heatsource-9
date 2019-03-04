@@ -246,8 +246,7 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
     if dt >= (2 * K * (1 - X)):
         # Unstable: Decrease dt or increase dx
         dt_stable = (2 * K * (1 - X)) / 60
-        msg = "Unstable timestep. Decrease dt or increase dx. \
-        dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
+        msg = "Unstable timestep. Decrease dt or increase dx. dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
         raise Exception(msg)
 

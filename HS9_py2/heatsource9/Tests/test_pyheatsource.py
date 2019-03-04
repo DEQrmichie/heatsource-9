@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Not implemented with Cython yet. Useful for testing individual functions within vanilla python"""
 
 from ..Stream.PyHeatsource \
     import CalcSolarPosition, GetStreamGeometry, CalcMuskingum, CalcFlows, \
