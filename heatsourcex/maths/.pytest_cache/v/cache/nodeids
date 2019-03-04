@@ -1,8 +1,0 @@
-[
-  "test_solar_calculator.py::test_radians",
-  "test_solar_calculator.py::test_degrees",
-  "test_solar_calculator.py::test_mean_obliquity",
-  "test_solar_calculator.py::test_obliquity",
-  "test_solar_calculator.py::test_eccentricity",
-  "test_solar_calculator.py::test_geo_mean_long_sun"
-]
