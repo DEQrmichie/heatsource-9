@@ -5,6 +5,11 @@ It is located here so be they can be accessed globally.
 """
 from collections import defaultdict
 
+try:
+  basestring
+except NameError:
+  basestring = str
+  
 # IniParms mostly holds the control file info.
 # A couple initial values are suggested to make life easy.
 IniParams = {"run_in_python": True,
@@ -57,6 +62,8 @@ IniParams = {"run_in_python": True,
 # bool type here are basestring in the input files and converted to bool 
 # upon import. See Inputs class validate() and import_control_file() 
 # for details.
+
+
 dtype = {"run_in_python": bool,
          "usertxt" : basestring,
          "name": basestring, 

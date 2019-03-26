@@ -460,8 +460,9 @@ class StreamNode(object):
                                             self.next_km.Mix_T_Delta)
 
     def CalcDispersion(self):
-        dx = self.dx
-        dt = self.dt
+        cdef double dx = self.dx
+        cdef double dt = self.dt
+        cdef double Shear_Velocity, Disp
         if not self.S:
             Shear_Velocity = self.U
         else:
@@ -471,51 +472,6 @@ class StreamNode(object):
             Disp = (0.45 * (dx ** 2)) / dt
         Disp = 0.1
         return Disp
-
-    def MacCormick_THW(self, time):
-        mix = self.MixItUp(bc_hour, self.prev_km.Q_prev,
-                           self.prev_km.T_prev) if self.Q else 0
-        T0 = self.prev_km.T_prev + mix
-        T1 = self.T_prev
-        T2 = self.next_km.T_prev if self.next_km else self.T_prev
-        Dummy1 = -self.U * (T1 - T0) / self.dx
-        Disp = self.CalcDispersion()
-        Dummy2 = Disp * (T2 - 2 * T1 + T0) / (self.dx ** 2)
-        S1 = Dummy1 + Dummy2 + self.Delta_T / self.dt
-        T = T1 + S1 * self.dt
-        return T, S1
-
-    def MacCormick_BoundaryNode(self, time):
-        if not args[12]: # We're running the first time if we have no S value.
-            self.T = self.T_bc[time]
-            self.T_prev = self.T_bc[time]
-        else:
-            pass
-
-    def MacCormick2_THW(self, time):
-        SkipNode = False
-        if self.prev_km:
-            if not SkipNode:
-                mix = self.MixItUp(time, self.prev_km.Q,
-                                   self.prev_km.T) if self.Q else 0
-                T0 = self.prev_km.T + mix
-                T1 = self.T
-                T2 = self.next_km.T if self.next_km else self.T
-                #======================================================
-                #Final MacCormick Finite Difference Calc.
-                #===================================================
-                Dummy1 = -self.U * (T1 - T0) / self.dx
-                Dummy2 = self.Disp * (T2 - 2 * T1 + T0) / (self.dx ** 2)
-                S2 = Dummy1 + Dummy2 + self.Delta_T / self.dt
-                T = self.T_prev + ((self.S1 + S2) / 2) * self.dt
-            else:
-                T = self.T_prev
-        else: T = self.T_prev
-        if T > 50 or T < 0:
-            msg = "Unstable model"
-            logger.error(msg)
-            raise Exception(msg)
-        return T
 
     def MixItUp(self, time, Q_up, T_up):
         Q_in = 0

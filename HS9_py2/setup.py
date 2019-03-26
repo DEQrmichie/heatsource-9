@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from distutils.core import setup, Extension
+from Cython.Build import cythonize
 from sys import version_info as vi
 
 DISTUTILS_DEBUG = True
@@ -43,4 +44,6 @@ setup(name='heatsource9',
                 'heatsource9.ModelSetup',
                 'heatsource9.Dieties',
                 'heatsource9.Stream',
-                'heatsource9.Utils'])
+                'heatsource9.Utils'],
+      ext_modules = cythonize("heatsource9/Stream/*.pyx")
+        )
