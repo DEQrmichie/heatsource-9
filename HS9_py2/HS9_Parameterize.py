@@ -11,7 +11,9 @@ options are to try to double click on this file and execute it
 using python.exe, or to open a command prompt and execute manually 
 by typing:  python -i path/to/this/script/HS9_Run_Parameterize.py
 """
+from __future__ import print_function
 
+from builtins import range
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
@@ -89,7 +91,7 @@ def parameterize_from_nodes_fc(input_file, nodes_fc,
 
     # build a list of the data to pass to parameterize()
     outlist = []
-    nodeIDs = nodeDict.keys()
+    nodeIDs = list(nodeDict.keys())
     nodeIDs.sort()
 
     if cont_stream_km:
@@ -98,7 +100,7 @@ def parameterize_from_nodes_fc(input_file, nodes_fc,
     for i, nodeID in enumerate(nodeIDs):
         row_list = []
         for header in headers:
-            if header in nodeDict[nodeID].keys():
+            if header in list(nodeDict[nodeID].keys()):
                 val = nodeDict[nodeID][header]
                 if cont_stream_km and header == "STREAM_KM":
                     row_list.append(kmlist[i])
@@ -136,7 +138,7 @@ def read_nodes_fc(nodes_fc, readfields, whereclause):
 
     with arcpy.da.SearchCursor(nodes_fc, incursorFields, whereclause, proj) as Inrows:
         for row in Inrows:
-            for f in xrange(0,len(readfields)):
+            for f in range(0,len(readfields)):
                 nodeDict[row[0]][readfields[f]] = row[1+f]
     return nodeDict
 

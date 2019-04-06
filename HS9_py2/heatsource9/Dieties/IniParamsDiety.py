@@ -3,6 +3,7 @@ IniParams holds regular dictionaries with information
 about the model initialization parameters and model inputs.
 It is located here so be they can be accessed globally.
 """
+from past.builtins import basestring
 from collections import defaultdict
 
 # IniParms mostly holds the control file info.

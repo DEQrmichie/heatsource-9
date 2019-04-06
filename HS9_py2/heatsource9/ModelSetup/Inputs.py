@@ -1,3 +1,11 @@
+from __future__ import division
+from builtins import next
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
+from past.utils import old_div
 import csv
 import platform
 from os import makedirs
@@ -97,8 +105,8 @@ class Inputs(object):
     def headers_met(self):
         """Returns a list of column headers for
         the met input file(s)."""
-        ncols = int((IniParams["metsites"] /
-                    len(IniParams["metfiles"].split(","))))
+        ncols = int((old_div(IniParams["metsites"],
+                    len(IniParams["metfiles"].split(",")))))
         header = ["DATETIME"]
         for n in range(1, ncols+1):
             header.append("CLOUDINESS"+str(n))
@@ -130,7 +138,7 @@ class Inputs(object):
         else:        
             tran = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
     
-        zone = range(1,int(IniParams["transsample_count"])+1)
+        zone = list(range(1,int(IniParams["transsample_count"])+1))
     
         # Concatenate the prefix, transect, and zone and order in the correct way
         for p in prefix:
@@ -171,8 +179,8 @@ class Inputs(object):
         the tributary inflow input file(s).
         """
         if IniParams["inflowsites"] > 0:
-            ncols = int(IniParams["inflowsites"] /
-                        len(IniParams["inflowinfiles"].split(",")))
+            ncols = int(old_div(IniParams["inflowsites"],
+                        len(IniParams["inflowinfiles"].split(","))))
             header = ["DATETIME"]
             for n in range(1, ncols+1):
                 header.append("FLOW"+str(n))
@@ -312,12 +320,12 @@ class Inputs(object):
                        "point"]
         else:
             # This is a setup call, None is ok for all of them
-            none_ok = IniParams.keys()
+            none_ok = list(IniParams.keys())
         
         # This is so the iteration happens in descending order
         # so some of the keys are parameterized earlier for the
         # none list. 
-        keys = cf_dict.keys()
+        keys = list(cf_dict.keys())
         keys.sort(reverse=True)
             
         for k in keys:
@@ -562,7 +570,7 @@ class Inputs(object):
     
     def dict2list(self, data, colnames, skiprows=0, skipcols=0):
         
-        d2 = zip(*[[k] + data[k] for k in colnames])
+        d2 = list(zip(*[[k] + data[k] for k in colnames]))
         
         # skiprows
         d3 = d2[-(len(d2)-skiprows):]
@@ -589,11 +597,11 @@ class Inputs(object):
         print_console(msg)
         cf_dict = self.control_file_dict()
         
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             cf_dict[k][3] = v
             
         # sort the list is in the order of the line number
-        cf_sorted = sorted(cf_dict.items(), key=itemgetter(1))
+        cf_sorted = sorted(list(cf_dict.items()), key=itemgetter(1))
         cf_list = [line[1] for line in cf_sorted]        
 
         self.write_to_output(self.model_dir, self.control_file,
@@ -706,11 +714,11 @@ class Inputs(object):
             # set the colnames as the dictionary key 
             reader.fieldnames = colnames
             # skip the header row
-            reader.next()
+            next(reader)
             # read a row as {column1: value1, column2: value2,...}
             for row in reader:
                 # go over each column name and value
-                for k, v in row.items():
+                for k, v in list(row.items()):
                     
                     # if the value is empty '' replace it with a None
                     if v.strip() in ['', None]:
@@ -857,7 +865,7 @@ class Inputs(object):
                                   morphlist, self.headers_morph())
 
         for file in metfiles:
-            metlist = [[t] + [None]*4*int((IniParams["metsites"]/len(metfiles))) for t in timelist]
+            metlist = [[t] + [None]*4*int((old_div(IniParams["metsites"],len(metfiles)))) for t in timelist]
             
             if use_timestamp:
                 met_filename = "input_"+timestamp+"_"+file.strip()
@@ -876,7 +884,7 @@ class Inputs(object):
 
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
-                inflowlist = [[t] + [None]*2*int((IniParams["inflowsites"]/len(tribfiles))) for t in timelist]
+                inflowlist = [[t] + [None]*2*int((old_div(IniParams["inflowsites"],len(tribfiles)))) for t in timelist]
                 
                 if use_timestamp:
                     trib_filename = "input_"+timestamp+"_"+file.strip()
@@ -903,7 +911,7 @@ class Inputs(object):
         """
         timelist = []
         # hourly timestep
-        timelist = range(IniParams["datastart"],IniParams["dataend"]+60,3600) 
+        timelist = list(range(IniParams["datastart"],IniParams["dataend"]+60,3600)) 
         for i, val in enumerate(timelist):
             timelist[i] = strftime("%m/%d/%Y %H:%M",gmtime(val))
         return timelist
@@ -919,9 +927,9 @@ class Inputs(object):
         # input value. Therefore we enforce a precision only up to the 
         # ten thousandths decimal place to make sure the number of nodes
         # is correct.        
-        num_nodes = int(ceil(round(IniParams["length"]*1000/(IniParams["longsample"]), 4))) +1
+        num_nodes = int(ceil(round(old_div(IniParams["length"]*1000,(IniParams["longsample"])), 4))) +1
         kmlist = []    
-        kmlist = [(float(node) * IniParams["longsample"])/1000 for node in range(0,num_nodes)]    
+        kmlist = [old_div((float(node) * IniParams["longsample"]),1000) for node in range(0,num_nodes)]    
         kmlist.sort(reverse=True)
         return kmlist
     
@@ -932,10 +940,10 @@ class Inputs(object):
         and None for string data types.
         """
         data_v = {}
-        for key, v in data.iteritems():
+        for key, v in list(data.items()):
             
             # tranlsate removes numbers from the key, e.g. TEMPERATURE2
-            if key.translate(None, digits) not in dtype.keys():
+            if key.translate(str.maketrans('','', digits)) not in list(dtype.keys()):
                 # This is to find the correct landcover data 
                 # key since they are all different
                 if "LC" in key:
@@ -945,7 +953,7 @@ class Inputs(object):
                     # float
                     k = "ELE"
             else:
-                k = key.translate(None, digits)
+                k = key.translate(str.maketrans('','', digits))
             
             # -- 
                     
@@ -960,7 +968,7 @@ class Inputs(object):
                 
             # --
                 
-            if (dtype[k] is not basestring and dtype[k] in iniRange.keys()):
+            if (dtype[k] is not basestring and dtype[k] in list(iniRange.keys())):
                 # check the value range
                 for val, i in enumerate(v):
                     if not iniRange[k][0] <= val <= iniRange[k][1]:

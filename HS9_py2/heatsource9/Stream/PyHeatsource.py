@@ -18,6 +18,7 @@
 flux and hydraulic calculations are made."""
 
 from __future__ import division, print_function
+from builtins import range
 from math import pow, sqrt, log, log10, exp, pi
 from math import atan, sin, cos, tan, acos, radians
 from random import randint
@@ -156,7 +157,7 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
         Azimuth_mod = Azimuth
     else:        
         Angle_Incr = 360.0 / radial_count
-        DirNumbers = range(1, radial_count+1)
+        DirNumbers = list(range(1, radial_count+1))
         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
         if Azimuth < AngleStart[0]:
             Azimuth_mod = Azimuth + 360
@@ -737,7 +738,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     T_in = 0
     T_up = T0
     numerator = 0
-    for i in xrange(len(Q_tup)):
+    for i in range(len(Q_tup)):
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         # make sure there's a value for discharge. Temp can be 
