@@ -15,6 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division, print_function
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 from math import sqrt
 from time import ctime
 import logging
@@ -24,7 +27,7 @@ from ..Dieties.ChronosDiety import Chronos
 from ..Dieties.IniParamsDiety import IniParams
 from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
-import PyHeatsource as py_HS
+from . import PyHeatsource as py_HS
 # import C_Heatsource as C_HS # TODO for the future
 
 _HS = None # Placeholder for heatsource module
@@ -91,7 +94,7 @@ class StreamNode(object):
         # Define members in __slots__ to ensure that later member names cannot be added accidentally
         # Set all the attributes to bare lists, or set from the constructor
         for attr in __slots:
-            x = kwargs[attr] if attr in kwargs.keys() else None
+            x = kwargs[attr] if attr in list(kwargs.keys()) else None
             setattr(self, attr, x)
         self.__slots = __slots
         self.__slots.sort()
@@ -520,7 +523,7 @@ class StreamNode(object):
     def MixItUp(self, time, Q_up, T_up):
         Q_in = 0
         T_in = 0
-        for i in xrange(len(self.Q_tribs[time])):
+        for i in range(len(self.Q_tribs[time])):
             Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
             T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
 

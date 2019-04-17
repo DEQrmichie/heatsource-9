@@ -15,6 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division, print_function
+from builtins import str
+from builtins import range
+from builtins import object
 from time import ctime
 from os.path import join
 from copy import deepcopy
@@ -29,7 +32,7 @@ class Output(object):
         # Store a sorted list of StreamNodes.
         
         if IniParams["outputkm"].lower() == "all":
-            self.nodes = sorted(reach.itervalues(),reverse=True)
+            self.nodes = sorted(iter(list(reach.values())),reverse=True)
         
         else:
             # specific outputkm
@@ -100,7 +103,7 @@ class Output(object):
 
         # Storage dictionary for the data.
         self.data = {}
-        for name in desc.keys():
+        for name in list(desc.keys()):
             self.data[name] = {}
         # make a deepcopy of the empty variables dictionary for use later
         self.empty_vars = deepcopy(self.data)
@@ -109,7 +112,7 @@ class Output(object):
 
         # Here we build up the self.files attribute by cycling through 
         # the filenames and descriptions
-        for key in desc.iterkeys():
+        for key in list(desc.keys()):
             # Build the header that will be stamped to each output file
             header = [["File Created:"] + [ctime()]]
             header += [["Heat Source Version:"] + [IniParams["version"]]]
@@ -125,10 +128,10 @@ class Output(object):
                 if IniParams["heatsource8"]:
                     # Same as 8 directions but no north
                     dir = ["NE","E","SE","S","SW","W","NW"]
-                    zone = range(1,int(IniParams["transsample_count"])+1)
+                    zone = list(range(1,int(IniParams["transsample_count"])+1))
                 else:
                     dir = ["T" + str(x) for x in range(1,IniParams["trans_count"]+ 1)]
-                    zone = range(1,int(IniParams["transsample_count"])+1)
+                    zone = list(range(1,int(IniParams["transsample_count"])+1))
                     
                     # TODO this is a future function to have a landcover 
                     # sample at the streamnode
@@ -149,7 +152,7 @@ class Output(object):
                            
             # Now create a file object in the dictionary, and write 
             # the header
-            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "wb"))
+            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "w"))
             self.files[key].writerows(header)
         
     def __call__(self, time, hour, minute=0, second=0):
@@ -247,7 +250,7 @@ class Output(object):
         # localize the data
         data = self.data
         # Cycle through the file objects
-        for name, fileobj in self.files.iteritems():
+        for name, fileobj in list(self.files.items()):
             # Each time is a single line, so we want to iterate over all 
             # the times stored so far. We can do this because everytime 
             # we store data, we append the time string to self.times

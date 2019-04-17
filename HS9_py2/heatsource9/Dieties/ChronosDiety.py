@@ -1,3 +1,4 @@
+from __future__ import division
 # Heat Source, Copyright (C) 2000-2016, 
 # Oregon Department of Environmental Quality
 
@@ -14,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import object
+from past.utils import old_div
 from time import ctime, gmtime
 
 class ChronosDiety(object):
@@ -119,7 +122,7 @@ class ChronosDiety(object):
     def CalcJulianCentury(self):
         # Then break out the time into a tuple
         y,m,d,H,M,S,day,wk,tz = gmtime(self.__current)
-        dec_day = d + (H + (M + S/60)/60)/24
+        dec_day = d + old_div((H + old_div((M + old_div(S,60)),60)),24)
 
         if m < 3:
             m += 12;
@@ -129,8 +132,8 @@ class ChronosDiety(object):
 
         # This value should only be added if we fall after a certain date
         if julian_day > 2299160.0:
-            a = int(y/100)
-            b = (2 - a + int(a/4))
+            a = int(old_div(y,100))
+            b = (2 - a + int(old_div(a,4)))
             julian_day += b
         #This is the julian century
         self.__jdc = round((julian_day-2451545.0)/36525.0,10) # Eqn. 2-5 in HS Manual
