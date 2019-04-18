@@ -1,6 +1,6 @@
 HS9_py2/dist/**
 HS9_py2/build/**
-example_model/**
+**example_model**
 parking_lot.py
 Inputs_xlsx.py
 *.txt
@@ -8,3 +8,4 @@ Inputs_xlsx.py
 *.exe
 *.pyc
 *.spec
+*.zip
