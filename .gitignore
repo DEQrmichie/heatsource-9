@@ -1,6 +1,6 @@
 HS9_py2/dist/**
 HS9_py2/build/**
-example_model/**
+**example_model**
 parking_lot.py
 Inputs_xlsx.py
 HS9_py2/bin
@@ -18,3 +18,4 @@ HS9_py2/HeatSource_Control.csv
 .Python
 **/.pytest_cache
 .python-version
+*.zip
