@@ -672,7 +672,7 @@ class ModelSetup(object):
         vheight = []
         vcanopy = []
         overhang = []
-        elevation = []        
+        elevation = []
         
         print_console("Translating landcover Data")
         if IniParams["canopy_data"] == "LAI":
@@ -712,7 +712,7 @@ class ModelSetup(object):
                 if i>6:
                     # There isn't a stream center elevation 
                     # (that is in the morphology file), so we don't want 
-                    # to read in first elevation value which s actually 
+                    # to read in first elevation value which is actually 
                     # the last LULC col.
                     
                     elevation.append(self.multiplier(elev, average))
@@ -724,16 +724,23 @@ class ModelSetup(object):
                 node = self.Reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count+1):
-                    for zone in xrange(transsample_count):
-                        node.lc_height[tran][zone] = vheight[n][i]
-                        node.lc_canopy[tran][zone] = vcanopy[n][i]
-                        node.lc_k[tran][zone] = k[n][i]
-                        node.lc_oh[tran][zone] = overhang[n][i]
-                        n = n + 1
-                        # 0 is emergent, there is only one value at zone = 0
-                        if tran == 0 and zone == 0:
+                    for s in xrange(transsample_count):
+                        node.lc_height[tran][s] = vheight[n][i]
+                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_k[tran][s] = k[n][i]
+                        node.lc_oh[tran][s] = overhang[n][i]
+                        
+                        # 0 is emergent, there is only one value at s = 0
+                        if tran == 0 and s == 0:
+                            # Relative vegetation height is same as veg height
+                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            n = n + 1
                             # go to the next tran 
-                            break            
+                            break
+                        else:
+                            # Vegetation height relative to the node, - 1 because there is no emergent elevation
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n-1][i] - node.elevation)
+                        n = n + 1
         else:
             # -------------------------------------------------------------
             # using canopy cover data
@@ -773,22 +780,28 @@ class ModelSetup(object):
                 
                 msg = "Translating Land Cover Data"
                 logger.info('{0} {1} {2}'.format(msg, i, radial_count*transsample_count+7))
-                print_console(msg, True, i, radial_count*transsample_count+7)                
+                print_console(msg, True, i, radial_count*transsample_count+7)
     
             for i in xrange(len(keys)):
                 node = self.Reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count+1):
-                    for zone in xrange(transsample_count):
-                        node.lc_height[tran][zone] = vheight[n][i]
-                        node.lc_canopy[tran][zone] = vcanopy[n][i]
-                        node.lc_oh[tran][zone] = overhang[n][i]
-                        n = n + 1
+                    for s in xrange(transsample_count):
+                        node.lc_height[tran][s] = vheight[n][i]
+                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_oh[tran][s] = overhang[n][i]
                         
-                        # 0 is emergent, there is only one value at zone = 0
-                        if tran == 0 and zone == 0:
+                        # 0 is emergent, there is only one value at s = 0
+                        if tran == 0 and s == 0:
+                            # Relative vegetation height is same as veg height
+                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            n = n + 1
                             # go to the next tran 
-                            break          
+                            break
+                        else:
+                            # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n-1][i] - node.elevation)
+                        n = n + 1
 
         # Average over the topo values
         # topo_ne = self.multiplier([float(LCdata[row][3]) for row in range(0, len(LCdata))], average)
@@ -853,18 +866,21 @@ class ModelSetup(object):
 
             # Iterate through each transect direction            
             for i in xrange(radial_count):
-                
-                # lowest angle necessary for full sun
+                                
+                # The minimum sun angle needed for full sun
                 T_Full = ()
                 
-                # Highest angle necessary for full shade
+                # The angle with longest path length in each veg zone
+                T_Path = ()
+                
+                # Highest angle necessary for full shade in each veg zone
                 T_None = ()
                 
                 # Numerator for the weighted Veg density calculation
                 W_Vdens_num = 0.0
                 
                 # Denominator for the weighted Veg density calculation
-                W_Vdens_dem = 0.0  
+                W_Vdens_dem = 0.0
 
                 # Iterate through each of the zones
                 for s in xrange(transsample_count): 
@@ -880,6 +896,7 @@ class ModelSetup(object):
                     else:
                         # No overhang away from the stream
                         Voverhang = 0 
+                        
                     ####################################################
                     # Calculate the relative ground elevation. This is 
                     # the vertical distance from the stream surface to 
@@ -898,32 +915,27 @@ class ModelSetup(object):
                     else:
                         adjust = 0.0
 
-                    # TODO this is a future function where there is a 
-                    # landcover sample at the stream node   
-                    if IniParams["heatsource8"]:
-                        adjust2 = 1
-                    else:
-                        # if adjust2 = 0 there is a landcover sample 
-                        # at the stream node 
-                        adjust2 = 1
-
-                    LC_Distance = IniParams["transsample_distance"] * (s + adjust2 - adjust)
+                    LC_Distance1 = IniParams["transsample_distance"] * (s + 1 - adjust)
+                    LC_Distance2 = IniParams["transsample_distance"] * (s + 2 - adjust)
+                    
                     # We shift closer to the stream by the amount of overhang
-                    # This is a rather ugly cludge.
-                    if not s: LC_Distance -= Voverhang
-                    if LC_Distance <= 0:
-                        LC_Distance = 0.00001
+                    if not s: LC_Distance1 -= Voverhang
+                    if LC_Distance1 <= 0:
+                        LC_Distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     # It gets added to a tuple of full sun values
-                    T_Full += degrees(atan(VH/LC_Distance)), 
+                    T_Full += degrees(atan(VH/LC_Distance1)),
+                    
+                    # Calculate angle with longest path length. This is used in the solar flux calcs
+                    T_Path += degrees(atan(VH/LC_Distance2)),
 
                     # Now get the maximum of bank shade and topographic 
                     # shade for this transect direction.
                     # likewise, a tuple of values
-                    T_None += degrees(atan(SH/LC_Distance)), 
+                    T_None += degrees(atan(SH/LC_Distance1)),
 
                     # Calculate View To Sky
-                    veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
+                    veg_angle = degrees(atan(VH/LC_Distance1)) - degrees(atan(SH/LC_Distance1))
                     if IniParams["canopy_data"] == "LAI":
                         # use LAI data
                         Vk = k[i*transsample_count+s+1][h]
@@ -953,7 +965,7 @@ class ModelSetup(object):
                         else:
                             Vdens_mod = 1.0
                         VTS_Total += max(T_Full)*Vdens_mod # Add angle at end of each zone calculation
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full),
+                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full, T_Path),
             node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
 
     def BuildZones_w_Values(self):
@@ -961,7 +973,7 @@ class ModelSetup(object):
         vegetation data instead of codes"""
 
         # Pull the LULC Data
-        LCdata = self.inputs.import_lcdata(return_list=True)   
+        LCdata = self.inputs.import_lcdata(return_list=True)
         
         average = lambda x:sum(x)/len(x)
         transsample_count = IniParams["transsample_count"]
@@ -1015,16 +1027,23 @@ class ModelSetup(object):
                 node = self.Reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count+1):
-                    for zone in xrange(transsample_count):
-                        node.lc_height[tran][zone] = vheight[n][i]
-                        node.lc_canopy[tran][zone] = vcanopy[n][i]
-                        node.lc_k[tran][zone] = k[n][i]
-                        node.lc_oh[tran][zone] = overhang[n][i]
-                        n = n + 1
+                    for s in xrange(transsample_count):
+                        node.lc_height[tran][s] = vheight[n][i]
+                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_k[tran][s] = k[n][i]
+                        node.lc_oh[tran][s] = overhang[n][i]
                         
-                        # 0 is emergent, there is only one value at zone = 0
-                        if tran == 0 and zone == 0:
-                            break # go to the next tran            
+                        # 0 is emergent, there is only one value at s = 0
+                        if tran == 0 and s == 0:
+                            # Relative vegetation height is same as veg height
+                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            n = n + 1
+                            # go to the next tran 
+                            break
+                        else:
+                            # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n-1][i] - node.elevation)
+                        n = n + 1
         
         else:
             # -------------------------------------------------------------
@@ -1063,13 +1082,23 @@ class ModelSetup(object):
                 node = self.Reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count+1):
-                    for zone in xrange(transsample_count):
-                        node.lc_height[tran][zone] = vheight[n][i]
-                        node.lc_canopy[tran][zone] = vcanopy[n][i]
-                        node.lc_oh[tran][zone] = overhang[n][i]
+                    for s in xrange(transsample_count):
+                        node.lc_height[tran][s] = vheight[n][i]
+                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_k[tran][s] = k[n][i]
+                        node.lc_oh[tran][s] = overhang[n][i]
+                        
+                        # 0 is emergent, there is only one value at s = 0
+                        if tran == 0 and s == 0:
+                            # Relative vegetation height is same as veg height
+                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            n = n + 1
+                            # go to the next tran 
+                            break
+                        else:
+                            # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n-1][i] - node.elevation)
                         n = n + 1
-                        if tran == 0 and zone == 0: # 0 is emergent, there is only one value at zone = 0
-                            break # go to the next tran            
 
         # Average over the topo values
         # topo_ne = self.multiplier([float(LCdata[row][3]) for row in range(0, len(LCdata))], average)
@@ -1121,17 +1150,27 @@ class ModelSetup(object):
             # if that is true.
 
             for i in xrange(radial_count): # Iterate through each transect direction
-                T_Full = () # lowest angle necessary for full sun
-                T_None = () # Highest angle necessary for full shade
-                W_Vdens_num = 0.0  #Numerator for the weighted Veg density calculation
-                W_Vdens_dem = 0.0  #Denominator for the weighted Veg density calculation
+                # The minimum sun angle needed for full sun
+                T_Full = ()
+                
+                # The angle with longest path length in each veg zone
+                T_Path = ()
+                
+                # Highest angle necessary for full shade in each veg zone
+                T_None = ()
+                
+                # Numerator for the weighted Veg density calculation
+                W_Vdens_num = 0.0
+                
+                # Denominator for the weighted Veg density calculation
+                W_Vdens_dem = 0.0
 
                 for s in xrange(transsample_count): # Iterate through each of the zones
                     Vheight = vheight[i*transsample_count+s+1][h]
                     if Vheight < 0 or Vheight is None or Vheight > 120:
                         raise Exception("Vegetation height (value of %s in Land Cover Data) must be greater than zero and less than 120 meters" % Vheight)
-                    Vcan = vcanopy[i*transsample_count+s+1][h] 
-                    Voverhang = overhang[i*transsample_count+s+1][h] 
+                    Vcan = vcanopy[i*transsample_count+s+1][h]
+                    Voverhang = overhang[i*transsample_count+s+1][h]
                     Elev = elevation[i*transsample_count+s][h]
                     
                     if not s: # We are at the stream edge, so start over
@@ -1155,20 +1194,25 @@ class ModelSetup(object):
                         adjust = 0.5
                     else:
                         adjust = 0.0
-                    LC_Distance = IniParams["transsample_distance"] * (s + 1 - adjust) #This is "+ 1" because s starts at 0
+                    LC_Distance1 = IniParams["transsample_distance"] * (s + 1 - adjust) #This is "+ 1" because s starts at 0
+                    LC_Distance2 = IniParams["transsample_distance"] * (s + 2 - adjust) #This is "+ 2" because we want to get to the farthest end of the zone
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
-                    if not s: LC_Distance -= Voverhang
-                    if LC_Distance <= 0:
-                        LC_Distance = 0.00001
+                    if not s: LC_Distance1 -= Voverhang
+                    if LC_Distance1 <= 0:
+                        LC_Distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
-                    T_Full += degrees(atan(VH/LC_Distance)), # It gets added to a tuple of full sun values
+                    T_Full += degrees(atan(VH/LC_Distance1)), # It gets added to a tuple of full sun values
+                    
+                    # Calculate angle with longest path length. This is used in the solar flux calcs
+                    T_Path += degrees(atan(VH/LC_Distance2)),
+                    
                     # Now get the maximum of bank shade and topographic shade for this
                     # transect direction
-                    T_None += degrees(atan(SH/LC_Distance)), # likewise, a tuple of values
+                    T_None += degrees(atan(SH/LC_Distance1)), # likewise, a tuple of values
 
                     # Calculate View To Sky
-                    veg_angle = degrees(atan(VH/LC_Distance)) - degrees(atan(SH/LC_Distance))
+                    veg_angle = degrees(atan(VH/LC_Distance1)) - degrees(atan(SH/LC_Distance1))
                     if IniParams["canopy_data"] == "LAI":
                         # use LAI data
                         
@@ -1200,7 +1244,7 @@ class ModelSetup(object):
                         else:
                             Vdens_mod = 1.0
                         VTS_Total += max(T_Full)*Vdens_mod # Add angle at end of each zone calculation
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full),
+                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full, T_Path),
             node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
 
     def GetLandCoverCodes(self):
