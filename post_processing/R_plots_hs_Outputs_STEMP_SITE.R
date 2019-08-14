@@ -4,12 +4,14 @@
 # Ryan Michie
 #---------------------------------------------------------------------------------------
 
-require(reshape2)
-require(ggplot2)
-require(hydroGOF)
-require(plyr)
+library(ggplot2)
+library(dplyr)
+library(hydroGOF)
 
 sim_name <- "Yach_s1_2"
+
+sim_file <- "Temp_H2O"
+obs_file <- "ObservedData.csv"
 
 out_dir <-"F:/WorkSpace/Mid_Coast/Heat_Source/Yachats/sim_01_CCC/s1_2/outputs/"
 sim_dir <- "F:/WorkSpace/Mid_Coast/Heat_Source/Yachats/sim_01_CCC/s1_2/outputs/"
@@ -20,27 +22,35 @@ source(paste0(fun_dir,"/","R_functions_hs_read_and_format.R"))
 
 setwd(out_dir)
 
-sim.hour <- read.hs.outputs(output_dir=out_dir, file_name="Temp_H2O", 
-                       constituent_name="Hourly Stream Temperature", 
-                       sim_name=sim_name, hs8=FALSE)
+sim.hour <- read.hs.outputs(output_dir=sim_dir, file_name="Temp_H2O", 
+                            constituent_name="Temperature (deg-C)",
+                            statistic_name="hourly",
+                            sim_name=sim_name, hs_ver=9, sheet_name = NULL)
 
 sim.7dadm <- calc.7dadm(sim.hour)
 
-obs.raw <- read.obs(obs_dir=obs_dir, file_name="ObservedData.csv")
+obs.raw <- read.obs(obs_dir=obs_dir, file_name=obs_file)
 
-obs <- obs.raw[obs.raw$ConstituentCode == "STEMPH",]
+obs <- obs.raw[obs.raw$constituentCode == "STEMPH",]
 
 obs$hour <-as.integer(format(obs$Datetime, "%H"))
 
 # Drop these cols
-obs$Notes <- NULL
-obs$ConstituentCode <- NULL
-obs$SiteName <-NULL
+#obs$notes <- NULL
+#obs$constituentCode <- NULL
+#obs$siteName <-NULL
 
 # data frame of obkm and simkm with site name
 km <- obs2simkm(obs_dir=obs_dir, file_name="ObservedData.csv", 
-                ConstituentCode="STEMPH",
+                constituentCode="STEMPH",
                 simkm=as.numeric(unique(sim.hour$Stream_km)))
+
+# Drop these cols
+obs$notes <- NULL
+obs$constituentCode <- NULL
+obs$constituent <- NULL
+obs$statistic <- NULL
+obs$siteName <-NULL
 
 obs <- merge(km,obs,by.x="obs.km",by.y="Stream_km")
 
@@ -48,11 +58,9 @@ obs$Stream_km <- obs$sim.km
 obs$obs.km <- NULL
 obs$sim.km <- NULL
 
-obs.wide  <- reshape(obs, timevar= "Datetime", idvar = c("Stream_km","SiteName"), 
-                     direction="wide", drop = c("Date","value","hour", "Constituent"))
-
-# Only use observed data for the same time period as the model output
-obs <- obs[obs$Datetime >= min(sim.hour$Datetime) & obs$Datetime <= max(sim.hour$Datetime),]
+obs.wide  <- obs.wide <- obs %>%
+  dplyr::select(Stream_km, siteName) %>%
+  dplyr::distinct()
 
 # calc 7DADM
 obs$sim <- "Observations"
@@ -61,10 +69,12 @@ obs.7dadm <- calc.7dadm(df=obs)
 # Only use observed data for the same time period as the model output
 obs <- obs[obs$Datetime >= min(sim.hour$Datetime) & obs$Datetime <= max(sim.hour$Datetime),]
 
-obs$SiteName <- NULL
+obs$siteName <- NULL
 obs$Constituent <- NULL
 
+sim.hour$statistic <- NULL
 sim.hour$constituent <- NULL
+sim.7dadm$constituent <- NULL
 
 sim.hour$sim <-"Predictions"
 sim.7dadm$sim <- "Predictions"
@@ -82,6 +92,8 @@ sim.7dadm$Date <- as.POSIXct(sim.7dadm$Date,format="%m/%d/%Y")
 df.hour <- merge(sim.hour,obs, by=c("Date","Stream_km", "hour"))
 
 # set y axis plot limits
+round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
+
 ymin <- round_any(min(sim.hour$value, obs$value, na.rm=TRUE), 5, floor)
 ymax <- round_any(max(sim.hour$value, obs$value, na.rm=TRUE), 5, ceiling)
 
@@ -105,7 +117,7 @@ for(i in 1:length(obs.km)) {
   obs.wide$hourly_n[i] <- nrow(na.omit(df.stats[,c("value.x","value.y")]))
 
   p1 <- ggplot(data=df.i, aes(x=Datetime, y=value, size=sim, 
-                                linetype=sim, colour=sim)) +
+                              linetype=sim, colour=sim)) +
     geom_line() +
     scale_color_manual(values=c("black", "red")) +
     scale_size_manual(values=c(1, 0.5)) +
@@ -131,18 +143,18 @@ for(i in 1:length(obs.km)) {
 #---------------------------------------------------------------------------------------
 # PLOT 7DADM SIMULATED VS. OBSERVED TEMPERATURES 
 
-df.7dadm <- merge(sim.7dadm, obs.7dadm, by=c("Date","Stream_km","constituent"))
+df.7dadm <- merge(sim.7dadm, obs.7dadm, by=c("Date","Stream_km","statistic"))
 
-i <- 12
+i <- 2
 
 for(i in 1:length(obs.km)) {
 
   # The actual model stream kilometer
   skm <- obs.km[i]
   
-  obs.i <- obs.7dadm[obs.7dadm$Stream_km == skm & obs.7dadm$constituent== "7DADM Temperature",]
-  sim.i <- sim.7dadm[sim.7dadm$Stream_km == skm & sim.7dadm$constituent== "7DADM Temperature",] 
-  df.stats <- df.7dadm[df.7dadm$Stream_km == skm & df.7dadm$constituent== "7DADM Temperature",] 
+  obs.i <- obs.7dadm[obs.7dadm$Stream_km == skm & obs.7dadm$statistic== "7DADM Temperature",]
+  sim.i <- sim.7dadm[sim.7dadm$Stream_km == skm & sim.7dadm$statistic== "7DADM Temperature",] 
+  df.stats <- df.7dadm[df.7dadm$Stream_km == skm & df.7dadm$statistic== "7DADM Temperature",] 
 
   df.i <- rbind(obs.i,sim.i)
 
