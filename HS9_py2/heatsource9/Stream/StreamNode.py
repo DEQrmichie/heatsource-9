@@ -36,6 +36,7 @@ class StreamNode(object):
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
                 "lc_height", "lc_canopy", "lc_oh","lc_lai", "lc_k", # Land cover params
+                "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
@@ -116,6 +117,7 @@ class StreamNode(object):
         else:
             radial_count = IniParams["trans_count"]
         self.lc_height = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_height_rel = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_canopy = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
@@ -167,7 +169,7 @@ class StreamNode(object):
         self.CalcDischarge = self.CalculateDischarge
         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
                        self.ViewToSky, self.phi, self.lc_canopy,
-                       self.lc_height, self.lc_k, self.SedDepth,
+                       self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
                        self.dx, self.dt, self.SedThermCond,
                        self.SedThermDiff, self.Q_in, self.T_in,
                        has_prev, IniParams["transsample_distance"],
