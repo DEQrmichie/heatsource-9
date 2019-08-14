@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b22 (beta 22)
+Current Version: heatsource 9.0.0b23 (beta 23)
 
 =========================================================================
 ## ABOUT 
@@ -39,7 +39,7 @@ navigate to setup.py and install
 ```python setup.py install```
 
 *Windows Executables*
-You run the model on windows by installing the compiled windows executables. 
+You can run the model on windows by using the compiled windows executables. 
 Python installation is not required.
 
 https://github.com/rmichie/heatsource-9/releases
@@ -54,8 +54,8 @@ https://github.com/rmichie/heatsource-9/releases
    The control file must be named HeatSource_Control.csv
 3. Use HS9_Setup_Model_Inputs.py to build template input files (they will
    be saved to your input file directory that is specified in the control file).
-5. Edit the template csv files with your input data. You can use excel. 
- Save it as a csv.
+5. Edit the template csv files with your input data. You can use excel although 
+   make sure the datetimes are formatted correctly. Save the files as a csv.
 6. Run the model by executing one of the following model run scripts or executables:
    HS9_Run_Hydraulics_Only,
    HS9_Run_Solar_Only,
@@ -163,7 +163,7 @@ inputs.parameterize_cf(overwrite=False,
                        transsample_distance = 8, 
                        emergent = "True", 
                        lcdatainput = "Codes", 
-                       canopy_data = "CanopyClosure", 
+                       canopy_data = "CanopyCover", 
                        lcsampmethod = "point", 
                        heatsource8 = "False")
 ```
