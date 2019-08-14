@@ -341,7 +341,7 @@ Input file formatting when ```canopy_data = "CanopyClosure"``` in the control fi
 |1|`NAME`|Land cover Name|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|`CODE`|Land cover code|N/A|string|Required|Required (Not Used)|Required|
 |3|`HEIGHT`|Land cover height|meters|float|Required|Required (Not Used)|Required|
-|4|`CANOPY`|Canopy closure|proportion (0-1)|float|Optional 2|Optional 2|Optional 2|
+|4|`CANOPY`|Canopy cover|proportion (0-1)|float|Optional 2|Optional 2|Optional 2|
 |5|`OVERHANG`|Overhang|meters|float|Required|Required (Not Used)|Required|
 
 
