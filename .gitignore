@@ -3,6 +3,7 @@ HS9_py2/build/**
 **example_model**
 parking_lot.py
 Inputs_xlsx.py
+solar_trig_math/**
 *.txt
 *.log
 *.exe
