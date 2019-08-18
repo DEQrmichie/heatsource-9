@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2016, 
+# Heat Source, Copyright (C) 2000-2019, 
 # Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
@@ -986,9 +986,9 @@ class ModelSetup(object):
         vheight = []
         vcanopy = []
         overhang = []
-        elevation = []        
+        elevation = []
         
-        print_console("Translating Land Cover Data")       
+        print_console("Translating Land Cover Data")
         if IniParams["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
@@ -1047,7 +1047,7 @@ class ModelSetup(object):
         
         else:
             # -------------------------------------------------------------
-            # using canopy cover data            
+            # using canopy cover data
             
             for i in xrange(6, shiftcol+7): # For each column of LULC data                      
                 heightcol = [float(LCdata[row][i]) for row in range(0, len(LCdata))]
@@ -1085,7 +1085,6 @@ class ModelSetup(object):
                     for s in xrange(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
-                        node.lc_k[tran][s] = k[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
                         
                         # 0 is emergent, there is only one value at s = 0
