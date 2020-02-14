@@ -2,7 +2,7 @@
 
 :: This script builds heat source exectubles for windows 
 :: Requires pyinstaller
-python setup.py build_ext --inplace
+C:\Python27\python.exe setup.py build_ext --inplace
 
 pyinstaller -F HS9_Run_Hydraulics_Only.py
 pyinstaller -F HS9_Run_Solar_Only.py
