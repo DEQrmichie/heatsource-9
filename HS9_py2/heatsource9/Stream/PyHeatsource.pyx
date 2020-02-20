@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2016, 
+# Heat Source, Copyright (C) 2000-2019, 
 # Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
@@ -277,10 +277,10 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
 
 def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, phi, emergent, lc_canopy, lc_height, lc_k,
+                 BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
                  ShaderList, tran, heatsource8):
     """ """
-    FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle = ShaderList
+    FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
     F_Solar = [0]*8
@@ -331,6 +331,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
+    PLz =[0]*transsample_count
     
     if Altitude <= TopoShadeAngle:
         # Topographic shade is occurring
@@ -351,75 +352,59 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         
         # 3 - Below Landcover (Above Bank Shade & Emergent)
         Dummy1 = F_Direct[2]
-        
-        zone = transsample_count - 1
-        
-        # zonal sun path length
-        PLz = transsample_distance / cos(radians(Altitude))
-        
-        if heatsource8:
-            #---------  Boyd and Kasper 2007
-            PL = 10
-        else:
-            #--------- (Norman and Welles 1983)
-            # here the extinction coefficient 
-            # represents the foliage density * k
-            # Calculate the path length as the total sun vector distance
-            # through all the canopy zones
-            # start with zero
-            PL = 0
-        
-            for z in range(transsample_count): 
-                if Altitude < VegetationAngle[z]:
-                    # sun vector is passing through the canopy
-                    PL += PLz
-            
-            # Just testing hs8 methods
-            #PL = 10
-        
+
         # Now calculate the fraction of radiation passed through the canopy
-        while zone >= 0:
-            if Altitude >= VegetationAngle[zone]:
+        s = transsample_count - 1
+        
+        while s >= 0:
+            if Altitude >= VegetationAngle1[s]:
                 # no shading
                 fraction_passed = 1
             else:
-                # shading is occurring from this zone
-                if BeersData == "LAI":
-                    # use LAI data
-                    # k as an input
-                    RipExtinction = lc_k[tran][zone]
-                    
-                    # Assumption here is that LAI is for the whole canopy.
-                    # Since we are calculating the fraction passed for a 
-                    # portion of the canopy (zone) I take the approach 
-                    # described by Norman and Welles 1983.
-                    # Use total path length to calculate foliage 
-                    # density, then calculate fraction passed for the 
-                    # zonal path length.
-                    fraction_passed = exp(-1 *
-                                          RipExtinction *
-                                          (lc_canopy[tran][zone] / PL) *
-                                          PLz)
+                
+                # First calculate path length through the canopy sample 
+                if Altitude <= VegetationAngle2[s]:
+                    # solar incoming from the side of the canopy
+                    PLz = transsample_distance / cos(radians(Altitude))
                 else:
-                    # Use canopy closure to calculate 
+                    # solar incoming from top of the canopy (not from the side)
+                    PLz = (lc_height_rel[tran][s] - (tan(radians(Altitude)) * (transsample_distance*s))) / sin(radians(Altitude))
+                
+                # shading is occurring from this sample
+                if BeersData == "LAI":
+                    
+                    # use LAI and k to calculate the riparian extinction value
+                    RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
+                    fraction_passed = exp(-1 * RipExtinction * PLz)
+                    
+                else:
+                    # Use canopy cover to calculate 
                     # the riparian extinction value
+                    if heatsource8:
+                        #---------  Boyd and Kasper 2007 
+                        # from original heat source model
+                        PL = 10
+                    else:
+                        #--------- Norman and Welles 1983, Chen et al 1998
+                        PL = lc_height[tran][s]
+                    
                     try:
-                        RipExtinction = -log(1- lc_canopy[tran][zone])/ PL
+                        RipExtinction = -log(1- lc_canopy[tran][s]) / PL
                         fraction_passed = exp(-1* RipExtinction * PLz)
                     except:
-                        if lc_canopy[tran][zone] >= 1:
-                            # can't take log of zero
+                        if (lc_canopy[tran][s] >= 1 or PL <= 0):
+                            # can't take log or divide by zero
                             fraction_passed = 0
                         else:
                             # some other error
-                            msg="Unknown error when calculating riparian extinction value. transect={0} zone={1} canopy={2} PL={3} ".format(tran,zone,lc_canopy[tran][zone],PL)
+                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
                             logger.error(msg)
                             print_console(msg)
                             raise
                         
-            Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
+            Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
-            zone -= 1
+            s -= 1
         F_Direct[3] = Dummy1
         
     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
@@ -441,39 +426,47 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
 
     if emergent:
         # Account for emergent vegetation
-        if (lc_height[0][0] <= 0) or (lc_canopy[0][0] == 0):
+        if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):
             # Set to one if no veg or no canopy
             fraction_passed = 1
-        
+    
         else:
+            # sun vector is passing through the canopy
+            
             if heatsource8:
                 #---------  Boyd and Kasper 2007
                 PLe = 10
             else:
                 #--------- (Norman and Welles 1983)
                 # PLe is the path length of the sun vector through 
-                # the vegetation in the emergent zone
-                PLe =  lc_height[0][0] / sin(radians(Altitude))
+                # the vegetation in the emergent sample
+        
+                # The emergent zone can't be wider than half the 
+                # wetted width. if this is a solar only run the wetted 
+                # width is not calculated so W_b = 0. The sample zone 
+                # width is used instead.
+                if W_b == 0: 
+                    emergent_distance = transsample_distance 
+                else:
+                    emergent_distance = W_b * 0.5
                 
-                # PLe can't be longer than the wetted width.
-                # this happens when altitude is lower than height of veg.
-                # if this is a solar only run the wetted width is not 
-                # calculated so W_b = 0. The zone width is used instead.
-                if W_b == 0: W_b = transsample_distance
-                if PLe >  W_b: PLe = W_b
-
+                if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):
+                    PLe = emergent_distance / cos(radians(Altitude))
+                else:
+                    PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
+                
             if BeersData == "LAI":
-                # use LAI data
-                # k as an input
-                RipExtinction = lc_k[0][0]
-                fraction_passed = exp(-1* lc_canopy[0][0] * RipExtinction * PLe)
+                # use LAI and k to calculate the riparian extinction value
+                RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]
+                fraction_passed = exp(-1 * RipExtinction * PLe)
                 
             else:
                 try:
-                    # Use canopy closure to calculate 
+                    # Use canopy cover to calculate 
                     # the riparian extinction value
-                    RipExtinction = -log(1- lc_canopy[0][0]) / PLe
+                    RipExtinction = -log(1- lc_canopy[0][0]) / lc_height[0][0]
                     fraction_passed = exp(-1* RipExtinction * PLe)
+                    
                 except:
                     if lc_canopy[0][0] >= 1:
                         # can't take log of zero
@@ -487,7 +480,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 
         F_Direct[4] = F_Direct[4] * fraction_passed
         F_Diffuse[4] = F_Diffuse[4] * fraction_passed
-
+        
     #=========================================================
     # 5 - Entering Stream
     if Zenith > 80:
@@ -802,7 +795,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     cloud, wind, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
-        lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
+        lc_height_rel, lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, T_alluv = C_args
@@ -823,7 +816,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                                         transsample_distance,
                                         transsample_count,
                                         BeersData, phi, emergent,
-                                        lc_canopy, lc_height,
+                                        lc_canopy, lc_height, lc_height_rel,
                                         lc_k, ShaderList, tran,
                                         heatsource8)
 

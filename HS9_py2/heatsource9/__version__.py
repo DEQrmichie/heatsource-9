@@ -39,6 +39,6 @@ major = 9
 minor = 0
 micro = 0
 prerel = 'b'
-prerelversion = '23'
+prerelversion = '24'
 version_info = (major,minor,micro,prerel,prerelversion)
 version_string = "%s.%s.%s%s%s" % version_info

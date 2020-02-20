@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2016, 
+# Heat Source, Copyright (C) 2000-2019, 
 # Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ class ModelControl(object):
         
         msg = ("\n")
         
-        msg += ("Heat Source, Copyright (C) 2000-2016, "
+        msg += ("Heat Source, Copyright (C) 2000-2019, "
                 "Oregon Department of Environmental Quality\n\n"
                 "This program comes with ABSOLUTELY NO WARRANTY. "
                 "Appropriate model \n"

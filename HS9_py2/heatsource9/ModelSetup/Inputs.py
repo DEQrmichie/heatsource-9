@@ -461,7 +461,7 @@ class Inputs(object):
                    "transsample_distance": [36, "Distance Between Transect Samples (meters)", "transsample_distance", None],
                    "emergent": [37, "Account For Emergent Veg Shading (True/False)", "emergent", None],
                    "lcdatainput": [38, "Land Cover Data Input Type (Codes/Values)", "lcdatainput", None],
-                   "canopy_data": [39, "Canopy Data Type (LAI/CanopyClosure)", "canopy_data", None],
+                   "canopy_data": [39, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
                    "lcsampmethod": [40, "Land Cover Sample Method (point/zone)", "lcsampmethod", None],
                    "heatsource8": [41, "Use Heat Source 8 Land Cover Methods (True/False)", "heatsource8", None],
                    }

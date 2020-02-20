@@ -11,8 +11,8 @@ installed_version = (vi[0], vi[1])
 if installed_version != (2,7):
     raise Exception("The default Python version must be 2.7, not {0}.{1}".format(vi[0], vi[1]))
 
-setup(name='heatsource9', 
-      version='9.0.0b23',
+setup(name='heatsource9',
+      version='9.0.0b24',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
