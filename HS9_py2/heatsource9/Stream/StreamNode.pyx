@@ -464,7 +464,8 @@ class StreamNode(object):
     def CalcDispersion(self):
         cdef double dx = self.dx
         cdef double dt = self.dt
-        cdef double Shear_Velocity, Disp
+        cdef double Shear_Velocity
+        cdef double Disp
         if not self.S:
             Shear_Velocity = self.U
         else:
