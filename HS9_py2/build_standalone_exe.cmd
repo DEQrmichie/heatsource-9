@@ -2,11 +2,17 @@
 
 :: This script builds heat source exectubles for windows 
 :: Requires pyinstaller
-pyinstaller -F HS9_Run_Hydraulics_Only.py
-pyinstaller -F HS9_Run_Solar_Only.py
-pyinstaller -F HS9_Run_Temperature.py
-pyinstaller -F HS9_Setup_Control_File.py
-pyinstaller -F HS9_Setup_Model_Inputs.py
+
+C:\Python27\python.exe setup.py build_ext --inplace
+
+cython heatsource9\Stream\PyHeatsource.pyx --embed
+cython heatsource9\Stream\StreamNode.pyx --embed
+
+pyinstaller -F HS9_Run_Hydraulics_Only.py --hidden-import=heatsource9.Stream.PyHeatsource
+pyinstaller -F HS9_Run_Solar_Only.py --hidden-import=heatsource9.Stream.PyHeatsource
+pyinstaller -F HS9_Run_Temperature.py --hidden-import=heatsource9.Stream.PyHeatsource
+pyinstaller -F HS9_Setup_Control_File.py --hidden-import=heatsource9.Stream.PyHeatsource
+pyinstaller -F HS9_Setup_Model_Inputs.py --hidden-import=heatsource9.Stream.PyHeatsource
 echo .
 echo .
 echo 'dist' folder contains exectubles
