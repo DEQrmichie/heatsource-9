@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup
+from setuptools import Extension
 from Cython.Build import cythonize
-from sys import version_info as vi
 
-DISTUTILS_DEBUG = True
+from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
 if installed_version != (2,7):
     raise Exception("The default Python version must be 2.7, not {0}.{1}".format(vi[0], vi[1]))
 
-setup(name='heatsource9',
-      version='9.0.0b22',
+setup(name='heatsource9', 
+      version='9.0.0b23',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -45,5 +45,5 @@ setup(name='heatsource9',
                 'heatsource9.Dieties',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
-      ext_modules = cythonize("heatsource9/Stream/*.pyx")
+      ext_modules = cythonize('heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"})
         )
