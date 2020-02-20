@@ -19,7 +19,7 @@ flux and hydraulic calculations are made."""
 
 from __future__ import division, print_function
 from math import pow, sqrt, log, log10, exp, pi
-from math import atan, sin, cos, tan, acos, radians
+from math import atan, sin, cos, tan, acos, radians, degrees
 from random import randint
 from bisect import bisect
 
@@ -246,7 +246,8 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
     if dt >= (2 * K * (1 - X)):
         # Unstable: Decrease dt or increase dx
         dt_stable = (2 * K * (1 - X)) / 60
-        msg = "Unstable timestep. Decrease dt or increase dx. dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
+        msg = "Unstable timestep. Decrease dt or increase dx. \
+        dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
         raise Exception(msg)
 
@@ -744,7 +745,9 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         # make sure there's a value for discharge. Temp can be 
         # blank if discharge is negative (withdrawal)
         if Qitem is None or (Qitem > 0 and Titem is None):
-            return -1 #raise HeatSourceError("Problem with null value in tributary discharge or temperature")
+            msg="Problem with null value in tributary discharge or temperature"
+            logger.error(msg)
+            raise Exception(msg)
         if Qitem > 0:
             Q_in += Qitem
             numerator += Qitem*Titem
