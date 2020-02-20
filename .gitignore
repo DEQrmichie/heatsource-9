@@ -3,12 +3,7 @@ HS9_py2/build/**
 **example_model**
 parking_lot.py
 Inputs_xlsx.py
-HS9_py2/bin
-HS9_py2/input
-HS9_py2/output
-HS9_py2/include
-HS9_py2/lib
-HS9_py2/HeatSource_Control.csv
+dependencies/**
 *.txt
 *.log
 *.exe
@@ -19,3 +14,5 @@ HS9_py2/HeatSource_Control.csv
 **/.pytest_cache
 .python-version
 *.zip
+*.egg
+*.egg-info
