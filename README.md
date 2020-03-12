@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b23 (beta 23)
+Current Version: heatsource 9.0.0b24 (beta 24)
 
 =========================================================================
 ## ABOUT 
