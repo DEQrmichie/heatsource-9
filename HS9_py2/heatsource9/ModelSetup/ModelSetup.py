@@ -177,7 +177,7 @@ class ModelSetup(object):
                 self.Reach[km].metData = datasite.metData
             msg = "Assigning Node"
             current = c.next()+1
-            logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
+            logger.debug('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
 
     def GetBoundaryConditions(self):
@@ -213,7 +213,7 @@ class ModelSetup(object):
             self.T_bc[time] = t_val
             msg = "Reading boundary conditions"
             current = c.next()+1
-            logger.info('{0} {1} {2}'.format(msg, current, length))
+            logger.debug('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Next we expand or revise the dictionary to account for the 
@@ -357,7 +357,7 @@ class ModelSetup(object):
                     node.T_tribs[time] += temp,
                     msg = "Reading inflow data"
                     current = tm.next()+1
-                    logger.info('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
+                    logger.debug('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
                     print_console(msg, True, current, length * IniParams["inflowsites"])
 
         # Next we expand or revise the dictionary to account for the 
@@ -437,7 +437,7 @@ class ModelSetup(object):
             
             msg = "Reading meteorological data"
             current = tm.next()+1
-            logger.info('{0} {1} {2}'.format(msg, current, length))
+            logger.debug('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
@@ -640,7 +640,7 @@ class ModelSetup(object):
             self.Reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
             msg = "Building Stream Nodes"
-            logger.info('{0} {1} {2}'.format(msg, i+1, num_nodes))
+            logger.debug('{0} {1} {2}'.format(msg, i+1, num_nodes))
             print_console(msg, True, i+1, num_nodes)
         
         # Find the mouth node and calculate the actual distance
@@ -1020,7 +1020,7 @@ class ModelSetup(object):
                     # elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
                 msg = "Reading vegetation heights"
-                logger.info('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
+                logger.debug('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
                 print_console(msg, True, i+1, shiftcol+7)
                 
             for i in xrange(len(keys)):
@@ -1075,7 +1075,7 @@ class ModelSetup(object):
                     elevation.append(self.multiplier(elevcol, average))
                 
                 msg = "Reading vegetation heights"
-                logger.info('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
+                logger.debug('{0} {1} {2}'.format(msg,  i+1, shiftcol+7))
                 print_console(msg, True, i+1, shiftcol+7)
 
             for i in xrange(len(keys)):

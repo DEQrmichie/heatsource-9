@@ -36,7 +36,7 @@ from Utils.Output import Output as O
 from __version__ import version_string
 
 # set up logging
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     filename='heatsource.log',
                     filemode='w')

@@ -19,7 +19,7 @@ flux and hydraulic calculations are made."""
 
 from __future__ import division, print_function
 from math import pow, sqrt, log, log10, exp, pi
-from math import atan, sin, cos, tan, acos, radians
+from math import atan, sin, cos, tan, acos, radians, degrees
 from random import randint
 from bisect import bisect
 
@@ -163,13 +163,15 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
         else:
             Azimuth_mod = Azimuth
         tran = bisect(AngleStart,Azimuth_mod)-1
+
     return Altitude, Zenith, Daytime, tran, Azimuth_mod
 
 def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
-    Converge = 10
-    dy = 0.01
-    count = 0
-    power = 2/3
+    cdef double Converge = 10
+    cdef double dy = 0.01
+    cdef int count = 0
+    cdef double power = 2/3
+    cdef double Fy, thed, Fyy, dFy
     
     # ASSUMPTION: Make bottom width 1 cm to prevent undefined numbers 
     # in the math.
@@ -206,6 +208,7 @@ def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
             count += 1
     # Use the calculated wetted depth to calculate new 
     # channel characteristics
+    cdef double A, Pw, Rh, Ww, U, Shear_Velocity, Dispersion
     A = (D_est * (W_b + z * D_est))
     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))
     Rh = A/Pw
@@ -232,13 +235,12 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
     # Calculate an initial geometry based on an estimated 
     # discharge (typically (t,x-1))
     # Taken from the VB source in Heat Source version 7.
-    c_k = (5/3) * U  # Wave celerity
-    X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
+    cdef double c_k = (5/3) * U  # Wave celerity
+    cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
     if X > 0.5: X = 0.5
     elif X < 0.0: X = 0.0
-    K = dx / c_k
-    dt = dt
-
+    cdef double K = dx / c_k
+    cdef double dt_stable
     # Check the celerity to ensure stability. These tests are 
     # from the VB code.
     if dt >= (2 * K * (1 - X)):
@@ -247,19 +249,21 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
         msg = "Unstable timestep. Decrease dt or increase dx. \
         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
-        raise Exception()
+        raise Exception(msg)
 
     # These calculations are from Chow's "Applied Hydrology"
-    D = K * (1 - X) + 0.5 * dt
-    C1 = (0.5*dt - K * X) / D
-    C2 = (0.5*dt + K * X) / D
-    C3 = (K * (1 - X) - 0.5*dt) / D
+    cdef double D = K * (1 - X) + 0.5 * dt
+    cdef double C1 = (0.5*dt - K * X) / D
+    cdef double C2 = (0.5*dt + K * X) / D
+    cdef double C3 = (K * (1 - X) - 0.5*dt) / D
     # TODO: reformulate this using an updated model, 
     # such as Moramarco, et.al., 2006
     return C1, C2, C3
 
 def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
               inputs, Q_bc):
+    cdef double Q1, Q2, Q_new
+    cdef double C[3]              
     if Q_bc >= 0:
         Q_new = Q_bc
     else:
@@ -586,7 +590,7 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # SedThermCond units of W/(m *C)
     # SedThermDiff units of cm^2/sec
 
-    SedRhoCp = SedThermCond / (SedThermDiff / 10000)
+    cdef double SedRhoCp = SedThermCond / (SedThermDiff / 10000)
     # NOTE: SedRhoCp is the product of sediment density and heat capacity
     # since thermal conductivity is defined as 
     # density * heat capacity * diffusivity,
@@ -594,23 +598,23 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # units of (J / m3 / *C)
 
     # Water Variable
-    rhow = 1000  #density of water kg / m3
-    H2O_HeatCapacity = 4187 #J/(kg *C)
+    cdef int rhow = 1000  #density of water kg / m3
+    cdef int H2O_HeatCapacity = 4187 #J/(kg *C)
 
     # Conduction flux (positive is heat into stream)
     # units of (W/m2)
-    F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2) 
+    cdef double F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2) 
     
     # Calculate the conduction flux between deeper alluvium 
     # & substrate conditionally
-    Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
+    cdef double Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
 
     # Hyporheic flux (negative is heat into sediment)
-    F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
+    cdef double F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
 
-    NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
-    DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
-    T_sed_new = T_sed + DT_Sed
+    cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
+    cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
+    cdef double T_sed_new = T_sed + DT_Sed
     if T_sed_new > 50 or T_sed_new < 0:
         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
         logger.error(msg)
@@ -622,37 +626,39 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # Atmospheric variables
     
     # mbar (Chapra p. 567)
-    Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
-    Air_Vapor = humidity * Sat_Vapor
+    cdef double Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
+    cdef double Air_Vapor = humidity * Sat_Vapor
     
     # Stefan-Boltzmann constant (W/m2 K4)    
-    Sigma = 5.67e-8
+    cdef double Sigma = 5.67e-8
     
     # Dingman p 282
-    Emissivity = (1.72 * (((Air_Vapor * 0.1) /
+    cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
                            (273.2 + T_air)) ** (1 / 7)) *
                   (1 + 0.22 * cloud ** 2))
     #======================================================
     # Calculate the atmospheric longwave flux
-    F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
+    cdef double F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
     # Calculate the backradiation longwave flux
-    F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
+    cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
     # Calculate the vegetation longwave flux
-    F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
+    cdef double F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
     # Calculate the net longwave flux
-    F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
+    cdef double F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
 
     #===================================================
     # Calculate Evaporation FLUX
     #===================================================
     # Atmospheric Variables
-    Pressure = 1013 - 0.1055 * elevation #mbar
+    cdef double Pressure = 1013 - 0.1055 * elevation #mbar
     
     # mbar (Chapra p. 567)
     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
     Air_Vapor = humidity * Sat_Vapor
     #===================================================
     # Calculate the frictional reduction in wind velocity
+    cdef int Zm
+    cdef double Zd, Zo, Friction_Velocity
     if emergent and lc_height[0][0] > 0:
         
         Zm = 2
@@ -677,14 +683,15 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
-    Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity 
+    cdef double Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity 
     # Wind_Function = 0.000000001505 + 0.0000000016 * Friction_Velocity #m/mbar/s
 
     #===================================================
     # Latent Heat of Vaporization
-    LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
+    cdef double LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
     #===================================================
     # Use Jobson Wind Function
+    cdef double P, Gamma, Delta, NetRadiation, Ea, Evap_Rate, F_Evap, Bowen
     if penman:
         #Calculate Evaporation FLUX
         P = 998.2 # kg/m3
@@ -719,24 +726,28 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
         else:
             Bowen = 1
             
-    F_Conv = F_Evap * Bowen
-    E = Evap_Rate*W_w if calcevap else 0
+    cdef double F_Conv = F_Evap * Bowen
+    cdef double E = Evap_Rate*W_w if calcevap else 0
     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
 
 def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
-    Q_in = 0
-    T_in = 0
-    T_up = T0
-    numerator = 0
+    cdef double Q_in = 0.0
+    cdef double T_in = 0.0
+    cdef double T_up = T0
+    cdef double numerator = 0.0
+    cdef double T_mix
+    cdef double Qitem, Titem
     for i in xrange(len(Q_tup)):
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         # make sure there's a value for discharge. Temp can be 
         # blank if discharge is negative (withdrawal)
         if Qitem is None or (Qitem > 0 and Titem is None):
-            raise HeatSourceError("Problem with null value in tributary discharge or temperature")
+            msg="Problem with null value in tributary discharge or temperature"
+            logger.error(msg)
+            raise Exception(msg)
         if Qitem > 0:
             Q_in += Qitem
             numerator += Qitem*Titem
@@ -768,14 +779,14 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     # to account for mixing in that reach.
     T2 -= MixTDelta_dn
 
-    Dummy1 = -U * (T1 - T0) / dx
-    Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
-    S = Dummy1 + Dummy2 + Delta_T / dt
+    cdef double Dummy1 = -U * (T1 - T0) / dx
+    cdef double Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
+    cdef double S = Dummy1 + Dummy2 + Delta_T / dt
+    cdef double Temp
     if S1:
         Temp = T_prev + ((S1_value + S) / 2) * dt
     else:
         Temp = T1 + S * dt
-
     return Temp, S, T_mix
 
 def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
