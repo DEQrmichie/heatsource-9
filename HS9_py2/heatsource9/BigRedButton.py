@@ -24,7 +24,8 @@ from __future__ import with_statement, division, print_function
 import logging
 from itertools import count
 import traceback
-from sys import exc_info
+import os
+import argparse
 from time import time as Time
 
 # Heat Source modules
@@ -34,6 +35,7 @@ from Dieties.ChronosDiety import Chronos
 from Utils.Printer import Printer as print_console
 from Utils.Output import Output as O
 from __version__ import version_string
+from ModelSetup.Inputs import Inputs
 
 # set up logging
 logging.basicConfig(level=logging.INFO,
@@ -66,7 +68,7 @@ class ModelControl(object):
         control_file is the control file name. It must be a comma
         delimited text file.
         
-        run_type is one of 0, 1, 2, or 3 for Heat Source (Temperature),
+        run_type is one of 0, 1, or 2 for Heat Source (Temperature),
         Solar only, hydraulics only respectively.
         """
         
@@ -300,12 +302,85 @@ def RunSH(model_dir, control_file):
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
         print_console(msg)
-        
+
 def RunHY(model_dir, control_file):
     """Run hydraulics only"""
     try:
         HSP = ModelControl(model_dir, control_file, 2)
         HSP.Run()
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
+        print_console(msg)
+
+def hs():
+    """Entry point to run Heat Source from command line."""
+
+    pkg_dir = os.path.abspath(os.path.dirname(__file__))
+
+    parser = argparse.ArgumentParser(prog='hs', prefix_chars='-',
+                                     usage='''hs <command> [options]''')
+
+    # general options
+    parser.add_argument('-v', action='version', version='hs {0} installed at {1}.'.format(version_string, pkg_dir),
+                        help='The heat source version.')
+    parser.add_argument('-md', '--model-dir', nargs='?', default=os.getcwd() + '/',
+                        help='Path to the model directory. Default is current working directory.')
+
+    subparsers = parser.add_subparsers(title='options', dest='command')
+    
+    # run command
+    run_parser = subparsers.add_parser('run', help='Command to run a model with arguments -t | -s | -hy')
+    run_parser.add_argument('-t', '--temperature', action='store_true', help='Runs a temperature model.')
+    run_parser.add_argument('-s', '--solar', action='store_true', help='Runs solar routines only.')
+    run_parser.add_argument('-hy', '--hydraulics', action='store_true', help='Runs hydraulics only.')
+    
+    # setup command
+    setup_parser = subparsers.add_parser('setup', help='Command to setup a model with arguments -cf | -mi')
+    setup_parser.add_argument('-cf', '--control-file', action='store_true', help='Writes a blank control file.')
+    setup_parser.add_argument('-mi', '--model-inputs', action='store_true',
+                              help='Write blank input files. Control file must already be parameterized.')
+    setup_parser.add_argument('-t', '--timestamp', action='store_true',
+                              help='Use -t to add a timestamp to the file name.')
+    setup_parser.add_argument('-o', '--overwrite', action='store_true',
+                              help='Use -o to overwrite any existing file.')
+
+    arg = parser.parse_args()
+    control_file = 'HeatSource_Control.csv'
+
+    print(arg)
+    try:
+        if arg.command == 'run':
+
+            if not os.path.exists(os.path.join(arg.model_dir, control_file)):
+                raise Exception("HeatSource_Control.csv not found in {0}.".format(arg.model_dir))
+
+            if arg.temperature:
+                HSP = ModelControl(arg.model_dir, control_file, 0)
+                HSP.Run()
+            elif arg.solar:
+                HSP = ModelControl(arg.model_dir, control_file, 1)
+                HSP.Run()
+            elif arg.run.hydraulics:
+                HSP = ModelControl(arg.model_dir, control_file, 2)
+                HSP.Run()
+
+        if arg.command == 'setup':
+
+            # create an input object
+            inputs = Inputs(arg.model_dir, control_file)
+
+            if arg.control_file:
+                # Write a blank control file
+                inputs.parameterize_cf(use_timestamp=arg.timestamp, overwrite=arg.overwrite)
+
+            if arg.model_inputs:
+                # Control file must already be parameterized
+                inputs.import_control_file()
+
+                # Write blank input files,
+                inputs.setup(use_timestamp=arg.timestamp, overwrite=arg.overwrite)
+
     except:
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
