@@ -44,6 +44,7 @@ logging.basicConfig(level=logging.INFO,
                     filemode='w')
 logger = logging.getLogger(__name__)
 
+
 class ModelControl(object):
     """Main model control class for Heat Source.
 
@@ -60,6 +61,7 @@ class ModelControl(object):
     Reach class. Since this was essentially an interim
     solution to the problem, don't hesitate to improve it.
     """
+
     def __init__(self, model_dir, control_file, run_type=0):
         """
         model_dir is the path to the directory where the
@@ -71,13 +73,13 @@ class ModelControl(object):
         run_type is one of 0, 1, or 2 for Heat Source (Temperature),
         Solar only, hydraulics only respectively.
         """
-        
+
         # Add run type and heat source model version into IniParams
         IniParams["version"] = version_string
         IniParams["run_type"] = run_type
-        
+
         msg = ("\n")
-        
+
         msg += ("Heat Source, Copyright (C) 2000-2019, "
                 "Oregon Department of Environmental Quality\n\n"
                 "This program comes with ABSOLUTELY NO WARRANTY. "
@@ -88,10 +90,10 @@ class ModelControl(object):
                 "redistribute it under \n"
                 "certain conditions described in the License.\n\n")
         msg += "Heat Source Version:  {0}\n".format(IniParams["version"])
-        
+
         print_console(msg)
         logger.info(msg)
-        
+
         # Create a ModelSetup instance.
         self.HS = ModelSetup(model_dir, control_file, run_type)
 
@@ -103,22 +105,25 @@ class ModelControl(object):
         # This if statement prevents us from having to test every 
         # timestep. We just call self.run_all(), which is a classmethod 
         # pointing to the correct method.
-        if run_type == 0: self.run_all = self.run_hs
-        elif run_type == 1: self.run_all = self.run_sh
-        elif run_type == 2: self.run_all = self.run_hy
+        if run_type == 0:
+            self.run_all = self.run_hs
+        elif run_type == 1:
+            self.run_all = self.run_sh
+        elif run_type == 2:
+            self.run_all = self.run_hy
         else:
             logger.error("Bad run_type: {0}. Must be 0, 1, or 2.\
             Something wrong with the executable".format(run_type))
             raise Exception("Bad run_type: {0}. Must be 0, 1, or 2. \
             Something wrong with the executable".format(run_type))
-        
+
         # Create a Chronos iterator that controls all model time.
-        Chronos.Start(start = IniParams["modelstart"],
-                      stop = IniParams["modelend"],
-                      dt = IniParams["dt"],
-                      spin = IniParams["flushdays"],
-                      offset = IniParams["offset"])
-        
+        Chronos.Start(start=IniParams["modelstart"],
+                      stop=IniParams["modelend"],
+                      dt=IniParams["dt"],
+                      spin=IniParams["flushdays"],
+                      offset=IniParams["offset"])
+
         # This is the output class, which is essentially just a list
         # of file objects and an append method which writes to them
         # every so often.
@@ -130,38 +135,38 @@ class ModelControl(object):
         Use the Chronos instance and list of StreamNodes to cycle
         through each timestep and spacestep, calling the appropriate
         StreamNode functions to calculate heat and hydraulics."""
-        
+
         msg = "Starting Simulation:  {0}".format(IniParams["name"])
         logger.info(msg)
         print_console(msg)
-        
+
         # Current time of the Chronos clock (i.e. this timestep)
         time = Chronos.TheTime
-        
+
         # Stop time for Chronos
         stop = Chronos.stop
-        
+
         # Start time for Chronos, model start, not flush/spin start.
         start = Chronos.start
-        
+
         # flush in seconds
-        flush = start-(IniParams["flushdays"]*86400) 
+        flush = start - (IniParams["flushdays"] * 86400)
         # Number of timesteps is based on the division of the timesteps 
         # into the hour. In other words 1 day with a 1 minute dt is 
         # 1440 timesteps, while a 3 minute dt is only 480 timesteps. 
         # Thus, we define the timesteps by dividing dt (now in seconds) 
         # by 3600
-        timesteps = (stop-flush)/IniParams["dt"]
-        
+        timesteps = (stop - flush) / IniParams["dt"]
+
         # Counter iterator for counting current timesteps passed
         cnt = count()
-        
+
         # Volume of water flowing out of mouth (for simple mass balance)
         out = 0
-        
+
         # Current computer time- for estimating total model runtime
         time1 = Time()
-        
+
         # Localize run_type for a bit more speed
         ################################################################
         # So, it's simple and stupid. We basically just cycle through the
@@ -176,45 +181,45 @@ class ModelControl(object):
             if not (hour + minute + second):
                 # zero out the daily flux sum at this point.
                 for nd in self.reachlist:
-                    nd.F_DailySum = [0]*5
+                    nd.F_DailySum = [0] * 5
                     nd.Solar_Blocked = {}
-                    
+
                     # Number of radial sample directions
                     for i in range(IniParams["trans_count"]):
-                        
                         # A spot for each land cover sample
-                        nd.Solar_Blocked[i]=[0]*IniParams["transsample_count"]
-                    nd.Solar_Blocked["diffuse"]=0
+                        nd.Solar_Blocked[i] = [0] * IniParams["transsample_count"]
+                    nd.Solar_Blocked["diffuse"] = 0
 
             # Back to every timestep level of the loop. Here we wrap the call to
             # run_all() in a try block to catch the exceptions thrown.
             try:
                 # Note that all of the run methods have to have 
                 # the same signature
-                #if time == 1056951360.0:
+                # if time == 1056951360.0:
                 #   print_console(msg="error timestep")                
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem
             except:
-                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.PrettyTime(), Chronos.TheTime, traceback.format_exc())
+                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.PrettyTime(),
+                                                                                Chronos.TheTime, traceback.format_exc())
                 logging.error(msg)
                 print_console(msg)
-                
+
                 # Then just die
                 raise SystemExit
-                        
+
             # If minute and second are both zero, we are at the top of 
             # the hour. 
             if (minute == 0 and second == 0):
-                ts = cnt.next() # Number of actual timesteps per tick
-                
+                ts = cnt.next()  # Number of actual timesteps per tick
+
                 # Number of timesteps in one hour
-                hr = 60/(IniParams["dt"]/60) 
+                hr = 60 / (IniParams["dt"] / 60)
                 # This writes a line to the status bar.
                 msg = "Timesteps:"
-                logger.info('{0} {1} {2}'.format(msg, (ts)*hr, timesteps))
-                print_console(msg, True, (ts)*hr, timesteps)
-                
+                logger.info('{0} {1} {2}'.format(msg, (ts) * hr, timesteps))
+                print_console(msg, True, (ts) * hr, timesteps)
+
                 # Call the Output class to update the textfiles. We call
                 # this every hour and store the data, then we write to 
                 # file every day. Limiting disk access saves us 
@@ -224,11 +229,11 @@ class ModelControl(object):
             # ---- 
             # Uncomment to output every timestep and 
             # comment section above
-            #ts = cnt.next()
-            #msg = "Timesteps:"
-            #logger.info('{0} {1} {2}'.format(msg, ts, timesteps))
-            #print_console("Timesteps:", True, ts, timesteps)
-            #self.Output(time, hour, minute, second)
+            # ts = cnt.next()
+            # msg = "Timesteps:"
+            # logger.info('{0} {1} {2}'.format(msg, ts, timesteps))
+            # print_console("Timesteps:", True, ts, timesteps)
+            # self.Output(time, hour, minute, second)
             # ---- 
 
             # We've made it through the entire stream without an error, 
@@ -249,10 +254,10 @@ class ModelControl(object):
         # calculate a single StreamNode's information one time. 
         # Ideally, for performance and impatience reasons, we want this
         # to be somewhere around or less than 1 microsecond.
-        microseconds = (total_time/timesteps/len(self.reachlist))*1e6
-        
+        microseconds = (total_time / timesteps / len(self.reachlist)) * 1e6
+
         message = "Simulation Complete"
-        
+
         message += "\n\nFinished in {0:0.1f} minutes ".format(total_time)
         message += "(spent {0:0.3f} microseconds ".format(microseconds)
         message += "in each stream node).\n"
@@ -262,12 +267,12 @@ class ModelControl(object):
 
         logger.info(message)
         print_console(message)
-        #raw_input('Press <ENTER> to close this console')
+        # raw_input('Press <ENTER> to close this console')
 
     #############################################################
     # Three different versions of the run() routine, depending on the 
     # run_type.
-    
+
     def run_hs(self, time, H, M, S, JD, JDC):
         """Call both hydraulic and solar routines for each StreamNode"""
         [x.CalcDischarge(time) for x in self.reachlist]
@@ -282,6 +287,7 @@ class ModelControl(object):
         """Call solar routines for each StreamNode"""
         [x.CalcHeat(time, H, M, S, JD, JDC, True) for x in self.reachlist]
 
+
 def RunHS(model_dir, control_file):
     """Run full temperature model"""
     try:
@@ -293,6 +299,7 @@ def RunHS(model_dir, control_file):
         logging.error(msg)
         print_console(msg)
 
+
 def RunSH(model_dir, control_file):
     """Run solar routines only"""
     try:
@@ -303,6 +310,7 @@ def RunSH(model_dir, control_file):
         logging.error(msg)
         print_console(msg)
 
+
 def RunHY(model_dir, control_file):
     """Run hydraulics only"""
     try:
@@ -312,6 +320,7 @@ def RunHY(model_dir, control_file):
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
         print_console(msg)
+
 
 def hs():
     """Entry point to run Heat Source from command line."""
@@ -328,13 +337,13 @@ def hs():
                         help='Path to the model directory. Default is current working directory.')
 
     subparsers = parser.add_subparsers(title='options', dest='command')
-    
+
     # run command
     run_parser = subparsers.add_parser('run', help='Command to run a model with arguments -t | -s | -hy')
     run_parser.add_argument('-t', '--temperature', action='store_true', help='Runs a temperature model.')
     run_parser.add_argument('-s', '--solar', action='store_true', help='Runs solar routines only.')
     run_parser.add_argument('-hy', '--hydraulics', action='store_true', help='Runs hydraulics only.')
-    
+
     # setup command
     setup_parser = subparsers.add_parser('setup', help='Command to setup a model with arguments -cf | -mi')
     setup_parser.add_argument('-cf', '--control-file', action='store_true', help='Writes a blank control file.')
