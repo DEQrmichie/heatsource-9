@@ -14,19 +14,19 @@ from os.path import exists
 from os.path import join
 from os.path import realpath
 
+
 def getScriptPath():
     """Gets the path to the directory where the script is being executed from."""
     return abspath(join(dirname(realpath(__file__)), '.'))
 
+
 model_dir = getScriptPath() + '/'
 control_file = 'HeatSource_Control.csv'
 
-
-if not exists(join(model_dir,control_file)):
+if not exists(join(model_dir, control_file)):
     raise Exception("HeatSource_Control.csv not found. \
     Move the executable or place the control file in \
     this directory: {0}.".format(model_dir))
 
 # Run Heat Source Solar only, run_type = 1
-BigRedButton.RunSH(model_dir,control_file)
-
+BigRedButton.RunSH(model_dir, control_file)
