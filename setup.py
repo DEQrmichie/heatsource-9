@@ -43,10 +43,12 @@ setup(name='heatsource9',
       platforms = ['darwin', 'win32'],
       license = ['GNU General Public License v3 (GPLv3)'],
       zip_safe=False,
+      entry_points={'console_scripts': ['hs = heatsource9.BigRedButton:hs']},
       packages=['heatsource9',
                 'heatsource9.ModelSetup',
                 'heatsource9.Dieties',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
-      ext_modules = cythonize('heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"})
+      package_dir={'': 'src'},
+      ext_modules = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"})
         )
