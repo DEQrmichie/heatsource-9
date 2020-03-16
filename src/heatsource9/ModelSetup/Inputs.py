@@ -1,3 +1,8 @@
+from ..Dieties.IniParamsDiety import IniParams
+from ..Dieties.IniParamsDiety import iniRange
+from ..Dieties.IniParamsDiety import dtype
+from ..Utils.Printer import Printer as print_console
+
 import csv
 import platform
 from os import makedirs
@@ -14,10 +19,6 @@ from calendar import timegm
 from datetime import datetime
 from operator import itemgetter
 
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import iniRange
-from ..Dieties.IniParamsDiety import dtype
-from ..Utils.Printer import Printer as print_console
 import logging
 
 # set up logging
