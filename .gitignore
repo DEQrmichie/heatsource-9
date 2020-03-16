@@ -6,6 +6,7 @@ Inputs_xlsx.py
 dependencies/**
 solar_trig_math/**
 *.txt
+*.docx
 *.log
 *.exe
 *.pyc
@@ -17,3 +18,5 @@ solar_trig_math/**
 *.zip
 *.egg
 *.egg-info
+*.ico
+.idea/*
