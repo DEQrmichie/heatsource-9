@@ -357,7 +357,6 @@ def hs():
     arg = parser.parse_args()
     control_file = 'HeatSource_Control.csv'
 
-    print(arg)
     try:
         if arg.command == 'run':
 
