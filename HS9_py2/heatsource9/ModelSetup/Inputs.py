@@ -572,13 +572,18 @@ class Inputs(object):
         
         return [list(i) for i in d4]
     
-    def parameterize_cf(self, overwrite=False, **kwargs):
+    def parameterize_cf(self, overwrite=False, use_timestamp=False, **kwargs):
         """
         Writes the control file. Any keyword arguments
         passed will be parameterized into the control file.
         """
+        if use_timestamp:
+            cf_name = self.timestamp(self.control_file)
+        else:
+            cf_name = self.control_file
+
         # check to see if the file exists 
-        if not overwrite and isfile(join(self.model_dir, self.control_file)):
+        if not overwrite and isfile(join(self.model_dir, cf_name)):
             msg = "HeatSource_Control.csv already exists. It will not be overwritten"
             logger.warning(msg)
             print_console(msg)
@@ -596,10 +601,20 @@ class Inputs(object):
         cf_sorted = sorted(cf_dict.items(), key=itemgetter(1))
         cf_list = [line[1] for line in cf_sorted]        
 
-        self.write_to_output(self.model_dir, self.control_file,
+        self.write_to_output(self.model_dir, cf_name,
                           cf_list, self.headers_cf())
 
-        
+    def timestamp(self, name=""):
+        """Returns the name with timestamp prefixed. Name must be a string.
+
+        E.g. 20200314_031415_name
+        """
+        now = datetime.now()
+        timestamp = now.strftime("%Y%m%d_%H%M%S")
+        new_name = timestamp + "_" + name
+
+        return new_name
+
     def parameterize_lccodes(self, lccodes=None, code_as_ht=False,
                              ht_list=None, can_list=None,
                              lai_list=None, k_list=None, oh_list=None,
@@ -770,7 +785,7 @@ class Inputs(object):
             makedirs(IniParams["outputdir"])
 
         now = datetime.now()    
-        timestamp = now.strftime("%Y%m%d_%H%M%S")
+        timestamp = self.timestamp()
         timelist= self.datetime_string()
         kmlist= self.stream_kms()
 
@@ -792,12 +807,12 @@ class Inputs(object):
         # file and adds a timestamp
         
         if use_timestamp:
-            acc_file = "input_"+timestamp+"_"+IniParams["accretionfile"]
-            bc_file = "input_"+timestamp+"_"+IniParams["bcfile"]
-            lcdata_file = "input_"+timestamp+"_"+IniParams["lcdatafile"]
+            acc_file = timestamp+IniParams["accretionfile"]
+            bc_file = timestamp+IniParams["bcfile"]
+            lcdata_file = timestamp+IniParams["lcdatafile"]
             if IniParams["lcdatainput"] == "Codes":
-                lccodes_file = "input_"+timestamp+"_"+IniParams["lccodefile"]
-            morph_file = "input_"+timestamp+"_"+IniParams["morphfile"]
+                lccodes_file = timestamp+IniParams["lccodefile"]
+            morph_file = timestamp+IniParams["morphfile"]
         else:
             # Name the files as they appear in the control file
             acc_file = IniParams["accretionfile"]
@@ -860,7 +875,7 @@ class Inputs(object):
             metlist = [[t] + [None]*4*int((IniParams["metsites"]/len(metfiles))) for t in timelist]
             
             if use_timestamp:
-                met_filename = "input_"+timestamp+"_"+file.strip()
+                met_filename = timestamp+file.strip()
             else:
                 met_filename = file.strip()
             
@@ -879,7 +894,7 @@ class Inputs(object):
                 inflowlist = [[t] + [None]*2*int((IniParams["inflowsites"]/len(tribfiles))) for t in timelist]
                 
                 if use_timestamp:
-                    trib_filename = "input_"+timestamp+"_"+file.strip()
+                    trib_filename = timestamp+file.strip()
                 else:
                     trib_filename = file.strip()
                     
