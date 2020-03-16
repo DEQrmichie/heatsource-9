@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division, print_function
+
 # Heat Source Methods
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import head2var
@@ -23,7 +25,6 @@ from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
 
 # Builtin methods
-from __future__ import division, print_function
 from itertools import ifilter, izip, chain, repeat, count
 from collections import defaultdict
 from math import ceil, log, degrees, atan
