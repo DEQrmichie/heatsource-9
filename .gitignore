@@ -1,5 +1,5 @@
-HS9_py2/dist/**
-HS9_py2/build/**
+dist/**
+build/**
 **example_model**
 parking_lot.py
 Inputs_xlsx.py
@@ -17,3 +17,4 @@ solar_trig_math/**
 *.zip
 *.egg
 *.egg-info
+.idea/**
