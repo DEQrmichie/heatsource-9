@@ -48,7 +48,7 @@ class ModelSetup(object):
 
     def __init__(self, model_dir, control_file, run_type=0):
         self.run_type = run_type
-        self.Reach = {}
+        self.reach = {}
         self.ID2km = {}
 
         msg = "Starting Model Initialization"
@@ -77,37 +77,37 @@ class ModelSetup(object):
 
         # Setup for a model run
         # Get the list of model periods times
-        self.flowtimelist = self.GetTimelistUNIX()
-        self.continuoustimelist = self.GetTimelistUNIX()
-        self.flushtimelist = self.GetTimelistFlushPeriod()
+        self.flowtimelist = self.get_timelist_unix()
+        self.continuoustimelist = self.get_timelist_unix()
+        self.flushtimelist = self.get_timelist_flush_period()
 
         # Start through the steps of building a reach 
         # full of StreamNodes
-        self.GetBoundaryConditions()
-        self.BuildNodes()
+        self.get_boundary_conditions()
+        self.build_nodes()
         if IniParams["lcdatainput"] == "Values":
-            self.BuildZones_w_Values()
+            self.build_zones_w_values()
         else:
-            self.BuildZones_w_Codes()
-        self.GetTributaryData()
-        self.GetMetData()
-        self.SetAtmosphericData()
-        self.OrientNodes()
+            self.build_zones_w_codes()
+        self.get_tributary_data()
+        self.get_met_data()
+        self.set_atmospheric_data()
+        self.orient_nodes()
 
         # setup output km
         if not IniParams["outputkm"] == "all":
-            IniParams["outputkm"] = self.GetLocations("outputkm")
+            IniParams["outputkm"] = self.get_locations("outputkm")
 
         msg = "Model Initialization Complete"
         logger.info(msg)
         print_console(msg)
 
-    def OrientNodes(self):
+    def orient_nodes(self):
         # Now we manually set each nodes next and previous 
         # kilometer values by stepping through the reach
-        l = sorted(self.Reach.keys(), reverse=True)
+        l = sorted(self.reach.keys(), reverse=True)
         # The headwater node
-        head = self.Reach[max(l)]
+        head = self.reach[max(l)]
         # Set the previous and next kilometer of each node.
         slope_problems = []
         for i in xrange(len(l)):
@@ -117,24 +117,24 @@ class ModelSetup(object):
                 pass
             # At first node, there's no previous
             else:
-                self.Reach[key].prev_km = self.Reach[l[i - 1]]
+                self.reach[key].prev_km = self.reach[l[i - 1]]
 
             try:
-                self.Reach[key].next_km = self.Reach[l[i + 1]]
+                self.reach[key].next_km = self.reach[l[i + 1]]
             except IndexError:
                 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 # For last node (mouth) we set the downstream node equal
                 # to self, this is because we want to access the node's
                 # temp if there's no downstream, and this saves us an
                 # if statement.
-                self.Reach[key].next_km = self.Reach[key]
+                self.reach[key].next_km = self.reach[key]
             # Set a headwater node
-            self.Reach[key].head = head
-            self.Reach[key].Initialize()
+            self.reach[key].head = head
+            self.reach[key].initialize()
             # check for a zero slope. We store all of them before 
             # checking so we can print a lengthy error that no-one 
             # will ever read.
-            if self.Reach[key].S <= 0.0:
+            if self.reach[key].S <= 0.0:
                 slope_problems.append(key)
 
         if self.run_type != 1:  # zeros are alright in shade calculations
@@ -142,7 +142,7 @@ class ModelSetup(object):
                 raise Exception("The following reaches have zero slope. Kilometers: %s" % ",".join(
                     ['%0.3f' % i for i in slope_problems]))
 
-    def SetAtmosphericData(self):
+    def set_atmospheric_data(self):
         """For each node without met data, use closest (up or downstream) node's data"""
         print_console("Assigning Meteorological Data to Nodes")
 
@@ -153,12 +153,12 @@ class ModelSetup(object):
         # the bisect module
         sites.sort()
         c = count()
-        l = self.Reach.keys()
+        l = self.reach.keys()
         # This routine iterates through all nodes and uses bisect to 
         # determine which met site is closest to the node and 
         # initializes that node with the met data that is closest 
         # (up or downstream)
-        for km, node in self.Reach.iteritems():
+        for km, node in self.reach.iteritems():
             if km not in sites:  # if we are not on the node where the
                 # met data is assigned we have t
                 # Kilometer's downstream and upstream
@@ -175,18 +175,18 @@ class ModelSetup(object):
                 down = sites[lower]
                 up = sites[upper]
                 # Initialize to upstream's met data
-                datasite = self.Reach[up]
+                datasite = self.reach[up]
                 # Only if the distance to the downstream node is closer 
                 # do we use that
                 if km - down < up - km:
-                    datasite = self.Reach[down]
-                self.Reach[km].metData = datasite.metData
+                    datasite = self.reach[down]
+                self.reach[km].metData = datasite.metData
             msg = "Assigning Node"
             current = c.next() + 1
             logger.debug('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
 
-    def GetBoundaryConditions(self):
+    def get_boundary_conditions(self):
         """Get the boundary conditions"""
         # Get the columns, which is faster than accessing cells
         print_console("Reading boundary conditions")
@@ -239,10 +239,10 @@ class ModelSetup(object):
             if first_day_time >= second_day:
                 first_day_time = IniParams["modelstart"]
 
-        self.Q_bc = self.Q_bc.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-        self.T_bc = self.T_bc.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+        self.Q_bc = self.Q_bc.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+        self.T_bc = self.T_bc.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
-    def GetLocations(self, ini):
+    def get_locations(self, ini):
         """Build a list of kilometers corresponding to the ini parameter
         that is passed.
         
@@ -251,7 +251,7 @@ class ModelSetup(object):
         or the model output kilometers"""
 
         t = ()
-        l = self.Reach.keys()
+        l = self.reach.keys()
         l.sort()
 
         if (ini == "metkm" or
@@ -274,7 +274,7 @@ class ModelSetup(object):
             t += l[key],  # Index by kilometer
         return t
 
-    def GetStreamKMlist(self):
+    def get_stream_km_list(self):
         """Build a list of stream kilometers sorted from
         headwaters to mouth"""
 
@@ -291,7 +291,7 @@ class ModelSetup(object):
         kmlist.sort(reverse=True)
         return kmlist
 
-    def GetTimelistUNIX(self):
+    def get_timelist_unix(self):
         """Build a UNIX time list of floating point time values
         corresponding to the data start and end dates available in
         the control file"""
@@ -300,7 +300,7 @@ class ModelSetup(object):
         timelist = range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)
         return tuple(timelist)
 
-    def GetTimelistFlushPeriod(self):
+    def get_timelist_flush_period(self):
         """Build a UNIX time list that represents the flushing period"""
         # This assumes that data is hourly, not tested with
         # variable input timesteps
@@ -311,7 +311,7 @@ class ModelSetup(object):
             flushtime += 3600
         return tuple(flushtimelist)
 
-    def GetTributaryData(self):
+    def get_tributary_data(self):
         """Populate the tributary flow and temperature values for
         nodes from the Flow Data page"""
         print_console("Reading inflow data")
@@ -333,7 +333,7 @@ class ModelSetup(object):
 
         # Get a tuple of kilometers to use as keys to the 
         # location of each tributary 
-        kms = self.GetLocations("inflowkm")
+        kms = self.get_locations("inflowkm")
 
         length = len(timelist)
         # Which datapoint time are we recording
@@ -349,7 +349,7 @@ class ModelSetup(object):
                 c = count()
                 for flow, temp in line:
                     i = c.next()
-                    node = self.Reach[kms[i]]  # Index by kilometer
+                    node = self.reach[kms[i]]  # Index by kilometer
                     if node not in nodelist or not len(nodelist):
                         nodelist.append(node)
                     if flow is None or (flow > 0 and temp is None):
@@ -390,10 +390,10 @@ class ModelSetup(object):
         # This is placed here at the end so we can dispose of it 
         # easily if necessary
         for node in nodelist:
-            node.Q_tribs = node.Q_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-            node.T_tribs = node.T_tribs.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            node.Q_tribs = node.Q_tribs.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            node.T_tribs = node.T_tribs.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
 
-    def GetMetData(self):
+    def get_met_data(self):
         """Get data from the input met data csv file"""
         # This is remarkably similar to GetInflowData. We get a block 
         # of data, then set the dictionary of the node
@@ -407,7 +407,7 @@ class ModelSetup(object):
 
         # Get a tuple of kilometers to use as keys to the location of 
         # each met node
-        kms = self.GetLocations("metkm")
+        kms = self.get_locations("metkm")
 
         tm = count()  # Which datapoint time are we recording
         length = len(timelist)
@@ -418,7 +418,7 @@ class ModelSetup(object):
                 i = c.next()
 
                 # Index by kilometer
-                node = self.Reach[kms[i]]
+                node = self.reach[kms[i]]
                 # Append this node to a list of all nodes which 
                 # have met data
                 if node.km not in self.metDataSites:
@@ -466,7 +466,7 @@ class ModelSetup(object):
         for i in xrange(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for km in self.metDataSites:
-                node = self.Reach[km]
+                node = self.reach[km]
                 node.metData[time] = node.metData[first_day_time]
             first_day_time += 3600
             if first_day_time >= second_day:
@@ -479,8 +479,8 @@ class ModelSetup(object):
         tm = count()
         length = len(self.metDataSites)
         for km in self.metDataSites:
-            node = self.Reach[km]
-            node.metData = node.metData.View(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            node = self.reach[km]
+            node.metData = node.metData.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             msg = "Subsetting met data"
             current = tm.next() + 1
             logger.info('{0} {1} {2}'.format(msg, current, length))
@@ -551,10 +551,10 @@ class ModelSetup(object):
         # "better" things to do than optimize our code.) First we strip 
         # off the None values.
 
-        stripNone = lambda y: [i for i in ifilter(lambda x: x is not None, y)]
-        return [predicate(stripNone(x)) for x in self.zipper(iterable, self.multiple)]
+        strip_none = lambda y: [i for i in ifilter(lambda x: x is not None, y)]
+        return [predicate(strip_none(x)) for x in self.zipper(iterable, self.multiple)]
 
-    def GetColumnarData(self):
+    def get_columnar_data(self):
         """
         Return a dictionary of input attributes that are
         averaged or summed as appropriate
@@ -597,7 +597,7 @@ class ModelSetup(object):
         # Add these columns to morph data since they do not 
         # exist in the input file. 
         # TODO
-        kmlist = self.GetStreamKMlist()
+        kmlist = self.get_stream_km_list()
         morphdata["Q_cont"] = [0.0 for km in kmlist]
         morphdata["d_cont"] = [0.0 for km in kmlist]
 
@@ -625,13 +625,13 @@ class ModelSetup(object):
             data[attr] = self.multiplier(data[attr], lambda x: min(x))
         return data
 
-    def BuildNodes(self):
+    def build_nodes(self):
         # This is the worst of the methods but it works. # TODO
         print_console("Building Stream Nodes")
         Q_mb = 0.0
 
         # Grab all of the data in a dictionary
-        data = self.GetColumnarData()
+        data = self.get_columnar_data()
 
         # Build a boundary node
         node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
@@ -641,9 +641,9 @@ class ModelSetup(object):
         # set the flow and temp boundary conditions for the boundary node
         node.Q_bc = self.Q_bc
         node.T_bc = self.T_bc
-        self.InitializeNode(node)
+        self.initialize_node(node)
         node.dx = IniParams["longsample"]
-        self.Reach[node.km] = node
+        self.reach[node.km] = node
         self.ID2km[node.nodeID] = node.km
 
         # Figure out how many nodes we should have downstream. We use
@@ -658,26 +658,26 @@ class ModelSetup(object):
             node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
             for k, v in data.iteritems():
                 setattr(node, k, v[i + 1])  # Add one to ignore boundary node
-            self.InitializeNode(node)
-            self.Reach[node.km] = node
+            self.initialize_node(node)
+            self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
             msg = "Building Stream Nodes"
             logger.debug('{0} {1} {2}'.format(msg, i + 1, num_nodes))
             print_console(msg, True, i + 1, num_nodes)
 
         # Find the mouth node and calculate the actual distance
-        mouth = self.Reach[min(self.Reach.keys())]
+        mouth = self.reach[min(self.reach.keys())]
 
         # number of extra variables if we're not perfectly divisible
         mouth_dx = (vars) % self.multiple or 1.0
         mouth.dx = IniParams["longsample"] * mouth_dx
 
-    def BuildZones_w_Codes(self):
+    def build_zones_w_codes(self):
         """Build zones when the landcover data files contains
         vegetation codes"""
 
         # Pull the LULC codes
-        LCcodes = self.GetLandCoverCodes()
+        LCcodes = self.get_lc_codes()
 
         # Pull the LULC Data
         LCdata = self.inputs.import_lcdata(return_list=True)
@@ -686,7 +686,7 @@ class ModelSetup(object):
         transsample_count = IniParams["transsample_count"]
         radial_count = IniParams["trans_count"]
 
-        keys = self.Reach.keys()
+        keys = self.reach.keys()
 
         # Downstream sorted list of stream kilometers
         keys.sort(reverse=True)
@@ -744,7 +744,7 @@ class ModelSetup(object):
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
             for i in xrange(len(keys)):
-                node = self.Reach[keys[i]]
+                node = self.reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count + 1):
                     for s in xrange(transsample_count):
@@ -807,7 +807,7 @@ class ModelSetup(object):
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
             for i in xrange(len(keys)):
-                node = self.Reach[keys[i]]
+                node = self.reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count + 1):
                     for s in xrange(transsample_count):
@@ -853,28 +853,28 @@ class ModelSetup(object):
             msg = "Building land cover zones"
             logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
-            node = self.Reach[keys[h]]
-            VTS_Total = 0  # View to sky value
-            LC_Angle_Max = 0
+            node = self.reach[keys[h]]
+            vts_total = 0  # View to sky value
+            lc_angle_max = 0
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each 
             # with one of three topographies
-            ElevationList = []
-            Angle_Incr = 360.0 / radial_count
-            DirNumbers = range(1, radial_count + 1)
-            AngleMid = [x * Angle_Incr for x in DirNumbers]
+            elevation_list = []
+            angle_incr = 360.0 / radial_count
+            dir_numbers = range(1, radial_count + 1)
+            angle_mid = [x * angle_incr for x in dir_numbers]
 
             # Iterate through each transect direction
             for i in xrange(radial_count):
-                DirAngle = AngleMid[i]
-                if DirAngle < 135:
-                    ElevationList.append(topo_e[h])
-                elif DirAngle < 225:
-                    ElevationList.append(topo_s[h])
+                dir_angle = angle_mid[i]
+                if dir_angle < 135:
+                    elevation_list.append(topo_e[h])
+                elif dir_angle < 225:
+                    elevation_list.append(topo_s[h])
                 else:
-                    ElevationList.append(topo_w[h])
+                    elevation_list.append(topo_w[h])
 
             # Sun comes down and can be full-on, blocked by veg, or 
             # blocked by topography. Earlier implementations calculated 
@@ -892,42 +892,42 @@ class ModelSetup(object):
             for i in xrange(radial_count):
 
                 # The minimum sun angle needed for full sun
-                T_Full = ()
+                t_full = ()
 
                 # The angle with longest path length in each veg zone
-                T_Path = ()
+                t_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                T_None = ()
+                t_none = ()
 
                 # Numerator for the weighted Veg density calculation
-                W_Vdens_num = 0.0
+                w_vdens_num = 0.0
 
                 # Denominator for the weighted Veg density calculation
-                W_Vdens_dem = 0.0
+                w_vdens_dem = 0.0
 
                 # Iterate through each of the zones
                 for s in xrange(transsample_count):
-                    Vheight = vheight[i * transsample_count + s + 1][h]
-                    Vcan = vcanopy[i * transsample_count + s + 1][h]
-                    Voverhang = overhang[i * transsample_count + s + 1][h]
-                    Elev = elevation[i * transsample_count + s][h]
+                    v_height = vheight[i * transsample_count + s + 1][h]
+                    v_can = vcanopy[i * transsample_count + s + 1][h]
+                    v_overhang = overhang[i * transsample_count + s + 1][h]
+                    elev = elevation[i * transsample_count + s][h]
 
                     if not s:
                         # We are at the stream edge, so start over
                         # New value for each transect direction
-                        LC_Angle_Max = 0
+                        lc_angle_max = 0
                     else:
                         # No overhang away from the stream
-                        Voverhang = 0
+                        v_overhang = 0
 
                         ####################################################
                     # Calculate the relative ground elevation. This is 
                     # the vertical distance from the stream surface to 
                     # the land surface
-                    SH = Elev - node.elevation
+                    SH = elev - node.elevation
                     # Then calculate the relative vegetation height
-                    VH = Vheight + SH
+                    VH = v_height + SH
 
                     # If lcsampmethod = point we assume you are sampling 
                     # a tree at a specific location rather than a veg 
@@ -939,61 +939,61 @@ class ModelSetup(object):
                     else:
                         adjust = 0.0
 
-                    LC_Distance1 = IniParams["transsample_distance"] * (s + 1 - adjust)
-                    LC_Distance2 = IniParams["transsample_distance"] * (s + 2 - adjust)
+                    lc_distance1 = IniParams["transsample_distance"] * (s + 1 - adjust)
+                    lc_distance2 = IniParams["transsample_distance"] * (s + 2 - adjust)
 
                     # We shift closer to the stream by the amount of overhang
                     if not s:
-                        LC_Distance1 -= Voverhang
-                    if LC_Distance1 <= 0:
-                        LC_Distance1 = 0.00001
+                        lc_distance1 -= v_overhang
+                    if lc_distance1 <= 0:
+                        lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     # It gets added to a tuple of full sun values
-                    T_Full += degrees(atan(VH / LC_Distance1)),
+                    t_full += degrees(atan(VH / lc_distance1)),
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    T_Path += degrees(atan(VH / LC_Distance2)),
+                    t_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic 
                     # shade for this transect direction.
                     # likewise, a tuple of values
-                    T_None += degrees(atan(SH / LC_Distance1)),
+                    t_none += degrees(atan(SH / lc_distance1)),
 
                     # Calculate View To Sky
-                    veg_angle = degrees(atan(VH / LC_Distance1)) - degrees(atan(SH / LC_Distance1))
+                    veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
                     if IniParams["canopy_data"] == "LAI":
                         # use LAI data
                         Vk = k[i * transsample_count + s + 1][h]
 
                         # Purpose here is to calculate a LAI where 
                         # gap fraction = 0.1% (basically zero)
-                        LAI_den = Vcan / -log(0.001) / Vk
+                        LAI_den = v_can / -log(0.001) / Vk
                         if LAI_den > 1:
                             LAI_den = 1
-                        W_Vdens_num += veg_angle * float(LAI_den)
+                        w_vdens_num += veg_angle * float(LAI_den)
                     else:
-                        W_Vdens_num += veg_angle * float(Vcan)
-                    W_Vdens_dem += veg_angle
+                        w_vdens_num += veg_angle * float(v_can)
+                    w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(T_Full) > 0:
+                        if max(t_full) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
-                            # Vdens_mod = (Amount of Veg shade * Veg dens) +
+                            # vdens_mod = (Amount of Veg shade * Veg dens) +
                             # (Amount of bank shade * bank dens, i.e. 1) / 
                             # (Sum of amount of shade)
-                            if W_Vdens_dem > 0:
-                                Vdens_ave_veg = W_Vdens_num / W_Vdens_dem
+                            if w_vdens_dem > 0:
+                                vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
-                                Vdens_ave_veg = 0
-                            Vdens_mod = ((max(T_Full) - max(T_None)) * Vdens_ave_veg + max(T_None)) / max(T_Full)
+                                vdens_ave_veg = 0
+                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
                         else:
-                            Vdens_mod = 1.0
-                        VTS_Total += max(T_Full) * Vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full, T_Path),
-            node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
+                            vdens_mod = 1.0
+                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
+                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+            node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
-    def BuildZones_w_Values(self):
+    def build_zones_w_values(self):
         """Build zones when the landcover data files contains explicit
         vegetation data instead of codes"""
 
@@ -1005,7 +1005,7 @@ class ModelSetup(object):
         radial_count = IniParams["trans_count"]
         shiftcol = radial_count * transsample_count  # Shift to get to each data type column
 
-        keys = self.Reach.keys()
+        keys = self.reach.keys()
         keys.sort(reverse=True)  # Downstream sorted list of stream kilometers
 
         vheight = []
@@ -1049,7 +1049,7 @@ class ModelSetup(object):
                 print_console(msg, True, i + 1, shiftcol + 7)
 
             for i in xrange(len(keys)):
-                node = self.Reach[keys[i]]
+                node = self.reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count + 1):
                     for s in xrange(transsample_count):
@@ -1104,7 +1104,7 @@ class ModelSetup(object):
                 print_console(msg, True, i + 1, shiftcol + 7)
 
             for i in xrange(len(keys)):
-                node = self.Reach[keys[i]]
+                node = self.reach[keys[i]]
                 n = 0
                 for tran in xrange(radial_count + 1):
                     for s in xrange(transsample_count):
@@ -1145,26 +1145,26 @@ class ModelSetup(object):
             logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
 
-            node = self.Reach[keys[h]]
-            LC_Angle_Max = 0
-            VTS_Total = 0  # View to sky value
+            node = self.reach[keys[h]]
+            lc_angle_max = 0
+            vts_total = 0  # View to sky value
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
-            node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
+            node.topo_factor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each with one 
             # of three topographies
-            ElevationList = []
-            Angle_Incr = 360.0 / radial_count
-            DirNumbers = range(1, radial_count + 1)
-            AngleMid = [x * Angle_Incr for x in DirNumbers]
+            elevation_list = []
+            angle_incr = 360.0 / radial_count
+            dir_numbers = range(1, radial_count + 1)
+            angle_mid = [x * angle_incr for x in dir_numbers]
             for i in xrange(radial_count):  # Iterate through each transect direction
-                DirAngle = AngleMid[i]
-                if DirAngle < 135:
-                    ElevationList.append(topo_e[h])
-                elif DirAngle < 225:
-                    ElevationList.append(topo_s[h])
+                dir_angle = angle_mid[i]
+                if dir_angle < 135:
+                    elevation_list.append(topo_e[h])
+                elif dir_angle < 225:
+                    elevation_list.append(topo_s[h])
                 else:
-                    ElevationList.append(topo_w[h])
+                    elevation_list.append(topo_w[h])
             # Sun comes down and can be full-on, blocked by veg, or blocked by topography. Earlier implementations
             # calculated each case on the fly. Here we chose a somewhat more elegant solution and calculate necessary
             # angles. Basically, there is a minimum angle for which full sun is calculated (top of trees), and the
@@ -1175,40 +1175,40 @@ class ModelSetup(object):
 
             for i in xrange(radial_count):  # Iterate through each transect direction
                 # The minimum sun angle needed for full sun
-                T_Full = ()
+                t_full = ()
 
                 # The angle with longest path length in each veg zone
-                T_Path = ()
+                t_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                T_None = ()
+                t_none = ()
 
                 # Numerator for the weighted Veg density calculation
-                W_Vdens_num = 0.0
+                w_vdens_num = 0.0
 
                 # Denominator for the weighted Veg density calculation
-                W_Vdens_dem = 0.0
+                w_vdens_dem = 0.0
 
                 for s in xrange(transsample_count):  # Iterate through each of the zones
-                    Vheight = vheight[i * transsample_count + s + 1][h]
-                    if Vheight < 0 or Vheight is None or Vheight > 120:
+                    v_height = vheight[i * transsample_count + s + 1][h]
+                    if v_height < 0 or v_height is None or v_height > 120:
                         raise Exception(
                             "Vegetation height (value of %s in Land Cover Data) must be greater than zero and less "
-                            "than 120 meters" % Vheight)
-                    Vcan = vcanopy[i * transsample_count + s + 1][h]
-                    Voverhang = overhang[i * transsample_count + s + 1][h]
-                    Elev = elevation[i * transsample_count + s][h]
+                            "than 120 meters" % v_height)
+                    v_can = vcanopy[i * transsample_count + s + 1][h]
+                    v_overhang = overhang[i * transsample_count + s + 1][h]
+                    elev = elevation[i * transsample_count + s][h]
 
                     if not s:  # We are at the stream edge, so start over
-                        LC_Angle_Max = 0  # New value for each transect direction
+                        lc_angle_max = 0  # New value for each transect direction
                     else:
-                        Voverhang = 0  # No overhang away from the stream
+                        v_overhang = 0  # No overhang away from the stream
                     ##########################################################
                     # Calculate the relative ground elevation. This is the
                     # vertical distance from the stream surface to the land surface
-                    SH = Elev - node.elevation
+                    SH = elev - node.elevation
                     # Then calculate the relative vegetation height
-                    VH = Vheight + SH
+                    VH = v_height + SH
 
                     # Calculate the distance to the node from the 
                     # current landcover sample location.
@@ -1220,28 +1220,28 @@ class ModelSetup(object):
                         adjust = 0.5
                     else:
                         adjust = 0.0
-                    LC_Distance1 = IniParams["transsample_distance"] * (
+                    lc_distance1 = IniParams["transsample_distance"] * (
                             s + 1 - adjust)  # This is "+ 1" because s starts at 0
-                    LC_Distance2 = IniParams["transsample_distance"] * (
+                    lc_distance2 = IniParams["transsample_distance"] * (
                             s + 2 - adjust)  # This is "+ 2" because we want to get to the farthest end of the zone
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
                     if not s:
-                        LC_Distance1 -= Voverhang
-                    if LC_Distance1 <= 0:
-                        LC_Distance1 = 0.00001
+                        lc_distance1 -= v_overhang
+                    if lc_distance1 <= 0:
+                        lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
-                    T_Full += degrees(atan(VH / LC_Distance1)),  # It gets added to a tuple of full sun values
+                    t_full += degrees(atan(VH / lc_distance1)),  # It gets added to a tuple of full sun values
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    T_Path += degrees(atan(VH / LC_Distance2)),
+                    t_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic shade for this
                     # transect direction
-                    T_None += degrees(atan(SH / LC_Distance1)),  # likewise, a tuple of values
+                    t_none += degrees(atan(SH / lc_distance1)),  # likewise, a tuple of values
 
                     # Calculate View To Sky
-                    veg_angle = degrees(atan(VH / LC_Distance1)) - degrees(atan(SH / LC_Distance1))
+                    veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
                     if IniParams["canopy_data"] == "LAI":
                         # use LAI data
 
@@ -1249,34 +1249,34 @@ class ModelSetup(object):
                         # use LAI data
                         # Purpose here is to calculate a LAI where 
                         # gap fraction = 0.01% (basically zero)
-                        LAI_den = Vcan / -log(0.001) / Vk
+                        LAI_den = v_can / -log(0.001) / Vk
 
                         if LAI_den > 1:
                             LAI_den = 1
-                        W_Vdens_num += veg_angle * float(LAI_den)
+                        w_vdens_num += veg_angle * float(LAI_den)
                     else:
-                        W_Vdens_num += veg_angle * float(Vcan)
-                    W_Vdens_dem += veg_angle
+                        w_vdens_num += veg_angle * float(v_can)
+                    w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(T_Full) > 0:
+                        if max(t_full) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
-                            # Vdens_mod = (Amount of Veg shade * Veg dens) +
+                            # vdens_mod = (Amount of Veg shade * Veg dens) +
                             # (Amount of bank shade * bank dens, i.e. 1) / 
                             # (Sum of amount of shade)
-                            if W_Vdens_dem > 0:
-                                Vdens_ave_veg = W_Vdens_num / W_Vdens_dem
+                            if w_vdens_dem > 0:
+                                vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
-                                Vdens_ave_veg = 0
-                            Vdens_mod = ((max(T_Full) - max(T_None)) * Vdens_ave_veg + max(T_None)) / max(T_Full)
+                                vdens_ave_veg = 0
+                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
                         else:
-                            Vdens_mod = 1.0
-                        VTS_Total += max(T_Full) * Vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(T_Full), ElevationList[i], max(T_None), T_Full, T_Path),
-            node.ViewToSky = 1 - VTS_Total / (radial_count * 90)
+                            vdens_mod = 1.0
+                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
+                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+            node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
-    def GetLandCoverCodes(self):
+    def get_lc_codes(self):
         """Return the codes from the Land Cover Codes csv input file
         as a dictionary of dictionaries"""
 
@@ -1306,7 +1306,7 @@ class ModelSetup(object):
                         "Canopy value of {0} in Land Cover Codes) must be >= 0.0 and <= 1.0".format(vals[i][1]))
         return data
 
-    def InitializeNode(self, node):
+    def initialize_node(self, node):
         """Perform some initialization of the StreamNode,
         and write some values to spreadsheet"""
         # Initialize each nodes tribs dictionary to a tuple
