@@ -75,7 +75,7 @@ class Interpolator(defaultdict):
         # self[key] = val
         return val
 
-    def View(self, minkey, maxkey, fore=None, aft=None):
+    def view(self, minkey, maxkey, fore=None, aft=None):
         """Return dictionary subset
 
         Return a subset of the current dictionary containing items

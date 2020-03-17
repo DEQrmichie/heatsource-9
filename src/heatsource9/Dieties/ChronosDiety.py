@@ -53,7 +53,7 @@ class ChronosDiety(object):
         if gmtime(self.__current)[2] != gmtime(self.__thisday)[2]:
             # Day numbers not equal, need to recalculate julian day
             self.__thisday = self.__current
-            self.CalcJulianCentury()
+            self.calc_julian_century()
         # Then test whether we're still spinning up
 
         if self.__current < self.__start:
@@ -76,7 +76,7 @@ class ChronosDiety(object):
     def __iter__(self):
         """Iterator support to allow 'for tm in Chronos' loops"""
         if not self.__start or not self.__dt:
-            raise Exception("Must call %s with the Start() method before using." % self.__class__.__name__)
+            raise Exception("Must call %s with the clock() method before using." % self.__class__.__name__)
         while self.__current <= self.__stop:
             yield self.__current
             self(True)
@@ -89,25 +89,25 @@ class ChronosDiety(object):
         raise NotImplementedError("This needs some work- do we actually need it?")
         # return len([i for i in self])
 
-    def PrettyTime(self):
+    def pretty_time(self):
         return ctime(self.__current)
 
-    def Year(self):
+    def year(self):
         return gmtime(self.__current)[0]
 
-    def Month(self):
+    def month(self):
         return gmtime(self.__current)[1]
 
-    def Day(self):
+    def day(self):
         return gmtime(self.__current)[2]
 
-    def TimeTuple(self):
+    def time_tuple(self):
         year, month, day, hour, minute, second, weekday, jday, offset = gmtime(self.__current)
         return year, month, day, hour, minute, second, jday, offset, self.__jdc
 
     # def ExcelTime(self): return float(pyTime(self.__current))
 
-    def Start(self, start, dt=None, stop=None, spin=0, offset=0):
+    def clock(self, start, dt=None, stop=None, spin=0, offset=0):
         """Initialize the clock to some default values and get ready to run.
 
         Initial values are starting and stopping times, timestep in seconds, number
@@ -129,9 +129,9 @@ class ChronosDiety(object):
         self.__thisday = self.__current - self.__dt
         # Placeholder for making sure we don't leave the spin-up period until the right time
         self.__spinday = gmtime(self.__spin_current)[2]
-        self.CalcJulianCentury()
+        self.calc_julian_century()
 
-    def CalcJulianCentury(self):
+    def calc_julian_century(self):
         # Then break out the time into a tuple
         y, m, d, H, M, S, day, wk, tz = gmtime(self.__current)
         dec_day = d + (H + (M + S / 60) / 60) / 24

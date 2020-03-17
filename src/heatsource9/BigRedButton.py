@@ -100,7 +100,7 @@ class ModelControl(object):
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
         # headwater, but we want to run the model from headwater to mouth.
-        self.reachlist = sorted(self.HS.Reach.itervalues(), reverse=True)
+        self.reachlist = sorted(self.HS.reach.itervalues(), reverse=True)
 
         # This if statement prevents us from having to test every 
         # timestep. We just call self.run_all(), which is a classmethod 
@@ -118,7 +118,7 @@ class ModelControl(object):
             Something wrong with the executable".format(run_type))
 
         # Create a Chronos iterator that controls all model time.
-        Chronos.Start(start=IniParams["modelstart"],
+        Chronos.clock(start=IniParams["modelstart"],
                       stop=IniParams["modelend"],
                       dt=IniParams["dt"],
                       spin=IniParams["flushdays"],
@@ -127,9 +127,9 @@ class ModelControl(object):
         # This is the output class, which is essentially just a list
         # of file objects and an append method which writes to them
         # every so often.
-        self.Output = O(self.HS.Reach, IniParams["modelstart"], run_type)
+        self.Output = O(self.HS.reach, IniParams["modelstart"], run_type)
 
-    def Run(self):
+    def run(self):
         """Run the model one time
 
         Use the Chronos instance and list of StreamNodes to cycle
@@ -176,7 +176,7 @@ class ModelControl(object):
         # this so we can start calculating the second timestep (using 
         # another CPU or core) while the first one is still unfinished.
         while time <= stop:
-            year, month, day, hour, minute, second, JD, offset, JDC = Chronos.TimeTuple()
+            year, month, day, hour, minute, second, JD, offset, JDC = Chronos.time_tuple()
             # zero hour+minute+second means first timestep of new day
             if not (hour + minute + second):
                 # zero out the daily flux sum at this point.
@@ -200,7 +200,7 @@ class ModelControl(object):
                 self.run_all(time, hour, minute, second, JD, JDC)
             # Shit, there's a problem
             except:
-                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.PrettyTime(),
+                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.pretty_time(),
                                                                                 Chronos.TheTime, traceback.format_exc())
                 logging.error(msg)
                 print_console(msg)
@@ -277,7 +277,7 @@ class ModelControl(object):
         """Call both hydraulic and solar routines for each StreamNode"""
         [x.CalcDischarge(time) for x in self.reachlist]
         [x.CalcHeat(time, H, M, S, JD, JDC) for x in self.reachlist]
-        [x.MacCormick2(time) for x in self.reachlist]
+        [x.maccormick2(time) for x in self.reachlist]
 
     def run_hy(self, time, H, M, S, JD, JDC):
         """Call hydraulic routines for each StreamNode"""
@@ -292,7 +292,7 @@ def RunHS(model_dir, control_file):
     """Run full temperature model"""
     try:
         HSP = ModelControl(model_dir, control_file, 0)
-        HSP.Run()
+        HSP.run()
         del HSP
     except:
         msg = "Error: {0}".format(traceback.format_exc())
@@ -304,7 +304,7 @@ def RunSH(model_dir, control_file):
     """Run solar routines only"""
     try:
         HSP = ModelControl(model_dir, control_file, 1)
-        HSP.Run()
+        HSP.run()
     except:
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
@@ -315,7 +315,7 @@ def RunHY(model_dir, control_file):
     """Run hydraulics only"""
     try:
         HSP = ModelControl(model_dir, control_file, 2)
-        HSP.Run()
+        HSP.run()
     except:
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
@@ -365,13 +365,13 @@ def hs():
 
             if arg.temperature:
                 HSP = ModelControl(arg.model_dir, control_file, 0)
-                HSP.Run()
+                HSP.run()
             elif arg.solar:
                 HSP = ModelControl(arg.model_dir, control_file, 1)
-                HSP.Run()
+                HSP.run()
             elif arg.run.hydraulics:
                 HSP = ModelControl(arg.model_dir, control_file, 2)
-                HSP.Run()
+                HSP.run()
 
         if arg.command == 'setup':
 
