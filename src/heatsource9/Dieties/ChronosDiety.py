@@ -134,7 +134,6 @@ class ChronosDiety(object):
     def CalcJulianCentury(self):
         # Then break out the time into a tuple
         y, m, d, H, M, S, day, wk, tz = gmtime(self.__current)
-        dec_day = d + (H + (M + S / 60) / 60) / 24
 
         if m < 3:
             m += 12;
