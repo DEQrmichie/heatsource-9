@@ -1,3 +1,5 @@
+from __future__ import division
+
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import iniRange
 from ..Dieties.IniParamsDiety import dtype
@@ -101,7 +103,7 @@ class Inputs(object):
     def headers_met(self):
         """Returns a list of column headers for
         the met input file(s)."""
-        ncols = int((IniParams["metsites"] /
+        ncols = int((IniParams["metsites"] //
                      len(IniParams["metfiles"].split(","))))
         header = ["DATETIME"]
         for n in range(1, ncols + 1):
@@ -175,7 +177,7 @@ class Inputs(object):
         the tributary inflow input file(s).
         """
         if IniParams["inflowsites"] > 0:
-            ncols = int(IniParams["inflowsites"] /
+            ncols = int(IniParams["inflowsites"] //
                         len(IniParams["inflowinfiles"].split(",")))
             header = ["DATETIME"]
             for n in range(1, ncols + 1):
@@ -400,7 +402,7 @@ class Inputs(object):
 
         # make sure that the timestep divides into 60 minutes, 
         # or we may not land squarely on each hour's starting point.
-        if float(60) / IniParams["dt"] - int(float(60) / IniParams["dt"]) > 1e-7:
+        if 60 % IniParams["dt"] != 0:
             raise ValueError(
                 "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]))
         else:
@@ -877,7 +879,7 @@ class Inputs(object):
                                   morphlist, self.headers_morph())
 
         for file in metfiles:
-            metlist = [[t] + [None] * 4 * int((IniParams["metsites"] / len(metfiles))) for t in timelist]
+            metlist = [[t] + [None] * 4 * int((IniParams["metsites"] // len(metfiles))) for t in timelist]
 
             if use_timestamp:
                 met_filename = timestamp + file.strip()
@@ -896,7 +898,7 @@ class Inputs(object):
 
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
-                inflowlist = [[t] + [None] * 2 * int((IniParams["inflowsites"] / len(tribfiles))) for t in timelist]
+                inflowlist = [[t] + [None] * 2 * int((IniParams["inflowsites"] // len(tribfiles))) for t in timelist]
 
                 if use_timestamp:
                     trib_filename = timestamp + file.strip()
