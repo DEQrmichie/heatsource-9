@@ -1,57 +1,8 @@
-from __future__ import print_function
-import unittest
+from __future__ import print_function, division
 from time import ctime, gmtime
-import jdcal
-
-from heatsource9.Dieties.ChronosDiety import Chronos
 
 from heatsource9.Stream.PyHeatsource import CalcSolarPosition, GetStreamGeometry, CalcMuskingum, CalcFlows, \
     CalcHeatFluxes, GetSolarFlux, GetGroundFluxes, CalcMacCormick
-
-# -*- coding: utf-8 -*-
-"""Not implemented with Cython yet. Useful for testing individual functions within vanilla python"""
-
-def CalcJulianCentury(start):
-    # Then break out the time into a tuple
-    y, m, d, H, M, S, day, wk, tz = gmtime(start)
-
-    if m < 3:
-        m += 12
-        y -= 1
-
-    julian_day = int(365.25 * (y + 4716.0)) + int(30.6001 * (m + 1)) + d - 1524.5
-
-    # This value should only be added if we fall after a certain date
-    if julian_day > 2299160.0:
-        a = int(y / 100)
-        b = (2 - a + int(a / 4))
-        julian_day += b
-
-    z = jdcal.gcal2jd(year=y, month=m, day=d)
-    z1 = z[0] + z[1]
-    if julian_day != z1:
-        print(julian_day, z)
-    
-
-    # This is the julian century
-    jdc = round((julian_day - 2451545.0) / 36525.0, 10)  # Eqn. 2-5 in HS Manual
-
-    return jdc
-
-# start=993945600
-# stop=994550400
-Chronos.Start(start=993945600, dt=60.0, stop=993945600 + (86400 * 1), offset=-7)
-
-year, month, day, hour, minute, second, JD, offset, JDC = Chronos.TimeTuple()
-
-jdcl = []
-while Chronos.TheTime <= Chronos.stop:
-    jdc = CalcJulianCentury(start=Chronos.TheTime)
-    jdcl.append(jdc)
-    Chronos(tick=True)
-
-
-
 
 test_params = {
     "CalcSolarPosition": {
