@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
 from time import ctime, gmtime
 
 
@@ -54,20 +55,9 @@ class ChronosDiety(object):
             # Day numbers not equal, need to recalculate julian day
             self.__thisday = self.__current
             self.calc_julian_century()
+            
         # Then test whether we're still spinning up
-
         if self.__current < self.__start:
-            # If we're still in the spin-up period
-            #            print "True",
-            #            #Make sure we don't advance to next day (i.e. just run the first day over and over)
-            #            if gmtime(self.__spin_current+self.__dt)[2] != gmtime(self.__spin_start)[2]:
-            # We would have advanced, so we start again on the first day
-            #                self.__spin_current = self.__spin_start
-            #            else:
-            #                print "False"
-            # We're spinning up and haven't advanced, so use the current spin-up time
-            #                self.__spin_current += self.__dt
-            #            # Set TheTime according to either spin_current or current and then return it
             self.__spin_current += self.__dt
             return self.__spin_current
         else:
@@ -134,7 +124,6 @@ class ChronosDiety(object):
     def calc_julian_century(self):
         # Then break out the time into a tuple
         y, m, d, H, M, S, day, wk, tz = gmtime(self.__current)
-        dec_day = d + (H + (M + S / 60) / 60) / 24
 
         if m < 3:
             m += 12;
