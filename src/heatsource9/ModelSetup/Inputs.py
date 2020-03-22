@@ -9,7 +9,6 @@ from builtins import next
 from builtins import zip
 from builtins import str
 from builtins import range
-from past.builtins import basestring
 from builtins import object
 import csv
 import platform
@@ -35,6 +34,11 @@ logging.basicConfig(level=logging.DEBUG,
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 class Inputs(object):
