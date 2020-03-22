@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2016, 
+# Heat Source, Copyright (C) 2000-2019, 
 # Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ class StreamNode(object):
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
                 "lc_height", "lc_canopy", "lc_oh","lc_lai", "lc_k", # Land cover params
+                "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
@@ -119,11 +120,12 @@ class StreamNode(object):
         else:
             radial_count = IniParams["trans_count"]
         self.lc_height = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_height_rel = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_canopy = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
-    def GetNodeData(self):
+    def get_node_data(self):
         data = {}
         for attr in self.__slots:
             data[attr] = getattr(self,attr)
@@ -150,14 +152,14 @@ class StreamNode(object):
     def __repr__(self):
         return '%s @ %.3f km' % (self.__class__.__name__, self.km)
 
-    def Initialize(self):
+    def initialize(self):
         """Methods necessary to set initial conditions of the node"""
         global _HS, py_HS, C_HS
         has_prev = self.prev_km is not None
         if has_prev:
-            self.CalcHeat = self.CalcHeat_Opt
+            self.CalcHeat = self.calc_heat_opt
         else:
-            self.CalcHeat = self.CalcHeat_BoundaryNode
+            self.CalcHeat = self.calc_heat_boundary_node
         
         if IniParams["run_in_python"]:
             _HS = py_HS
@@ -167,10 +169,10 @@ class StreamNode(object):
             logger.error(msg)
             raise Exception(msg)
 
-        self.CalcDischarge = self.CalculateDischarge
+        self.CalcDischarge = self.calculate_discharge
         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
                        self.ViewToSky, self.phi, self.lc_canopy,
-                       self.lc_height, self.lc_k, self.SedDepth,
+                       self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
                        self.dx, self.dt, self.SedThermCond,
                        self.SedThermDiff, self.Q_in, self.T_in,
                        has_prev, IniParams["transsample_distance"],
@@ -181,8 +183,8 @@ class StreamNode(object):
                        IniParams["calcalluvium"],
                        IniParams["alluviumtemp"])
 
-    def CalcDischarge_Opt(self, time):
-        """A Version of CalculateDischarge() that does not require
+    def calc_discharge_opt(self, time):
+        """A Version of calculate_discharge() that does not require
         checking for boundary conditions"""
         inputs = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
         self.Q_mass += inputs
@@ -190,7 +192,7 @@ class StreamNode(object):
         
         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
             self.Disp) = \
-            _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+            _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
                           self.dx, self.dt, self.z, self.n,
                           self.d_cont, self.Q, up.Q, up.Q_prev,
                           inputs, -1)
@@ -206,7 +208,7 @@ class StreamNode(object):
             msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
             logger.warning(msg)
 
-    def CalcDischarge_BoundaryNode(self, time):
+    def calc_discharge_boundary_node(self, time):
         Q_bc = self.Q_bc[time]
         self.Q_mass += Q_bc
         # We fill the discharge arguments with 0 because it is 
@@ -214,7 +216,7 @@ class StreamNode(object):
         
         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
             self.U, self.Disp) = \
-                _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+                _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
                               self.dx, self.dt, self.z, self.n,
                               self.d_cont,
                               0.0, 0.0, 0.0, 0.0, Q_bc)
@@ -227,7 +229,7 @@ class StreamNode(object):
             #Channel is going dry
             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
 
-    def CalculateDischarge(self, time):
+    def calculate_discharge(self, time):
         """Return the discharge for the current timestep
 
         This method uses the GetKnownDischarges() and GetMuskigum()
@@ -259,14 +261,14 @@ class StreamNode(object):
             
             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
                 self.U, self.Disp) = \
-                    _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+                    _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
                                   self.dt, self.z, self.n,
                                   self.d_cont, 0.0, 0.0, 0.0,
                                   inputs, Q)
             
             # If we hit this once, we remap so we can avoid the 
             # if statements in the future.
-            self.CalcDischarge = self.CalcDischarge_Opt
+            self.CalcDischarge = self.calc_discharge_opt
         else:
             # We're a spatial boundary, use the boundary condition
             # At spatial boundaries, we return the boundary 
@@ -278,12 +280,12 @@ class StreamNode(object):
             
             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
                 self.U, self.Disp) = \
-                    _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+                    _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
                                   self.dx, self.dt, self.z, self.n,
                                   self.d_cont, 0.0, 0.0, 0.0,
                                   inputs, Q_bc)
             
-            self.CalcDischarge = self.CalcDischarge_BoundaryNode
+            self.CalcDischarge = self.calc_discharge_boundary_node
 
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
         self.Q_prev = self.Q  or Q
@@ -294,7 +296,7 @@ class StreamNode(object):
             msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.PrettyTime())
             logger.warning(msg)
 
-    def CalcHeat_Opt(self, time, hour, min, sec, JD,
+    def calc_heat_opt(self, time, hour, min, sec, JD,
                      JDC, solar_only=False):
         """Inlined version of CalcHeat optimized for non-boundary nodes
         (removes a bunch of if/else statements)"""
@@ -320,7 +322,7 @@ class StreamNode(object):
          ground,
          self.F_Total,
          self.Delta_T,
-         Mac) = _HS.CalcHeatFluxes(self.metData[time],
+         Mac) = _HS.calc_heat_fluxes(self.metData[time],
                                    self.C_args,
                                    self.d_w,
                                    self.A,
@@ -366,7 +368,7 @@ class StreamNode(object):
             self.Solar_Blocked[tran][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
 
-    def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
+    def calc_heat_boundary_node(self, time, hour, min, sec, JD,
                               JDC, solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
@@ -376,7 +378,7 @@ class StreamNode(object):
          Zenith,
          Daytime,
          tran,
-         Azimuth_mod) = _HS.CalcSolarPosition(self.latitude, 
+         Azimuth_mod) = _HS.calc_solar_position(self.latitude,
                                               self.longitude,hour,
                                               min,
                                               sec,
@@ -393,7 +395,7 @@ class StreamNode(object):
          veg_block,
          ground,
          self.F_Total,
-         self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
+         self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],
                                        self.C_args,
                                        self.d_w,
                                        self.A,
@@ -441,7 +443,7 @@ class StreamNode(object):
         self.T = self.T_bc[time]
         self.T_prev = self.T_bc[time]
 
-    def MacCormick2(self, time):
+    def maccormick2(self, time):
         #===================================================
         #Set control temps
         if not self.prev_km:
@@ -449,7 +451,7 @@ class StreamNode(object):
         #===================================================
         #Throw away S and mix because we won't need them.
 
-        self.T, S, mix = _HS.CalcMacCormick(self.dt, self.dx, self.U,
+        self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,
                                             self.T_sed, self.T_prev,
                                             self.Q_hyp,
                                             self.Q_tribs[time],
@@ -462,9 +464,11 @@ class StreamNode(object):
                                             self.Q_in, self.T_in,
                                             self.next_km.Mix_T_Delta)
 
-    def CalcDispersion(self):
-        dx = self.dx
-        dt = self.dt
+    def calc_dispersion(self):
+        cdef double dx = self.dx
+        cdef double dt = self.dt
+        cdef double Shear_Velocity
+        cdef double Disp
         if not self.S:
             Shear_Velocity = self.U
         else:
@@ -475,52 +479,7 @@ class StreamNode(object):
         Disp = 0.1
         return Disp
 
-    def MacCormick_THW(self, time):
-        mix = self.MixItUp(bc_hour, self.prev_km.Q_prev,
-                           self.prev_km.T_prev) if self.Q else 0
-        T0 = self.prev_km.T_prev + mix
-        T1 = self.T_prev
-        T2 = self.next_km.T_prev if self.next_km else self.T_prev
-        Dummy1 = -self.U * (T1 - T0) / self.dx
-        Disp = self.CalcDispersion()
-        Dummy2 = Disp * (T2 - 2 * T1 + T0) / (self.dx ** 2)
-        S1 = Dummy1 + Dummy2 + self.Delta_T / self.dt
-        T = T1 + S1 * self.dt
-        return T, S1
-
-    def MacCormick_BoundaryNode(self, time):
-        if not args[12]: # We're running the first time if we have no S value.
-            self.T = self.T_bc[time]
-            self.T_prev = self.T_bc[time]
-        else:
-            pass
-
-    def MacCormick2_THW(self, time):
-        SkipNode = False
-        if self.prev_km:
-            if not SkipNode:
-                mix = self.MixItUp(time, self.prev_km.Q,
-                                   self.prev_km.T) if self.Q else 0
-                T0 = self.prev_km.T + mix
-                T1 = self.T
-                T2 = self.next_km.T if self.next_km else self.T
-                #======================================================
-                #Final MacCormick Finite Difference Calc.
-                #===================================================
-                Dummy1 = -self.U * (T1 - T0) / self.dx
-                Dummy2 = self.Disp * (T2 - 2 * T1 + T0) / (self.dx ** 2)
-                S2 = Dummy1 + Dummy2 + self.Delta_T / self.dt
-                T = self.T_prev + ((self.S1 + S2) / 2) * self.dt
-            else:
-                T = self.T_prev
-        else: T = self.T_prev
-        if T > 50 or T < 0:
-            msg = "Unstable model"
-            logger.error(msg)
-            raise Exception(msg)
-        return T
-
-    def MixItUp(self, time, Q_up, T_up):
+    def mix_it_up(self, time, Q_up, T_up):
         Q_in = 0
         T_in = 0
         for i in range(len(self.Q_tribs[time])):

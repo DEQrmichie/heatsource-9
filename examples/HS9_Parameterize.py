@@ -18,6 +18,7 @@ from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
 from collections import defaultdict
+from operator import itemgetter
 from os.path import abspath
 from os.path import dirname
 from os.path import exists
@@ -204,7 +205,7 @@ inputs.parameterize_cf(overwrite=False,
                        transsample_distance = 8, 
                        emergent = "True", 
                        lcdatainput = "Codes", 
-                       canopy_data = "CanopyClosure", 
+                       canopy_data = "CanopyCover", 
                        lcsampmethod = "point", 
                        heatsource8 = "False")
 
@@ -220,11 +221,11 @@ inputs.setup(use_timestamp=False, overwrite=True)
 # ArcGIS Desktop license
 parameterize_from_nodes_fc(input_file="lcdatafile", nodes_fc=nodes_fc,
                            group_val="Example Model", grouping_field="STREAM_ID",
-                           cont_stream_km=False, overwrite=False)
+                           cont_stream_km=False, overwrite=True)
 
 parameterize_from_nodes_fc(input_file="morphfile", nodes_fc=nodes_fc,
                            group_val="Example Model", grouping_field="STREAM_ID",
-                           cont_stream_km=False, overwrite=False)
+                           cont_stream_km=False, overwrite=True)
 
 # Parameterize the lccodes input 
 lccodes = [('Active River Channel',100,0,0,0), 

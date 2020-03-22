@@ -1,4 +1,4 @@
-# Heat Source, Copyright (C) 2000-2016, 
+# Heat Source, Copyright (C) 2000-2019, 
 # Oregon Department of Environmental Quality
 
 # This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ flux and hydraulic calculations are made."""
 from __future__ import division, print_function
 from builtins import range
 from math import pow, sqrt, log, log10, exp, pi
-from math import atan, sin, cos, tan, acos, radians
+from math import atan, sin, cos, tan, acos, radians, degrees
 from random import randint
 from bisect import bisect
 
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 from ..Utils.Printer import Printer as print_console
 
-def CalcSolarPosition(lat, lon, hour, min, sec, offset,
+def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JDC, heatsource8, radial_count):
     toRadians = pi/180.0
     toDegrees = 180.0/pi
@@ -164,13 +164,15 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
         else:
             Azimuth_mod = Azimuth
         tran = bisect(AngleStart,Azimuth_mod)-1
+
     return Altitude, Zenith, Daytime, tran, Azimuth_mod
 
-def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
-    Converge = 10
-    dy = 0.01
-    count = 0
-    power = 2/3
+def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
+    cdef double Converge = 10
+    cdef double dy = 0.01
+    cdef int count = 0
+    cdef double power = 2/3
+    cdef double Fy, thed, Fyy, dFy
     
     # ASSUMPTION: Make bottom width 1 cm to prevent undefined numbers 
     # in the math.
@@ -207,6 +209,7 @@ def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
             count += 1
     # Use the calculated wetted depth to calculate new 
     # channel characteristics
+    cdef double A, Pw, Rh, Ww, U, Shear_Velocity, Dispersion
     A = (D_est * (W_b + z * D_est))
     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))
     Rh = A/Pw
@@ -227,19 +230,18 @@ def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     #Dispersion = 50
     return D_est, A, Pw, Rh, Ww, U, Dispersion
 
-def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
+def calc_muskingum(Q_est, U, W_w, S, dx, dt):
     """Return the values for the Muskigum routing coefficients
     using current timestep and optional discharge"""
     # Calculate an initial geometry based on an estimated 
     # discharge (typically (t,x-1))
     # Taken from the VB source in Heat Source version 7.
-    c_k = (5/3) * U  # Wave celerity
-    X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
+    cdef double c_k = (5/3) * U  # Wave celerity
+    cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
     if X > 0.5: X = 0.5
     elif X < 0.0: X = 0.0
-    K = dx / c_k
-    dt = dt
-
+    cdef double K = dx / c_k
+    cdef double dt_stable
     # Check the celerity to ensure stability. These tests are 
     # from the VB code.
     if dt >= (2 * K * (1 - X)):
@@ -248,37 +250,39 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
         msg = "Unstable timestep. Decrease dt or increase dx. \
         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
-        raise Exception()
+        raise Exception(msg)
 
     # These calculations are from Chow's "Applied Hydrology"
-    D = K * (1 - X) + 0.5 * dt
-    C1 = (0.5*dt - K * X) / D
-    C2 = (0.5*dt + K * X) / D
-    C3 = (K * (1 - X) - 0.5*dt) / D
+    cdef double D = K * (1 - X) + 0.5 * dt
+    cdef double C1 = (0.5*dt - K * X) / D
+    cdef double C2 = (0.5*dt + K * X) / D
+    cdef double C3 = (K * (1 - X) - 0.5*dt) / D
     # TODO: reformulate this using an updated model, 
     # such as Moramarco, et.al., 2006
     return C1, C2, C3
 
-def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
+def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
               inputs, Q_bc):
+    cdef double Q1, Q2, Q_new
+    cdef double C[3]              
     if Q_bc >= 0:
         Q_new = Q_bc
     else:
         Q1 = Q_up + inputs
         Q2 = Q_up_prev + inputs
-        C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
+        C = calc_muskingum(Q2, U, W_w, S, dx, dt)
         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
 
     #if Q_new > 0.000:
-    Geom = GetStreamGeometry(Q_new, W_b, z, n, S, D_est, dx, dt)
+    Geom = get_stream_geometry(Q_new, W_b, z, n, S, D_est, dx, dt)
     return Q_new, Geom
 
-def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
+def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, phi, emergent, lc_canopy, lc_height, lc_k,
+                 BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
                  ShaderList, tran, heatsource8):
     """ """
-    FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle = ShaderList
+    FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
     F_Solar = [0]*8
@@ -329,6 +333,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
+    PLz =[0]*transsample_count
     
     if Altitude <= TopoShadeAngle:
         # Topographic shade is occurring
@@ -349,75 +354,59 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         
         # 3 - Below Landcover (Above Bank Shade & Emergent)
         Dummy1 = F_Direct[2]
-        
-        zone = transsample_count - 1
-        
-        # zonal sun path length
-        PLz = transsample_distance / cos(radians(Altitude))
-        
-        if heatsource8:
-            #---------  Boyd and Kasper 2007
-            PL = 10
-        else:
-            #--------- (Norman and Welles 1983)
-            # here the extinction coefficient 
-            # represents the foliage density * k
-            # Calculate the path length as the total sun vector distance
-            # through all the canopy zones
-            # start with zero
-            PL = 0
-        
-            for z in range(transsample_count): 
-                if Altitude < VegetationAngle[z]:
-                    # sun vector is passing through the canopy
-                    PL += PLz
-            
-            # Just testing hs8 methods
-            #PL = 10
-        
+
         # Now calculate the fraction of radiation passed through the canopy
-        while zone >= 0:
-            if Altitude >= VegetationAngle[zone]:
+        s = transsample_count - 1
+        
+        while s >= 0:
+            if Altitude >= VegetationAngle1[s]:
                 # no shading
                 fraction_passed = 1
             else:
-                # shading is occurring from this zone
-                if BeersData == "LAI":
-                    # use LAI data
-                    # k as an input
-                    RipExtinction = lc_k[tran][zone]
-                    
-                    # Assumption here is that LAI is for the whole canopy.
-                    # Since we are calculating the fraction passed for a 
-                    # portion of the canopy (zone) I take the approach 
-                    # described by Norman and Welles 1983.
-                    # Use total path length to calculate foliage 
-                    # density, then calculate fraction passed for the 
-                    # zonal path length.
-                    fraction_passed = exp(-1 *
-                                          RipExtinction *
-                                          (lc_canopy[tran][zone] / PL) *
-                                          PLz)
+                
+                # First calculate path length through the canopy sample 
+                if Altitude <= VegetationAngle2[s]:
+                    # solar incoming from the side of the canopy
+                    PLz = transsample_distance / cos(radians(Altitude))
                 else:
-                    # Use canopy closure to calculate 
+                    # solar incoming from top of the canopy (not from the side)
+                    PLz = (lc_height_rel[tran][s] - (tan(radians(Altitude)) * (transsample_distance*s))) / sin(radians(Altitude))
+                
+                # shading is occurring from this sample
+                if BeersData == "LAI":
+                    
+                    # use LAI and k to calculate the riparian extinction value
+                    RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
+                    fraction_passed = exp(-1 * RipExtinction * PLz)
+                    
+                else:
+                    # Use canopy cover to calculate 
                     # the riparian extinction value
+                    if heatsource8:
+                        #---------  Boyd and Kasper 2007 
+                        # from original heat source model
+                        PL = 10
+                    else:
+                        #--------- Norman and Welles 1983, Chen et al 1998
+                        PL = lc_height[tran][s]
+                    
                     try:
-                        RipExtinction = -log(1- lc_canopy[tran][zone])/ PL
+                        RipExtinction = -log(1- lc_canopy[tran][s]) / PL
                         fraction_passed = exp(-1* RipExtinction * PLz)
                     except:
-                        if lc_canopy[tran][zone] >= 1:
-                            # can't take log of zero
+                        if (lc_canopy[tran][s] >= 1 or PL <= 0):
+                            # can't take log or divide by zero
                             fraction_passed = 0
                         else:
                             # some other error
-                            msg="Unknown error when calculating riparian extinction value. transect={0} zone={1} canopy={2} PL={3} ".format(tran,zone,lc_canopy[tran][zone],PL)
+                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
                             logger.error(msg)
                             print_console(msg)
                             raise
                         
-            Solar_blocked_byVeg[zone] = Dummy1 - (Dummy1 * fraction_passed)
+            Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
-            zone -= 1
+            s -= 1
         F_Direct[3] = Dummy1
         
     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
@@ -439,39 +428,47 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
 
     if emergent:
         # Account for emergent vegetation
-        if (lc_height[0][0] <= 0) or (lc_canopy[0][0] == 0):
+        if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):
             # Set to one if no veg or no canopy
             fraction_passed = 1
-        
+    
         else:
+            # sun vector is passing through the canopy
+            
             if heatsource8:
                 #---------  Boyd and Kasper 2007
                 PLe = 10
             else:
                 #--------- (Norman and Welles 1983)
                 # PLe is the path length of the sun vector through 
-                # the vegetation in the emergent zone
-                PLe =  lc_height[0][0] / sin(radians(Altitude))
+                # the vegetation in the emergent sample
+        
+                # The emergent zone can't be wider than half the 
+                # wetted width. if this is a solar only run the wetted 
+                # width is not calculated so W_b = 0. The sample zone 
+                # width is used instead.
+                if W_b == 0: 
+                    emergent_distance = transsample_distance 
+                else:
+                    emergent_distance = W_b * 0.5
                 
-                # PLe can't be longer than the wetted width.
-                # this happens when altitude is lower than height of veg.
-                # if this is a solar only run the wetted width is not 
-                # calculated so W_b = 0. The zone width is used instead.
-                if W_b == 0: W_b = transsample_distance
-                if PLe >  W_b: PLe = W_b
-
+                if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):
+                    PLe = emergent_distance / cos(radians(Altitude))
+                else:
+                    PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
+                
             if BeersData == "LAI":
-                # use LAI data
-                # k as an input
-                RipExtinction = lc_k[0][0]
-                fraction_passed = exp(-1* lc_canopy[0][0] * RipExtinction * PLe)
+                # use LAI and k to calculate the riparian extinction value
+                RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]
+                fraction_passed = exp(-1 * RipExtinction * PLe)
                 
             else:
                 try:
-                    # Use canopy closure to calculate 
+                    # Use canopy cover to calculate 
                     # the riparian extinction value
-                    RipExtinction = -log(1- lc_canopy[0][0]) / PLe
+                    RipExtinction = -log(1- lc_canopy[0][0]) / lc_height[0][0]
                     fraction_passed = exp(-1* RipExtinction * PLe)
+                    
                 except:
                     if lc_canopy[0][0] >= 1:
                         # can't take log of zero
@@ -485,7 +482,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 
         F_Direct[4] = F_Direct[4] * fraction_passed
         F_Diffuse[4] = F_Diffuse[4] * fraction_passed
-
+        
     #=========================================================
     # 5 - Entering Stream
     if Zenith > 80:
@@ -585,7 +582,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
-def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
+def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
@@ -594,7 +591,7 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # SedThermCond units of W/(m *C)
     # SedThermDiff units of cm^2/sec
 
-    SedRhoCp = SedThermCond / (SedThermDiff / 10000)
+    cdef double SedRhoCp = SedThermCond / (SedThermDiff / 10000)
     # NOTE: SedRhoCp is the product of sediment density and heat capacity
     # since thermal conductivity is defined as 
     # density * heat capacity * diffusivity,
@@ -602,23 +599,23 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # units of (J / m3 / *C)
 
     # Water Variable
-    rhow = 1000  #density of water kg / m3
-    H2O_HeatCapacity = 4187 #J/(kg *C)
+    cdef int rhow = 1000  #density of water kg / m3
+    cdef int H2O_HeatCapacity = 4187 #J/(kg *C)
 
     # Conduction flux (positive is heat into stream)
     # units of (W/m2)
-    F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2) 
+    cdef double F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2) 
     
     # Calculate the conduction flux between deeper alluvium 
     # & substrate conditionally
-    Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
+    cdef double Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
 
     # Hyporheic flux (negative is heat into sediment)
-    F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
+    cdef double F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
 
-    NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
-    DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
-    T_sed_new = T_sed + DT_Sed
+    cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
+    cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
+    cdef double T_sed_new = T_sed + DT_Sed
     if T_sed_new > 50 or T_sed_new < 0:
         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
         logger.error(msg)
@@ -630,37 +627,39 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     # Atmospheric variables
     
     # mbar (Chapra p. 567)
-    Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
-    Air_Vapor = humidity * Sat_Vapor
+    cdef double Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
+    cdef double Air_Vapor = humidity * Sat_Vapor
     
     # Stefan-Boltzmann constant (W/m2 K4)    
-    Sigma = 5.67e-8
+    cdef double Sigma = 5.67e-8
     
     # Dingman p 282
-    Emissivity = (1.72 * (((Air_Vapor * 0.1) /
+    cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
                            (273.2 + T_air)) ** (1 / 7)) *
                   (1 + 0.22 * cloud ** 2))
     #======================================================
     # Calculate the atmospheric longwave flux
-    F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
+    cdef double F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
     # Calculate the backradiation longwave flux
-    F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
+    cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
     # Calculate the vegetation longwave flux
-    F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
+    cdef double F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
     # Calculate the net longwave flux
-    F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
+    cdef double F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
 
     #===================================================
     # Calculate Evaporation FLUX
     #===================================================
     # Atmospheric Variables
-    Pressure = 1013 - 0.1055 * elevation #mbar
+    cdef double Pressure = 1013 - 0.1055 * elevation #mbar
     
     # mbar (Chapra p. 567)
     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
     Air_Vapor = humidity * Sat_Vapor
     #===================================================
     # Calculate the frictional reduction in wind velocity
+    cdef int Zm
+    cdef double Zd, Zo, Friction_Velocity
     if emergent and lc_height[0][0] > 0:
         
         Zm = 2
@@ -685,14 +684,15 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
-    Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity 
+    cdef double Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity 
     # Wind_Function = 0.000000001505 + 0.0000000016 * Friction_Velocity #m/mbar/s
 
     #===================================================
     # Latent Heat of Vaporization
-    LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
+    cdef double LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
     #===================================================
     # Use Jobson Wind Function
+    cdef double P, Gamma, Delta, NetRadiation, Ea, Evap_Rate, F_Evap, Bowen
     if penman:
         #Calculate Evaporation FLUX
         P = 998.2 # kg/m3
@@ -727,30 +727,35 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
         else:
             Bowen = 1
             
-    F_Conv = F_Evap * Bowen
-    E = Evap_Rate*W_w if calcevap else 0
+    cdef double F_Conv = F_Evap * Bowen
+    cdef double E = Evap_Rate*W_w if calcevap else 0
     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
 
-def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
+def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
-    Q_in = 0
-    T_in = 0
-    T_up = T0
-    numerator = 0
+
+    cdef double Q_in = 0.0
+    cdef double T_in = 0.0
+    cdef double T_up = T0
+    cdef double numerator = 0.0
+    cdef double T_mix
+    cdef double Qitem, Titem
     for i in range(len(Q_tup)):
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         # make sure there's a value for discharge. Temp can be 
         # blank if discharge is negative (withdrawal)
         if Qitem is None or (Qitem > 0 and Titem is None):
-            raise HeatSourceError("Problem with null value in tributary discharge or temperature")
+            msg="Problem with null value in tributary discharge or temperature"
+            logger.error(msg)
+            raise Exception(msg)
         if Qitem > 0:
             Q_in += Qitem
             numerator += Qitem*Titem
     if numerator and (Q_in > 0):
         T_in = numerator/Q_in
-    # This is basically MixItUp from the VB code
+    # This is basically mix_it_up from the VB code
     T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
     
     # Calculate temperature change from mass transfer from hyporheic zone
@@ -776,17 +781,17 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     # to account for mixing in that reach.
     T2 -= MixTDelta_dn
 
-    Dummy1 = -U * (T1 - T0) / dx
-    Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
-    S = Dummy1 + Dummy2 + Delta_T / dt
+    cdef double Dummy1 = -U * (T1 - T0) / dx
+    cdef double Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
+    cdef double S = Dummy1 + Dummy2 + Delta_T / dt
+    cdef double Temp
     if S1:
         Temp = T_prev + ((S1_value + S) / 2) * dt
     else:
         Temp = T1 + S * dt
-
     return Temp, S, T_mix
 
-def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
+def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
@@ -795,7 +800,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     cloud, wind, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
-        lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
+        lc_height_rel, lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, T_alluv = C_args
@@ -810,13 +815,13 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     if daytime:
         
         (solar, diffuse,
-        direct, veg_block) = GetSolarFlux(hour, JD, Altitude, Zenith,
+        direct, veg_block) = get_solar_flux(hour, JD, Altitude, Zenith,
                                         cloud, d_w, W_b, elevation,
                                         TopoFactor, ViewToSky,
                                         transsample_distance,
                                         transsample_count,
                                         BeersData, phi, emergent,
-                                        lc_canopy, lc_height,
+                                        lc_canopy, lc_height, lc_height_rel,
                                         lc_k, ShaderList, tran,
                                         heatsource8)
 
@@ -833,7 +838,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # regular node
         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
-    ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
+    ground = get_ground_fluxes(cloud, wind, humidity, T_air, elevation,
                     phi, lc_height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
@@ -849,7 +854,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # Boundary node
         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
 
-    Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
+    Mac = calc_maccormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
                          T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr,
                          MixTDelta_dn_prev)
