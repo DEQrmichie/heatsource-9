@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 from ..Utils.Printer import Printer as print_console
 
-def CalcSolarPosition(lat, lon, hour, min, sec, offset,
+def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JDC, heatsource8, radial_count):
     toRadians = pi/180.0
     toDegrees = 180.0/pi
@@ -166,7 +166,7 @@ def CalcSolarPosition(lat, lon, hour, min, sec, offset,
 
     return Altitude, Zenith, Daytime, tran, Azimuth_mod
 
-def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
+def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     cdef double Converge = 10
     cdef double dy = 0.01
     cdef int count = 0
@@ -229,7 +229,7 @@ def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     #Dispersion = 50
     return D_est, A, Pw, Rh, Ww, U, Dispersion
 
-def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
+def calc_muskingum(Q_est, U, W_w, S, dx, dt):
     """Return the values for the Muskigum routing coefficients
     using current timestep and optional discharge"""
     # Calculate an initial geometry based on an estimated 
@@ -260,7 +260,7 @@ def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
     # such as Moramarco, et.al., 2006
     return C1, C2, C3
 
-def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
+def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
               inputs, Q_bc):
     cdef double Q1, Q2, Q_new
     cdef double C[3]              
@@ -269,14 +269,14 @@ def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
     else:
         Q1 = Q_up + inputs
         Q2 = Q_up_prev + inputs
-        C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
+        C = calc_muskingum(Q2, U, W_w, S, dx, dt)
         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
 
     #if Q_new > 0.000:
-    Geom = GetStreamGeometry(Q_new, W_b, z, n, S, D_est, dx, dt)
+    Geom = get_stream_geometry(Q_new, W_b, z, n, S, D_est, dx, dt)
     return Q_new, Geom
 
-def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
+def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
                  ShaderList, tran, heatsource8):
@@ -581,7 +581,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
-def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
+def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
@@ -730,7 +730,7 @@ def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
     cdef double E = Evap_Rate*W_w if calcevap else 0
     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
 
-def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
+def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
     cdef double Q_in = 0.0
@@ -753,7 +753,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
             numerator += Qitem*Titem
     if numerator and (Q_in > 0):
         T_in = numerator/Q_in
-    # This is basically MixItUp from the VB code
+    # This is basically mix_it_up from the VB code
     T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
     
     # Calculate temperature change from mass transfer from hyporheic zone
@@ -789,7 +789,7 @@ def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         Temp = T1 + S * dt
     return Temp, S, T_mix
 
-def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
+def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
@@ -813,7 +813,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     if daytime:
         
         (solar, diffuse,
-        direct, veg_block) = GetSolarFlux(hour, JD, Altitude, Zenith,
+        direct, veg_block) = get_solar_flux(hour, JD, Altitude, Zenith,
                                         cloud, d_w, W_b, elevation,
                                         TopoFactor, ViewToSky,
                                         transsample_distance,
@@ -836,7 +836,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # regular node
         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
-    ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
+    ground = get_ground_fluxes(cloud, wind, humidity, T_air, elevation,
                     phi, lc_height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
@@ -852,7 +852,7 @@ def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # Boundary node
         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
 
-    Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
+    Mac = calc_maccormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
                          T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr,
                          MixTDelta_dn_prev)
