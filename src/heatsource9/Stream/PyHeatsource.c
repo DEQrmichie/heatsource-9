@@ -3,11 +3,11 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "heatsource9.Stream.PyHeatsource", 
+        "name": "heatsource9.Stream.PyHeatsource",
         "sources": [
             "src/heatsource9/Stream/PyHeatsource.pyx"
         ]
-    }, 
+    },
     "module_name": "heatsource9.Stream.PyHeatsource"
 }
 END: Cython Metadata */
@@ -883,16 +883,6 @@ static const char *__pyx_f[] = {
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
-#else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
-#endif
-
-/* GetBuiltinName.proto */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name);
-
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -912,6 +902,16 @@ static PyObject* __Pyx_PyFloat_TrueDivideObjC(PyObject *op1, PyObject *op2, doub
 #define __Pyx_PyFloat_TrueDivideObjC(op1, op2, floatval, inplace, zerodivision_check)\
     (inplace ? PyNumber_InPlaceTrueDivide(op1, op2) : PyNumber_TrueDivide(op1, op2))
 #endif
+
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
@@ -1226,13 +1226,6 @@ static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int eq
 /* UnicodeEquals.proto */
 static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
 
-/* StrEquals.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
-#else
-#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
-#endif
-
 /* GetTopmostException.proto */
 #if CYTHON_USE_EXC_INFO_STACK
 static _PyErr_StackItem * __Pyx_PyErr_GetTopmostException(PyThreadState *tstate);
@@ -1373,8 +1366,6 @@ extern int __pyx_module_is_main_heatsource9__Stream__PyHeatsource;
 int __pyx_module_is_main_heatsource9__Stream__PyHeatsource = 0;
 
 /* Implementation of 'heatsource9.Stream.PyHeatsource' */
-static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_xrange;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_OverflowError;
 static PyObject *__pyx_builtin_enumerate;
@@ -1516,7 +1507,6 @@ static const char __pyx_k_penman[] = "penman";
 static const char __pyx_k_random[] = "random";
 static const char __pyx_k_wind_a[] = "wind_a";
 static const char __pyx_k_wind_b[] = "wind_b";
-static const char __pyx_k_xrange[] = "xrange";
 static const char __pyx_k_Azimuth[] = "Azimuth";
 static const char __pyx_k_BedRock[] = "BedRock";
 static const char __pyx_k_Daytime[] = "Daytime";
@@ -1547,13 +1537,13 @@ static const char __pyx_k_Pressure[] = "Pressure";
 static const char __pyx_k_S1_value[] = "S1_value";
 static const char __pyx_k_SedDepth[] = "SedDepth";
 static const char __pyx_k_SedRhoCp[] = "SedRhoCp";
+static const char __pyx_k_builtins[] = "builtins";
 static const char __pyx_k_calcevap[] = "calcevap";
 static const char __pyx_k_emergent[] = "emergent";
 static const char __pyx_k_has_prev[] = "has_prev";
 static const char __pyx_k_humidity[] = "humidity";
 static const char __pyx_k_Air_Vapor[] = "Air_Vapor";
 static const char __pyx_k_BeersData[] = "BeersData";
-static const char __pyx_k_CalcFlows[] = "CalcFlows";
 static const char __pyx_k_Evap_Rate[] = "Evap_Rate";
 static const char __pyx_k_F_Diffuse[] = "F_Diffuse";
 static const char __pyx_k_HourAngle[] = "HourAngle";
@@ -1588,6 +1578,7 @@ static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ShaderList[] = "ShaderList";
 static const char __pyx_k_TopoFactor[] = "TopoFactor";
 static const char __pyx_k_Water_Path[] = "Water_Path";
+static const char __pyx_k_calc_flows[] = "calc_flows";
 static const char __pyx_k_solar_only[] = "solar_only";
 static const char __pyx_k_Azimuth_mod[] = "Azimuth_mod";
 static const char __pyx_k_Bed_Reflect[] = "Bed_Reflect";
@@ -1598,7 +1589,6 @@ static const char __pyx_k_heatsource8[] = "heatsource8";
 static const char __pyx_k_AtmElevation[] = "AtmElevation";
 static const char __pyx_k_Eccentricity[] = "Eccentricity";
 static const char __pyx_k_FullSunAngle[] = "FullSunAngle";
-static const char __pyx_k_GetSolarFlux[] = "GetSolarFlux";
 static const char __pyx_k_MixTDelta_dn[] = "MixTDelta_dn";
 static const char __pyx_k_NetRadiation[] = "NetRadiation";
 static const char __pyx_k_SedThermCond[] = "SedThermCond";
@@ -1606,7 +1596,6 @@ static const char __pyx_k_SedThermDiff[] = "SedThermDiff";
 static const char __pyx_k_SunRadVector[] = "SunRadVector";
 static const char __pyx_k_Trans_Stream[] = "Trans_Stream";
 static const char __pyx_k_radial_count[] = "radial_count";
-static const char __pyx_k_CalcMuskingum[] = "CalcMuskingum";
 static const char __pyx_k_MeanObliquity[] = "MeanObliquity";
 static const char __pyx_k_OverflowError[] = "OverflowError";
 static const char __pyx_k_RipExtinction[] = "RipExtinction";
@@ -1616,31 +1605,33 @@ static const char __pyx_k_Wind_Function[] = "Wind_Function";
 static const char __pyx_k_lc_height_rel[] = "lc_height_rel";
 static const char __pyx_k_print_console[] = "print_console";
 static const char __pyx_k_BankShadeAngle[] = "BankShadeAngle";
-static const char __pyx_k_CalcHeatFluxes[] = "CalcHeatFluxes";
-static const char __pyx_k_CalcMacCormick[] = "CalcMacCormick";
 static const char __pyx_k_GeoMeanLongSun[] = "GeoMeanLongSun";
 static const char __pyx_k_Shear_Velocity[] = "Shear_Velocity";
 static const char __pyx_k_Solar_Constant[] = "Solar_Constant";
 static const char __pyx_k_Stream_Reflect[] = "Stream_Reflect";
 static const char __pyx_k_TopoShadeAngle[] = "TopoShadeAngle";
+static const char __pyx_k_calc_muskingum[] = "calc_muskingum";
+static const char __pyx_k_get_solar_flux[] = "get_solar_flux";
 static const char __pyx_k_Clearness_Index[] = "Clearness_Index";
-static const char __pyx_k_GetGroundFluxes[] = "GetGroundFluxes";
 static const char __pyx_k_SunApparentLong[] = "SunApparentLong";
+static const char __pyx_k_calc_maccormick[] = "calc_maccormick";
 static const char __pyx_k_diffuse_blocked[] = "diffuse_blocked";
 static const char __pyx_k_fraction_passed[] = "fraction_passed";
 static const char __pyx_k_Diffuse_Fraction[] = "Diffuse_Fraction";
 static const char __pyx_k_H2O_HeatCapacity[] = "H2O_HeatCapacity";
 static const char __pyx_k_VegetationAngle1[] = "VegetationAngle1";
 static const char __pyx_k_VegetationAngle2[] = "VegetationAngle2";
-static const char __pyx_k_CalcSolarPosition[] = "CalcSolarPosition";
+static const char __pyx_k_calc_heat_fluxes[] = "calc_heat_fluxes";
 static const char __pyx_k_Friction_Velocity[] = "Friction_Velocity";
 static const char __pyx_k_GeoMeanAnomalySun[] = "GeoMeanAnomalySun";
-static const char __pyx_k_GetStreamGeometry[] = "GetStreamGeometry";
 static const char __pyx_k_MixTDelta_dn_prev[] = "MixTDelta_dn_prev";
 static const char __pyx_k_emergent_distance[] = "emergent_distance";
+static const char __pyx_k_get_ground_fluxes[] = "get_ground_fluxes";
 static const char __pyx_k_transsample_count[] = "transsample_count";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_Solar_blocked_byVeg[] = "Solar_blocked_byVeg";
+static const char __pyx_k_calc_solar_position[] = "calc_solar_position";
+static const char __pyx_k_get_stream_geometry[] = "get_stream_geometry";
 static const char __pyx_k_RefractionCorrection[] = "RefractionCorrection";
 static const char __pyx_k_transsample_distance[] = "transsample_distance";
 static const char __pyx_k_Flux_Conduction_Alluvium[] = "Flux_Conduction_Alluvium";
@@ -1671,11 +1662,6 @@ static PyObject *__pyx_n_s_C1;
 static PyObject *__pyx_n_s_C2;
 static PyObject *__pyx_n_s_C3;
 static PyObject *__pyx_n_s_C_args;
-static PyObject *__pyx_n_s_CalcFlows;
-static PyObject *__pyx_n_s_CalcHeatFluxes;
-static PyObject *__pyx_n_s_CalcMacCormick;
-static PyObject *__pyx_n_s_CalcMuskingum;
-static PyObject *__pyx_n_s_CalcSolarPosition;
 static PyObject *__pyx_n_s_Clearness_Index;
 static PyObject *__pyx_n_s_Converge;
 static PyObject *__pyx_n_s_D;
@@ -1725,16 +1711,13 @@ static PyObject *__pyx_n_s_Gamma;
 static PyObject *__pyx_n_s_GeoMeanAnomalySun;
 static PyObject *__pyx_n_s_GeoMeanLongSun;
 static PyObject *__pyx_n_s_Geom;
-static PyObject *__pyx_n_s_GetGroundFluxes;
-static PyObject *__pyx_n_s_GetSolarFlux;
-static PyObject *__pyx_n_s_GetStreamGeometry;
 static PyObject *__pyx_n_s_H2O_HeatCapacity;
 static PyObject *__pyx_n_s_HourAngle;
 static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_n_s_JD;
 static PyObject *__pyx_n_s_JDC;
 static PyObject *__pyx_n_s_K;
-static PyObject *__pyx_n_s_LAI;
+static PyObject *__pyx_n_u_LAI;
 static PyObject *__pyx_n_s_LHV;
 static PyObject *__pyx_n_s_Mac;
 static PyObject *__pyx_n_s_MeanObliquity;
@@ -1751,7 +1734,7 @@ static PyObject *__pyx_n_s_PLz;
 static PyObject *__pyx_n_s_P_w;
 static PyObject *__pyx_n_s_Pressure;
 static PyObject *__pyx_n_s_Printer;
-static PyObject *__pyx_kp_s_Problem_with_null_value_in_tribu;
+static PyObject *__pyx_kp_u_Problem_with_null_value_in_tribu;
 static PyObject *__pyx_n_s_Pw;
 static PyObject *__pyx_n_s_Q;
 static PyObject *__pyx_n_s_Q1;
@@ -1779,7 +1762,7 @@ static PyObject *__pyx_n_s_SedDepth;
 static PyObject *__pyx_n_s_SedRhoCp;
 static PyObject *__pyx_n_s_SedThermCond;
 static PyObject *__pyx_n_s_SedThermDiff;
-static PyObject *__pyx_kp_s_Sediment_temperature_is_0_must_b;
+static PyObject *__pyx_kp_u_Sediment_temperature_is_0_must_b;
 static PyObject *__pyx_n_s_ShaderList;
 static PyObject *__pyx_n_s_Shear_Velocity;
 static PyObject *__pyx_n_s_Sigma;
@@ -1814,9 +1797,9 @@ static PyObject *__pyx_n_s_Trans_Air;
 static PyObject *__pyx_n_s_Trans_Stream;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_n_s_U;
-static PyObject *__pyx_kp_s_Unknown_error_when_calculating_e;
-static PyObject *__pyx_kp_s_Unknown_error_when_calculating_r;
-static PyObject *__pyx_kp_s_Unstable_timestep_Decrease_dt_or;
+static PyObject *__pyx_kp_u_Unknown_error_when_calculating_e;
+static PyObject *__pyx_kp_u_Unknown_error_when_calculating_r;
+static PyObject *__pyx_kp_u_Unstable_timestep_Decrease_dt_or;
 static PyObject *__pyx_n_s_Utils_Printer;
 static PyObject *__pyx_n_s_VegetationAngle1;
 static PyObject *__pyx_n_s_VegetationAngle2;
@@ -1835,7 +1818,13 @@ static PyObject *__pyx_n_s_acos;
 static PyObject *__pyx_n_s_area;
 static PyObject *__pyx_n_s_atan;
 static PyObject *__pyx_n_s_bisect;
+static PyObject *__pyx_n_s_builtins;
 static PyObject *__pyx_n_s_c_k;
+static PyObject *__pyx_n_s_calc_flows;
+static PyObject *__pyx_n_s_calc_heat_fluxes;
+static PyObject *__pyx_n_s_calc_maccormick;
+static PyObject *__pyx_n_s_calc_muskingum;
+static PyObject *__pyx_n_s_calc_solar_position;
 static PyObject *__pyx_n_s_calcalluv;
 static PyObject *__pyx_n_s_calcevap;
 static PyObject *__pyx_n_s_cline_in_traceback;
@@ -1862,6 +1851,9 @@ static PyObject *__pyx_n_s_exp;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fraction_passed;
 static PyObject *__pyx_n_s_getLogger;
+static PyObject *__pyx_n_s_get_ground_fluxes;
+static PyObject *__pyx_n_s_get_solar_flux;
+static PyObject *__pyx_n_s_get_stream_geometry;
 static PyObject *__pyx_n_s_ground;
 static PyObject *__pyx_n_s_has_prev;
 static PyObject *__pyx_n_s_heatsource8;
@@ -1922,16 +1914,15 @@ static PyObject *__pyx_n_s_wind;
 static PyObject *__pyx_n_s_wind_a;
 static PyObject *__pyx_n_s_wind_b;
 static PyObject *__pyx_n_s_x;
-static PyObject *__pyx_n_s_xrange;
 static PyObject *__pyx_n_s_z;
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_lat, PyObject *__pyx_v_lon, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_offset, PyObject *__pyx_v_JDC, PyObject *__pyx_v_heatsource8, PyObject *__pyx_v_radial_count); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_W_b, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_S, PyObject *__pyx_v_D_est, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_D_est, PyObject *__pyx_v_Q, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_inputs, PyObject *__pyx_v_Q_bc); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_cloud, PyObject *__pyx_v_d_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_elevation, PyObject *__pyx_v_TopoFactor, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_transsample_distance, PyObject *__pyx_v_transsample_count, PyObject *__pyx_v_BeersData, PyObject *__pyx_v_phi, PyObject *__pyx_v_emergent, PyObject *__pyx_v_lc_canopy, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_lc_height_rel, PyObject *__pyx_v_lc_k, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_heatsource8); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_cloud, PyObject *__pyx_v_wind, PyObject *__pyx_v_humidity, PyObject *__pyx_v_T_air, PyObject *__pyx_v_elevation, CYTHON_UNUSED PyObject *__pyx_v_phi, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_SedDepth, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_SedThermCond, PyObject *__pyx_v_SedThermDiff, PyObject *__pyx_v_calcalluv, PyObject *__pyx_v_T_alluv, CYTHON_UNUSED PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_emergent, PyObject *__pyx_v_penman, PyObject *__pyx_v_wind_a, PyObject *__pyx_v_wind_b, PyObject *__pyx_v_calcevap, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_F_Solar5, PyObject *__pyx_v_F_Solar7); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dt, PyObject *__pyx_v_dx, PyObject *__pyx_v_U, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_Q_tup, PyObject *__pyx_v_T_tup, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Delta_T, PyObject *__pyx_v_Disp, PyObject *__pyx_v_S1, PyObject *__pyx_v_S1_value, PyObject *__pyx_v_T0, PyObject *__pyx_v_T1, PyObject *__pyx_v_T2, PyObject *__pyx_v_Q_accr, PyObject *__pyx_v_T_accr, PyObject *__pyx_v_MixTDelta_dn); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_metData, PyObject *__pyx_v_C_args, PyObject *__pyx_v_d_w, PyObject *__pyx_v_area, PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_U, PyObject *__pyx_v_Q_tribs, PyObject *__pyx_v_T_tribs, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_T_dn_prev, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_Disp, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_daytime, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_T_up_prev, PyObject *__pyx_v_solar_only, PyObject *__pyx_v_MixTDelta_dn_prev, PyObject *__pyx_v_heatsource8); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_calc_solar_position(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_lat, PyObject *__pyx_v_lon, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_offset, PyObject *__pyx_v_JDC, PyObject *__pyx_v_heatsource8, PyObject *__pyx_v_radial_count); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2get_stream_geometry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_W_b, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_S, PyObject *__pyx_v_D_est, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4calc_muskingum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6calc_flows(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_D_est, PyObject *__pyx_v_Q, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_inputs, PyObject *__pyx_v_Q_bc); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8get_solar_flux(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_cloud, PyObject *__pyx_v_d_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_elevation, PyObject *__pyx_v_TopoFactor, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_transsample_distance, PyObject *__pyx_v_transsample_count, PyObject *__pyx_v_BeersData, PyObject *__pyx_v_phi, PyObject *__pyx_v_emergent, PyObject *__pyx_v_lc_canopy, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_lc_height_rel, PyObject *__pyx_v_lc_k, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_heatsource8); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10get_ground_fluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_cloud, PyObject *__pyx_v_wind, PyObject *__pyx_v_humidity, PyObject *__pyx_v_T_air, PyObject *__pyx_v_elevation, CYTHON_UNUSED PyObject *__pyx_v_phi, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_SedDepth, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_SedThermCond, PyObject *__pyx_v_SedThermDiff, PyObject *__pyx_v_calcalluv, PyObject *__pyx_v_T_alluv, CYTHON_UNUSED PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_emergent, PyObject *__pyx_v_penman, PyObject *__pyx_v_wind_a, PyObject *__pyx_v_wind_b, PyObject *__pyx_v_calcevap, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_F_Solar5, PyObject *__pyx_v_F_Solar7); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12calc_maccormick(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dt, PyObject *__pyx_v_dx, PyObject *__pyx_v_U, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_Q_tup, PyObject *__pyx_v_T_tup, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Delta_T, PyObject *__pyx_v_Disp, PyObject *__pyx_v_S1, PyObject *__pyx_v_S1_value, PyObject *__pyx_v_T0, PyObject *__pyx_v_T1, PyObject *__pyx_v_T2, PyObject *__pyx_v_Q_accr, PyObject *__pyx_v_T_accr, PyObject *__pyx_v_MixTDelta_dn); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14calc_heat_fluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_metData, PyObject *__pyx_v_C_args, PyObject *__pyx_v_d_w, PyObject *__pyx_v_area, PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_U, PyObject *__pyx_v_Q_tribs, PyObject *__pyx_v_T_tribs, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_T_dn_prev, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_Disp, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_daytime, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_T_up_prev, PyObject *__pyx_v_solar_only, PyObject *__pyx_v_MixTDelta_dn_prev, PyObject *__pyx_v_heatsource8); /* proto */
 static PyObject *__pyx_float_0_0;
 static PyObject *__pyx_float_0_1;
 static PyObject *__pyx_float_0_5;
@@ -2075,18 +2066,18 @@ static PyObject *__pyx_codeobj__16;
 static PyObject *__pyx_codeobj__18;
 /* Late includes */
 
-/* "heatsource9/Stream/PyHeatsource.pyx":31
+/* "heatsource9/Stream/PyHeatsource.pyx":32
  * from ..Utils.Printer import Printer as print_console
  * 
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPosition(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPosition = {"CalcSolarPosition", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPosition, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPosition(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1calc_solar_position(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_1calc_solar_position = {"calc_solar_position", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1calc_solar_position, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1calc_solar_position(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_lat = 0;
   PyObject *__pyx_v_lon = 0;
   PyObject *__pyx_v_hour = 0;
@@ -2098,7 +2089,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPositio
   PyObject *__pyx_v_radial_count = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcSolarPosition (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_solar_position (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_lat,&__pyx_n_s_lon,&__pyx_n_s_hour,&__pyx_n_s_min,&__pyx_n_s_sec,&__pyx_n_s_offset,&__pyx_n_s_JDC,&__pyx_n_s_heatsource8,&__pyx_n_s_radial_count,0};
     PyObject* values[9] = {0,0,0,0,0,0,0,0,0};
@@ -2136,53 +2127,53 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPositio
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lon)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 1); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 1); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_hour)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 2); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 2); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 3); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 3); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sec)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 4); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 4); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_offset)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 5); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 5); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JDC)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 6); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 6); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_heatsource8)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 7); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 7); __PYX_ERR(0, 32, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_radial_count)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, 8); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, 8); __PYX_ERR(0, 32, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcSolarPosition") < 0)) __PYX_ERR(0, 31, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_solar_position") < 0)) __PYX_ERR(0, 32, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 9) {
       goto __pyx_L5_argtuple_error;
@@ -2209,20 +2200,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPositio
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcSolarPosition", 1, 9, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 31, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_solar_position", 1, 9, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 32, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcSolarPosition", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_solar_position", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition(__pyx_self, __pyx_v_lat, __pyx_v_lon, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_offset, __pyx_v_JDC, __pyx_v_heatsource8, __pyx_v_radial_count);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_calc_solar_position(__pyx_self, __pyx_v_lat, __pyx_v_lon, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_offset, __pyx_v_JDC, __pyx_v_heatsource8, __pyx_v_radial_count);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_lat, PyObject *__pyx_v_lon, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_offset, PyObject *__pyx_v_JDC, PyObject *__pyx_v_heatsource8, PyObject *__pyx_v_radial_count) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_calc_solar_position(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_lat, PyObject *__pyx_v_lon, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_offset, PyObject *__pyx_v_JDC, PyObject *__pyx_v_heatsource8, PyObject *__pyx_v_radial_count) {
   PyObject *__pyx_v_toRadians = NULL;
   PyObject *__pyx_v_toDegrees = NULL;
   PyObject *__pyx_v_MeanObliquity = NULL;
@@ -2254,7 +2245,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   PyObject *__pyx_v_Angle_Incr = NULL;
   PyObject *__pyx_v_DirNumbers = NULL;
   PyObject *__pyx_v_AngleStart = NULL;
-  PyObject *__pyx_v_x = NULL;
+  PyObject *__pyx_7genexpr__pyx_v_x = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2266,141 +2257,140 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   PyObject *__pyx_t_7 = NULL;
   int __pyx_t_8;
   Py_ssize_t __pyx_t_9;
-  PyObject *(*__pyx_t_10)(PyObject *);
-  __Pyx_RefNannySetupContext("CalcSolarPosition", 0);
+  __Pyx_RefNannySetupContext("calc_solar_position", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":33
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,
+  /* "heatsource9/Stream/PyHeatsource.pyx":34
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0             # <<<<<<<<<<<<<<
  *     toDegrees = 180.0/pi
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_1, __pyx_float_180_0, 180.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_1, __pyx_float_180_0, 180.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_toRadians = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":34
+  /* "heatsource9/Stream/PyHeatsource.pyx":35
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0
  *     toDegrees = 180.0/pi             # <<<<<<<<<<<<<<
  * 
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_180_0, __pyx_t_2, 180.0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_180_0, __pyx_t_2, 180.0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_toDegrees = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":38
+  /* "heatsource9/Stream/PyHeatsource.pyx":39
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /             # <<<<<<<<<<<<<<
  *                                      60.0)) / 60.0)
  *     Obliquity = (MeanObliquity + 0.00256 *
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_float_0_001813); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_float_0_001813); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_00059, __pyx_t_1, 0.00059, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_00059, __pyx_t_1, 0.00059, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":37
+  /* "heatsource9/Stream/PyHeatsource.pyx":38
  * 
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *
  *                                       (46.815 + JDC *             # <<<<<<<<<<<<<<
  *                                        (0.00059 - JDC * 0.001813))) /
  *                                      60.0)) / 60.0)
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_46_815, __pyx_t_1, 46.815, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_46_815, __pyx_t_1, 46.815, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":36
+  /* "heatsource9/Stream/PyHeatsource.pyx":37
  *     toDegrees = 180.0/pi
  * 
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *             # <<<<<<<<<<<<<<
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_21_448, __pyx_t_1, 21.448, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_21_448, __pyx_t_1, 21.448, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":38
+  /* "heatsource9/Stream/PyHeatsource.pyx":39
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /             # <<<<<<<<<<<<<<
  *                                      60.0)) / 60.0)
  *     Obliquity = (MeanObliquity + 0.00256 *
  */
-  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":36
+  /* "heatsource9/Stream/PyHeatsource.pyx":37
  *     toDegrees = 180.0/pi
  * 
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *             # <<<<<<<<<<<<<<
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /
  */
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_26_0, __pyx_t_1, 26.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_26_0, __pyx_t_1, 26.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":39
+  /* "heatsource9/Stream/PyHeatsource.pyx":40
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /
  *                                      60.0)) / 60.0)             # <<<<<<<<<<<<<<
  *     Obliquity = (MeanObliquity + 0.00256 *
  *                  cos(toRadians*(125.04 - 1934.136 * JDC)))
  */
-  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":36
+  /* "heatsource9/Stream/PyHeatsource.pyx":37
  *     toDegrees = 180.0/pi
  * 
  *     MeanObliquity = (23.0 + (26.0 + ((21.448 - JDC *             # <<<<<<<<<<<<<<
  *                                       (46.815 + JDC *
  *                                        (0.00059 - JDC * 0.001813))) /
  */
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_23_0, __pyx_t_1, 23.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_23_0, __pyx_t_1, 23.0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_MeanObliquity = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":41
+  /* "heatsource9/Stream/PyHeatsource.pyx":42
  *                                      60.0)) / 60.0)
  *     Obliquity = (MeanObliquity + 0.00256 *
  *                  cos(toRadians*(125.04 - 1934.136 * JDC)))             # <<<<<<<<<<<<<<
  * 
  *     Eccentricity = 0.016708634 - JDC * (0.000042037 + 0.0000001267 * JDC)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1934_136, __pyx_v_JDC); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1934_136, __pyx_v_JDC); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyFloat_SubtractCObj(__pyx_float_125_04, __pyx_t_3, 125.04, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_SubtractCObj(__pyx_float_125_04, __pyx_t_3, 125.04, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -2416,69 +2406,69 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":40
+  /* "heatsource9/Stream/PyHeatsource.pyx":41
  *                                        (0.00059 - JDC * 0.001813))) /
  *                                      60.0)) / 60.0)
  *     Obliquity = (MeanObliquity + 0.00256 *             # <<<<<<<<<<<<<<
  *                  cos(toRadians*(125.04 - 1934.136 * JDC)))
  * 
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_00256, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_00256, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Add(__pyx_v_MeanObliquity, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Add(__pyx_v_MeanObliquity, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Obliquity = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":43
+  /* "heatsource9/Stream/PyHeatsource.pyx":44
  *                  cos(toRadians*(125.04 - 1934.136 * JDC)))
  * 
  *     Eccentricity = 0.016708634 - JDC * (0.000042037 + 0.0000001267 * JDC)             # <<<<<<<<<<<<<<
  *     GeoMeanLongSun = 280.46646 + JDC * (36000.76983 + 0.0003032 * JDC)
  * 
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_0000001267, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_0000001267, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyFloat_AddCObj(__pyx_float_0_000042037, __pyx_t_2, 0.000042037, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_AddCObj(__pyx_float_0_000042037, __pyx_t_2, 0.000042037, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_016708634, __pyx_t_2, 0.016708634, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_016708634, __pyx_t_2, 0.016708634, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Eccentricity = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":44
+  /* "heatsource9/Stream/PyHeatsource.pyx":45
  * 
  *     Eccentricity = 0.016708634 - JDC * (0.000042037 + 0.0000001267 * JDC)
  *     GeoMeanLongSun = 280.46646 + JDC * (36000.76983 + 0.0003032 * JDC)             # <<<<<<<<<<<<<<
  * 
  *     while GeoMeanLongSun < 0:
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0003032, __pyx_v_JDC); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0003032, __pyx_v_JDC); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_36000_76983, __pyx_t_1, 36000.76983, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_36000_76983, __pyx_t_1, 36000.76983, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_280_46646, __pyx_t_1, 280.46646, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_280_46646, __pyx_t_1, 280.46646, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_GeoMeanLongSun = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":46
+  /* "heatsource9/Stream/PyHeatsource.pyx":47
  *     GeoMeanLongSun = 280.46646 + JDC * (36000.76983 + 0.0003032 * JDC)
  * 
  *     while GeoMeanLongSun < 0:             # <<<<<<<<<<<<<<
@@ -2486,25 +2476,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  *     while GeoMeanLongSun > 360:
  */
   while (1) {
-    __pyx_t_2 = PyObject_RichCompare(__pyx_v_GeoMeanLongSun, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 46, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_v_GeoMeanLongSun, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 47, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (!__pyx_t_5) break;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":47
+    /* "heatsource9/Stream/PyHeatsource.pyx":48
  * 
  *     while GeoMeanLongSun < 0:
  *         GeoMeanLongSun += 360             # <<<<<<<<<<<<<<
  *     while GeoMeanLongSun > 360:
  *         GeoMeanLongSun -= 360
  */
-    __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_v_GeoMeanLongSun, __pyx_int_360, 0x168, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_v_GeoMeanLongSun, __pyx_int_360, 0x168, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF_SET(__pyx_v_GeoMeanLongSun, __pyx_t_2);
     __pyx_t_2 = 0;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":48
+  /* "heatsource9/Stream/PyHeatsource.pyx":49
  *     while GeoMeanLongSun < 0:
  *         GeoMeanLongSun += 360
  *     while GeoMeanLongSun > 360:             # <<<<<<<<<<<<<<
@@ -2512,65 +2502,65 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  *     GeoMeanAnomalySun = 357.52911 + JDC * (35999.05029 - 0.0001537 * JDC)
  */
   while (1) {
-    __pyx_t_2 = PyObject_RichCompare(__pyx_v_GeoMeanLongSun, __pyx_int_360, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 48, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_v_GeoMeanLongSun, __pyx_int_360, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 49, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (!__pyx_t_5) break;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":49
+    /* "heatsource9/Stream/PyHeatsource.pyx":50
  *         GeoMeanLongSun += 360
  *     while GeoMeanLongSun > 360:
  *         GeoMeanLongSun -= 360             # <<<<<<<<<<<<<<
  *     GeoMeanAnomalySun = 357.52911 + JDC * (35999.05029 - 0.0001537 * JDC)
  * 
  */
-    __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_GeoMeanLongSun, __pyx_int_360, 0x168, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_GeoMeanLongSun, __pyx_int_360, 0x168, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF_SET(__pyx_v_GeoMeanLongSun, __pyx_t_2);
     __pyx_t_2 = 0;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":50
+  /* "heatsource9/Stream/PyHeatsource.pyx":51
  *     while GeoMeanLongSun > 360:
  *         GeoMeanLongSun -= 360
  *     GeoMeanAnomalySun = 357.52911 + JDC * (35999.05029 - 0.0001537 * JDC)             # <<<<<<<<<<<<<<
  * 
  *     Dummy1 = toRadians*GeoMeanAnomalySun
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_0001537, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_0001537, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyFloat_SubtractCObj(__pyx_float_35999_05029, __pyx_t_2, 35999.05029, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_SubtractCObj(__pyx_float_35999_05029, __pyx_t_2, 35999.05029, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyFloat_AddCObj(__pyx_float_357_52911, __pyx_t_2, 357.52911, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_AddCObj(__pyx_float_357_52911, __pyx_t_2, 357.52911, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_GeoMeanAnomalySun = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":52
+  /* "heatsource9/Stream/PyHeatsource.pyx":53
  *     GeoMeanAnomalySun = 357.52911 + JDC * (35999.05029 - 0.0001537 * JDC)
  * 
  *     Dummy1 = toRadians*GeoMeanAnomalySun             # <<<<<<<<<<<<<<
  *     Dummy2 = sin(Dummy1)
  *     Dummy3 = sin(Dummy2 * 2)
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_Dummy1 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":53
+  /* "heatsource9/Stream/PyHeatsource.pyx":54
  * 
  *     Dummy1 = toRadians*GeoMeanAnomalySun
  *     Dummy2 = sin(Dummy1)             # <<<<<<<<<<<<<<
  *     Dummy3 = sin(Dummy2 * 2)
  *     Dummy4 = sin(Dummy3 * 3)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2584,52 +2574,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_Dummy1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Dummy1);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Dummy2 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":54
+  /* "heatsource9/Stream/PyHeatsource.pyx":55
  *     Dummy1 = toRadians*GeoMeanAnomalySun
  *     Dummy2 = sin(Dummy1)
  *     Dummy3 = sin(Dummy2 * 2)             # <<<<<<<<<<<<<<
  *     Dummy4 = sin(Dummy3 * 3)
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_int_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_Dummy3 = __pyx_t_1;
-  __pyx_t_1 = 0;
-
-  /* "heatsource9/Stream/PyHeatsource.pyx":55
- *     Dummy2 = sin(Dummy1)
- *     Dummy3 = sin(Dummy2 * 2)
- *     Dummy4 = sin(Dummy3 * 3)             # <<<<<<<<<<<<<<
- * 
- *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
- */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy3, __pyx_int_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_int_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2647,111 +2607,141 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_Dummy3 = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":56
+ *     Dummy2 = sin(Dummy1)
+ *     Dummy3 = sin(Dummy2 * 2)
+ *     Dummy4 = sin(Dummy3 * 3)             # <<<<<<<<<<<<<<
+ * 
+ *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy3, __pyx_int_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Dummy4 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":58
+  /* "heatsource9/Stream/PyHeatsource.pyx":59
  * 
  *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
  *                                (0.004817 + 0.000014 * JDC)) + Dummy3 *             # <<<<<<<<<<<<<<
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)
  * 
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_000014, __pyx_v_JDC); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_000014, __pyx_v_JDC); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_0_004817, __pyx_t_1, 0.004817, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_0_004817, __pyx_t_1, 0.004817, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":57
+  /* "heatsource9/Stream/PyHeatsource.pyx":58
  *     Dummy4 = sin(Dummy3 * 3)
  * 
  *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *             # <<<<<<<<<<<<<<
  *                                (0.004817 + 0.000014 * JDC)) + Dummy3 *
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_JDC, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_1_914602, __pyx_t_1, 1.914602, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_SubtractCObj(__pyx_float_1_914602, __pyx_t_1, 1.914602, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":59
+  /* "heatsource9/Stream/PyHeatsource.pyx":60
  *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
  *                                (0.004817 + 0.000014 * JDC)) + Dummy3 *
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)             # <<<<<<<<<<<<<<
  * 
  *     SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_000101, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_000101, __pyx_v_JDC); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_019993, __pyx_t_2, 0.019993, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_019993, __pyx_t_2, 0.019993, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":58
+  /* "heatsource9/Stream/PyHeatsource.pyx":59
  * 
  *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
  *                                (0.004817 + 0.000014 * JDC)) + Dummy3 *             # <<<<<<<<<<<<<<
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)
  * 
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_Dummy3, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_Dummy3, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":59
+  /* "heatsource9/Stream/PyHeatsource.pyx":60
  *     SunEqofCenter = (Dummy2 * (1.914602 - JDC *
  *                                (0.004817 + 0.000014 * JDC)) + Dummy3 *
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)             # <<<<<<<<<<<<<<
  * 
  *     SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_Dummy4, __pyx_float_0_000289); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_Dummy4, __pyx_float_0_000289); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_SunEqofCenter = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":61
+  /* "heatsource9/Stream/PyHeatsource.pyx":62
  *                      (0.019993 - 0.000101 * JDC) + Dummy4 * 0.000289)
  * 
  *     SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -             # <<<<<<<<<<<<<<
  *                        0.00569 - 0.00478 *
  *                        sin(toRadians*((125.04 - 1934.136 * JDC))))
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_v_GeoMeanLongSun, __pyx_v_SunEqofCenter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_v_GeoMeanLongSun, __pyx_v_SunEqofCenter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_0_00569, 0.00569, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_0_00569, 0.00569, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":63
+  /* "heatsource9/Stream/PyHeatsource.pyx":64
  *     SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -
  *                        0.00569 - 0.00478 *
  *                        sin(toRadians*((125.04 - 1934.136 * JDC))))             # <<<<<<<<<<<<<<
  * 
  *     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_1934_136, __pyx_v_JDC); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_1934_136, __pyx_v_JDC); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_125_04, __pyx_t_4, 125.04, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_125_04, __pyx_t_4, 125.04, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = NULL;
@@ -2767,37 +2757,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":62
+  /* "heatsource9/Stream/PyHeatsource.pyx":63
  * 
  *     SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -
  *                        0.00569 - 0.00478 *             # <<<<<<<<<<<<<<
  *                        sin(toRadians*((125.04 - 1934.136 * JDC))))
  * 
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_00478, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_00478, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_SunApparentLong = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":65
+  /* "heatsource9/Stream/PyHeatsource.pyx":66
  *                        sin(toRadians*((125.04 - 1934.136 * JDC))))
  * 
  *     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)             # <<<<<<<<<<<<<<
  *     Declination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Obliquity); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Obliquity); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -2812,12 +2802,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_SunApparentLong); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_SunApparentLong); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2832,33 +2822,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy1, __pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":66
+  /* "heatsource9/Stream/PyHeatsource.pyx":67
  * 
  *     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)
  *     Declination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))             # <<<<<<<<<<<<<<
  * 
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_atan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_atan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = PyNumber_Negative(__pyx_v_Dummy1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Negative(__pyx_v_Dummy1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_6, __pyx_v_Dummy1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_6, __pyx_v_Dummy1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_7, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_7, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_7 = NULL;
@@ -2874,10 +2864,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_Dummy1, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_Dummy1, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = NULL;
@@ -2893,23 +2883,23 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_1, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Declination = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":68
+  /* "heatsource9/Stream/PyHeatsource.pyx":69
  *     Declination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
  * 
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /             # <<<<<<<<<<<<<<
  *                     (1 + Eccentricity * cos(toRadians*
  *                                             (GeoMeanAnomalySun +
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   __pyx_t_8 = 0;
@@ -2926,7 +2916,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_Eccentricity, __pyx_int_2};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
@@ -2934,13 +2924,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_Eccentricity, __pyx_int_2};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else
   #endif
   {
-    __pyx_t_1 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -2951,46 +2941,46 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_int_2);
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_8, __pyx_int_2);
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_3, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_3, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1_000001018, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1_000001018, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":69
+  /* "heatsource9/Stream/PyHeatsource.pyx":70
  * 
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
  *                     (1 + Eccentricity * cos(toRadians*             # <<<<<<<<<<<<<<
  *                                             (GeoMeanAnomalySun +
  *                                              SunEqofCenter))))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":70
+  /* "heatsource9/Stream/PyHeatsource.pyx":71
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
  *                     (1 + Eccentricity * cos(toRadians*
  *                                             (GeoMeanAnomalySun +             # <<<<<<<<<<<<<<
  *                                              SunEqofCenter))))
  * 
  */
-  __pyx_t_4 = PyNumber_Add(__pyx_v_GeoMeanAnomalySun, __pyx_v_SunEqofCenter); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_v_GeoMeanAnomalySun, __pyx_v_SunEqofCenter); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":69
+  /* "heatsource9/Stream/PyHeatsource.pyx":70
  * 
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
  *                     (1 + Eccentricity * cos(toRadians*             # <<<<<<<<<<<<<<
  *                                             (GeoMeanAnomalySun +
  *                                              SunEqofCenter))))
  */
-  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -3006,47 +2996,47 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Eccentricity, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Eccentricity, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":68
+  /* "heatsource9/Stream/PyHeatsource.pyx":69
  *     Declination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
  * 
  *     SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /             # <<<<<<<<<<<<<<
  *                     (1 + Eccentricity * cos(toRadians*
  *                                             (GeoMeanAnomalySun +
  */
-  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_SunRadVector = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":75
+  /* "heatsource9/Stream/PyHeatsource.pyx":76
  *     #======================================================
  *     # Equation of time (minutes)
  *     Dummy = pow((tan(Obliquity * pi / 360)),2)             # <<<<<<<<<<<<<<
  *     Dummy1 = sin(toRadians*(2 * GeoMeanLongSun))
  *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_tan); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_tan); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_v_Obliquity, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_v_Obliquity, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_7, __pyx_int_360, 0x168, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_7, __pyx_int_360, 0x168, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_7 = NULL;
@@ -3062,7 +3052,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 75, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = NULL;
@@ -3080,7 +3070,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_3, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3089,14 +3079,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_3, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -3107,7 +3097,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_8, __pyx_int_2);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
@@ -3115,50 +3105,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_v_Dummy = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":76
+  /* "heatsource9/Stream/PyHeatsource.pyx":77
  *     # Equation of time (minutes)
  *     Dummy = pow((tan(Obliquity * pi / 360)),2)
  *     Dummy1 = sin(toRadians*(2 * GeoMeanLongSun))             # <<<<<<<<<<<<<<
  *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))
  *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF_SET(__pyx_v_Dummy1, __pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "heatsource9/Stream/PyHeatsource.pyx":77
- *     Dummy = pow((tan(Obliquity * pi / 360)),2)
- *     Dummy1 = sin(toRadians*(2 * GeoMeanLongSun))
- *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))             # <<<<<<<<<<<<<<
- *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))
- *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
- */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
     __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
@@ -3175,21 +3135,51 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF_SET(__pyx_v_Dummy2, __pyx_t_1);
+  __Pyx_DECREF_SET(__pyx_v_Dummy1, __pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "heatsource9/Stream/PyHeatsource.pyx":78
+ *     Dummy = pow((tan(Obliquity * pi / 360)),2)
+ *     Dummy1 = sin(toRadians*(2 * GeoMeanLongSun))
+ *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))             # <<<<<<<<<<<<<<
+ *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))
+ *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(__pyx_v_Dummy2, __pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":79
  *     Dummy1 = sin(toRadians*(2 * GeoMeanLongSun))
  *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))
  *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))             # <<<<<<<<<<<<<<
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_cos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_cos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -3205,24 +3195,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy3, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":79
+  /* "heatsource9/Stream/PyHeatsource.pyx":80
  *     Dummy2 = sin(toRadians*(GeoMeanAnomalySun))
  *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))             # <<<<<<<<<<<<<<
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_int_4, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_int_4, __pyx_v_GeoMeanLongSun); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -3238,24 +3228,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy4, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":80
+  /* "heatsource9/Stream/PyHeatsource.pyx":81
  *     Dummy3 = cos(toRadians*(2 * GeoMeanLongSun))
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))             # <<<<<<<<<<<<<<
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_int_2, __pyx_v_GeoMeanAnomalySun); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -3271,94 +3261,94 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Dummy5 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":81
+  /* "heatsource9/Stream/PyHeatsource.pyx":82
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *             # <<<<<<<<<<<<<<
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_v_Dummy1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_v_Dummy1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":82
+  /* "heatsource9/Stream/PyHeatsource.pyx":83
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *             # <<<<<<<<<<<<<<
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_int_2, __pyx_v_Eccentricity); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_int_2, __pyx_v_Eccentricity); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_Dummy2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_Dummy2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":81
+  /* "heatsource9/Stream/PyHeatsource.pyx":82
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *             # <<<<<<<<<<<<<<
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  */
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":82
+  /* "heatsource9/Stream/PyHeatsource.pyx":83
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *             # <<<<<<<<<<<<<<
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_int_4, __pyx_v_Eccentricity); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_int_4, __pyx_v_Eccentricity); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":83
+  /* "heatsource9/Stream/PyHeatsource.pyx":84
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *             # <<<<<<<<<<<<<<
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  * 
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_v_Dummy2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_v_Dummy2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":82
+  /* "heatsource9/Stream/PyHeatsource.pyx":83
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *             # <<<<<<<<<<<<<<
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  */
-  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 83, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":83
+  /* "heatsource9/Stream/PyHeatsource.pyx":84
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *             # <<<<<<<<<<<<<<
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_8 = 0;
@@ -3375,7 +3365,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_Dummy, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -3383,13 +3373,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_Dummy, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 84, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -3400,46 +3390,46 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_int_2);
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_8, __pyx_int_2);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_5, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_5, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":84
+  /* "heatsource9/Stream/PyHeatsource.pyx":85
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))             # <<<<<<<<<<<<<<
  * 
  *     SolarTime = ((hour*60.0) + min + (sec/60.0) +
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":83
+  /* "heatsource9/Stream/PyHeatsource.pyx":84
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *             # <<<<<<<<<<<<<<
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  * 
  */
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":84
+  /* "heatsource9/Stream/PyHeatsource.pyx":85
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))             # <<<<<<<<<<<<<<
  * 
  *     SolarTime = ((hour*60.0) + min + (sec/60.0) +
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   __pyx_t_8 = 0;
@@ -3456,7 +3446,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_Eccentricity, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -3464,13 +3454,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_Eccentricity, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_3 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 85, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -3481,94 +3471,94 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_int_2);
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_3, 1+__pyx_t_8, __pyx_int_2);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_1_25, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_1_25, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Dummy5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":81
+  /* "heatsource9/Stream/PyHeatsource.pyx":82
  *     Dummy4 = sin(toRadians*(4 * GeoMeanLongSun))
  *     Dummy5 = sin(toRadians*(2 * GeoMeanAnomalySun))
  *     Et = (toDegrees*(4 * (Dummy * Dummy1 - 2 *             # <<<<<<<<<<<<<<
  *                          Eccentricity * Dummy2 + 4 * Eccentricity *
  *                          Dummy * Dummy2 * Dummy3 - 0.5 * pow(Dummy,2) *
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_int_4, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_int_4, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Et = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":86
+  /* "heatsource9/Stream/PyHeatsource.pyx":87
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  * 
  *     SolarTime = ((hour*60.0) + min + (sec/60.0) +             # <<<<<<<<<<<<<<
  *                  (Et - 4.0 * -lon - (offset*60.0)))
  * 
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_hour, __pyx_float_60_0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_hour, __pyx_float_60_0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_v_min); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_v_min); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_TrueDivideObjC(__pyx_v_sec, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_TrueDivideObjC(__pyx_v_sec, __pyx_float_60_0, 60.0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyNumber_Add(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Add(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":87
+  /* "heatsource9/Stream/PyHeatsource.pyx":88
  * 
  *     SolarTime = ((hour*60.0) + min + (sec/60.0) +
  *                  (Et - 4.0 * -lon - (offset*60.0)))             # <<<<<<<<<<<<<<
  * 
  *     while SolarTime > 1440.0:
  */
-  __pyx_t_4 = PyNumber_Negative(__pyx_v_lon); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Negative(__pyx_v_lon); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_4_0, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_4_0, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Subtract(__pyx_v_Et, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_v_Et, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_offset, __pyx_float_60_0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_offset, __pyx_float_60_0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":86
+  /* "heatsource9/Stream/PyHeatsource.pyx":87
  *                          Dummy4 - 1.25 * pow(Eccentricity,2) * Dummy5)))
  * 
  *     SolarTime = ((hour*60.0) + min + (sec/60.0) +             # <<<<<<<<<<<<<<
  *                  (Et - 4.0 * -lon - (offset*60.0)))
  * 
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_SolarTime = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":89
+  /* "heatsource9/Stream/PyHeatsource.pyx":90
  *                  (Et - 4.0 * -lon - (offset*60.0)))
  * 
  *     while SolarTime > 1440.0:             # <<<<<<<<<<<<<<
@@ -3576,64 +3566,64 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  *     HourAngle = SolarTime / 4.0 - 180.0
  */
   while (1) {
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_SolarTime, __pyx_float_1440_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_SolarTime, __pyx_float_1440_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 90, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (!__pyx_t_5) break;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":90
+    /* "heatsource9/Stream/PyHeatsource.pyx":91
  * 
  *     while SolarTime > 1440.0:
  *         SolarTime -= 1440.0             # <<<<<<<<<<<<<<
  *     HourAngle = SolarTime / 4.0 - 180.0
  *     if HourAngle < -180.0:
  */
-    __pyx_t_1 = __Pyx_PyFloat_SubtractObjC(__pyx_v_SolarTime, __pyx_float_1440_0, 1440.0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 90, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFloat_SubtractObjC(__pyx_v_SolarTime, __pyx_float_1440_0, 1440.0, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_SolarTime, __pyx_t_1);
     __pyx_t_1 = 0;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":91
+  /* "heatsource9/Stream/PyHeatsource.pyx":92
  *     while SolarTime > 1440.0:
  *         SolarTime -= 1440.0
  *     HourAngle = SolarTime / 4.0 - 180.0             # <<<<<<<<<<<<<<
  *     if HourAngle < -180.0:
  *         HourAngle += 360.0
  */
-  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_v_SolarTime, __pyx_float_4_0, 4.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyFloat_TrueDivideObjC(__pyx_v_SolarTime, __pyx_float_4_0, 4.0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_180_0, 180.0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 91, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_180_0, 180.0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_HourAngle = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":92
+  /* "heatsource9/Stream/PyHeatsource.pyx":93
  *         SolarTime -= 1440.0
  *     HourAngle = SolarTime / 4.0 - 180.0
  *     if HourAngle < -180.0:             # <<<<<<<<<<<<<<
  *         HourAngle += 360.0
  * 
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_HourAngle, __pyx_float_neg_180_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_HourAngle, __pyx_float_neg_180_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":93
+    /* "heatsource9/Stream/PyHeatsource.pyx":94
  *     HourAngle = SolarTime / 4.0 - 180.0
  *     if HourAngle < -180.0:
  *         HourAngle += 360.0             # <<<<<<<<<<<<<<
  * 
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +
  */
-    __pyx_t_3 = __Pyx_PyFloat_AddObjC(__pyx_v_HourAngle, __pyx_float_360_0, 360.0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFloat_AddObjC(__pyx_v_HourAngle, __pyx_float_360_0, 360.0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 94, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF_SET(__pyx_v_HourAngle, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":92
+    /* "heatsource9/Stream/PyHeatsource.pyx":93
  *         SolarTime -= 1440.0
  *     HourAngle = SolarTime / 4.0 - 180.0
  *     if HourAngle < -180.0:             # <<<<<<<<<<<<<<
@@ -3642,16 +3632,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":95
+  /* "heatsource9/Stream/PyHeatsource.pyx":96
  *         HourAngle += 360.0
  * 
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +             # <<<<<<<<<<<<<<
  *              cos(toRadians*lat) * cos(toRadians*Declination) *
  *              cos(toRadians*HourAngle))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -3666,12 +3656,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3686,24 +3676,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":96
+  /* "heatsource9/Stream/PyHeatsource.pyx":97
  * 
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +
  *              cos(toRadians*lat) * cos(toRadians*Declination) *             # <<<<<<<<<<<<<<
  *              cos(toRadians*HourAngle))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -3718,12 +3708,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_7 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -3738,24 +3728,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 96, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":97
+  /* "heatsource9/Stream/PyHeatsource.pyx":98
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +
  *              cos(toRadians*lat) * cos(toRadians*Declination) *
  *              cos(toRadians*HourAngle))             # <<<<<<<<<<<<<<
  * 
  *     if Dummy > 1.0:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_HourAngle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_HourAngle); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_7 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -3770,49 +3760,49 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":96
+  /* "heatsource9/Stream/PyHeatsource.pyx":97
  * 
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +
  *              cos(toRadians*lat) * cos(toRadians*Declination) *             # <<<<<<<<<<<<<<
  *              cos(toRadians*HourAngle))
  * 
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":95
+  /* "heatsource9/Stream/PyHeatsource.pyx":96
  *         HourAngle += 360.0
  * 
  *     Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +             # <<<<<<<<<<<<<<
  *              cos(toRadians*lat) * cos(toRadians*Declination) *
  *              cos(toRadians*HourAngle))
  */
-  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":99
+  /* "heatsource9/Stream/PyHeatsource.pyx":100
  *              cos(toRadians*HourAngle))
  * 
  *     if Dummy > 1.0:             # <<<<<<<<<<<<<<
  *         Dummy = 1.0
  *     elif Dummy < -1.0:
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Dummy, __pyx_float_1_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Dummy, __pyx_float_1_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 100, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":100
+    /* "heatsource9/Stream/PyHeatsource.pyx":101
  * 
  *     if Dummy > 1.0:
  *         Dummy = 1.0             # <<<<<<<<<<<<<<
@@ -3822,7 +3812,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_float_1_0);
     __Pyx_DECREF_SET(__pyx_v_Dummy, __pyx_float_1_0);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":99
+    /* "heatsource9/Stream/PyHeatsource.pyx":100
  *              cos(toRadians*HourAngle))
  * 
  *     if Dummy > 1.0:             # <<<<<<<<<<<<<<
@@ -3832,19 +3822,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     goto __pyx_L10;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":101
+  /* "heatsource9/Stream/PyHeatsource.pyx":102
  *     if Dummy > 1.0:
  *         Dummy = 1.0
  *     elif Dummy < -1.0:             # <<<<<<<<<<<<<<
  *         Dummy = -1.0
  * 
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Dummy, __pyx_float_neg_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Dummy, __pyx_float_neg_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 102, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":102
+    /* "heatsource9/Stream/PyHeatsource.pyx":103
  *         Dummy = 1.0
  *     elif Dummy < -1.0:
  *         Dummy = -1.0             # <<<<<<<<<<<<<<
@@ -3854,7 +3844,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_float_neg_1_0);
     __Pyx_DECREF_SET(__pyx_v_Dummy, __pyx_float_neg_1_0);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":101
+    /* "heatsource9/Stream/PyHeatsource.pyx":102
  *     if Dummy > 1.0:
  *         Dummy = 1.0
  *     elif Dummy < -1.0:             # <<<<<<<<<<<<<<
@@ -3864,14 +3854,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   }
   __pyx_L10:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":104
+  /* "heatsource9/Stream/PyHeatsource.pyx":105
  *         Dummy = -1.0
  * 
  *     Zenith = toDegrees*(acos(Dummy))             # <<<<<<<<<<<<<<
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
  *     if abs(Dummy) >= 0.000999:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_acos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_acos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -3885,25 +3875,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   }
   __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_2, __pyx_v_Dummy) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_Dummy);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_Zenith = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":105
+  /* "heatsource9/Stream/PyHeatsource.pyx":106
  * 
  *     Zenith = toDegrees*(acos(Dummy))
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)             # <<<<<<<<<<<<<<
  *     if abs(Dummy) >= 0.000999:
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_cos); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -3918,12 +3908,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Zenith); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Zenith); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3938,41 +3928,41 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy, __pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":106
+  /* "heatsource9/Stream/PyHeatsource.pyx":107
  *     Zenith = toDegrees*(acos(Dummy))
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
  *     if abs(Dummy) >= 0.000999:             # <<<<<<<<<<<<<<
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
  *                     sin(toRadians*Declination)) / Dummy)
  */
-  __pyx_t_2 = __Pyx_PyNumber_Absolute(__pyx_v_Dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Absolute(__pyx_v_Dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_float_0_000999, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_float_0_000999, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":107
+    /* "heatsource9/Stream/PyHeatsource.pyx":108
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
  *     if abs(Dummy) >= 0.000999:
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -             # <<<<<<<<<<<<<<
  *                     sin(toRadians*Declination)) / Dummy)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_lat); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3987,12 +3977,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Zenith); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Zenith); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -4007,24 +3997,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":108
+    /* "heatsource9/Stream/PyHeatsource.pyx":109
  *     if abs(Dummy) >= 0.000999:
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
  *                     sin(toRadians*Declination)) / Dummy)             # <<<<<<<<<<<<<<
  * 
  *         if abs(Azimuth) > 1.0:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_Declination); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -4039,63 +4029,63 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":107
+    /* "heatsource9/Stream/PyHeatsource.pyx":108
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
  *     if abs(Dummy) >= 0.000999:
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -             # <<<<<<<<<<<<<<
  *                     sin(toRadians*Declination)) / Dummy)
  * 
  */
-    __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":108
+    /* "heatsource9/Stream/PyHeatsource.pyx":109
  *     if abs(Dummy) >= 0.000999:
  *         Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
  *                     sin(toRadians*Declination)) / Dummy)             # <<<<<<<<<<<<<<
  * 
  *         if abs(Azimuth) > 1.0:
  */
-    __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_v_Dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_v_Dummy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_Azimuth = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":110
+    /* "heatsource9/Stream/PyHeatsource.pyx":111
  *                     sin(toRadians*Declination)) / Dummy)
  * 
  *         if abs(Azimuth) > 1.0:             # <<<<<<<<<<<<<<
  *             if Azimuth < 0:
  *                 Azimuth = -1.0
  */
-    __pyx_t_2 = __Pyx_PyNumber_Absolute(__pyx_v_Azimuth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyNumber_Absolute(__pyx_v_Azimuth); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_float_1_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_float_1_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 111, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 110, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":111
+      /* "heatsource9/Stream/PyHeatsource.pyx":112
  * 
  *         if abs(Azimuth) > 1.0:
  *             if Azimuth < 0:             # <<<<<<<<<<<<<<
  *                 Azimuth = -1.0
  *             else:
  */
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 112, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 112, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_5) {
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":112
+        /* "heatsource9/Stream/PyHeatsource.pyx":113
  *         if abs(Azimuth) > 1.0:
  *             if Azimuth < 0:
  *                 Azimuth = -1.0             # <<<<<<<<<<<<<<
@@ -4105,7 +4095,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
         __Pyx_INCREF(__pyx_float_neg_1_0);
         __Pyx_DECREF_SET(__pyx_v_Azimuth, __pyx_float_neg_1_0);
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":111
+        /* "heatsource9/Stream/PyHeatsource.pyx":112
  * 
  *         if abs(Azimuth) > 1.0:
  *             if Azimuth < 0:             # <<<<<<<<<<<<<<
@@ -4115,7 +4105,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
         goto __pyx_L13;
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":114
+      /* "heatsource9/Stream/PyHeatsource.pyx":115
  *                 Azimuth = -1.0
  *             else:
  *                 Azimuth = 1.0             # <<<<<<<<<<<<<<
@@ -4128,7 +4118,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       }
       __pyx_L13:;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":110
+      /* "heatsource9/Stream/PyHeatsource.pyx":111
  *                     sin(toRadians*Declination)) / Dummy)
  * 
  *         if abs(Azimuth) > 1.0:             # <<<<<<<<<<<<<<
@@ -4137,14 +4127,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":116
+    /* "heatsource9/Stream/PyHeatsource.pyx":117
  *                 Azimuth = 1.0
  * 
  *         Azimuth = 180 - toDegrees*(acos(Azimuth))             # <<<<<<<<<<<<<<
  *         if HourAngle > 0:
  *             Azimuth *= -1.0
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_acos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_acos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4158,43 +4148,43 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     }
     __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_v_Azimuth) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Azimuth);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 117, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_v_toDegrees, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_180, __pyx_t_2, 0xB4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_180, __pyx_t_2, 0xB4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 117, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF_SET(__pyx_v_Azimuth, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":117
+    /* "heatsource9/Stream/PyHeatsource.pyx":118
  * 
  *         Azimuth = 180 - toDegrees*(acos(Azimuth))
  *         if HourAngle > 0:             # <<<<<<<<<<<<<<
  *             Azimuth *= -1.0
  *     else:
  */
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_HourAngle, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 117, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_HourAngle, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":118
+      /* "heatsource9/Stream/PyHeatsource.pyx":119
  *         Azimuth = 180 - toDegrees*(acos(Azimuth))
  *         if HourAngle > 0:
  *             Azimuth *= -1.0             # <<<<<<<<<<<<<<
  *     else:
  *         if lat > 0:
  */
-      __pyx_t_3 = PyNumber_InPlaceMultiply(__pyx_v_Azimuth, __pyx_float_neg_1_0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 118, __pyx_L1_error)
+      __pyx_t_3 = PyNumber_InPlaceMultiply(__pyx_v_Azimuth, __pyx_float_neg_1_0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 119, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF_SET(__pyx_v_Azimuth, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":117
+      /* "heatsource9/Stream/PyHeatsource.pyx":118
  * 
  *         Azimuth = 180 - toDegrees*(acos(Azimuth))
  *         if HourAngle > 0:             # <<<<<<<<<<<<<<
@@ -4203,7 +4193,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":106
+    /* "heatsource9/Stream/PyHeatsource.pyx":107
  *     Zenith = toDegrees*(acos(Dummy))
  *     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
  *     if abs(Dummy) >= 0.000999:             # <<<<<<<<<<<<<<
@@ -4213,7 +4203,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     goto __pyx_L11;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":120
+  /* "heatsource9/Stream/PyHeatsource.pyx":121
  *             Azimuth *= -1.0
  *     else:
  *         if lat > 0:             # <<<<<<<<<<<<<<
@@ -4221,12 +4211,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  *         else:
  */
   /*else*/ {
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_lat, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 120, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_lat, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":121
+      /* "heatsource9/Stream/PyHeatsource.pyx":122
  *     else:
  *         if lat > 0:
  *             Azimuth = 180.0             # <<<<<<<<<<<<<<
@@ -4236,7 +4226,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       __Pyx_INCREF(__pyx_float_180_0);
       __pyx_v_Azimuth = __pyx_float_180_0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":120
+      /* "heatsource9/Stream/PyHeatsource.pyx":121
  *             Azimuth *= -1.0
  *     else:
  *         if lat > 0:             # <<<<<<<<<<<<<<
@@ -4246,7 +4236,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       goto __pyx_L15;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":123
+    /* "heatsource9/Stream/PyHeatsource.pyx":124
  *             Azimuth = 180.0
  *         else:
  *             Azimuth = 0.0             # <<<<<<<<<<<<<<
@@ -4261,31 +4251,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   }
   __pyx_L11:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":124
+  /* "heatsource9/Stream/PyHeatsource.pyx":125
  *         else:
  *             Azimuth = 0.0
  *     if Azimuth < 0:             # <<<<<<<<<<<<<<
  *         Azimuth += 360.0
  * 
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 124, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":125
+    /* "heatsource9/Stream/PyHeatsource.pyx":126
  *             Azimuth = 0.0
  *     if Azimuth < 0:
  *         Azimuth += 360.0             # <<<<<<<<<<<<<<
  * 
  *     AtmElevation = 90 - Zenith
  */
-    __pyx_t_3 = __Pyx_PyFloat_AddObjC(__pyx_v_Azimuth, __pyx_float_360_0, 360.0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFloat_AddObjC(__pyx_v_Azimuth, __pyx_float_360_0, 360.0, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF_SET(__pyx_v_Azimuth, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":124
+    /* "heatsource9/Stream/PyHeatsource.pyx":125
  *         else:
  *             Azimuth = 0.0
  *     if Azimuth < 0:             # <<<<<<<<<<<<<<
@@ -4294,31 +4284,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":127
+  /* "heatsource9/Stream/PyHeatsource.pyx":128
  *         Azimuth += 360.0
  * 
  *     AtmElevation = 90 - Zenith             # <<<<<<<<<<<<<<
  *     if AtmElevation > 85:
  *         RefractionCorrection = 0
  */
-  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_90, __pyx_v_Zenith, 90, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 127, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_90, __pyx_v_Zenith, 90, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_AtmElevation = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":128
+  /* "heatsource9/Stream/PyHeatsource.pyx":129
  * 
  *     AtmElevation = 90 - Zenith
  *     if AtmElevation > 85:             # <<<<<<<<<<<<<<
  *         RefractionCorrection = 0
  *     else:
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_int_85, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 128, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_int_85, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":129
+    /* "heatsource9/Stream/PyHeatsource.pyx":130
  *     AtmElevation = 90 - Zenith
  *     if AtmElevation > 85:
  *         RefractionCorrection = 0             # <<<<<<<<<<<<<<
@@ -4328,7 +4318,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_int_0);
     __pyx_v_RefractionCorrection = __pyx_int_0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":128
+    /* "heatsource9/Stream/PyHeatsource.pyx":129
  * 
  *     AtmElevation = 90 - Zenith
  *     if AtmElevation > 85:             # <<<<<<<<<<<<<<
@@ -4338,7 +4328,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     goto __pyx_L17;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":131
+  /* "heatsource9/Stream/PyHeatsource.pyx":132
  *         RefractionCorrection = 0
  *     else:
  *         Dummy = tan(toRadians*(AtmElevation))             # <<<<<<<<<<<<<<
@@ -4346,9 +4336,9 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  * 
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_tan); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_tan); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_AtmElevation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_v_toRadians, __pyx_v_AtmElevation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4363,42 +4353,42 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF_SET(__pyx_v_Dummy, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":132
+    /* "heatsource9/Stream/PyHeatsource.pyx":133
  *     else:
  *         Dummy = tan(toRadians*(AtmElevation))
  *         if AtmElevation > 5:             # <<<<<<<<<<<<<<
  * 
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /
  */
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_int_5, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_int_5, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":134
+      /* "heatsource9/Stream/PyHeatsource.pyx":135
  *         if AtmElevation > 5:
  * 
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /             # <<<<<<<<<<<<<<
  *                                     pow(Dummy,3) + 0.000086 /
  *                                     pow(Dummy,5))
  */
-      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_58_1, __pyx_v_Dummy, 58.1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 134, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_58_1, __pyx_v_Dummy, 58.1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":135
+      /* "heatsource9/Stream/PyHeatsource.pyx":136
  * 
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /
  *                                     pow(Dummy,3) + 0.000086 /             # <<<<<<<<<<<<<<
  *                                     pow(Dummy,5))
  *         elif AtmElevation > -0.575:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_4 = NULL;
       __pyx_t_8 = 0;
@@ -4415,7 +4405,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_1)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_Dummy, __pyx_int_3};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
@@ -4423,13 +4413,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
         PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_Dummy, __pyx_int_3};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_4) {
           __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -4440,35 +4430,35 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
         __Pyx_INCREF(__pyx_int_3);
         __Pyx_GIVEREF(__pyx_int_3);
         PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_8, __pyx_int_3);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":134
+      /* "heatsource9/Stream/PyHeatsource.pyx":135
  *         if AtmElevation > 5:
  * 
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /             # <<<<<<<<<<<<<<
  *                                     pow(Dummy,3) + 0.000086 /
  *                                     pow(Dummy,5))
  */
-      __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_0_07, __pyx_t_2, 0.07, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_0_07, __pyx_t_2, 0.07, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":136
+      /* "heatsource9/Stream/PyHeatsource.pyx":137
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /
  *                                     pow(Dummy,3) + 0.000086 /
  *                                     pow(Dummy,5))             # <<<<<<<<<<<<<<
  *         elif AtmElevation > -0.575:
  * 
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pow); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pow); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 = NULL;
       __pyx_t_8 = 0;
@@ -4485,7 +4475,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_Dummy, __pyx_int_5};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
@@ -4493,13 +4483,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_Dummy, __pyx_int_5};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       {
-        __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 136, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         if (__pyx_t_6) {
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -4510,30 +4500,30 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
         __Pyx_INCREF(__pyx_int_5);
         __Pyx_GIVEREF(__pyx_int_5);
         PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_8, __pyx_int_5);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":135
+      /* "heatsource9/Stream/PyHeatsource.pyx":136
  * 
  *             RefractionCorrection = (58.1 / Dummy - 0.07 /
  *                                     pow(Dummy,3) + 0.000086 /             # <<<<<<<<<<<<<<
  *                                     pow(Dummy,5))
  *         elif AtmElevation > -0.575:
  */
-      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_0_000086, __pyx_t_1, 0.000086, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_0_000086, __pyx_t_1, 0.000086, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_RefractionCorrection = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":132
+      /* "heatsource9/Stream/PyHeatsource.pyx":133
  *     else:
  *         Dummy = tan(toRadians*(AtmElevation))
  *         if AtmElevation > 5:             # <<<<<<<<<<<<<<
@@ -4543,76 +4533,76 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       goto __pyx_L18;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":137
+    /* "heatsource9/Stream/PyHeatsource.pyx":138
  *                                     pow(Dummy,3) + 0.000086 /
  *                                     pow(Dummy,5))
  *         elif AtmElevation > -0.575:             # <<<<<<<<<<<<<<
  * 
  *             RefractionCorrection = (1735 + AtmElevation *
  */
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_float_neg_0_575, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 137, __pyx_L1_error)
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_AtmElevation, __pyx_float_neg_0_575, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 138, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":142
+      /* "heatsource9/Stream/PyHeatsource.pyx":143
  *                                     (-518.2 + AtmElevation *
  *                                      (103.4 + AtmElevation *
  *                                       (-12.79 + AtmElevation * 0.711))))             # <<<<<<<<<<<<<<
  *         else:
  *             RefractionCorrection = -20.774 / Dummy
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_float_0_711); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_float_0_711); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_neg_12_79, __pyx_t_1, -12.79, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_neg_12_79, __pyx_t_1, -12.79, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 143, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":141
+      /* "heatsource9/Stream/PyHeatsource.pyx":142
  *             RefractionCorrection = (1735 + AtmElevation *
  *                                     (-518.2 + AtmElevation *
  *                                      (103.4 + AtmElevation *             # <<<<<<<<<<<<<<
  *                                       (-12.79 + AtmElevation * 0.711))))
  *         else:
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_103_4, __pyx_t_1, 103.4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_103_4, __pyx_t_1, 103.4, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":140
+      /* "heatsource9/Stream/PyHeatsource.pyx":141
  * 
  *             RefractionCorrection = (1735 + AtmElevation *
  *                                     (-518.2 + AtmElevation *             # <<<<<<<<<<<<<<
  *                                      (103.4 + AtmElevation *
  *                                       (-12.79 + AtmElevation * 0.711))))
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_neg_518_2, __pyx_t_1, -518.2, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_AddCObj(__pyx_float_neg_518_2, __pyx_t_1, -518.2, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":139
+      /* "heatsource9/Stream/PyHeatsource.pyx":140
  *         elif AtmElevation > -0.575:
  * 
  *             RefractionCorrection = (1735 + AtmElevation *             # <<<<<<<<<<<<<<
  *                                     (-518.2 + AtmElevation *
  *                                      (103.4 + AtmElevation *
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_AtmElevation, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyInt_AddCObj(__pyx_int_1735, __pyx_t_1, 0x6C7, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_AddCObj(__pyx_int_1735, __pyx_t_1, 0x6C7, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_v_RefractionCorrection = __pyx_t_3;
       __pyx_t_3 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":137
+      /* "heatsource9/Stream/PyHeatsource.pyx":138
  *                                     pow(Dummy,3) + 0.000086 /
  *                                     pow(Dummy,5))
  *         elif AtmElevation > -0.575:             # <<<<<<<<<<<<<<
@@ -4622,7 +4612,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       goto __pyx_L18;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":144
+    /* "heatsource9/Stream/PyHeatsource.pyx":145
  *                                       (-12.79 + AtmElevation * 0.711))))
  *         else:
  *             RefractionCorrection = -20.774 / Dummy             # <<<<<<<<<<<<<<
@@ -4630,52 +4620,52 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  * 
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_neg_20_774, __pyx_v_Dummy, -20.774, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_neg_20_774, __pyx_v_Dummy, -20.774, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_v_RefractionCorrection = __pyx_t_3;
       __pyx_t_3 = 0;
     }
     __pyx_L18:;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":145
+    /* "heatsource9/Stream/PyHeatsource.pyx":146
  *         else:
  *             RefractionCorrection = -20.774 / Dummy
  *         RefractionCorrection = RefractionCorrection / 3600             # <<<<<<<<<<<<<<
  * 
  *     Zenith = Zenith - RefractionCorrection
  */
-    __pyx_t_3 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_RefractionCorrection, __pyx_int_3600, 0xE10, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_RefractionCorrection, __pyx_int_3600, 0xE10, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 146, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF_SET(__pyx_v_RefractionCorrection, __pyx_t_3);
     __pyx_t_3 = 0;
   }
   __pyx_L17:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":147
+  /* "heatsource9/Stream/PyHeatsource.pyx":148
  *         RefractionCorrection = RefractionCorrection / 3600
  * 
  *     Zenith = Zenith - RefractionCorrection             # <<<<<<<<<<<<<<
  *     Altitude = 90 - Zenith
  *     Daytime = 0
  */
-  __pyx_t_3 = PyNumber_Subtract(__pyx_v_Zenith, __pyx_v_RefractionCorrection); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 147, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_v_Zenith, __pyx_v_RefractionCorrection); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF_SET(__pyx_v_Zenith, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":148
+  /* "heatsource9/Stream/PyHeatsource.pyx":149
  * 
  *     Zenith = Zenith - RefractionCorrection
  *     Altitude = 90 - Zenith             # <<<<<<<<<<<<<<
  *     Daytime = 0
  *     if Altitude > 0.0:
  */
-  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_90, __pyx_v_Zenith, 90, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_SubtractCObj(__pyx_int_90, __pyx_v_Zenith, 90, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_Altitude = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":149
+  /* "heatsource9/Stream/PyHeatsource.pyx":150
  *     Zenith = Zenith - RefractionCorrection
  *     Altitude = 90 - Zenith
  *     Daytime = 0             # <<<<<<<<<<<<<<
@@ -4684,19 +4674,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
   __pyx_v_Daytime = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":150
+  /* "heatsource9/Stream/PyHeatsource.pyx":151
  *     Altitude = 90 - Zenith
  *     Daytime = 0
  *     if Altitude > 0.0:             # <<<<<<<<<<<<<<
  *         Daytime = 1
  * 
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 150, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 150, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":151
+    /* "heatsource9/Stream/PyHeatsource.pyx":152
  *     Daytime = 0
  *     if Altitude > 0.0:
  *         Daytime = 1             # <<<<<<<<<<<<<<
@@ -4705,7 +4695,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
     __pyx_v_Daytime = 1;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":150
+    /* "heatsource9/Stream/PyHeatsource.pyx":151
  *     Altitude = 90 - Zenith
  *     Daytime = 0
  *     if Altitude > 0.0:             # <<<<<<<<<<<<<<
@@ -4714,24 +4704,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":154
+  /* "heatsource9/Stream/PyHeatsource.pyx":155
  * 
  *     # Determine which landcover transect direction corresponds to the sun azimuth
  *     if heatsource8:  # same as 8 directions but no north             # <<<<<<<<<<<<<<
  *         tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
  *         Azimuth_mod = Azimuth
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 155, __pyx_L1_error)
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":155
+    /* "heatsource9/Stream/PyHeatsource.pyx":156
  *     # Determine which landcover transect direction corresponds to the sun azimuth
  *     if heatsource8:  # same as 8 directions but no north
  *         tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1             # <<<<<<<<<<<<<<
  *         Azimuth_mod = Azimuth
  *     else:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_bisect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_bisect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = NULL;
     __pyx_t_8 = 0;
@@ -4748,7 +4738,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_tuple_, __pyx_v_Azimuth};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 155, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else
@@ -4756,13 +4746,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_tuple_, __pyx_v_Azimuth};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 155, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_3);
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 156, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (__pyx_t_2) {
         __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -4773,18 +4763,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       __Pyx_INCREF(__pyx_v_Azimuth);
       __Pyx_GIVEREF(__pyx_v_Azimuth);
       PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_8, __pyx_v_Azimuth);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 155, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 156, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_tran = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":156
+    /* "heatsource9/Stream/PyHeatsource.pyx":157
  *     if heatsource8:  # same as 8 directions but no north
  *         tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
  *         Azimuth_mod = Azimuth             # <<<<<<<<<<<<<<
@@ -4794,7 +4784,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     __Pyx_INCREF(__pyx_v_Azimuth);
     __pyx_v_Azimuth_mod = __pyx_v_Azimuth;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":154
+    /* "heatsource9/Stream/PyHeatsource.pyx":155
  * 
  *     # Determine which landcover transect direction corresponds to the sun azimuth
  *     if heatsource8:  # same as 8 directions but no north             # <<<<<<<<<<<<<<
@@ -4804,145 +4794,164 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
     goto __pyx_L20;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":158
+  /* "heatsource9/Stream/PyHeatsource.pyx":159
  *         Azimuth_mod = Azimuth
  *     else:
  *         Angle_Incr = 360.0 / radial_count             # <<<<<<<<<<<<<<
- *         DirNumbers = range(1, radial_count+1)
+ *         DirNumbers = list(range(1, radial_count+1))
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_360_0, __pyx_v_radial_count, 360.0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFloat_TrueDivideCObj(__pyx_float_360_0, __pyx_v_radial_count, 360.0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_Angle_Incr = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":159
+    /* "heatsource9/Stream/PyHeatsource.pyx":160
  *     else:
  *         Angle_Incr = 360.0 / radial_count
- *         DirNumbers = range(1, radial_count+1)             # <<<<<<<<<<<<<<
+ *         DirNumbers = list(range(1, radial_count+1))             # <<<<<<<<<<<<<<
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
  *         if Azimuth < AngleStart[0]:
  */
-    __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_radial_count, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_range); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 160, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_int_1);
-    __Pyx_GIVEREF(__pyx_int_1);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_int_1);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
-    __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_radial_count, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_2 = NULL;
+    __pyx_t_8 = 0;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_2)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_2);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __pyx_t_8 = 1;
+      }
+    }
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_int_1, __pyx_t_4};
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    } else
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_int_1, __pyx_t_4};
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    } else
+    #endif
+    {
+      __pyx_t_6 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      if (__pyx_t_2) {
+        __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_2); __pyx_t_2 = NULL;
+      }
+      __Pyx_INCREF(__pyx_int_1);
+      __Pyx_GIVEREF(__pyx_int_1);
+      PyTuple_SET_ITEM(__pyx_t_6, 0+__pyx_t_8, __pyx_int_1);
+      __Pyx_GIVEREF(__pyx_t_4);
+      PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_8, __pyx_t_4);
+      __pyx_t_4 = 0;
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_DirNumbers = __pyx_t_1;
-    __pyx_t_1 = 0;
+    __pyx_t_3 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 160, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_DirNumbers = ((PyObject*)__pyx_t_3);
+    __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":160
+    /* "heatsource9/Stream/PyHeatsource.pyx":161
  *         Angle_Incr = 360.0 / radial_count
- *         DirNumbers = range(1, radial_count+1)
+ *         DirNumbers = list(range(1, radial_count+1))
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]             # <<<<<<<<<<<<<<
  *         if Azimuth < AngleStart[0]:
  *             Azimuth_mod = Azimuth + 360
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (likely(PyList_CheckExact(__pyx_v_DirNumbers)) || PyTuple_CheckExact(__pyx_v_DirNumbers)) {
-      __pyx_t_3 = __pyx_v_DirNumbers; __Pyx_INCREF(__pyx_t_3); __pyx_t_9 = 0;
-      __pyx_t_10 = NULL;
-    } else {
-      __pyx_t_9 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_DirNumbers); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 160, __pyx_L1_error)
+    { /* enter inner scope */
+      __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L23_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_10 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 160, __pyx_L1_error)
-    }
-    for (;;) {
-      if (likely(!__pyx_t_10)) {
-        if (likely(PyList_CheckExact(__pyx_t_3))) {
-          if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_3)) break;
-          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
-          #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_4);
-          #endif
-        } else {
-          if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
-          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_9); __Pyx_INCREF(__pyx_t_4); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
-          #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_4);
-          #endif
-        }
-      } else {
-        __pyx_t_4 = __pyx_t_10(__pyx_t_3);
-        if (unlikely(!__pyx_t_4)) {
-          PyObject* exc_type = PyErr_Occurred();
-          if (exc_type) {
-            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 160, __pyx_L1_error)
-          }
-          break;
-        }
+      __pyx_t_1 = __pyx_v_DirNumbers; __Pyx_INCREF(__pyx_t_1); __pyx_t_9 = 0;
+      for (;;) {
+        if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_1)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_9); __Pyx_INCREF(__pyx_t_6); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 161, __pyx_L23_error)
+        #else
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L23_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        #endif
+        __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_x, __pyx_t_6);
+        __pyx_t_6 = 0;
+        __pyx_t_6 = PyNumber_Multiply(__pyx_7genexpr__pyx_v_x, __pyx_v_Angle_Incr); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 161, __pyx_L23_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_Angle_Incr, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 161, __pyx_L23_error)
         __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_2 = PyNumber_Subtract(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 161, __pyx_L23_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 161, __pyx_L23_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       }
-      __Pyx_XDECREF_SET(__pyx_v_x, __pyx_t_4);
-      __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Multiply(__pyx_v_x, __pyx_v_Angle_Incr); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_Angle_Incr, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_6))) __PYX_ERR(0, 160, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_AngleStart = ((PyObject*)__pyx_t_1);
-    __pyx_t_1 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x); __pyx_7genexpr__pyx_v_x = 0;
+      goto __pyx_L26_exit_scope;
+      __pyx_L23_error:;
+      __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x); __pyx_7genexpr__pyx_v_x = 0;
+      goto __pyx_L1_error;
+      __pyx_L26_exit_scope:;
+    } /* exit inner scope */
+    __pyx_v_AngleStart = ((PyObject*)__pyx_t_3);
+    __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":161
- *         DirNumbers = range(1, radial_count+1)
+    /* "heatsource9/Stream/PyHeatsource.pyx":162
+ *         DirNumbers = list(range(1, radial_count+1))
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
  *         if Azimuth < AngleStart[0]:             # <<<<<<<<<<<<<<
  *             Azimuth_mod = Azimuth + 360
  *         else:
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_AngleStart, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_t_1, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 161, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_AngleStart, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_Azimuth, __pyx_t_3, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":162
+      /* "heatsource9/Stream/PyHeatsource.pyx":163
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
  *         if Azimuth < AngleStart[0]:
  *             Azimuth_mod = Azimuth + 360             # <<<<<<<<<<<<<<
  *         else:
  *             Azimuth_mod = Azimuth
  */
-      __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_Azimuth, __pyx_int_360, 0x168, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_v_Azimuth_mod = __pyx_t_3;
-      __pyx_t_3 = 0;
+      __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_Azimuth, __pyx_int_360, 0x168, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_v_Azimuth_mod = __pyx_t_1;
+      __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":161
- *         DirNumbers = range(1, radial_count+1)
+      /* "heatsource9/Stream/PyHeatsource.pyx":162
+ *         DirNumbers = list(range(1, radial_count+1))
  *         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
  *         if Azimuth < AngleStart[0]:             # <<<<<<<<<<<<<<
  *             Azimuth_mod = Azimuth + 360
  *         else:
  */
-      goto __pyx_L23;
+      goto __pyx_L27;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":164
+    /* "heatsource9/Stream/PyHeatsource.pyx":165
  *             Azimuth_mod = Azimuth + 360
  *         else:
  *             Azimuth_mod = Azimuth             # <<<<<<<<<<<<<<
@@ -4953,105 +4962,105 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
       __Pyx_INCREF(__pyx_v_Azimuth);
       __pyx_v_Azimuth_mod = __pyx_v_Azimuth;
     }
-    __pyx_L23:;
+    __pyx_L27:;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":165
+    /* "heatsource9/Stream/PyHeatsource.pyx":166
  *         else:
  *             Azimuth_mod = Azimuth
  *         tran = bisect(AngleStart,Azimuth_mod)-1             # <<<<<<<<<<<<<<
  * 
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_bisect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = NULL;
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_bisect); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = NULL;
     __pyx_t_8 = 0;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_1);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-        __Pyx_INCREF(__pyx_t_6);
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_2)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_2);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_1, function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
         __pyx_t_8 = 1;
       }
     }
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_1)) {
-      PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_AngleStart, __pyx_v_Azimuth_mod};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (PyFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v_AngleStart, __pyx_v_Azimuth_mod};
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
-      PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_AngleStart, __pyx_v_Azimuth_mod};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_GOTREF(__pyx_t_3);
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_v_AngleStart, __pyx_v_Azimuth_mod};
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_1);
     } else
     #endif
     {
-      __pyx_t_2 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      if (__pyx_t_6) {
-        __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_6); __pyx_t_6 = NULL;
+      __pyx_t_4 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      if (__pyx_t_2) {
+        __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2); __pyx_t_2 = NULL;
       }
       __Pyx_INCREF(__pyx_v_AngleStart);
       __Pyx_GIVEREF(__pyx_v_AngleStart);
-      PyTuple_SET_ITEM(__pyx_t_2, 0+__pyx_t_8, __pyx_v_AngleStart);
+      PyTuple_SET_ITEM(__pyx_t_4, 0+__pyx_t_8, __pyx_v_AngleStart);
       __Pyx_INCREF(__pyx_v_Azimuth_mod);
       __Pyx_GIVEREF(__pyx_v_Azimuth_mod);
-      PyTuple_SET_ITEM(__pyx_t_2, 1+__pyx_t_8, __pyx_v_Azimuth_mod);
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_8, __pyx_v_Azimuth_mod);
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_tran = __pyx_t_1;
-    __pyx_t_1 = 0;
+    __pyx_t_3 = __Pyx_PyInt_SubtractObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_tran = __pyx_t_3;
+    __pyx_t_3 = 0;
   }
   __pyx_L20:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":167
+  /* "heatsource9/Stream/PyHeatsource.pyx":168
  *         tran = bisect(AngleStart,Azimuth_mod)-1
  * 
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod             # <<<<<<<<<<<<<<
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v_Daytime); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_long(__pyx_v_Daytime); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 168, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyTuple_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_Altitude);
   __Pyx_GIVEREF(__pyx_v_Altitude);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_Altitude);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_Altitude);
   __Pyx_INCREF(__pyx_v_Zenith);
   __Pyx_GIVEREF(__pyx_v_Zenith);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_Zenith);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_Zenith);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_t_3);
   __Pyx_INCREF(__pyx_v_tran);
   __Pyx_GIVEREF(__pyx_v_tran);
-  PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_v_tran);
+  PyTuple_SET_ITEM(__pyx_t_1, 3, __pyx_v_tran);
   __Pyx_INCREF(__pyx_v_Azimuth_mod);
   __Pyx_GIVEREF(__pyx_v_Azimuth_mod);
-  PyTuple_SET_ITEM(__pyx_t_3, 4, __pyx_v_Azimuth_mod);
-  __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_3;
+  PyTuple_SET_ITEM(__pyx_t_1, 4, __pyx_v_Azimuth_mod);
   __pyx_t_3 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":31
+  /* "heatsource9/Stream/PyHeatsource.pyx":32
  * from ..Utils.Printer import Printer as print_console
  * 
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0
  */
@@ -5064,7 +5073,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcSolarPosition", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_solar_position", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_toRadians);
@@ -5097,24 +5106,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_CalcSolarPosition
   __Pyx_XDECREF(__pyx_v_Angle_Incr);
   __Pyx_XDECREF(__pyx_v_DirNumbers);
   __Pyx_XDECREF(__pyx_v_AngleStart);
-  __Pyx_XDECREF(__pyx_v_x);
+  __Pyx_XDECREF(__pyx_7genexpr__pyx_v_x);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":169
+/* "heatsource9/Stream/PyHeatsource.pyx":170
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
  *     cdef double Converge = 10
  *     cdef double dy = 0.01
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometry(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometry = {"GetStreamGeometry", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometry, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometry(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3get_stream_geometry(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_3get_stream_geometry = {"get_stream_geometry", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3get_stream_geometry, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3get_stream_geometry(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_Q_est = 0;
   PyObject *__pyx_v_W_b = 0;
   PyObject *__pyx_v_z = 0;
@@ -5125,7 +5134,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometr
   PyObject *__pyx_v_dt = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("GetStreamGeometry (wrapper)", 0);
+  __Pyx_RefNannySetupContext("get_stream_geometry (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_Q_est,&__pyx_n_s_W_b,&__pyx_n_s_z,&__pyx_n_s_n,&__pyx_n_s_S,&__pyx_n_s_D_est,&__pyx_n_s_dx,&__pyx_n_s_dt,0};
     PyObject* values[8] = {0,0,0,0,0,0,0,0};
@@ -5161,47 +5170,47 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometr
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_b)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 1); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 1); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_z)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 2); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 2); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 3); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 3); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_S)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 4); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 4); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_D_est)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 5); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 5); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 6); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 6); __PYX_ERR(0, 170, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dt)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, 7); __PYX_ERR(0, 169, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, 7); __PYX_ERR(0, 170, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "GetStreamGeometry") < 0)) __PYX_ERR(0, 169, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_stream_geometry") < 0)) __PYX_ERR(0, 170, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
       goto __pyx_L5_argtuple_error;
@@ -5226,20 +5235,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometr
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("GetStreamGeometry", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 169, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_stream_geometry", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 170, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetStreamGeometry", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_stream_geometry", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometry(__pyx_self, __pyx_v_Q_est, __pyx_v_W_b, __pyx_v_z, __pyx_v_n, __pyx_v_S, __pyx_v_D_est, __pyx_v_dx, __pyx_v_dt);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_2get_stream_geometry(__pyx_self, __pyx_v_Q_est, __pyx_v_W_b, __pyx_v_z, __pyx_v_n, __pyx_v_S, __pyx_v_D_est, __pyx_v_dx, __pyx_v_dt);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_W_b, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_S, PyObject *__pyx_v_D_est, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2get_stream_geometry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_W_b, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_S, PyObject *__pyx_v_D_est, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt) {
   double __pyx_v_Converge;
   double __pyx_v_dy;
   int __pyx_v_count;
@@ -5272,21 +5281,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   PyObject *__pyx_t_13 = NULL;
   double __pyx_t_14;
   int __pyx_t_15;
-  __Pyx_RefNannySetupContext("GetStreamGeometry", 0);
+  __Pyx_RefNannySetupContext("get_stream_geometry", 0);
   __Pyx_INCREF(__pyx_v_W_b);
   __Pyx_INCREF(__pyx_v_D_est);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":170
+  /* "heatsource9/Stream/PyHeatsource.pyx":171
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
  *     cdef double Converge = 10             # <<<<<<<<<<<<<<
  *     cdef double dy = 0.01
  *     cdef int count = 0
  */
   __pyx_v_Converge = 10.0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":171
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):
+  /* "heatsource9/Stream/PyHeatsource.pyx":172
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
  *     cdef double Converge = 10
  *     cdef double dy = 0.01             # <<<<<<<<<<<<<<
  *     cdef int count = 0
@@ -5294,7 +5303,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   __pyx_v_dy = 0.01;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":172
+  /* "heatsource9/Stream/PyHeatsource.pyx":173
  *     cdef double Converge = 10
  *     cdef double dy = 0.01
  *     cdef int count = 0             # <<<<<<<<<<<<<<
@@ -5303,7 +5312,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   __pyx_v_count = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":173
+  /* "heatsource9/Stream/PyHeatsource.pyx":174
  *     cdef double dy = 0.01
  *     cdef int count = 0
  *     cdef double power = 2/3             # <<<<<<<<<<<<<<
@@ -5312,16 +5321,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   __pyx_v_power = (2.0 / 3.0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":178
+  /* "heatsource9/Stream/PyHeatsource.pyx":179
  *     # ASSUMPTION: Make bottom width 1 cm to prevent undefined numbers
  *     # in the math.
  *     W_b = 0.01 if W_b == 0 else W_b             # <<<<<<<<<<<<<<
  * 
  *     if D_est == 0:
  */
-  __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_v_W_b, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_v_W_b, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 179, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (__pyx_t_3) {
     __Pyx_INCREF(__pyx_float_0_01);
@@ -5333,20 +5342,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   __Pyx_DECREF_SET(__pyx_v_W_b, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":180
+  /* "heatsource9/Stream/PyHeatsource.pyx":181
  *     W_b = 0.01 if W_b == 0 else W_b
  * 
  *     if D_est == 0:             # <<<<<<<<<<<<<<
  *         # This is a secant iterative solution method. It uses the
  *         # equation for discharge at equality then adds a slight change
  */
-  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_v_D_est, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_v_D_est, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_3) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":185
+    /* "heatsource9/Stream/PyHeatsource.pyx":186
  *         # to the depth and solves it again. It should iterate for a
  *         # solution to depth within about 5-6 solutions.
  *         while Converge > 1e-7:             # <<<<<<<<<<<<<<
@@ -5357,52 +5366,52 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_t_3 = ((__pyx_v_Converge > 1e-7) != 0);
       if (!__pyx_t_3) break;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":186
+      /* "heatsource9/Stream/PyHeatsource.pyx":187
  *         # solution to depth within about 5-6 solutions.
  *         while Converge > 1e-7:
  *             Fy = ((D_est * (W_b + z * D_est)) *             # <<<<<<<<<<<<<<
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyNumber_Add(__pyx_v_W_b, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Add(__pyx_v_W_b, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":187
+      /* "heatsource9/Stream/PyHeatsource.pyx":188
  *         while Converge > 1e-7:
  *             Fy = ((D_est * (W_b + z * D_est)) *
  *                   pow(((D_est * (W_b + z * D_est)) /             # <<<<<<<<<<<<<<
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
  *                   ((n * Q_est) / sqrt(S)))
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 187, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 187, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyNumber_Add(__pyx_v_W_b, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 187, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Add(__pyx_v_W_b, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 187, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":188
+      /* "heatsource9/Stream/PyHeatsource.pyx":189
  *             Fy = ((D_est * (W_b + z * D_est)) *
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -             # <<<<<<<<<<<<<<
  *                   ((n * Q_est) / sqrt(S)))
  * 
  */
-      __pyx_t_6 = PyNumber_Multiply(__pyx_int_2, __pyx_v_D_est); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Multiply(__pyx_int_2, __pyx_v_D_est); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_pow); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_pow); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __pyx_t_11 = NULL;
       __pyx_t_12 = 0;
@@ -5419,7 +5428,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_10)) {
         PyObject *__pyx_temp[3] = {__pyx_t_11, __pyx_v_z, __pyx_int_2};
-        __pyx_t_9 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_GOTREF(__pyx_t_9);
       } else
@@ -5427,13 +5436,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_10)) {
         PyObject *__pyx_temp[3] = {__pyx_t_11, __pyx_v_z, __pyx_int_2};
-        __pyx_t_9 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_GOTREF(__pyx_t_9);
       } else
       #endif
       {
-        __pyx_t_13 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_13 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 189, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         if (__pyx_t_11) {
           __Pyx_GIVEREF(__pyx_t_11); PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_11); __pyx_t_11 = NULL;
@@ -5444,12 +5453,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
         __Pyx_INCREF(__pyx_int_2);
         __Pyx_GIVEREF(__pyx_int_2);
         PyTuple_SET_ITEM(__pyx_t_13, 1+__pyx_t_12, __pyx_int_2);
-        __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_13, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_13, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       }
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_9, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_9, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_9 = NULL;
@@ -5465,37 +5474,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_t_7 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_9, __pyx_t_10) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_10);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = PyNumber_Multiply(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_8 = PyNumber_Multiply(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":187
+      /* "heatsource9/Stream/PyHeatsource.pyx":188
  *         while Converge > 1e-7:
  *             Fy = ((D_est * (W_b + z * D_est)) *
  *                   pow(((D_est * (W_b + z * D_est)) /             # <<<<<<<<<<<<<<
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
  *                   ((n * Q_est) / sqrt(S)))
  */
-      __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 187, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":188
+      /* "heatsource9/Stream/PyHeatsource.pyx":189
  *             Fy = ((D_est * (W_b + z * D_est)) *
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -             # <<<<<<<<<<<<<<
  *                   ((n * Q_est) / sqrt(S)))
  * 
  */
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_power); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_power); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_5 = NULL;
       __pyx_t_12 = 0;
@@ -5512,7 +5521,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_8, __pyx_t_7};
-        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -5522,7 +5531,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_8, __pyx_t_7};
-        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -5530,7 +5539,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       } else
       #endif
       {
-        __pyx_t_6 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 187, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 188, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         if (__pyx_t_5) {
           __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -5541,34 +5550,34 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
         PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_12, __pyx_t_7);
         __pyx_t_8 = 0;
         __pyx_t_7 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":186
+      /* "heatsource9/Stream/PyHeatsource.pyx":187
  *         # solution to depth within about 5-6 solutions.
  *         while Converge > 1e-7:
  *             Fy = ((D_est * (W_b + z * D_est)) *             # <<<<<<<<<<<<<<
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
  */
-      __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":189
+      /* "heatsource9/Stream/PyHeatsource.pyx":190
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
  *                   ((n * Q_est) / sqrt(S)))             # <<<<<<<<<<<<<<
  * 
  *             thed = D_est + dy
  */
-      __pyx_t_2 = PyNumber_Multiply(__pyx_v_n, __pyx_v_Q_est); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Multiply(__pyx_v_n, __pyx_v_Q_est); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 189, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -5582,103 +5591,103 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       }
       __pyx_t_1 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_v_S) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_S);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 189, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":188
+      /* "heatsource9/Stream/PyHeatsource.pyx":189
  *             Fy = ((D_est * (W_b + z * D_est)) *
  *                   pow(((D_est * (W_b + z * D_est)) /
  *                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -             # <<<<<<<<<<<<<<
  *                   ((n * Q_est) / sqrt(S)))
  * 
  */
-      __pyx_t_1 = PyNumber_Subtract(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Subtract(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_v_Fy = __pyx_t_14;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":191
+      /* "heatsource9/Stream/PyHeatsource.pyx":192
  *                   ((n * Q_est) / sqrt(S)))
  * 
  *             thed = D_est + dy             # <<<<<<<<<<<<<<
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /
  */
-      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_dy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_dy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_6 = PyNumber_Add(__pyx_v_D_est, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Add(__pyx_v_D_est, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 192, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_thed = __pyx_t_14;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":192
+      /* "heatsource9/Stream/PyHeatsource.pyx":193
  * 
  *             thed = D_est + dy
  *             Fyy = ((thed * (W_b + z * thed)) *             # <<<<<<<<<<<<<<
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
  */
-      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_4 = PyNumber_Multiply(__pyx_v_z, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_v_z, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyNumber_Add(__pyx_v_W_b, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Add(__pyx_v_W_b, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":193
+      /* "heatsource9/Stream/PyHeatsource.pyx":194
  *             thed = D_est + dy
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /             # <<<<<<<<<<<<<<
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
  *                    (n * Q_est) / sqrt(S))
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pow); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pow); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_2 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_thed); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = PyNumber_Multiply(__pyx_v_z, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_8 = PyNumber_Multiply(__pyx_v_z, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = PyNumber_Multiply(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_8 = PyNumber_Multiply(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":194
+      /* "heatsource9/Stream/PyHeatsource.pyx":195
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -             # <<<<<<<<<<<<<<
  *                    (n * Q_est) / sqrt(S))
  * 
  */
-      __pyx_t_7 = PyFloat_FromDouble((2.0 * __pyx_v_thed)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble((2.0 * __pyx_v_thed)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_pow); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_pow); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_13 = NULL;
       __pyx_t_12 = 0;
@@ -5695,7 +5704,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_9)) {
         PyObject *__pyx_temp[3] = {__pyx_t_13, __pyx_v_z, __pyx_int_2};
-        __pyx_t_10 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 194, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 195, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_GOTREF(__pyx_t_10);
       } else
@@ -5703,13 +5712,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_9)) {
         PyObject *__pyx_temp[3] = {__pyx_t_13, __pyx_v_z, __pyx_int_2};
-        __pyx_t_10 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 194, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 195, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_GOTREF(__pyx_t_10);
       } else
       #endif
       {
-        __pyx_t_11 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 194, __pyx_L1_error)
+        __pyx_t_11 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         if (__pyx_t_13) {
           __Pyx_GIVEREF(__pyx_t_13); PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_13); __pyx_t_13 = NULL;
@@ -5720,12 +5729,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
         __Pyx_INCREF(__pyx_int_2);
         __Pyx_GIVEREF(__pyx_int_2);
         PyTuple_SET_ITEM(__pyx_t_11, 1+__pyx_t_12, __pyx_int_2);
-        __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_11, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 194, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_11, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       }
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_10, 1, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_10, 1, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __pyx_t_10 = NULL;
@@ -5741,37 +5750,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_t_2 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_10, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_9);
       __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyNumber_Add(__pyx_v_W_b, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Add(__pyx_v_W_b, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":193
+      /* "heatsource9/Stream/PyHeatsource.pyx":194
  *             thed = D_est + dy
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /             # <<<<<<<<<<<<<<
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
  *                    (n * Q_est) / sqrt(S))
  */
-      __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_8, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_8, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":194
+      /* "heatsource9/Stream/PyHeatsource.pyx":195
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -             # <<<<<<<<<<<<<<
  *                    (n * Q_est) / sqrt(S))
  * 
  */
-      __pyx_t_2 = PyFloat_FromDouble(__pyx_v_power); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_2 = PyFloat_FromDouble(__pyx_v_power); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_8 = NULL;
       __pyx_t_12 = 0;
@@ -5788,7 +5797,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_6)) {
         PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_t_5, __pyx_t_2};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -5798,7 +5807,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
         PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_t_5, __pyx_t_2};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -5806,7 +5815,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 193, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         if (__pyx_t_8) {
           __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_8); __pyx_t_8 = NULL;
@@ -5817,34 +5826,34 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
         PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_12, __pyx_t_2);
         __pyx_t_5 = 0;
         __pyx_t_2 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":192
+      /* "heatsource9/Stream/PyHeatsource.pyx":193
  * 
  *             thed = D_est + dy
  *             Fyy = ((thed * (W_b + z * thed)) *             # <<<<<<<<<<<<<<
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
  */
-      __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":195
+      /* "heatsource9/Stream/PyHeatsource.pyx":196
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
  *                    (n * Q_est) / sqrt(S))             # <<<<<<<<<<<<<<
  * 
  *             dFy = (Fyy - Fy) / dy
  */
-      __pyx_t_1 = PyNumber_Multiply(__pyx_v_n, __pyx_v_Q_est); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_v_n, __pyx_v_Q_est); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 195, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_2 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -5858,30 +5867,30 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       }
       __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_2, __pyx_v_S) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_S);
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 195, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 195, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":194
+      /* "heatsource9/Stream/PyHeatsource.pyx":195
  *             Fyy = ((thed * (W_b + z * thed)) *
  *                    pow((thed * (W_b + z * thed)) /
  *                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -             # <<<<<<<<<<<<<<
  *                    (n * Q_est) / sqrt(S))
  * 
  */
-      __pyx_t_4 = PyNumber_Subtract(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Subtract(__pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
+      __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_Fyy = __pyx_t_14;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":197
+      /* "heatsource9/Stream/PyHeatsource.pyx":198
  *                    (n * Q_est) / sqrt(S))
  * 
  *             dFy = (Fyy - Fy) / dy             # <<<<<<<<<<<<<<
@@ -5891,11 +5900,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_t_14 = (__pyx_v_Fyy - __pyx_v_Fy);
       if (unlikely(__pyx_v_dy == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 197, __pyx_L1_error)
+        __PYX_ERR(0, 198, __pyx_L1_error)
       }
       __pyx_v_dFy = (__pyx_t_14 / __pyx_v_dy);
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":198
+      /* "heatsource9/Stream/PyHeatsource.pyx":199
  * 
  *             dFy = (Fyy - Fy) / dy
  *             if dFy <= 0: dFy = 0.99             # <<<<<<<<<<<<<<
@@ -5907,7 +5916,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
         __pyx_v_dFy = 0.99;
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":199
+      /* "heatsource9/Stream/PyHeatsource.pyx":200
  *             dFy = (Fyy - Fy) / dy
  *             if dFy <= 0: dFy = 0.99
  *             D_est -= Fy / dFy             # <<<<<<<<<<<<<<
@@ -5916,33 +5925,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
       if (unlikely(__pyx_v_dFy == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 199, __pyx_L1_error)
+        __PYX_ERR(0, 200, __pyx_L1_error)
       }
-      __pyx_t_4 = PyFloat_FromDouble((__pyx_v_Fy / __pyx_v_dFy)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 199, __pyx_L1_error)
+      __pyx_t_4 = PyFloat_FromDouble((__pyx_v_Fy / __pyx_v_dFy)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = PyNumber_InPlaceSubtract(__pyx_v_D_est, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 199, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_InPlaceSubtract(__pyx_v_D_est, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF_SET(__pyx_v_D_est, __pyx_t_7);
       __pyx_t_7 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":201
+      /* "heatsource9/Stream/PyHeatsource.pyx":202
  *             D_est -= Fy / dFy
  * 
  *             if (D_est < 0) or (D_est > 5000) or (count > 10000):             # <<<<<<<<<<<<<<
  *                 # Damn, missed it. There may be a local minimum confusing
  *                 # us, so we choose another depth at random and try again.
  */
-      __pyx_t_7 = PyObject_RichCompare(__pyx_v_D_est, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 201, __pyx_L1_error)
-      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_15 < 0)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_7 = PyObject_RichCompare(__pyx_v_D_est, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_15 < 0)) __PYX_ERR(0, 202, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       if (!__pyx_t_15) {
       } else {
         __pyx_t_3 = __pyx_t_15;
         goto __pyx_L8_bool_binop_done;
       }
-      __pyx_t_7 = PyObject_RichCompare(__pyx_v_D_est, __pyx_int_5000, Py_GT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 201, __pyx_L1_error)
-      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_15 < 0)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_7 = PyObject_RichCompare(__pyx_v_D_est, __pyx_int_5000, Py_GT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_15 < 0)) __PYX_ERR(0, 202, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       if (!__pyx_t_15) {
       } else {
@@ -5954,22 +5963,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_3) {
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":204
+        /* "heatsource9/Stream/PyHeatsource.pyx":205
  *                 # Damn, missed it. There may be a local minimum confusing
  *                 # us, so we choose another depth at random and try again.
  *                 D_est = randint(1,100)             # <<<<<<<<<<<<<<
  *                 Converge = 0
  *                 count = 0
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_randint); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_randint); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 205, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 205, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF_SET(__pyx_v_D_est, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":205
+        /* "heatsource9/Stream/PyHeatsource.pyx":206
  *                 # us, so we choose another depth at random and try again.
  *                 D_est = randint(1,100)
  *                 Converge = 0             # <<<<<<<<<<<<<<
@@ -5978,7 +5987,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
         __pyx_v_Converge = 0.0;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":206
+        /* "heatsource9/Stream/PyHeatsource.pyx":207
  *                 D_est = randint(1,100)
  *                 Converge = 0
  *                 count = 0             # <<<<<<<<<<<<<<
@@ -5987,7 +5996,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
         __pyx_v_count = 0;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":201
+        /* "heatsource9/Stream/PyHeatsource.pyx":202
  *             D_est -= Fy / dFy
  * 
  *             if (D_est < 0) or (D_est > 5000) or (count > 10000):             # <<<<<<<<<<<<<<
@@ -5996,7 +6005,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":207
+      /* "heatsource9/Stream/PyHeatsource.pyx":208
  *                 Converge = 0
  *                 count = 0
  *             Converge = abs(Fy/dFy)             # <<<<<<<<<<<<<<
@@ -6005,11 +6014,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
       if (unlikely(__pyx_v_dFy == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 207, __pyx_L1_error)
+        __PYX_ERR(0, 208, __pyx_L1_error)
       }
       __pyx_v_Converge = fabs((__pyx_v_Fy / __pyx_v_dFy));
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":208
+      /* "heatsource9/Stream/PyHeatsource.pyx":209
  *                 count = 0
  *             Converge = abs(Fy/dFy)
  *             count += 1             # <<<<<<<<<<<<<<
@@ -6019,7 +6028,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __pyx_v_count = (__pyx_v_count + 1);
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":180
+    /* "heatsource9/Stream/PyHeatsource.pyx":181
  *     W_b = 0.01 if W_b == 0 else W_b
  * 
  *     if D_est == 0:             # <<<<<<<<<<<<<<
@@ -6028,37 +6037,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":212
+  /* "heatsource9/Stream/PyHeatsource.pyx":213
  *     # channel characteristics
  *     cdef double A, Pw, Rh, Ww, U, Shear_Velocity, Dispersion
  *     A = (D_est * (W_b + z * D_est))             # <<<<<<<<<<<<<<
  *     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))
  *     Rh = A/Pw
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_z, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_A = __pyx_t_14;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":213
+  /* "heatsource9/Stream/PyHeatsource.pyx":214
  *     cdef double A, Pw, Rh, Ww, U, Shear_Velocity, Dispersion
  *     A = (D_est * (W_b + z * D_est))
  *     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))             # <<<<<<<<<<<<<<
  *     Rh = A/Pw
  *     Ww = W_b + 2 * z * D_est
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_int_2, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_int_2, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_5 = NULL;
   __pyx_t_12 = 0;
@@ -6075,7 +6084,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_v_z, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -6083,13 +6092,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_v_z, __pyx_int_2};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 213, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -6100,12 +6109,12 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     __Pyx_INCREF(__pyx_int_2);
     __Pyx_GIVEREF(__pyx_int_2);
     PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_12, __pyx_int_2);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = NULL;
@@ -6121,21 +6130,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   __pyx_t_7 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_1, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_2);
   __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 213, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_v_Pw = __pyx_t_14;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":214
+  /* "heatsource9/Stream/PyHeatsource.pyx":215
  *     A = (D_est * (W_b + z * D_est))
  *     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))
  *     Rh = A/Pw             # <<<<<<<<<<<<<<
@@ -6144,59 +6153,59 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   if (unlikely(__pyx_v_Pw == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 214, __pyx_L1_error)
+    __PYX_ERR(0, 215, __pyx_L1_error)
   }
   __pyx_v_Rh = (__pyx_v_A / __pyx_v_Pw);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":215
+  /* "heatsource9/Stream/PyHeatsource.pyx":216
  *     Pw = (W_b + 2 * D_est * sqrt(1+ pow(z,2)))
  *     Rh = A/Pw
  *     Ww = W_b + 2 * z * D_est             # <<<<<<<<<<<<<<
  *     U = Q_est / A
  * 
  */
-  __pyx_t_7 = PyNumber_Multiply(__pyx_int_2, __pyx_v_z); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_int_2, __pyx_v_z); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_t_7, __pyx_v_D_est); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_t_7, __pyx_v_D_est); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Add(__pyx_v_W_b, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_v_Ww = __pyx_t_14;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":216
+  /* "heatsource9/Stream/PyHeatsource.pyx":217
  *     Rh = A/Pw
  *     Ww = W_b + 2 * z * D_est
  *     U = Q_est / A             # <<<<<<<<<<<<<<
  * 
  *     # This is a sheer velocity estimate, followed by an estimate
  */
-  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_A); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_A); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_Q_est, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_Q_est, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_U = __pyx_t_14;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":220
+  /* "heatsource9/Stream/PyHeatsource.pyx":221
  *     # This is a sheer velocity estimate, followed by an estimate
  *     # of numerical dispersion
  *     if S == 0.0:             # <<<<<<<<<<<<<<
  *         Shear_Velocity = U
  *     else:
  */
-  __pyx_t_6 = __Pyx_PyFloat_EqObjC(__pyx_v_S, __pyx_float_0_0, 0.0, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyFloat_EqObjC(__pyx_v_S, __pyx_float_0_0, 0.0, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 221, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (__pyx_t_3) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":221
+    /* "heatsource9/Stream/PyHeatsource.pyx":222
  *     # of numerical dispersion
  *     if S == 0.0:
  *         Shear_Velocity = U             # <<<<<<<<<<<<<<
@@ -6205,7 +6214,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
     __pyx_v_Shear_Velocity = __pyx_v_U;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":220
+    /* "heatsource9/Stream/PyHeatsource.pyx":221
  *     # This is a sheer velocity estimate, followed by an estimate
  *     # of numerical dispersion
  *     if S == 0.0:             # <<<<<<<<<<<<<<
@@ -6215,7 +6224,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     goto __pyx_L11;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":223
+  /* "heatsource9/Stream/PyHeatsource.pyx":224
  *         Shear_Velocity = U
  *     else:
  *         Shear_Velocity = sqrt(9.8 * D_est * S)             # <<<<<<<<<<<<<<
@@ -6223,11 +6232,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  *                   (D_est * Shear_Velocity))
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 223, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 224, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_4 = PyNumber_Multiply(__pyx_float_9_8, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 223, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Multiply(__pyx_float_9_8, __pyx_v_D_est); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 224, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_v_S); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 223, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_v_S); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
@@ -6243,25 +6252,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 223, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 223, __pyx_L1_error)
+    __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 224, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_Shear_Velocity = __pyx_t_14;
   }
   __pyx_L11:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":224
+  /* "heatsource9/Stream/PyHeatsource.pyx":225
  *     else:
  *         Shear_Velocity = sqrt(9.8 * D_est * S)
  *     Dispersion = ((0.011 * pow(U,2.0) * pow(Ww,2.0)) /             # <<<<<<<<<<<<<<
  *                   (D_est * Shear_Velocity))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_pow); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_pow); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_U); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_U); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   __pyx_t_12 = 0;
@@ -6278,7 +6287,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_7)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_7, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_7, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6287,14 +6296,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_7)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_7, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_7, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_1 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -6305,17 +6314,17 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     __Pyx_GIVEREF(__pyx_float_2_0);
     PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_12, __pyx_float_2_0);
     __pyx_t_2 = 0;
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyNumber_Multiply(__pyx_float_0_011, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_float_0_011, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Ww); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Ww); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   __pyx_t_12 = 0;
@@ -6332,7 +6341,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -6341,14 +6350,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -6359,57 +6368,57 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     __Pyx_GIVEREF(__pyx_float_2_0);
     PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_12, __pyx_float_2_0);
     __pyx_t_2 = 0;
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_8, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_8, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":225
+  /* "heatsource9/Stream/PyHeatsource.pyx":226
  *         Shear_Velocity = sqrt(9.8 * D_est * S)
  *     Dispersion = ((0.011 * pow(U,2.0) * pow(Ww,2.0)) /
  *                   (D_est * Shear_Velocity))             # <<<<<<<<<<<<<<
  * 
  *     if (Dispersion * dt / pow(dx,2.0)) > 0.5:
  */
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Shear_Velocity); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Shear_Velocity); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_v_D_est, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":224
+  /* "heatsource9/Stream/PyHeatsource.pyx":225
  *     else:
  *         Shear_Velocity = sqrt(9.8 * D_est * S)
  *     Dispersion = ((0.011 * pow(U,2.0) * pow(Ww,2.0)) /             # <<<<<<<<<<<<<<
  *                   (D_est * Shear_Velocity))
  * 
  */
-  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_Dispersion = __pyx_t_14;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":227
+  /* "heatsource9/Stream/PyHeatsource.pyx":228
  *                   (D_est * Shear_Velocity))
  * 
  *     if (Dispersion * dt / pow(dx,2.0)) > 0.5:             # <<<<<<<<<<<<<<
  *         Dispersion = (0.45 * pow(dx,2)) / dt
  *     #Dispersion = 50
  */
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Dispersion); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Dispersion); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_6, __pyx_v_dt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_6, __pyx_v_dt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_8 = NULL;
   __pyx_t_12 = 0;
@@ -6426,7 +6435,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_v_dx, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_GOTREF(__pyx_t_6);
   } else
@@ -6434,13 +6443,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_v_dx, __pyx_float_2_0};
-    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_GOTREF(__pyx_t_6);
   } else
   #endif
   {
-    __pyx_t_2 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     if (__pyx_t_8) {
       __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_8); __pyx_t_8 = NULL;
@@ -6451,29 +6460,29 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     __Pyx_INCREF(__pyx_float_2_0);
     __Pyx_GIVEREF(__pyx_float_2_0);
     PyTuple_SET_ITEM(__pyx_t_2, 1+__pyx_t_12, __pyx_float_2_0);
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 227, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_float_0_5, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_float_0_5, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 228, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (__pyx_t_3) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":228
+    /* "heatsource9/Stream/PyHeatsource.pyx":229
  * 
  *     if (Dispersion * dt / pow(dx,2.0)) > 0.5:
  *         Dispersion = (0.45 * pow(dx,2)) / dt             # <<<<<<<<<<<<<<
  *     #Dispersion = 50
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_7 = NULL;
     __pyx_t_12 = 0;
@@ -6490,7 +6499,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_v_dx, __pyx_int_2};
-      __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_GOTREF(__pyx_t_6);
     } else
@@ -6498,13 +6507,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
       PyObject *__pyx_temp[3] = {__pyx_t_7, __pyx_v_dx, __pyx_int_2};
-      __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_12, 2+__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_GOTREF(__pyx_t_6);
     } else
     #endif
     {
-      __pyx_t_2 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 228, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(2+__pyx_t_12); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       if (__pyx_t_7) {
         __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_7); __pyx_t_7 = NULL;
@@ -6515,22 +6524,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
       __Pyx_INCREF(__pyx_int_2);
       __Pyx_GIVEREF(__pyx_int_2);
       PyTuple_SET_ITEM(__pyx_t_2, 1+__pyx_t_12, __pyx_int_2);
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_45, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_45, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_dt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_dt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 229, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_14 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_14 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 229, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_Dispersion = __pyx_t_14;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":227
+    /* "heatsource9/Stream/PyHeatsource.pyx":228
  *                   (D_est * Shear_Velocity))
  * 
  *     if (Dispersion * dt / pow(dx,2.0)) > 0.5:             # <<<<<<<<<<<<<<
@@ -6539,27 +6548,27 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":230
+  /* "heatsource9/Stream/PyHeatsource.pyx":231
  *         Dispersion = (0.45 * pow(dx,2)) / dt
  *     #Dispersion = 50
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion             # <<<<<<<<<<<<<<
  * 
- * def CalcMuskingum(Q_est, U, W_w, S, dx, dt):
+ * def calc_muskingum(Q_est, U, W_w, S, dx, dt):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_A); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_A); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_Pw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_Pw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Rh); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Rh); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_Ww); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_Ww); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_U); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_U); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Dispersion); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Dispersion); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_D_est);
   __Pyx_GIVEREF(__pyx_v_D_est);
@@ -6586,10 +6595,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":169
+  /* "heatsource9/Stream/PyHeatsource.pyx":170
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
  *     cdef double Converge = 10
  *     cdef double dy = 0.01
  */
@@ -6607,7 +6616,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetStreamGeometry", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_stream_geometry", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_W_b);
@@ -6617,19 +6626,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_2GetStreamGeometr
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":232
+/* "heatsource9/Stream/PyHeatsource.pyx":233
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion
  * 
- * def CalcMuskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
+ * def calc_muskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
  *     """Return the values for the Muskigum routing coefficients
  *     using current timestep and optional discharge"""
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum[] = "Return the values for the Muskigum routing coefficients\n    using current timestep and optional discharge";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum = {"CalcMuskingum", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5calc_muskingum(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_12PyHeatsource_4calc_muskingum[] = "Return the values for the Muskigum routing coefficients\n    using current timestep and optional discharge";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_5calc_muskingum = {"calc_muskingum", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5calc_muskingum, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_12PyHeatsource_4calc_muskingum};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5calc_muskingum(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_Q_est = 0;
   PyObject *__pyx_v_U = 0;
   PyObject *__pyx_v_W_w = 0;
@@ -6638,7 +6647,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum(Py
   PyObject *__pyx_v_dt = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcMuskingum (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_muskingum (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_Q_est,&__pyx_n_s_U,&__pyx_n_s_W_w,&__pyx_n_s_S,&__pyx_n_s_dx,&__pyx_n_s_dt,0};
     PyObject* values[6] = {0,0,0,0,0,0};
@@ -6670,35 +6679,35 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum(Py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_U)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, 1); __PYX_ERR(0, 232, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, 1); __PYX_ERR(0, 233, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, 2); __PYX_ERR(0, 232, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, 2); __PYX_ERR(0, 233, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_S)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, 3); __PYX_ERR(0, 232, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, 3); __PYX_ERR(0, 233, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, 4); __PYX_ERR(0, 232, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, 4); __PYX_ERR(0, 233, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dt)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, 5); __PYX_ERR(0, 232, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, 5); __PYX_ERR(0, 233, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcMuskingum") < 0)) __PYX_ERR(0, 232, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_muskingum") < 0)) __PYX_ERR(0, 233, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
@@ -6719,20 +6728,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum(Py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcMuskingum", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 232, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_muskingum", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 233, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcMuskingum", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_muskingum", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(__pyx_self, __pyx_v_Q_est, __pyx_v_U, __pyx_v_W_w, __pyx_v_S, __pyx_v_dx, __pyx_v_dt);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_4calc_muskingum(__pyx_self, __pyx_v_Q_est, __pyx_v_U, __pyx_v_W_w, __pyx_v_S, __pyx_v_dx, __pyx_v_dt);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4calc_muskingum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Q_est, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt) {
   double __pyx_v_c_k;
   double __pyx_v_X;
   double __pyx_v_K;
@@ -6754,56 +6763,56 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   PyObject *__pyx_t_8 = NULL;
   int __pyx_t_9;
   PyObject *__pyx_t_10 = NULL;
-  __Pyx_RefNannySetupContext("CalcMuskingum", 0);
+  __Pyx_RefNannySetupContext("calc_muskingum", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":238
+  /* "heatsource9/Stream/PyHeatsource.pyx":239
  *     # discharge (typically (t,x-1))
  *     # Taken from the VB source in Heat Source version 7.
  *     cdef double c_k = (5/3) * U  # Wave celerity             # <<<<<<<<<<<<<<
  *     cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
  *     if X > 0.5: X = 0.5
  */
-  __pyx_t_1 = PyFloat_FromDouble((5.0 / 3.0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((5.0 / 3.0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_v_U); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_v_U); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_c_k = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":239
+  /* "heatsource9/Stream/PyHeatsource.pyx":240
  *     # Taken from the VB source in Heat Source version 7.
  *     cdef double c_k = (5/3) * U  # Wave celerity
  *     cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))             # <<<<<<<<<<<<<<
  *     if X > 0.5: X = 0.5
  *     elif X < 0.0: X = 0.0
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_W_w, __pyx_v_S); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_W_w, __pyx_v_S); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_dx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_dx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_c_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_c_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_v_Q_est, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_v_Q_est, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_2, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_2, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_X = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":240
+  /* "heatsource9/Stream/PyHeatsource.pyx":241
  *     cdef double c_k = (5/3) * U  # Wave celerity
  *     cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
  *     if X > 0.5: X = 0.5             # <<<<<<<<<<<<<<
@@ -6816,7 +6825,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     goto __pyx_L3;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":241
+  /* "heatsource9/Stream/PyHeatsource.pyx":242
  *     cdef double X = 0.5 * (1 - Q_est / (W_w * S * dx * c_k))
  *     if X > 0.5: X = 0.5
  *     elif X < 0.0: X = 0.0             # <<<<<<<<<<<<<<
@@ -6829,38 +6838,38 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   }
   __pyx_L3:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":242
+  /* "heatsource9/Stream/PyHeatsource.pyx":243
  *     if X > 0.5: X = 0.5
  *     elif X < 0.0: X = 0.0
  *     cdef double K = dx / c_k             # <<<<<<<<<<<<<<
  *     cdef double dt_stable
  *     # Check the celerity to ensure stability. These tests are
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_c_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_c_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_dx, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_dx, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_K = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":246
+  /* "heatsource9/Stream/PyHeatsource.pyx":247
  *     # Check the celerity to ensure stability. These tests are
  *     # from the VB code.
  *     if dt >= (2 * K * (1 - X)):             # <<<<<<<<<<<<<<
  *         # Unstable: Decrease dt or increase dx
  *         dt_stable = (2 * K * (1 - X)) / 60
  */
-  __pyx_t_4 = PyFloat_FromDouble(((2.0 * __pyx_v_K) * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(((2.0 * __pyx_v_K) * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_dt, __pyx_t_4, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_dt, __pyx_t_4, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 247, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (unlikely(__pyx_t_5)) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":248
+    /* "heatsource9/Stream/PyHeatsource.pyx":249
  *     if dt >= (2 * K * (1 - X)):
  *         # Unstable: Decrease dt or increase dx
  *         dt_stable = (2 * K * (1 - X)) / 60             # <<<<<<<<<<<<<<
@@ -6869,20 +6878,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
  */
     __pyx_v_dt_stable = (((2.0 * __pyx_v_K) * (1.0 - __pyx_v_X)) / 60.0);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":250
+    /* "heatsource9/Stream/PyHeatsource.pyx":251
  *         dt_stable = (2 * K * (1 - X)) / 60
  *         msg = "Unstable timestep. Decrease dt or increase dx. \
  *         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)             # <<<<<<<<<<<<<<
  *         logger.error(msg)
  *         raise Exception(msg)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Unstable_timestep_Decrease_dt_or, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Unstable_timestep_Decrease_dt_or, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 251, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_dt_stable); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_dt_stable); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 251, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_K); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_K); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 251, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyFloat_FromDouble(__pyx_v_X); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 250, __pyx_L1_error)
+    __pyx_t_7 = PyFloat_FromDouble(__pyx_v_X); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 251, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_8 = NULL;
     __pyx_t_9 = 0;
@@ -6899,7 +6908,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[4] = {__pyx_t_8, __pyx_t_1, __pyx_t_6, __pyx_t_7};
-      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6910,7 +6919,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[4] = {__pyx_t_8, __pyx_t_1, __pyx_t_6, __pyx_t_7};
-      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_9, 3+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -6919,7 +6928,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     } else
     #endif
     {
-      __pyx_t_10 = PyTuple_New(3+__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __pyx_t_10 = PyTuple_New(3+__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 251, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       if (__pyx_t_8) {
         __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8); __pyx_t_8 = NULL;
@@ -6933,7 +6942,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
       __pyx_t_1 = 0;
       __pyx_t_6 = 0;
       __pyx_t_7 = 0;
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     }
@@ -6941,16 +6950,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     __pyx_v_msg = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":251
+    /* "heatsource9/Stream/PyHeatsource.pyx":252
  *         msg = "Unstable timestep. Decrease dt or increase dx. \
  *         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
  *         logger.error(msg)             # <<<<<<<<<<<<<<
  *         raise Exception(msg)
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_logger); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 251, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_logger); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_error); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 251, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_error); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
@@ -6965,25 +6974,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
     }
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_4, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_msg);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":252
+    /* "heatsource9/Stream/PyHeatsource.pyx":253
  *         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
  *         logger.error(msg)
  *         raise Exception(msg)             # <<<<<<<<<<<<<<
  * 
  *     # These calculations are from Chow's "Applied Hydrology"
  */
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_v_msg); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 252, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_v_msg); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(0, 252, __pyx_L1_error)
+    __PYX_ERR(0, 253, __pyx_L1_error)
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":246
+    /* "heatsource9/Stream/PyHeatsource.pyx":247
  *     # Check the celerity to ensure stability. These tests are
  *     # from the VB code.
  *     if dt >= (2 * K * (1 - X)):             # <<<<<<<<<<<<<<
@@ -6992,62 +7001,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":255
+  /* "heatsource9/Stream/PyHeatsource.pyx":256
  * 
  *     # These calculations are from Chow's "Applied Hydrology"
  *     cdef double D = K * (1 - X) + 0.5 * dt             # <<<<<<<<<<<<<<
  *     cdef double C1 = (0.5*dt - K * X) / D
  *     cdef double C2 = (0.5*dt + K * X) / D
  */
-  __pyx_t_2 = PyFloat_FromDouble((__pyx_v_K * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 255, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((__pyx_v_K * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_10 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 255, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 255, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 255, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_D = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":256
+  /* "heatsource9/Stream/PyHeatsource.pyx":257
  *     # These calculations are from Chow's "Applied Hydrology"
  *     cdef double D = K * (1 - X) + 0.5 * dt
  *     cdef double C1 = (0.5*dt - K * X) / D             # <<<<<<<<<<<<<<
  *     cdef double C2 = (0.5*dt + K * X) / D
  *     cdef double C3 = (K * (1 - X) - 0.5*dt) / D
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_10 = PyFloat_FromDouble((__pyx_v_K * __pyx_v_X)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_D); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_C1 = __pyx_t_3;
-
-  /* "heatsource9/Stream/PyHeatsource.pyx":257
- *     cdef double D = K * (1 - X) + 0.5 * dt
- *     cdef double C1 = (0.5*dt - K * X) / D
- *     cdef double C2 = (0.5*dt + K * X) / D             # <<<<<<<<<<<<<<
- *     cdef double C3 = (K * (1 - X) - 0.5*dt) / D
- *     # TODO: reformulate this using an updated model,
- */
   __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 257, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_10 = PyFloat_FromDouble((__pyx_v_K * __pyx_v_X)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 257, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyNumber_Add(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -7059,20 +7043,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 257, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_C2 = __pyx_t_3;
+  __pyx_v_C1 = __pyx_t_3;
 
   /* "heatsource9/Stream/PyHeatsource.pyx":258
+ *     cdef double D = K * (1 - X) + 0.5 * dt
  *     cdef double C1 = (0.5*dt - K * X) / D
- *     cdef double C2 = (0.5*dt + K * X) / D
- *     cdef double C3 = (K * (1 - X) - 0.5*dt) / D             # <<<<<<<<<<<<<<
+ *     cdef double C2 = (0.5*dt + K * X) / D             # <<<<<<<<<<<<<<
+ *     cdef double C3 = (K * (1 - X) - 0.5*dt) / D
  *     # TODO: reformulate this using an updated model,
- *     # such as Moramarco, et.al., 2006
  */
-  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_K * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_10 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_t_10 = PyFloat_FromDouble((__pyx_v_K * __pyx_v_X)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Add(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -7084,23 +7068,48 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_C2 = __pyx_t_3;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":259
+ *     cdef double C1 = (0.5*dt - K * X) / D
+ *     cdef double C2 = (0.5*dt + K * X) / D
+ *     cdef double C3 = (K * (1 - X) - 0.5*dt) / D             # <<<<<<<<<<<<<<
+ *     # TODO: reformulate this using an updated model,
+ *     # such as Moramarco, et.al., 2006
+ */
+  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_K * (1.0 - __pyx_v_X))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_10 = PyNumber_Multiply(__pyx_float_0_5, __pyx_v_dt); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_D); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 259, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_C3 = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":261
+  /* "heatsource9/Stream/PyHeatsource.pyx":262
  *     # TODO: reformulate this using an updated model,
  *     # such as Moramarco, et.al., 2006
  *     return C1, C2, C3             # <<<<<<<<<<<<<<
  * 
- * def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
+ * def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_C1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_C1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_C2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_C2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_C3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_C3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 261, __pyx_L1_error)
+  __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 262, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_4);
@@ -7115,10 +7124,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   __pyx_t_7 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":232
+  /* "heatsource9/Stream/PyHeatsource.pyx":233
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion
  * 
- * def CalcMuskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
+ * def calc_muskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
  *     """Return the values for the Muskigum routing coefficients
  *     using current timestep and optional discharge"""
  */
@@ -7132,7 +7141,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcMuskingum", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_muskingum", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_msg);
@@ -7141,18 +7150,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_4CalcMuskingum(CY
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":263
+/* "heatsource9/Stream/PyHeatsource.pyx":264
  *     return C1, C2, C3
  * 
- * def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
+ * def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
  *               inputs, Q_bc):
  *     cdef double Q1, Q2, Q_new
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_7CalcFlows = {"CalcFlows", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7calc_flows(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_7calc_flows = {"calc_flows", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7calc_flows, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7calc_flows(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_U = 0;
   PyObject *__pyx_v_W_w = 0;
   PyObject *__pyx_v_W_b = 0;
@@ -7169,7 +7178,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows(PyObje
   PyObject *__pyx_v_Q_bc = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcFlows (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_flows (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_U,&__pyx_n_s_W_w,&__pyx_n_s_W_b,&__pyx_n_s_S,&__pyx_n_s_dx,&__pyx_n_s_dt,&__pyx_n_s_z,&__pyx_n_s_n,&__pyx_n_s_D_est,&__pyx_n_s_Q,&__pyx_n_s_Q_up,&__pyx_n_s_Q_up_prev,&__pyx_n_s_inputs,&__pyx_n_s_Q_bc,0};
     PyObject* values[14] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -7217,83 +7226,83 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows(PyObje
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 1); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 1); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_b)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 2); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 2); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_S)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 3); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 3); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 4); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 4); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dt)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 5); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 5); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_z)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 6); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 6); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 7); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 7); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_D_est)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 8); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 8); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 9); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 9); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_up)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 10); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 10); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_up_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 11); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 11); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_inputs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 12); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 12); __PYX_ERR(0, 264, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_bc)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, 13); __PYX_ERR(0, 263, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, 13); __PYX_ERR(0, 264, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcFlows") < 0)) __PYX_ERR(0, 263, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_flows") < 0)) __PYX_ERR(0, 264, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 14) {
       goto __pyx_L5_argtuple_error;
@@ -7330,20 +7339,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_7CalcFlows(PyObje
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcFlows", 1, 14, 14, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 263, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_flows", 1, 14, 14, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 264, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcFlows", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_flows", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(__pyx_self, __pyx_v_U, __pyx_v_W_w, __pyx_v_W_b, __pyx_v_S, __pyx_v_dx, __pyx_v_dt, __pyx_v_z, __pyx_v_n, __pyx_v_D_est, __pyx_v_Q, __pyx_v_Q_up, __pyx_v_Q_up_prev, __pyx_v_inputs, __pyx_v_Q_bc);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_6calc_flows(__pyx_self, __pyx_v_U, __pyx_v_W_w, __pyx_v_W_b, __pyx_v_S, __pyx_v_dx, __pyx_v_dt, __pyx_v_z, __pyx_v_n, __pyx_v_D_est, __pyx_v_Q, __pyx_v_Q_up, __pyx_v_Q_up_prev, __pyx_v_inputs, __pyx_v_Q_bc);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_D_est, PyObject *__pyx_v_Q, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_inputs, PyObject *__pyx_v_Q_bc) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6calc_flows(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_U, PyObject *__pyx_v_W_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_S, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_z, PyObject *__pyx_v_n, PyObject *__pyx_v_D_est, PyObject *__pyx_v_Q, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_inputs, PyObject *__pyx_v_Q_bc) {
   double __pyx_v_Q1;
   double __pyx_v_Q2;
   double __pyx_v_Q_new;
@@ -7360,31 +7369,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
   double __pyx_t_9[3];
-  __Pyx_RefNannySetupContext("CalcFlows", 0);
+  __Pyx_RefNannySetupContext("calc_flows", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":267
+  /* "heatsource9/Stream/PyHeatsource.pyx":268
  *     cdef double Q1, Q2, Q_new
  *     cdef double C[3]
  *     if Q_bc >= 0:             # <<<<<<<<<<<<<<
  *         Q_new = Q_bc
  *     else:
  */
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Q_bc, __pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 267, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 267, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Q_bc, __pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 268, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 268, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":268
+    /* "heatsource9/Stream/PyHeatsource.pyx":269
  *     cdef double C[3]
  *     if Q_bc >= 0:
  *         Q_new = Q_bc             # <<<<<<<<<<<<<<
  *     else:
  *         Q1 = Q_up + inputs
  */
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_v_Q_bc); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 268, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_v_Q_bc); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 269, __pyx_L1_error)
     __pyx_v_Q_new = __pyx_t_3;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":267
+    /* "heatsource9/Stream/PyHeatsource.pyx":268
  *     cdef double Q1, Q2, Q_new
  *     cdef double C[3]
  *     if Q_bc >= 0:             # <<<<<<<<<<<<<<
@@ -7394,43 +7403,43 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
     goto __pyx_L3;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":270
+  /* "heatsource9/Stream/PyHeatsource.pyx":271
  *         Q_new = Q_bc
  *     else:
  *         Q1 = Q_up + inputs             # <<<<<<<<<<<<<<
  *         Q2 = Q_up_prev + inputs
- *         C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
+ *         C = calc_muskingum(Q2, U, W_w, S, dx, dt)
  */
   /*else*/ {
-    __pyx_t_1 = PyNumber_Add(__pyx_v_Q_up, __pyx_v_inputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 270, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_v_Q1 = __pyx_t_3;
-
-    /* "heatsource9/Stream/PyHeatsource.pyx":271
- *     else:
- *         Q1 = Q_up + inputs
- *         Q2 = Q_up_prev + inputs             # <<<<<<<<<<<<<<
- *         C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
- *         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
- */
-    __pyx_t_1 = PyNumber_Add(__pyx_v_Q_up_prev, __pyx_v_inputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Add(__pyx_v_Q_up, __pyx_v_inputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 271, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 271, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_v_Q2 = __pyx_t_3;
+    __pyx_v_Q1 = __pyx_t_3;
 
     /* "heatsource9/Stream/PyHeatsource.pyx":272
+ *     else:
+ *         Q1 = Q_up + inputs
+ *         Q2 = Q_up_prev + inputs             # <<<<<<<<<<<<<<
+ *         C = calc_muskingum(Q2, U, W_w, S, dx, dt)
+ *         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
+ */
+    __pyx_t_1 = PyNumber_Add(__pyx_v_Q_up_prev, __pyx_v_inputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 272, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_Q2 = __pyx_t_3;
+
+    /* "heatsource9/Stream/PyHeatsource.pyx":273
  *         Q1 = Q_up + inputs
  *         Q2 = Q_up_prev + inputs
- *         C = CalcMuskingum(Q2, U, W_w, S, dx, dt)             # <<<<<<<<<<<<<<
+ *         C = calc_muskingum(Q2, U, W_w, S, dx, dt)             # <<<<<<<<<<<<<<
  *         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_CalcMuskingum); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_calc_muskingum); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 273, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Q2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 272, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Q2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 273, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     __pyx_t_7 = 0;
@@ -7447,7 +7456,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[7] = {__pyx_t_6, __pyx_t_5, __pyx_v_U, __pyx_v_W_w, __pyx_v_S, __pyx_v_dx, __pyx_v_dt};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -7456,14 +7465,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[7] = {__pyx_t_6, __pyx_t_5, __pyx_v_U, __pyx_v_W_w, __pyx_v_S, __pyx_v_dx, __pyx_v_dt};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 6+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else
     #endif
     {
-      __pyx_t_8 = PyTuple_New(6+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_8 = PyTuple_New(6+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 273, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       if (__pyx_t_6) {
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -7486,49 +7495,49 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
       __Pyx_GIVEREF(__pyx_v_dt);
       PyTuple_SET_ITEM(__pyx_t_8, 5+__pyx_t_7, __pyx_v_dt);
       __pyx_t_5 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(__Pyx_carray_from_py_double(__pyx_t_1, __pyx_t_9, 3) < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
+    if (unlikely(__Pyx_carray_from_py_double(__pyx_t_1, __pyx_t_9, 3) < 0)) __PYX_ERR(0, 273, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     memcpy(&(__pyx_v_C[0]), __pyx_t_9, sizeof(__pyx_v_C[0]) * (3));
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":273
+    /* "heatsource9/Stream/PyHeatsource.pyx":274
  *         Q2 = Q_up_prev + inputs
- *         C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
+ *         C = calc_muskingum(Q2, U, W_w, S, dx, dt)
  *         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q             # <<<<<<<<<<<<<<
  * 
  *     #if Q_new > 0.000:
  */
-    __pyx_t_1 = PyFloat_FromDouble((((__pyx_v_C[0]) * __pyx_v_Q1) + ((__pyx_v_C[1]) * __pyx_v_Q2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble((((__pyx_v_C[0]) * __pyx_v_Q1) + ((__pyx_v_C[1]) * __pyx_v_Q2))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = PyFloat_FromDouble((__pyx_v_C[2])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_4 = PyFloat_FromDouble((__pyx_v_C[2])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_8 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Q); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_8 = PyNumber_Multiply(__pyx_t_4, __pyx_v_Q); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_Q_new = __pyx_t_3;
   }
   __pyx_L3:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":276
+  /* "heatsource9/Stream/PyHeatsource.pyx":277
  * 
  *     #if Q_new > 0.000:
- *     Geom = GetStreamGeometry(Q_new, W_b, z, n, S, D_est, dx, dt)             # <<<<<<<<<<<<<<
+ *     Geom = get_stream_geometry(Q_new, W_b, z, n, S, D_est, dx, dt)             # <<<<<<<<<<<<<<
  *     return Q_new, Geom
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_GetStreamGeometry); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 276, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_get_stream_geometry); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 277, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_Q_new); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_Q_new); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_7 = 0;
@@ -7545,7 +7554,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_8)) {
     PyObject *__pyx_temp[9] = {__pyx_t_5, __pyx_t_1, __pyx_v_W_b, __pyx_v_z, __pyx_v_n, __pyx_v_S, __pyx_v_D_est, __pyx_v_dx, __pyx_v_dt};
-    __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_7, 8+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_7, 8+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7554,14 +7563,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
     PyObject *__pyx_temp[9] = {__pyx_t_5, __pyx_t_1, __pyx_v_W_b, __pyx_v_z, __pyx_v_n, __pyx_v_S, __pyx_v_D_est, __pyx_v_dx, __pyx_v_dt};
-    __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_7, 8+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_7, 8+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(8+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(8+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -7590,7 +7599,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
     __Pyx_GIVEREF(__pyx_v_dt);
     PyTuple_SET_ITEM(__pyx_t_6, 7+__pyx_t_7, __pyx_v_dt);
     __pyx_t_1 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_6, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_6, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -7598,17 +7607,17 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   __pyx_v_Geom = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":277
+  /* "heatsource9/Stream/PyHeatsource.pyx":278
  *     #if Q_new > 0.000:
- *     Geom = GetStreamGeometry(Q_new, W_b, z, n, S, D_est, dx, dt)
+ *     Geom = get_stream_geometry(Q_new, W_b, z, n, S, D_est, dx, dt)
  *     return Q_new, Geom             # <<<<<<<<<<<<<<
  * 
- * def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
+ * def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Q_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Q_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 277, __pyx_L1_error)
+  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 278, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_4);
@@ -7620,10 +7629,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":263
+  /* "heatsource9/Stream/PyHeatsource.pyx":264
  *     return C1, C2, C3
  * 
- * def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
+ * def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
  *               inputs, Q_bc):
  *     cdef double Q1, Q2, Q_new
  */
@@ -7635,7 +7644,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcFlows", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_flows", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_Geom);
@@ -7644,19 +7653,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_6CalcFlows(CYTHON
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":279
+/* "heatsource9/Stream/PyHeatsource.pyx":280
  *     return Q_new, Geom
  * 
- * def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
+ * def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
  *                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
  *                  BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux[] = " ";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux = {"GetSolarFlux", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9get_solar_flux(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_12PyHeatsource_8get_solar_flux[] = " ";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_9get_solar_flux = {"get_solar_flux", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9get_solar_flux, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_12PyHeatsource_8get_solar_flux};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9get_solar_flux(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_hour = 0;
   PyObject *__pyx_v_JD = 0;
   PyObject *__pyx_v_Altitude = 0;
@@ -7681,7 +7690,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux(PyO
   PyObject *__pyx_v_heatsource8 = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("GetSolarFlux (wrapper)", 0);
+  __Pyx_RefNannySetupContext("get_solar_flux (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_hour,&__pyx_n_s_JD,&__pyx_n_s_Altitude,&__pyx_n_s_Zenith,&__pyx_n_s_cloud,&__pyx_n_s_d_w,&__pyx_n_s_W_b,&__pyx_n_s_elevation,&__pyx_n_s_TopoFactor,&__pyx_n_s_ViewToSky,&__pyx_n_s_transsample_distance,&__pyx_n_s_transsample_count,&__pyx_n_s_BeersData,&__pyx_n_s_phi,&__pyx_n_s_emergent,&__pyx_n_s_lc_canopy,&__pyx_n_s_lc_height,&__pyx_n_s_lc_height_rel,&__pyx_n_s_lc_k,&__pyx_n_s_ShaderList,&__pyx_n_s_tran,&__pyx_n_s_heatsource8,0};
     PyObject* values[22] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -7745,131 +7754,131 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux(PyO
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JD)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 1); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 1); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Altitude)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 2); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 2); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Zenith)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 3); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 3); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cloud)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 4); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 4); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_d_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 5); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 5); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_b)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 6); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 6); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_elevation)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 7); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 7); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_TopoFactor)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 8); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 8); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ViewToSky)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 9); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 9); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_transsample_distance)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 10); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 10); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_transsample_count)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 11); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 11); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_BeersData)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 12); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 12); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_phi)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 13); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 13); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
         if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_emergent)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 14); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 14); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
         if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lc_canopy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 15); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 15); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
         if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lc_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 16); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 16); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 17:
         if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lc_height_rel)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 17); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 17); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 18:
         if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lc_k)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 18); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 18); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 19:
         if (likely((values[19] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ShaderList)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 19); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 19); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 20:
         if (likely((values[20] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tran)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 20); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 20); __PYX_ERR(0, 280, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 21:
         if (likely((values[21] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_heatsource8)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, 21); __PYX_ERR(0, 279, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, 21); __PYX_ERR(0, 280, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "GetSolarFlux") < 0)) __PYX_ERR(0, 279, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_solar_flux") < 0)) __PYX_ERR(0, 280, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 22) {
       goto __pyx_L5_argtuple_error;
@@ -7922,20 +7931,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux(PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("GetSolarFlux", 1, 22, 22, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 279, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_solar_flux", 1, 22, 22, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 280, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetSolarFlux", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_solar_flux", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(__pyx_self, __pyx_v_hour, __pyx_v_JD, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_cloud, __pyx_v_d_w, __pyx_v_W_b, __pyx_v_elevation, __pyx_v_TopoFactor, __pyx_v_ViewToSky, __pyx_v_transsample_distance, __pyx_v_transsample_count, __pyx_v_BeersData, __pyx_v_phi, __pyx_v_emergent, __pyx_v_lc_canopy, __pyx_v_lc_height, __pyx_v_lc_height_rel, __pyx_v_lc_k, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_heatsource8);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_8get_solar_flux(__pyx_self, __pyx_v_hour, __pyx_v_JD, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_cloud, __pyx_v_d_w, __pyx_v_W_b, __pyx_v_elevation, __pyx_v_TopoFactor, __pyx_v_ViewToSky, __pyx_v_transsample_distance, __pyx_v_transsample_count, __pyx_v_BeersData, __pyx_v_phi, __pyx_v_emergent, __pyx_v_lc_canopy, __pyx_v_lc_height, __pyx_v_lc_height_rel, __pyx_v_lc_k, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_heatsource8);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_cloud, PyObject *__pyx_v_d_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_elevation, PyObject *__pyx_v_TopoFactor, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_transsample_distance, PyObject *__pyx_v_transsample_count, PyObject *__pyx_v_BeersData, PyObject *__pyx_v_phi, PyObject *__pyx_v_emergent, PyObject *__pyx_v_lc_canopy, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_lc_height_rel, PyObject *__pyx_v_lc_k, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_heatsource8) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8get_solar_flux(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_cloud, PyObject *__pyx_v_d_w, PyObject *__pyx_v_W_b, PyObject *__pyx_v_elevation, PyObject *__pyx_v_TopoFactor, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_transsample_distance, PyObject *__pyx_v_transsample_count, PyObject *__pyx_v_BeersData, PyObject *__pyx_v_phi, PyObject *__pyx_v_emergent, PyObject *__pyx_v_lc_canopy, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_lc_height_rel, PyObject *__pyx_v_lc_k, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_heatsource8) {
   PyObject *__pyx_v_FullSunAngle = NULL;
   PyObject *__pyx_v_TopoShadeAngle = NULL;
   PyObject *__pyx_v_BankShadeAngle = NULL;
@@ -7995,10 +8004,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   PyObject *__pyx_t_19 = NULL;
   PyObject *__pyx_t_20 = NULL;
   PyObject *__pyx_t_21 = NULL;
-  __Pyx_RefNannySetupContext("GetSolarFlux", 0);
+  __Pyx_RefNannySetupContext("get_solar_flux", 0);
   __Pyx_INCREF(__pyx_v_tran);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":284
+  /* "heatsource9/Stream/PyHeatsource.pyx":285
  *                  ShaderList, tran, heatsource8):
  *     """ """
  *     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList             # <<<<<<<<<<<<<<
@@ -8011,7 +8020,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     if (unlikely(size != 5)) {
       if (size > 5) __Pyx_RaiseTooManyValuesError(5);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(0, 284, __pyx_L1_error)
+      __PYX_ERR(0, 285, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -8037,7 +8046,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       Py_ssize_t i;
       PyObject** temps[5] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5};
       for (i=0; i < 5; i++) {
-        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 284, __pyx_L1_error)
+        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 285, __pyx_L1_error)
         __Pyx_GOTREF(item);
         *(temps[i]) = item;
       }
@@ -8046,7 +8055,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   } else {
     Py_ssize_t index = -1;
     PyObject** temps[5] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5};
-    __pyx_t_6 = PyObject_GetIter(__pyx_v_ShaderList); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 284, __pyx_L1_error)
+    __pyx_t_6 = PyObject_GetIter(__pyx_v_ShaderList); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = Py_TYPE(__pyx_t_6)->tp_iternext;
     for (index=0; index < 5; index++) {
@@ -8054,7 +8063,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       __Pyx_GOTREF(item);
       *(temps[index]) = item;
     }
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 5) < 0) __PYX_ERR(0, 284, __pyx_L1_error)
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 5) < 0) __PYX_ERR(0, 285, __pyx_L1_error)
     __pyx_t_7 = NULL;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     goto __pyx_L4_unpacking_done;
@@ -8062,7 +8071,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(0, 284, __pyx_L1_error)
+    __PYX_ERR(0, 285, __pyx_L1_error)
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_FullSunAngle = __pyx_t_1;
@@ -8076,14 +8085,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_v_VegetationAngle2 = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":285
+  /* "heatsource9/Stream/PyHeatsource.pyx":286
  *     """ """
  *     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
  *     F_Direct = [0]*8             # <<<<<<<<<<<<<<
  *     F_Diffuse = [0]*8
  *     F_Solar = [0]*8
  */
-  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 285, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 286, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -8095,14 +8104,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_v_F_Direct = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":286
+  /* "heatsource9/Stream/PyHeatsource.pyx":287
  *     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
  *     F_Direct = [0]*8
  *     F_Diffuse = [0]*8             # <<<<<<<<<<<<<<
  *     F_Solar = [0]*8
  * 
  */
-  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 286, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -8114,14 +8123,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_v_F_Diffuse = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":287
+  /* "heatsource9/Stream/PyHeatsource.pyx":288
  *     F_Direct = [0]*8
  *     F_Diffuse = [0]*8
  *     F_Solar = [0]*8             # <<<<<<<<<<<<<<
  * 
  *     # Make all math functions local to save time by preventing failed
  */
-  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 287, __pyx_L1_error)
+  __pyx_t_5 = PyList_New(1 * 8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -8133,32 +8142,32 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_v_F_Solar = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":297
+  /* "heatsource9/Stream/PyHeatsource.pyx":298
  *     # This calculation for Rad_Vec should be checked, with
  *     # respect to the DST hour/24 part.
  *     Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - JD + hour / 24))             # <<<<<<<<<<<<<<
  *     Solar_Constant = 1367 # W/m2
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pi); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pi); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_int_2, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_int_2, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_2, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_2, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_186, __pyx_v_JD, 0xBA, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_186, __pyx_v_JD, 0xBA, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_hour, __pyx_int_24, 24, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_hour, __pyx_int_24, 24, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -8175,19 +8184,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_5 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 297, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_017, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_017, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_4, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 297, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_4, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Rad_Vec = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":298
+  /* "heatsource9/Stream/PyHeatsource.pyx":299
  *     # respect to the DST hour/24 part.
  *     Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - JD + hour / 24))
  *     Solar_Constant = 1367 # W/m2             # <<<<<<<<<<<<<<
@@ -8197,29 +8206,29 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __Pyx_INCREF(__pyx_int_1367);
   __pyx_v_Solar_Constant = __pyx_int_1367;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":301
+  /* "heatsource9/Stream/PyHeatsource.pyx":302
  * 
  *     # Global Direct Solar Radiation
  *     F_Direct[0] = ((Solar_Constant / (Rad_Vec ** 2)) *             # <<<<<<<<<<<<<<
  *                    sin(radians(Altitude)))
  * 
  */
-  __pyx_t_5 = PyNumber_Power(__pyx_v_Rad_Vec, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Power(__pyx_v_Rad_Vec, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 302, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_Solar_Constant, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_Solar_Constant, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 302, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":302
+  /* "heatsource9/Stream/PyHeatsource.pyx":303
  *     # Global Direct Solar Radiation
  *     F_Direct[0] = ((Solar_Constant / (Rad_Vec ** 2)) *
  *                    sin(radians(Altitude)))             # <<<<<<<<<<<<<<
  * 
  *     F_Diffuse[0] = 0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_radians); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_radians); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -8233,7 +8242,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_Altitude);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 302, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -8249,45 +8258,45 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_5 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 302, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":301
+  /* "heatsource9/Stream/PyHeatsource.pyx":302
  * 
  *     # Global Direct Solar Radiation
  *     F_Direct[0] = ((Solar_Constant / (Rad_Vec ** 2)) *             # <<<<<<<<<<<<<<
  *                    sin(radians(Altitude)))
  * 
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 302, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 301, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 0, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 302, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":304
+  /* "heatsource9/Stream/PyHeatsource.pyx":305
  *                    sin(radians(Altitude)))
  * 
  *     F_Diffuse[0] = 0             # <<<<<<<<<<<<<<
  *     #======================================================
  *     # 1 - Above Topography
  */
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 0, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 304, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 0, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 305, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":307
+  /* "heatsource9/Stream/PyHeatsource.pyx":308
  *     #======================================================
  *     # 1 - Above Topography
  *     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \             # <<<<<<<<<<<<<<
  *         exp(-0.0001184 * elevation)
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sin); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sin); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -8301,7 +8310,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Altitude);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 307, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -8317,13 +8326,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyNumber_Multiply(__pyx_int_1224, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_int_1224, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = NULL;
@@ -8339,23 +8348,23 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_int_35, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_int_35, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":308
+  /* "heatsource9/Stream/PyHeatsource.pyx":309
  *     # 1 - Above Topography
  *     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
  *         exp(-0.0001184 * elevation)             # <<<<<<<<<<<<<<
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
  *     #Calculate Diffuse Fraction
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_float_neg_0_0001184, __pyx_v_elevation); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_float_neg_0_0001184, __pyx_v_elevation); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -8370,44 +8379,44 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":307
+  /* "heatsource9/Stream/PyHeatsource.pyx":308
  *     #======================================================
  *     # 1 - Above Topography
  *     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \             # <<<<<<<<<<<<<<
  *         exp(-0.0001184 * elevation)
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Air_Mass = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":309
+  /* "heatsource9/Stream/PyHeatsource.pyx":310
  *     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
  *         exp(-0.0001184 * elevation)
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8             # <<<<<<<<<<<<<<
  *     #Calculate Diffuse Fraction
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_pi); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_pi); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_int_2, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_int_2, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_6, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_6, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_JD, __pyx_int_10, 10, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_JD, __pyx_int_10, 10, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -8424,81 +8433,81 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 309, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0685, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0685, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_AddObjC(__pyx_t_1, __pyx_float_0_8, 0.8, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AddObjC(__pyx_t_1, __pyx_float_0_8, 0.8, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Trans_Air = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":311
+  /* "heatsource9/Stream/PyHeatsource.pyx":312
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
  *     #Calculate Diffuse Fraction
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *             # <<<<<<<<<<<<<<
  *                                                            cloud ** 2)
  *     if F_Direct[0] == 0:
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Power(__pyx_v_Trans_Air, __pyx_v_Air_Mass, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Power(__pyx_v_Trans_Air, __pyx_v_Air_Mass, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":312
+  /* "heatsource9/Stream/PyHeatsource.pyx":313
  *     #Calculate Diffuse Fraction
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
  *                                                            cloud ** 2)             # <<<<<<<<<<<<<<
  *     if F_Direct[0] == 0:
  *         Clearness_Index = 1
  */
-  __pyx_t_1 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":311
+  /* "heatsource9/Stream/PyHeatsource.pyx":312
  *     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
  *     #Calculate Diffuse Fraction
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *             # <<<<<<<<<<<<<<
  *                                                            cloud ** 2)
  *     if F_Direct[0] == 0:
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_65, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_65, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_4, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_4, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 1, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 311, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 1, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 312, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":313
+  /* "heatsource9/Stream/PyHeatsource.pyx":314
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
  *                                                            cloud ** 2)
  *     if F_Direct[0] == 0:             # <<<<<<<<<<<<<<
  *         Clearness_Index = 1
  *     else:
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 314, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 314, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 314, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":314
+    /* "heatsource9/Stream/PyHeatsource.pyx":315
  *                                                            cloud ** 2)
  *     if F_Direct[0] == 0:
  *         Clearness_Index = 1             # <<<<<<<<<<<<<<
@@ -8508,7 +8517,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __Pyx_INCREF(__pyx_int_1);
     __pyx_v_Clearness_Index = __pyx_int_1;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":313
+    /* "heatsource9/Stream/PyHeatsource.pyx":314
  *     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
  *                                                            cloud ** 2)
  *     if F_Direct[0] == 0:             # <<<<<<<<<<<<<<
@@ -8518,7 +8527,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     goto __pyx_L5;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":316
+  /* "heatsource9/Stream/PyHeatsource.pyx":317
  *         Clearness_Index = 1
  *     else:
  *         Clearness_Index = F_Direct[1] / F_Direct[0]             # <<<<<<<<<<<<<<
@@ -8526,11 +8535,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *     Dummy = F_Direct[1]
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 317, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 317, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 317, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -8539,102 +8548,102 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_L5:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":318
+  /* "heatsource9/Stream/PyHeatsource.pyx":319
  *         Clearness_Index = F_Direct[1] / F_Direct[0]
  * 
  *     Dummy = F_Direct[1]             # <<<<<<<<<<<<<<
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
  *         (5.14 * (Clearness_Index ** 2)) + \
  */
-  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 319, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_Dummy = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":319
+  /* "heatsource9/Stream/PyHeatsource.pyx":320
  * 
  *     Dummy = F_Direct[1]
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \             # <<<<<<<<<<<<<<
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1_071, __pyx_v_Clearness_Index); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_1_071, __pyx_v_Clearness_Index); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyFloat_AddCObj(__pyx_float_0_938, __pyx_t_3, 0.938, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AddCObj(__pyx_float_0_938, __pyx_t_3, 0.938, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":320
+  /* "heatsource9/Stream/PyHeatsource.pyx":321
  *     Dummy = F_Direct[1]
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
  *         (5.14 * (Clearness_Index ** 2)) + \             # <<<<<<<<<<<<<<
  *         (2.98 * (Clearness_Index ** 3)) - \
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  */
-  __pyx_t_3 = PyNumber_Power(__pyx_v_Clearness_Index, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 320, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Power(__pyx_v_Clearness_Index, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_5_14, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_5_14, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":319
+  /* "heatsource9/Stream/PyHeatsource.pyx":320
  * 
  *     Dummy = F_Direct[1]
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \             # <<<<<<<<<<<<<<
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \
  */
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":321
+  /* "heatsource9/Stream/PyHeatsource.pyx":322
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \             # <<<<<<<<<<<<<<
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  *         (0.009 - 0.078 * Clearness_Index)
  */
-  __pyx_t_1 = PyNumber_Power(__pyx_v_Clearness_Index, __pyx_int_3, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Power(__pyx_v_Clearness_Index, __pyx_int_3, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_2_98, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_2_98, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":320
+  /* "heatsource9/Stream/PyHeatsource.pyx":321
  *     Dummy = F_Direct[1]
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
  *         (5.14 * (Clearness_Index ** 2)) + \             # <<<<<<<<<<<<<<
  *         (2.98 * (Clearness_Index ** 3)) - \
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":322
+  /* "heatsource9/Stream/PyHeatsource.pyx":323
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \
  *         (sin(2 * pi * (JD - 40) / 365)) * \             # <<<<<<<<<<<<<<
  *         (0.009 - 0.078 * Clearness_Index)
  *     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyNumber_Multiply(__pyx_int_2, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Multiply(__pyx_int_2, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_SubtractObjC(__pyx_v_JD, __pyx_int_40, 40, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_SubtractObjC(__pyx_v_JD, __pyx_int_40, 40, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_2, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_2, __pyx_int_365, 0x16D, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -8650,126 +8659,106 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 322, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":323
+  /* "heatsource9/Stream/PyHeatsource.pyx":324
  *         (2.98 * (Clearness_Index ** 3)) - \
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  *         (0.009 - 0.078 * Clearness_Index)             # <<<<<<<<<<<<<<
  *     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
  *     F_Diffuse[1] = Dummy * (Diffuse_Fraction) * (1 - 0.65 * cloud ** 2)
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_078, __pyx_v_Clearness_Index); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_078, __pyx_v_Clearness_Index); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_009, __pyx_t_3, 0.009, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_009, __pyx_t_3, 0.009, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":322
+  /* "heatsource9/Stream/PyHeatsource.pyx":323
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \
  *         (sin(2 * pi * (JD - 40) / 365)) * \             # <<<<<<<<<<<<<<
  *         (0.009 - 0.078 * Clearness_Index)
  *     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 323, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":321
+  /* "heatsource9/Stream/PyHeatsource.pyx":322
  *     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
  *         (5.14 * (Clearness_Index ** 2)) + \
  *         (2.98 * (Clearness_Index ** 3)) - \             # <<<<<<<<<<<<<<
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  *         (0.009 - 0.078 * Clearness_Index)
  */
-  __pyx_t_6 = PyNumber_Subtract(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Subtract(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_Diffuse_Fraction = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":324
+  /* "heatsource9/Stream/PyHeatsource.pyx":325
  *         (sin(2 * pi * (JD - 40) / 365)) * \
  *         (0.009 - 0.078 * Clearness_Index)
  *     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)             # <<<<<<<<<<<<<<
  *     F_Diffuse[1] = Dummy * (Diffuse_Fraction) * (1 - 0.65 * cloud ** 2)
  * 
  */
-  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Diffuse_Fraction, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Diffuse_Fraction, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 325, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 325, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 1, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 1, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":325
+  /* "heatsource9/Stream/PyHeatsource.pyx":326
  *         (0.009 - 0.078 * Clearness_Index)
  *     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
  *     F_Diffuse[1] = Dummy * (Diffuse_Fraction) * (1 - 0.65 * cloud ** 2)             # <<<<<<<<<<<<<<
  * 
  *     #======================================================
  */
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_v_Diffuse_Fraction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy, __pyx_v_Diffuse_Fraction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_65, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_65, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 1, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 1, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 326, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":333
+  /* "heatsource9/Stream/PyHeatsource.pyx":334
  *     # need to add 1 because zero is emergent in stack data,
  *     # TODO fix. this should be consistent across the codebase
  *     tran = tran + 1             # <<<<<<<<<<<<<<
  *     Solar_blocked_byVeg = [0]*transsample_count
  *     PLz =[0]*transsample_count
  */
-  __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_tran, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 333, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_tran, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_tran, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":334
+  /* "heatsource9/Stream/PyHeatsource.pyx":335
  *     # TODO fix. this should be consistent across the codebase
  *     tran = tran + 1
  *     Solar_blocked_byVeg = [0]*transsample_count             # <<<<<<<<<<<<<<
  *     PLz =[0]*transsample_count
  * 
- */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 334, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_int_0);
-  __Pyx_GIVEREF(__pyx_int_0);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_0);
-  { PyObject* __pyx_temp = PyNumber_InPlaceMultiply(__pyx_t_1, __pyx_v_transsample_count); if (unlikely(!__pyx_temp)) __PYX_ERR(0, 334, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_temp);
-    __Pyx_DECREF(__pyx_t_1);
-    __pyx_t_1 = __pyx_temp;
-  }
-  __pyx_v_Solar_blocked_byVeg = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "heatsource9/Stream/PyHeatsource.pyx":335
- *     tran = tran + 1
- *     Solar_blocked_byVeg = [0]*transsample_count
- *     PLz =[0]*transsample_count             # <<<<<<<<<<<<<<
- * 
- *     if Altitude <= TopoShadeAngle:
  */
   __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -8781,58 +8770,78 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __Pyx_DECREF(__pyx_t_1);
     __pyx_t_1 = __pyx_temp;
   }
+  __pyx_v_Solar_blocked_byVeg = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":336
+ *     tran = tran + 1
+ *     Solar_blocked_byVeg = [0]*transsample_count
+ *     PLz =[0]*transsample_count             # <<<<<<<<<<<<<<
+ * 
+ *     if Altitude <= TopoShadeAngle:
+ */
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_0);
+  { PyObject* __pyx_temp = PyNumber_InPlaceMultiply(__pyx_t_1, __pyx_v_transsample_count); if (unlikely(!__pyx_temp)) __PYX_ERR(0, 336, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_temp);
+    __Pyx_DECREF(__pyx_t_1);
+    __pyx_t_1 = __pyx_temp;
+  }
   __pyx_v_PLz = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":337
+  /* "heatsource9/Stream/PyHeatsource.pyx":338
  *     PLz =[0]*transsample_count
  * 
  *     if Altitude <= TopoShadeAngle:             # <<<<<<<<<<<<<<
  *         # Topographic shade is occurring
  *         F_Direct[2] = 0
  */
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_TopoShadeAngle, Py_LE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 337, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_TopoShadeAngle, Py_LE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 338, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":339
+    /* "heatsource9/Stream/PyHeatsource.pyx":340
  *     if Altitude <= TopoShadeAngle:
  *         # Topographic shade is occurring
  *         F_Direct[2] = 0             # <<<<<<<<<<<<<<
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = 0
  */
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":340
+    /* "heatsource9/Stream/PyHeatsource.pyx":341
  *         # Topographic shade is occurring
  *         F_Direct[2] = 0
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)             # <<<<<<<<<<<<<<
  *         F_Direct[3] = 0
  *     elif Altitude >= FullSunAngle:
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 340, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 341, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 340, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 341, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 341, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":341
+    /* "heatsource9/Stream/PyHeatsource.pyx":342
  *         F_Direct[2] = 0
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = 0             # <<<<<<<<<<<<<<
  *     elif Altitude >= FullSunAngle:
  *         # Full sun
  */
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 341, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 342, __pyx_L1_error)
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":337
+    /* "heatsource9/Stream/PyHeatsource.pyx":338
  *     PLz =[0]*transsample_count
  * 
  *     if Altitude <= TopoShadeAngle:             # <<<<<<<<<<<<<<
@@ -8842,61 +8851,61 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     goto __pyx_L6;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":342
+  /* "heatsource9/Stream/PyHeatsource.pyx":343
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = 0
  *     elif Altitude >= FullSunAngle:             # <<<<<<<<<<<<<<
  *         # Full sun
  *         F_Direct[2] = F_Direct[1]
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_FullSunAngle, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 342, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_FullSunAngle, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 343, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 343, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":344
+    /* "heatsource9/Stream/PyHeatsource.pyx":345
  *     elif Altitude >= FullSunAngle:
  *         # Full sun
  *         F_Direct[2] = F_Direct[1]             # <<<<<<<<<<<<<<
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = F_Direct[2]
  */
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 344, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 344, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":345
+    /* "heatsource9/Stream/PyHeatsource.pyx":346
  *         # Full sun
  *         F_Direct[2] = F_Direct[1]
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)             # <<<<<<<<<<<<<<
  *         F_Direct[3] = F_Direct[2]
  *     else:
  */
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 346, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":346
+    /* "heatsource9/Stream/PyHeatsource.pyx":347
  *         F_Direct[2] = F_Direct[1]
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = F_Direct[2]             # <<<<<<<<<<<<<<
  *     else:
  *         #======================================================
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 347, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 346, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 347, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":342
+    /* "heatsource9/Stream/PyHeatsource.pyx":343
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
  *         F_Direct[3] = 0
  *     elif Altitude >= FullSunAngle:             # <<<<<<<<<<<<<<
@@ -8906,7 +8915,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     goto __pyx_L6;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":351
+  /* "heatsource9/Stream/PyHeatsource.pyx":352
  *         # Topographic Shade is not occurring and
  *         # Partial shade from veg
  *         F_Direct[2] = F_Direct[1]             # <<<<<<<<<<<<<<
@@ -8914,54 +8923,54 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  * 
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 351, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 351, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 2, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":352
+    /* "heatsource9/Stream/PyHeatsource.pyx":353
  *         # Partial shade from veg
  *         F_Direct[2] = F_Direct[1]
  *         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)             # <<<<<<<<<<<<<<
  * 
  *         # 3 - Below Landcover (Above Bank Shade & Emergent)
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_TopoFactor, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 353, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 352, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 2, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 353, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":355
+    /* "heatsource9/Stream/PyHeatsource.pyx":356
  * 
  *         # 3 - Below Landcover (Above Bank Shade & Emergent)
  *         Dummy1 = F_Direct[2]             # <<<<<<<<<<<<<<
  * 
  *         # Now calculate the fraction of radiation passed through the canopy
  */
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 355, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 356, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_Dummy1 = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":358
+    /* "heatsource9/Stream/PyHeatsource.pyx":359
  * 
  *         # Now calculate the fraction of radiation passed through the canopy
  *         s = transsample_count - 1             # <<<<<<<<<<<<<<
  * 
  *         while s >= 0:
  */
-    __pyx_t_3 = __Pyx_PyInt_SubtractObjC(__pyx_v_transsample_count, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 358, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_SubtractObjC(__pyx_v_transsample_count, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 359, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_s = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":360
+    /* "heatsource9/Stream/PyHeatsource.pyx":361
  *         s = transsample_count - 1
  * 
  *         while s >= 0:             # <<<<<<<<<<<<<<
@@ -8969,27 +8978,27 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                 # no shading
  */
     while (1) {
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_s, __pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 360, __pyx_L1_error)
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 360, __pyx_L1_error)
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_s, __pyx_int_0, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 361, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 361, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (!__pyx_t_9) break;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":361
+      /* "heatsource9/Stream/PyHeatsource.pyx":362
  * 
  *         while s >= 0:
  *             if Altitude >= VegetationAngle1[s]:             # <<<<<<<<<<<<<<
  *                 # no shading
  *                 fraction_passed = 1
  */
-      __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle1, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 361, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle1, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 362, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_3, Py_GE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 361, __pyx_L1_error)
+      __pyx_t_6 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_3, Py_GE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 362, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 361, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 362, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       if (__pyx_t_9) {
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":363
+        /* "heatsource9/Stream/PyHeatsource.pyx":364
  *             if Altitude >= VegetationAngle1[s]:
  *                 # no shading
  *                 fraction_passed = 1             # <<<<<<<<<<<<<<
@@ -8999,7 +9008,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         __Pyx_INCREF(__pyx_int_1);
         __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_int_1);
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":361
+        /* "heatsource9/Stream/PyHeatsource.pyx":362
  * 
  *         while s >= 0:
  *             if Altitude >= VegetationAngle1[s]:             # <<<<<<<<<<<<<<
@@ -9009,7 +9018,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         goto __pyx_L9;
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":367
+      /* "heatsource9/Stream/PyHeatsource.pyx":368
  * 
  *                 # First calculate path length through the canopy sample
  *                 if Altitude <= VegetationAngle2[s]:             # <<<<<<<<<<<<<<
@@ -9017,24 +9026,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                     PLz = transsample_distance / cos(radians(Altitude))
  */
       /*else*/ {
-        __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle2, __pyx_v_s); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 367, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle2, __pyx_v_s); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 368, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_6, Py_LE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 367, __pyx_L1_error)
+        __pyx_t_3 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_6, Py_LE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 368, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 367, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 368, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         if (__pyx_t_9) {
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":369
+          /* "heatsource9/Stream/PyHeatsource.pyx":370
  *                 if Altitude <= VegetationAngle2[s]:
  *                     # solar incoming from the side of the canopy
  *                     PLz = transsample_distance / cos(radians(Altitude))             # <<<<<<<<<<<<<<
  *                 else:
  *                     # solar incoming from top of the canopy (not from the side)
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 369, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 370, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_radians); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 369, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_radians); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 370, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_2 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -9048,7 +9057,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 369, __pyx_L1_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __pyx_t_4 = NULL;
@@ -9064,16 +9073,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_4, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1);
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 369, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 370, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_transsample_distance, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 369, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_transsample_distance, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 370, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF_SET(__pyx_v_PLz, __pyx_t_6);
           __pyx_t_6 = 0;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":367
+          /* "heatsource9/Stream/PyHeatsource.pyx":368
  * 
  *                 # First calculate path length through the canopy sample
  *                 if Altitude <= VegetationAngle2[s]:             # <<<<<<<<<<<<<<
@@ -9083,7 +9092,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           goto __pyx_L10;
         }
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":372
+        /* "heatsource9/Stream/PyHeatsource.pyx":373
  *                 else:
  *                     # solar incoming from top of the canopy (not from the side)
  *                     PLz = (lc_height_rel[tran][s] - (tan(radians(Altitude)) * (transsample_distance*s))) / sin(radians(Altitude))             # <<<<<<<<<<<<<<
@@ -9091,14 +9100,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                 # shading is occurring from this sample
  */
         /*else*/ {
-          __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_height_rel, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_height_rel, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_tan); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_tan); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __pyx_t_5 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -9112,7 +9121,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 372, __pyx_L1_error)
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_2 = NULL;
@@ -9128,22 +9137,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = PyNumber_Multiply(__pyx_v_transsample_distance, __pyx_v_s); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_1 = PyNumber_Multiply(__pyx_v_transsample_distance, __pyx_v_s); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_4 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Multiply(__pyx_t_6, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = PyNumber_Subtract(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_1 = PyNumber_Subtract(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_sin); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __pyx_t_5 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -9157,7 +9166,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_6 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 372, __pyx_L1_error)
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_2 = NULL;
@@ -9173,10 +9182,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 372, __pyx_L1_error)
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 372, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -9185,61 +9194,61 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         }
         __pyx_L10:;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":375
+        /* "heatsource9/Stream/PyHeatsource.pyx":376
  * 
  *                 # shading is occurring from this sample
  *                 if BeersData == "LAI":             # <<<<<<<<<<<<<<
  * 
  *                     # use LAI and k to calculate the riparian extinction value
  */
-        __pyx_t_9 = (__Pyx_PyString_Equals(__pyx_v_BeersData, __pyx_n_s_LAI, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 375, __pyx_L1_error)
+        __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_BeersData, __pyx_n_u_LAI, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 376, __pyx_L1_error)
         if (__pyx_t_9) {
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":378
+          /* "heatsource9/Stream/PyHeatsource.pyx":379
  * 
  *                     # use LAI and k to calculate the riparian extinction value
  *                     RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]             # <<<<<<<<<<<<<<
  *                     fraction_passed = exp(-1 * RipExtinction * PLz)
  * 
  */
-          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_lc_k, __pyx_v_tran); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_lc_k, __pyx_v_tran); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_s); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_v_s); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_lc_height, __pyx_v_tran); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_lc_height, __pyx_v_tran); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_XDECREF_SET(__pyx_v_RipExtinction, __pyx_t_1);
           __pyx_t_1 = 0;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":379
+          /* "heatsource9/Stream/PyHeatsource.pyx":380
  *                     # use LAI and k to calculate the riparian extinction value
  *                     RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
  *                     fraction_passed = exp(-1 * RipExtinction * PLz)             # <<<<<<<<<<<<<<
  * 
  *                 else:
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 379, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 380, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_3 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 379, __pyx_L1_error)
+          __pyx_t_3 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 380, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_6 = PyNumber_Multiply(__pyx_t_3, __pyx_v_PLz); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 379, __pyx_L1_error)
+          __pyx_t_6 = PyNumber_Multiply(__pyx_t_3, __pyx_v_PLz); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 380, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __pyx_t_3 = NULL;
@@ -9255,13 +9264,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 380, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_t_1);
           __pyx_t_1 = 0;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":375
+          /* "heatsource9/Stream/PyHeatsource.pyx":376
  * 
  *                 # shading is occurring from this sample
  *                 if BeersData == "LAI":             # <<<<<<<<<<<<<<
@@ -9271,7 +9280,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           goto __pyx_L11;
         }
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":384
+        /* "heatsource9/Stream/PyHeatsource.pyx":385
  *                     # Use canopy cover to calculate
  *                     # the riparian extinction value
  *                     if heatsource8:             # <<<<<<<<<<<<<<
@@ -9279,10 +9288,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                         # from original heat source model
  */
         /*else*/ {
-          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 384, __pyx_L1_error)
+          __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 385, __pyx_L1_error)
           if (__pyx_t_9) {
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":387
+            /* "heatsource9/Stream/PyHeatsource.pyx":388
  *                         #---------  Boyd and Kasper 2007
  *                         # from original heat source model
  *                         PL = 10             # <<<<<<<<<<<<<<
@@ -9292,7 +9301,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             __Pyx_INCREF(__pyx_int_10);
             __Pyx_XDECREF_SET(__pyx_v_PL, __pyx_int_10);
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":384
+            /* "heatsource9/Stream/PyHeatsource.pyx":385
  *                     # Use canopy cover to calculate
  *                     # the riparian extinction value
  *                     if heatsource8:             # <<<<<<<<<<<<<<
@@ -9302,7 +9311,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             goto __pyx_L12;
           }
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":390
+          /* "heatsource9/Stream/PyHeatsource.pyx":391
  *                     else:
  *                         #--------- Norman and Welles 1983, Chen et al 1998
  *                         PL = lc_height[tran][s]             # <<<<<<<<<<<<<<
@@ -9310,9 +9319,9 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                     try:
  */
           /*else*/ {
-            __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_lc_height, __pyx_v_tran); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
+            __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_lc_height, __pyx_v_tran); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 391, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
-            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 390, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 391, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_XDECREF_SET(__pyx_v_PL, __pyx_t_4);
@@ -9320,7 +9329,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_L12:;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":392
+          /* "heatsource9/Stream/PyHeatsource.pyx":393
  *                         PL = lc_height[tran][s]
  * 
  *                     try:             # <<<<<<<<<<<<<<
@@ -9336,21 +9345,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             __Pyx_XGOTREF(__pyx_t_12);
             /*try:*/ {
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":393
+              /* "heatsource9/Stream/PyHeatsource.pyx":394
  * 
  *                     try:
  *                         RipExtinction = -log(1- lc_canopy[tran][s]) / PL             # <<<<<<<<<<<<<<
  *                         fraction_passed = exp(-1* RipExtinction * PLz)
  *                     except:
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_1);
-              __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_6);
-              __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_3);
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_3, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_3, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_6);
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
               __pyx_t_3 = NULL;
@@ -9366,30 +9375,30 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
               __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 393, __pyx_L13_error)
+              if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_4);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-              __pyx_t_1 = PyNumber_Negative(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __pyx_t_1 = PyNumber_Negative(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_PL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 393, __pyx_L13_error)
+              __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_PL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_4);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
               __Pyx_XDECREF_SET(__pyx_v_RipExtinction, __pyx_t_4);
               __pyx_t_4 = 0;
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":394
+              /* "heatsource9/Stream/PyHeatsource.pyx":395
  *                     try:
  *                         RipExtinction = -log(1- lc_canopy[tran][s]) / PL
  *                         fraction_passed = exp(-1* RipExtinction * PLz)             # <<<<<<<<<<<<<<
  *                     except:
  *                         if (lc_canopy[tran][s] >= 1 or PL <= 0):
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_exp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 394, __pyx_L13_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_exp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_1);
-              __pyx_t_6 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 394, __pyx_L13_error)
+              __pyx_t_6 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 395, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_6);
-              __pyx_t_3 = PyNumber_Multiply(__pyx_t_6, __pyx_v_PLz); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L13_error)
+              __pyx_t_3 = PyNumber_Multiply(__pyx_t_6, __pyx_v_PLz); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 395, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_3);
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
               __pyx_t_6 = NULL;
@@ -9405,13 +9414,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3);
               __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-              if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 394, __pyx_L13_error)
+              if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 395, __pyx_L13_error)
               __Pyx_GOTREF(__pyx_t_4);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
               __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_t_4);
               __pyx_t_4 = 0;
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":392
+              /* "heatsource9/Stream/PyHeatsource.pyx":393
  *                         PL = lc_height[tran][s]
  * 
  *                     try:             # <<<<<<<<<<<<<<
@@ -9432,7 +9441,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":395
+            /* "heatsource9/Stream/PyHeatsource.pyx":396
  *                         RipExtinction = -log(1- lc_canopy[tran][s]) / PL
  *                         fraction_passed = exp(-1* RipExtinction * PLz)
  *                     except:             # <<<<<<<<<<<<<<
@@ -9440,41 +9449,41 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                             # can't take log or divide by zero
  */
             /*except:*/ {
-              __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetSolarFlux", __pyx_clineno, __pyx_lineno, __pyx_filename);
-              if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_1, &__pyx_t_3) < 0) __PYX_ERR(0, 395, __pyx_L15_except_error)
+              __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_solar_flux", __pyx_clineno, __pyx_lineno, __pyx_filename);
+              if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_1, &__pyx_t_3) < 0) __PYX_ERR(0, 396, __pyx_L15_except_error)
               __Pyx_GOTREF(__pyx_t_4);
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_GOTREF(__pyx_t_3);
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":396
+              /* "heatsource9/Stream/PyHeatsource.pyx":397
  *                         fraction_passed = exp(-1* RipExtinction * PLz)
  *                     except:
  *                         if (lc_canopy[tran][s] >= 1 or PL <= 0):             # <<<<<<<<<<<<<<
  *                             # can't take log or divide by zero
  *                             fraction_passed = 0
  */
-              __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 396, __pyx_L15_except_error)
+              __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 397, __pyx_L15_except_error)
               __Pyx_GOTREF(__pyx_t_6);
-              __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 396, __pyx_L15_except_error)
+              __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_v_s); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 397, __pyx_L15_except_error)
               __Pyx_GOTREF(__pyx_t_2);
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-              __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_int_1, Py_GE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 396, __pyx_L15_except_error)
+              __pyx_t_6 = PyObject_RichCompare(__pyx_t_2, __pyx_int_1, Py_GE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 397, __pyx_L15_except_error)
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-              __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 396, __pyx_L15_except_error)
+              __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 397, __pyx_L15_except_error)
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
               if (!__pyx_t_13) {
               } else {
                 __pyx_t_9 = __pyx_t_13;
                 goto __pyx_L24_bool_binop_done;
               }
-              __pyx_t_6 = PyObject_RichCompare(__pyx_v_PL, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 396, __pyx_L15_except_error)
-              __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 396, __pyx_L15_except_error)
+              __pyx_t_6 = PyObject_RichCompare(__pyx_v_PL, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 397, __pyx_L15_except_error)
+              __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 397, __pyx_L15_except_error)
               __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
               __pyx_t_9 = __pyx_t_13;
               __pyx_L24_bool_binop_done:;
               if (likely(__pyx_t_9)) {
 
-                /* "heatsource9/Stream/PyHeatsource.pyx":398
+                /* "heatsource9/Stream/PyHeatsource.pyx":399
  *                         if (lc_canopy[tran][s] >= 1 or PL <= 0):
  *                             # can't take log or divide by zero
  *                             fraction_passed = 0             # <<<<<<<<<<<<<<
@@ -9484,7 +9493,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 __Pyx_INCREF(__pyx_int_0);
                 __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_int_0);
 
-                /* "heatsource9/Stream/PyHeatsource.pyx":396
+                /* "heatsource9/Stream/PyHeatsource.pyx":397
  *                         fraction_passed = exp(-1* RipExtinction * PLz)
  *                     except:
  *                         if (lc_canopy[tran][s] >= 1 or PL <= 0):             # <<<<<<<<<<<<<<
@@ -9494,7 +9503,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 goto __pyx_L23;
               }
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":401
+              /* "heatsource9/Stream/PyHeatsource.pyx":402
  *                         else:
  *                             # some other error
  *                             msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])             # <<<<<<<<<<<<<<
@@ -9502,19 +9511,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                             print_console(msg)
  */
               /*else*/ {
-                __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Unknown_error_when_calculating_r, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Unknown_error_when_calculating_r, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_2);
-                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_lc_height_rel, __pyx_v_tran); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_lc_height_rel, __pyx_v_tran); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_5);
-                __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_s); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_s); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_8);
                 __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_lc_canopy, __pyx_v_tran); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_5);
-                __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_s); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_s); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_14);
                 __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle1, __pyx_v_s); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_VegetationAngle1, __pyx_v_s); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_5);
                 __pyx_t_15 = NULL;
                 __pyx_t_16 = 0;
@@ -9531,7 +9540,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 #if CYTHON_FAST_PYCALL
                 if (PyFunction_Check(__pyx_t_2)) {
                   PyObject *__pyx_temp[9] = {__pyx_t_15, __pyx_v_tran, __pyx_v_s, __pyx_t_8, __pyx_t_14, __pyx_v_PLz, __pyx_v_PL, __pyx_v_Altitude, __pyx_t_5};
-                  __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_16, 8+__pyx_t_16); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                  __pyx_t_6 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_16, 8+__pyx_t_16); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                   __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
                   __Pyx_GOTREF(__pyx_t_6);
                   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -9542,7 +9551,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 #if CYTHON_FAST_PYCCALL
                 if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
                   PyObject *__pyx_temp[9] = {__pyx_t_15, __pyx_v_tran, __pyx_v_s, __pyx_t_8, __pyx_t_14, __pyx_v_PLz, __pyx_v_PL, __pyx_v_Altitude, __pyx_t_5};
-                  __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_16, 8+__pyx_t_16); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                  __pyx_t_6 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_16, 8+__pyx_t_16); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                   __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
                   __Pyx_GOTREF(__pyx_t_6);
                   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -9551,7 +9560,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 } else
                 #endif
                 {
-                  __pyx_t_17 = PyTuple_New(8+__pyx_t_16); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                  __pyx_t_17 = PyTuple_New(8+__pyx_t_16); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                   __Pyx_GOTREF(__pyx_t_17);
                   if (__pyx_t_15) {
                     __Pyx_GIVEREF(__pyx_t_15); PyTuple_SET_ITEM(__pyx_t_17, 0, __pyx_t_15); __pyx_t_15 = NULL;
@@ -9580,7 +9589,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                   __pyx_t_8 = 0;
                   __pyx_t_14 = 0;
                   __pyx_t_5 = 0;
-                  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_17, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 401, __pyx_L15_except_error)
+                  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_17, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 402, __pyx_L15_except_error)
                   __Pyx_GOTREF(__pyx_t_6);
                   __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
                 }
@@ -9588,44 +9597,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 __pyx_v_msg = __pyx_t_6;
                 __pyx_t_6 = 0;
 
-                /* "heatsource9/Stream/PyHeatsource.pyx":402
+                /* "heatsource9/Stream/PyHeatsource.pyx":403
  *                             # some other error
  *                             msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
  *                             logger.error(msg)             # <<<<<<<<<<<<<<
  *                             print_console(msg)
  *                             raise
  */
-                __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_logger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 402, __pyx_L15_except_error)
+                __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_logger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 403, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_2);
-                __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_error); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 402, __pyx_L15_except_error)
+                __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_error); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 403, __pyx_L15_except_error)
                 __Pyx_GOTREF(__pyx_t_17);
                 __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-                __pyx_t_2 = NULL;
-                if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_17))) {
-                  __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_17);
-                  if (likely(__pyx_t_2)) {
-                    PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_17);
-                    __Pyx_INCREF(__pyx_t_2);
-                    __Pyx_INCREF(function);
-                    __Pyx_DECREF_SET(__pyx_t_17, function);
-                  }
-                }
-                __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_2, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_v_msg);
-                __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-                if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 402, __pyx_L15_except_error)
-                __Pyx_GOTREF(__pyx_t_6);
-                __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-                __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-
-                /* "heatsource9/Stream/PyHeatsource.pyx":403
- *                             msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
- *                             logger.error(msg)
- *                             print_console(msg)             # <<<<<<<<<<<<<<
- *                             raise
- * 
- */
-                __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_print_console); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 403, __pyx_L15_except_error)
-                __Pyx_GOTREF(__pyx_t_17);
                 __pyx_t_2 = NULL;
                 if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_17))) {
                   __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_17);
@@ -9644,6 +9627,32 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
                 /* "heatsource9/Stream/PyHeatsource.pyx":404
+ *                             msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
+ *                             logger.error(msg)
+ *                             print_console(msg)             # <<<<<<<<<<<<<<
+ *                             raise
+ * 
+ */
+                __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_print_console); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 404, __pyx_L15_except_error)
+                __Pyx_GOTREF(__pyx_t_17);
+                __pyx_t_2 = NULL;
+                if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_17))) {
+                  __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_17);
+                  if (likely(__pyx_t_2)) {
+                    PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_17);
+                    __Pyx_INCREF(__pyx_t_2);
+                    __Pyx_INCREF(function);
+                    __Pyx_DECREF_SET(__pyx_t_17, function);
+                  }
+                }
+                __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_2, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_v_msg);
+                __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+                if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 404, __pyx_L15_except_error)
+                __Pyx_GOTREF(__pyx_t_6);
+                __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
+                __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+                /* "heatsource9/Stream/PyHeatsource.pyx":405
  *                             logger.error(msg)
  *                             print_console(msg)
  *                             raise             # <<<<<<<<<<<<<<
@@ -9655,7 +9664,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 __Pyx_XGIVEREF(__pyx_t_3);
                 __Pyx_ErrRestoreWithState(__pyx_t_4, __pyx_t_1, __pyx_t_3);
                 __pyx_t_4 = 0; __pyx_t_1 = 0; __pyx_t_3 = 0; 
-                __PYX_ERR(0, 404, __pyx_L15_except_error)
+                __PYX_ERR(0, 405, __pyx_L15_except_error)
               }
               __pyx_L23:;
               __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -9665,7 +9674,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             }
             __pyx_L15_except_error:;
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":392
+            /* "heatsource9/Stream/PyHeatsource.pyx":393
  *                         PL = lc_height[tran][s]
  * 
  *                     try:             # <<<<<<<<<<<<<<
@@ -9689,143 +9698,143 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       }
       __pyx_L9:;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":406
+      /* "heatsource9/Stream/PyHeatsource.pyx":407
  *                             raise
  * 
  *             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)             # <<<<<<<<<<<<<<
  *             Dummy1 *= fraction_passed
  *             s -= 1
  */
-      __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 406, __pyx_L1_error)
+      __pyx_t_3 = PyNumber_Multiply(__pyx_v_Dummy1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_1 = PyNumber_Subtract(__pyx_v_Dummy1, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 406, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Subtract(__pyx_v_Dummy1, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(PyObject_SetItem(__pyx_v_Solar_blocked_byVeg, __pyx_v_s, __pyx_t_1) < 0)) __PYX_ERR(0, 406, __pyx_L1_error)
+      if (unlikely(PyObject_SetItem(__pyx_v_Solar_blocked_byVeg, __pyx_v_s, __pyx_t_1) < 0)) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":407
+      /* "heatsource9/Stream/PyHeatsource.pyx":408
  * 
  *             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
  *             Dummy1 *= fraction_passed             # <<<<<<<<<<<<<<
  *             s -= 1
  *         F_Direct[3] = Dummy1
  */
-      __pyx_t_1 = PyNumber_InPlaceMultiply(__pyx_v_Dummy1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_InPlaceMultiply(__pyx_v_Dummy1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF_SET(__pyx_v_Dummy1, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":408
+      /* "heatsource9/Stream/PyHeatsource.pyx":409
  *             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
  *             Dummy1 *= fraction_passed
  *             s -= 1             # <<<<<<<<<<<<<<
  *         F_Direct[3] = Dummy1
  * 
  */
-      __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_v_s, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_v_s, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 409, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF_SET(__pyx_v_s, __pyx_t_1);
       __pyx_t_1 = 0;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":409
+    /* "heatsource9/Stream/PyHeatsource.pyx":410
  *             Dummy1 *= fraction_passed
  *             s -= 1
  *         F_Direct[3] = Dummy1             # <<<<<<<<<<<<<<
  * 
  *     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
  */
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_v_Dummy1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 409, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 3, __pyx_v_Dummy1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 410, __pyx_L1_error)
   }
   __pyx_L6:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":411
+  /* "heatsource9/Stream/PyHeatsource.pyx":412
  *         F_Direct[3] = Dummy1
  * 
  *     F_Diffuse[3] = F_Diffuse[2] * ViewToSky             # <<<<<<<<<<<<<<
  *     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
  *     Solar_blocked_byVeg.append(diffuse_blocked)
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_ViewToSky); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_ViewToSky); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 3, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 411, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 3, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 412, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":412
+  /* "heatsource9/Stream/PyHeatsource.pyx":413
  * 
  *     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
  *     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]             # <<<<<<<<<<<<<<
  *     Solar_blocked_byVeg.append(diffuse_blocked)
  * 
  */
-  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 412, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 412, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 413, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_diffuse_blocked = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":413
+  /* "heatsource9/Stream/PyHeatsource.pyx":414
  *     F_Diffuse[3] = F_Diffuse[2] * ViewToSky
  *     diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
  *     Solar_blocked_byVeg.append(diffuse_blocked)             # <<<<<<<<<<<<<<
  * 
  *     #=========================================================
  */
-  __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_Solar_blocked_byVeg, __pyx_v_diffuse_blocked); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 413, __pyx_L1_error)
+  __pyx_t_18 = __Pyx_PyList_Append(__pyx_v_Solar_blocked_byVeg, __pyx_v_diffuse_blocked); if (unlikely(__pyx_t_18 == ((int)-1))) __PYX_ERR(0, 414, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":419
+  /* "heatsource9/Stream/PyHeatsource.pyx":420
  *     # What a Solar Pathfinder measures
  * 
  *     if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:             # <<<<<<<<<<<<<<
  *         # Bank shade is occurring
  *         F_Direct[4] = 0
  */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_TopoShadeAngle, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 419, __pyx_L1_error)
-  __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 419, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_TopoShadeAngle, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 420, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_13) {
   } else {
     __pyx_t_9 = __pyx_t_13;
     goto __pyx_L27_bool_binop_done;
   }
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_BankShadeAngle, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 419, __pyx_L1_error)
-  __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 419, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_v_BankShadeAngle, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 420, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 420, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_9 = __pyx_t_13;
   __pyx_L27_bool_binop_done:;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":421
+    /* "heatsource9/Stream/PyHeatsource.pyx":422
  *     if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:
  *         # Bank shade is occurring
  *         F_Direct[4] = 0             # <<<<<<<<<<<<<<
  *         F_Diffuse[4] = F_Diffuse[3]
  *     else:
  */
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 421, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_int_0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 422, __pyx_L1_error)
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":422
+    /* "heatsource9/Stream/PyHeatsource.pyx":423
  *         # Bank shade is occurring
  *         F_Direct[4] = 0
  *         F_Diffuse[4] = F_Diffuse[3]             # <<<<<<<<<<<<<<
  *     else:
  *         # bank shade is not occurring
  */
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 422, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 423, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 422, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 423, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":419
+    /* "heatsource9/Stream/PyHeatsource.pyx":420
  *     # What a Solar Pathfinder measures
  * 
  *     if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:             # <<<<<<<<<<<<<<
@@ -9835,7 +9844,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     goto __pyx_L26;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":425
+  /* "heatsource9/Stream/PyHeatsource.pyx":426
  *     else:
  *         # bank shade is not occurring
  *         F_Direct[4] = F_Direct[3]             # <<<<<<<<<<<<<<
@@ -9843,71 +9852,71 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  * 
  */
   /*else*/ {
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 425, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 426, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 425, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 426, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":426
+    /* "heatsource9/Stream/PyHeatsource.pyx":427
  *         # bank shade is not occurring
  *         F_Direct[4] = F_Direct[3]
  *         F_Diffuse[4] = F_Diffuse[3]             # <<<<<<<<<<<<<<
  * 
  *     if emergent:
  */
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 426, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 427, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 426, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 427, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
   __pyx_L26:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":428
+  /* "heatsource9/Stream/PyHeatsource.pyx":429
  *         F_Diffuse[4] = F_Diffuse[3]
  * 
  *     if emergent:             # <<<<<<<<<<<<<<
  *         # Account for emergent vegetation
  *         if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):
  */
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_emergent); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 428, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_emergent); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 429, __pyx_L1_error)
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":430
+    /* "heatsource9/Stream/PyHeatsource.pyx":431
  *     if emergent:
  *         # Account for emergent vegetation
  *         if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):             # <<<<<<<<<<<<<<
  *             # Set to one if no veg or no canopy
  *             fraction_passed = 1
  */
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_1, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_1, __pyx_int_0, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (!__pyx_t_13) {
     } else {
       __pyx_t_9 = __pyx_t_13;
       goto __pyx_L31_bool_binop_done;
     }
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) __PYX_ERR(0, 431, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_9 = __pyx_t_13;
     __pyx_L31_bool_binop_done:;
     if (__pyx_t_9) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":432
+      /* "heatsource9/Stream/PyHeatsource.pyx":433
  *         if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):
  *             # Set to one if no veg or no canopy
  *             fraction_passed = 1             # <<<<<<<<<<<<<<
@@ -9917,7 +9926,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       __Pyx_INCREF(__pyx_int_1);
       __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_int_1);
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":430
+      /* "heatsource9/Stream/PyHeatsource.pyx":431
  *     if emergent:
  *         # Account for emergent vegetation
  *         if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):             # <<<<<<<<<<<<<<
@@ -9927,7 +9936,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       goto __pyx_L30;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":437
+    /* "heatsource9/Stream/PyHeatsource.pyx":438
  *             # sun vector is passing through the canopy
  * 
  *             if heatsource8:             # <<<<<<<<<<<<<<
@@ -9935,10 +9944,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                 PLe = 10
  */
     /*else*/ {
-      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 437, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_heatsource8); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 438, __pyx_L1_error)
       if (__pyx_t_9) {
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":439
+        /* "heatsource9/Stream/PyHeatsource.pyx":440
  *             if heatsource8:
  *                 #---------  Boyd and Kasper 2007
  *                 PLe = 10             # <<<<<<<<<<<<<<
@@ -9948,7 +9957,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         __Pyx_INCREF(__pyx_int_10);
         __pyx_v_PLe = __pyx_int_10;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":437
+        /* "heatsource9/Stream/PyHeatsource.pyx":438
  *             # sun vector is passing through the canopy
  * 
  *             if heatsource8:             # <<<<<<<<<<<<<<
@@ -9958,7 +9967,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         goto __pyx_L33;
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":449
+      /* "heatsource9/Stream/PyHeatsource.pyx":450
  *                 # width is not calculated so W_b = 0. The sample zone
  *                 # width is used instead.
  *                 if W_b == 0:             # <<<<<<<<<<<<<<
@@ -9966,13 +9975,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                 else:
  */
       /*else*/ {
-        __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_v_W_b, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 449, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_v_W_b, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 449, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 450, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         if (__pyx_t_9) {
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":450
+          /* "heatsource9/Stream/PyHeatsource.pyx":451
  *                 # width is used instead.
  *                 if W_b == 0:
  *                     emergent_distance = transsample_distance             # <<<<<<<<<<<<<<
@@ -9982,7 +9991,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __Pyx_INCREF(__pyx_v_transsample_distance);
           __pyx_v_emergent_distance = __pyx_v_transsample_distance;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":449
+          /* "heatsource9/Stream/PyHeatsource.pyx":450
  *                 # width is not calculated so W_b = 0. The sample zone
  *                 # width is used instead.
  *                 if W_b == 0:             # <<<<<<<<<<<<<<
@@ -9992,7 +10001,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           goto __pyx_L34;
         }
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":452
+        /* "heatsource9/Stream/PyHeatsource.pyx":453
  *                     emergent_distance = transsample_distance
  *                 else:
  *                     emergent_distance = W_b * 0.5             # <<<<<<<<<<<<<<
@@ -10000,30 +10009,30 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                 if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):
  */
         /*else*/ {
-          __pyx_t_4 = PyNumber_Multiply(__pyx_v_W_b, __pyx_float_0_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 452, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Multiply(__pyx_v_W_b, __pyx_float_0_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 453, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_v_emergent_distance = __pyx_t_4;
           __pyx_t_4 = 0;
         }
         __pyx_L34:;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":454
+        /* "heatsource9/Stream/PyHeatsource.pyx":455
  *                     emergent_distance = W_b * 0.5
  * 
  *                 if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):             # <<<<<<<<<<<<<<
  *                     PLe = emergent_distance / cos(radians(Altitude))
  *                 else:
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_degrees); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_degrees); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_atan); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_atan); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_17 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __pyx_t_17 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_17);
-        __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_17, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_17, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-        __pyx_t_17 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_v_emergent_distance); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __pyx_t_17 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_v_emergent_distance); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_17);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_t_2 = NULL;
@@ -10039,7 +10048,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_2, __pyx_t_17) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_17);
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 454, __pyx_L1_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __pyx_t_6 = NULL;
@@ -10055,25 +10064,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_3);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 454, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_1 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_4, Py_LE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __pyx_t_1 = PyObject_RichCompare(__pyx_v_Altitude, __pyx_t_4, Py_LE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 454, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 455, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (__pyx_t_9) {
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":455
+          /* "heatsource9/Stream/PyHeatsource.pyx":456
  * 
  *                 if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):
  *                     PLe = emergent_distance / cos(radians(Altitude))             # <<<<<<<<<<<<<<
  *                 else:
  *                     PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 455, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_cos); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 456, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 455, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_radians); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 456, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __pyx_t_17 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -10087,7 +10096,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_17, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 455, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 456, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_6 = NULL;
@@ -10103,16 +10112,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 455, __pyx_L1_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 456, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_emergent_distance, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 455, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_v_emergent_distance, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 456, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_v_PLe = __pyx_t_4;
           __pyx_t_4 = 0;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":454
+          /* "heatsource9/Stream/PyHeatsource.pyx":455
  *                     emergent_distance = W_b * 0.5
  * 
  *                 if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):             # <<<<<<<<<<<<<<
@@ -10122,7 +10131,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           goto __pyx_L35;
         }
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":457
+        /* "heatsource9/Stream/PyHeatsource.pyx":458
  *                     PLe = emergent_distance / cos(radians(Altitude))
  *                 else:
  *                     PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))             # <<<<<<<<<<<<<<
@@ -10130,14 +10139,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *             if BeersData == "LAI":
  */
         /*else*/ {
-          __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height_rel, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_tan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_tan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_radians); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_radians); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_17);
           __pyx_t_2 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_17))) {
@@ -10151,7 +10160,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_2, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 457, __pyx_L1_error)
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_t_17 = NULL;
@@ -10167,19 +10176,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_4 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_17, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6);
           __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L1_error)
+          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_v_emergent_distance); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __pyx_t_3 = PyNumber_Multiply(__pyx_t_4, __pyx_v_emergent_distance); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_radians); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_radians); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_17);
           __pyx_t_2 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_17))) {
@@ -10193,7 +10202,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_t_6 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_2, __pyx_v_Altitude) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_v_Altitude);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 457, __pyx_L1_error)
+          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_t_17 = NULL;
@@ -10209,10 +10218,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_17, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
           __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 457, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 457, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 458, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -10223,61 +10232,61 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
       }
       __pyx_L33:;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":459
+      /* "heatsource9/Stream/PyHeatsource.pyx":460
  *                     PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
  * 
  *             if BeersData == "LAI":             # <<<<<<<<<<<<<<
  *                 # use LAI and k to calculate the riparian extinction value
  *                 RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]
  */
-      __pyx_t_9 = (__Pyx_PyString_Equals(__pyx_v_BeersData, __pyx_n_s_LAI, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 459, __pyx_L1_error)
+      __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_BeersData, __pyx_n_u_LAI, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 460, __pyx_L1_error)
       if (__pyx_t_9) {
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":461
+        /* "heatsource9/Stream/PyHeatsource.pyx":462
  *             if BeersData == "LAI":
  *                 # use LAI and k to calculate the riparian extinction value
  *                 RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]             # <<<<<<<<<<<<<<
  *                 fraction_passed = exp(-1 * RipExtinction * PLe)
  * 
  */
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_lc_k, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_lc_k, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 461, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 462, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_XDECREF_SET(__pyx_v_RipExtinction, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":462
+        /* "heatsource9/Stream/PyHeatsource.pyx":463
  *                 # use LAI and k to calculate the riparian extinction value
  *                 RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]
  *                 fraction_passed = exp(-1 * RipExtinction * PLe)             # <<<<<<<<<<<<<<
  * 
  *             else:
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_exp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 462, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_exp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 463, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_1 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
+        __pyx_t_1 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 463, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_v_PLe); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 462, __pyx_L1_error)
+        __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_v_PLe); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 463, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_1 = NULL;
@@ -10293,13 +10302,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_1, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 462, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 463, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "heatsource9/Stream/PyHeatsource.pyx":459
+        /* "heatsource9/Stream/PyHeatsource.pyx":460
  *                     PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
  * 
  *             if BeersData == "LAI":             # <<<<<<<<<<<<<<
@@ -10309,7 +10318,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
         goto __pyx_L36;
       }
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":465
+      /* "heatsource9/Stream/PyHeatsource.pyx":466
  * 
  *             else:
  *                 try:             # <<<<<<<<<<<<<<
@@ -10326,21 +10335,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __Pyx_XGOTREF(__pyx_t_10);
           /*try:*/ {
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":468
+            /* "heatsource9/Stream/PyHeatsource.pyx":469
  *                     # Use canopy cover to calculate
  *                     # the riparian extinction value
  *                     RipExtinction = -log(1- lc_canopy[0][0]) / lc_height[0][0]             # <<<<<<<<<<<<<<
  *                     fraction_passed = exp(-1* RipExtinction * PLe)
  * 
  */
-            __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_log); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_log); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_3);
-            __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_6);
-            __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_6, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_6, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
             __pyx_t_1 = NULL;
@@ -10356,36 +10365,36 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_1, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6);
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 468, __pyx_L37_error)
+            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-            __pyx_t_3 = PyNumber_Negative(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_3 = PyNumber_Negative(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_3);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-            __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-            __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 468, __pyx_L37_error)
+            __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_XDECREF_SET(__pyx_v_RipExtinction, __pyx_t_4);
             __pyx_t_4 = 0;
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":469
+            /* "heatsource9/Stream/PyHeatsource.pyx":470
  *                     # the riparian extinction value
  *                     RipExtinction = -log(1- lc_canopy[0][0]) / lc_height[0][0]
  *                     fraction_passed = exp(-1* RipExtinction * PLe)             # <<<<<<<<<<<<<<
  * 
  *                 except:
  */
-            __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_exp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 469, __pyx_L37_error)
+            __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_exp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 470, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_6);
-            __pyx_t_3 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 469, __pyx_L37_error)
+            __pyx_t_3 = PyNumber_Multiply(__pyx_int_neg_1, __pyx_v_RipExtinction); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 470, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_3);
-            __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_v_PLe); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 469, __pyx_L37_error)
+            __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_v_PLe); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 470, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __pyx_t_3 = NULL;
@@ -10401,13 +10410,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
             __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1);
             __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 469, __pyx_L37_error)
+            if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 470, __pyx_L37_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
             __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_t_4);
             __pyx_t_4 = 0;
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":465
+            /* "heatsource9/Stream/PyHeatsource.pyx":466
  * 
  *             else:
  *                 try:             # <<<<<<<<<<<<<<
@@ -10431,7 +10440,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":471
+          /* "heatsource9/Stream/PyHeatsource.pyx":472
  *                     fraction_passed = exp(-1* RipExtinction * PLe)
  * 
  *                 except:             # <<<<<<<<<<<<<<
@@ -10439,31 +10448,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                         # can't take log of zero
  */
           /*except:*/ {
-            __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetSolarFlux", __pyx_clineno, __pyx_lineno, __pyx_filename);
-            if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_6, &__pyx_t_1) < 0) __PYX_ERR(0, 471, __pyx_L39_except_error)
+            __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_solar_flux", __pyx_clineno, __pyx_lineno, __pyx_filename);
+            if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_6, &__pyx_t_1) < 0) __PYX_ERR(0, 472, __pyx_L39_except_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_GOTREF(__pyx_t_6);
             __Pyx_GOTREF(__pyx_t_1);
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":472
+            /* "heatsource9/Stream/PyHeatsource.pyx":473
  * 
  *                 except:
  *                     if lc_canopy[0][0] >= 1:             # <<<<<<<<<<<<<<
  *                         # can't take log of zero
  *                         fraction_passed = 0
  */
-            __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 472, __pyx_L39_except_error)
+            __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 473, __pyx_L39_except_error)
             __Pyx_GOTREF(__pyx_t_3);
-            __pyx_t_17 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 472, __pyx_L39_except_error)
+            __pyx_t_17 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 473, __pyx_L39_except_error)
             __Pyx_GOTREF(__pyx_t_17);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-            __pyx_t_3 = PyObject_RichCompare(__pyx_t_17, __pyx_int_1, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 472, __pyx_L39_except_error)
+            __pyx_t_3 = PyObject_RichCompare(__pyx_t_17, __pyx_int_1, Py_GE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 473, __pyx_L39_except_error)
             __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-            __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 472, __pyx_L39_except_error)
+            __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 473, __pyx_L39_except_error)
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             if (likely(__pyx_t_9)) {
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":474
+              /* "heatsource9/Stream/PyHeatsource.pyx":475
  *                     if lc_canopy[0][0] >= 1:
  *                         # can't take log of zero
  *                         fraction_passed = 0             # <<<<<<<<<<<<<<
@@ -10473,7 +10482,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               __Pyx_INCREF(__pyx_int_0);
               __Pyx_XDECREF_SET(__pyx_v_fraction_passed, __pyx_int_0);
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":472
+              /* "heatsource9/Stream/PyHeatsource.pyx":473
  * 
  *                 except:
  *                     if lc_canopy[0][0] >= 1:             # <<<<<<<<<<<<<<
@@ -10483,7 +10492,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               goto __pyx_L45;
             }
 
-            /* "heatsource9/Stream/PyHeatsource.pyx":477
+            /* "heatsource9/Stream/PyHeatsource.pyx":478
  *                     else:
  *                         # some other error
  *                         msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)             # <<<<<<<<<<<<<<
@@ -10491,11 +10500,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *                         print_console(msg)
  */
             /*else*/ {
-              __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Unknown_error_when_calculating_e, __pyx_n_s_format); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+              __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Unknown_error_when_calculating_e, __pyx_n_s_format); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 478, __pyx_L39_except_error)
               __Pyx_GOTREF(__pyx_t_17);
-              __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+              __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_canopy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L39_except_error)
               __Pyx_GOTREF(__pyx_t_2);
-              __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+              __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 478, __pyx_L39_except_error)
               __Pyx_GOTREF(__pyx_t_5);
               __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
               __pyx_t_2 = NULL;
@@ -10513,7 +10522,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               #if CYTHON_FAST_PYCALL
               if (PyFunction_Check(__pyx_t_17)) {
                 PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_t_5, __pyx_v_PLe};
-                __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_17, __pyx_temp+1-__pyx_t_16, 2+__pyx_t_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+                __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_17, __pyx_temp+1-__pyx_t_16, 2+__pyx_t_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 478, __pyx_L39_except_error)
                 __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
                 __Pyx_GOTREF(__pyx_t_3);
                 __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -10522,14 +10531,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               #if CYTHON_FAST_PYCCALL
               if (__Pyx_PyFastCFunction_Check(__pyx_t_17)) {
                 PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_t_5, __pyx_v_PLe};
-                __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_17, __pyx_temp+1-__pyx_t_16, 2+__pyx_t_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+                __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_17, __pyx_temp+1-__pyx_t_16, 2+__pyx_t_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 478, __pyx_L39_except_error)
                 __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
                 __Pyx_GOTREF(__pyx_t_3);
                 __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
               } else
               #endif
               {
-                __pyx_t_14 = PyTuple_New(2+__pyx_t_16); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+                __pyx_t_14 = PyTuple_New(2+__pyx_t_16); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 478, __pyx_L39_except_error)
                 __Pyx_GOTREF(__pyx_t_14);
                 if (__pyx_t_2) {
                   __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -10540,7 +10549,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
                 __Pyx_GIVEREF(__pyx_v_PLe);
                 PyTuple_SET_ITEM(__pyx_t_14, 1+__pyx_t_16, __pyx_v_PLe);
                 __pyx_t_5 = 0;
-                __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_17, __pyx_t_14, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 477, __pyx_L39_except_error)
+                __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_17, __pyx_t_14, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 478, __pyx_L39_except_error)
                 __Pyx_GOTREF(__pyx_t_3);
                 __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
               }
@@ -10548,44 +10557,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               __pyx_v_msg = __pyx_t_3;
               __pyx_t_3 = 0;
 
-              /* "heatsource9/Stream/PyHeatsource.pyx":478
+              /* "heatsource9/Stream/PyHeatsource.pyx":479
  *                         # some other error
  *                         msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)
  *                         logger.error(msg)             # <<<<<<<<<<<<<<
  *                         print_console(msg)
  *                         raise Exception
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_logger); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 478, __pyx_L39_except_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_logger); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 479, __pyx_L39_except_error)
               __Pyx_GOTREF(__pyx_t_17);
-              __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_17, __pyx_n_s_error); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 478, __pyx_L39_except_error)
+              __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_17, __pyx_n_s_error); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 479, __pyx_L39_except_error)
               __Pyx_GOTREF(__pyx_t_14);
               __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-              __pyx_t_17 = NULL;
-              if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
-                __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_14);
-                if (likely(__pyx_t_17)) {
-                  PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-                  __Pyx_INCREF(__pyx_t_17);
-                  __Pyx_INCREF(function);
-                  __Pyx_DECREF_SET(__pyx_t_14, function);
-                }
-              }
-              __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_17, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_v_msg);
-              __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-              if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 478, __pyx_L39_except_error)
-              __Pyx_GOTREF(__pyx_t_3);
-              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-              __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-              /* "heatsource9/Stream/PyHeatsource.pyx":479
- *                         msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)
- *                         logger.error(msg)
- *                         print_console(msg)             # <<<<<<<<<<<<<<
- *                         raise Exception
- * 
- */
-              __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_print_console); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 479, __pyx_L39_except_error)
-              __Pyx_GOTREF(__pyx_t_14);
               __pyx_t_17 = NULL;
               if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
                 __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_14);
@@ -10604,6 +10587,32 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
               __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
               /* "heatsource9/Stream/PyHeatsource.pyx":480
+ *                         msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)
+ *                         logger.error(msg)
+ *                         print_console(msg)             # <<<<<<<<<<<<<<
+ *                         raise Exception
+ * 
+ */
+              __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_print_console); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 480, __pyx_L39_except_error)
+              __Pyx_GOTREF(__pyx_t_14);
+              __pyx_t_17 = NULL;
+              if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
+                __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_14);
+                if (likely(__pyx_t_17)) {
+                  PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+                  __Pyx_INCREF(__pyx_t_17);
+                  __Pyx_INCREF(function);
+                  __Pyx_DECREF_SET(__pyx_t_14, function);
+                }
+              }
+              __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_17, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_v_msg);
+              __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+              if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 480, __pyx_L39_except_error)
+              __Pyx_GOTREF(__pyx_t_3);
+              __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+              __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+              /* "heatsource9/Stream/PyHeatsource.pyx":481
  *                         logger.error(msg)
  *                         print_console(msg)
  *                         raise Exception             # <<<<<<<<<<<<<<
@@ -10611,7 +10620,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *         F_Direct[4] = F_Direct[4] * fraction_passed
  */
               __Pyx_Raise(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), 0, 0, 0);
-              __PYX_ERR(0, 480, __pyx_L39_except_error)
+              __PYX_ERR(0, 481, __pyx_L39_except_error)
             }
             __pyx_L45:;
             __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -10621,7 +10630,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
           }
           __pyx_L39_except_error:;
 
-          /* "heatsource9/Stream/PyHeatsource.pyx":465
+          /* "heatsource9/Stream/PyHeatsource.pyx":466
  * 
  *             else:
  *                 try:             # <<<<<<<<<<<<<<
@@ -10645,37 +10654,37 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     }
     __pyx_L30:;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":482
+    /* "heatsource9/Stream/PyHeatsource.pyx":483
  *                         raise Exception
  * 
  *         F_Direct[4] = F_Direct[4] * fraction_passed             # <<<<<<<<<<<<<<
  *         F_Diffuse[4] = F_Diffuse[4] * fraction_passed
  * 
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 482, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 483, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 482, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Multiply(__pyx_t_1, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 483, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_t_6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 482, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 4, __pyx_t_6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 483, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":483
+    /* "heatsource9/Stream/PyHeatsource.pyx":484
  * 
  *         F_Direct[4] = F_Direct[4] * fraction_passed
  *         F_Diffuse[4] = F_Diffuse[4] * fraction_passed             # <<<<<<<<<<<<<<
  * 
  *     #=========================================================
  */
-    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 483, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 484, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 483, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_v_fraction_passed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 484, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 483, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 4, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 484, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":428
+    /* "heatsource9/Stream/PyHeatsource.pyx":429
  *         F_Diffuse[4] = F_Diffuse[3]
  * 
  *     if emergent:             # <<<<<<<<<<<<<<
@@ -10684,34 +10693,34 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":487
+  /* "heatsource9/Stream/PyHeatsource.pyx":488
  *     #=========================================================
  *     # 5 - Entering Stream
  *     if Zenith > 80:             # <<<<<<<<<<<<<<
  *         Stream_Reflect = 0.0515 * (Zenith) - 3.636
  *     else:
  */
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Zenith, __pyx_int_80, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 487, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 487, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_Zenith, __pyx_int_80, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 488, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 488, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":488
+    /* "heatsource9/Stream/PyHeatsource.pyx":489
  *     # 5 - Entering Stream
  *     if Zenith > 80:
  *         Stream_Reflect = 0.0515 * (Zenith) - 3.636             # <<<<<<<<<<<<<<
  *     else:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  */
-    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0515, __pyx_v_Zenith); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 488, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0515, __pyx_v_Zenith); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 489, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_3_636, 3.636, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 488, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_3_636, 3.636, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 489, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_Stream_Reflect = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":487
+    /* "heatsource9/Stream/PyHeatsource.pyx":488
  *     #=========================================================
  *     # 5 - Entering Stream
  *     if Zenith > 80:             # <<<<<<<<<<<<<<
@@ -10721,7 +10730,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     goto __pyx_L46;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":490
+  /* "heatsource9/Stream/PyHeatsource.pyx":491
  *         Stream_Reflect = 0.0515 * (Zenith) - 3.636
  *     else:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386             # <<<<<<<<<<<<<<
@@ -10729,14 +10738,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_3 = NULL;
@@ -10752,16 +10761,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 490, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyNumber_Multiply(__pyx_float_0_091, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Multiply(__pyx_float_0_091, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyFloat_SubtractObjC(__pyx_t_6, __pyx_float_0_0386, 0.0386, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 490, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFloat_SubtractObjC(__pyx_t_6, __pyx_float_0_0386, 0.0386, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 491, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_Stream_Reflect = __pyx_t_1;
@@ -10769,46 +10778,46 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_L46:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":491
+  /* "heatsource9/Stream/PyHeatsource.pyx":492
  *     else:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     if abs(Stream_Reflect) > 1:             # <<<<<<<<<<<<<<
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
  *     if abs(Stream_Reflect) > 1:
  */
-  __pyx_t_1 = __Pyx_PyNumber_Absolute(__pyx_v_Stream_Reflect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 491, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Absolute(__pyx_v_Stream_Reflect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 492, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 491, __pyx_L1_error)
+  __pyx_t_6 = PyObject_RichCompare(__pyx_t_1, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 492, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 491, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 492, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":492
+    /* "heatsource9/Stream/PyHeatsource.pyx":493
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636             # <<<<<<<<<<<<<<
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 493, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 493, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_1, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_1, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 493, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0515, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_0515, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 493, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_3_636, 3.636, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 492, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_3_636, 3.636, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 493, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF_SET(__pyx_v_Stream_Reflect, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":491
+    /* "heatsource9/Stream/PyHeatsource.pyx":492
  *     else:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     if abs(Stream_Reflect) > 1:             # <<<<<<<<<<<<<<
@@ -10817,36 +10826,36 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":493
+  /* "heatsource9/Stream/PyHeatsource.pyx":494
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
  *     if abs(Stream_Reflect) > 1:             # <<<<<<<<<<<<<<
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     F_Diffuse[5] = F_Diffuse[4] * 0.91
  */
-  __pyx_t_6 = __Pyx_PyNumber_Absolute(__pyx_v_Stream_Reflect); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 493, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyNumber_Absolute(__pyx_v_Stream_Reflect); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 494, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyObject_RichCompare(__pyx_t_6, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 493, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_t_6, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 494, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 493, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 494, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":494
+    /* "heatsource9/Stream/PyHeatsource.pyx":495
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386             # <<<<<<<<<<<<<<
  *     F_Diffuse[5] = F_Diffuse[4] * 0.91
  *     F_Direct[5] = F_Direct[4] * (1 - Stream_Reflect)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pi); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_3 = NULL;
@@ -10862,22 +10871,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 494, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_091, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_091, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_0_0386, 0.0386, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_1, __pyx_float_0_0386, 0.0386, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF_SET(__pyx_v_Stream_Reflect, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":493
+    /* "heatsource9/Stream/PyHeatsource.pyx":494
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
  *     if abs(Stream_Reflect) > 1:             # <<<<<<<<<<<<<<
@@ -10886,53 +10895,53 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":495
+  /* "heatsource9/Stream/PyHeatsource.pyx":496
  *     if abs(Stream_Reflect) > 1:
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     F_Diffuse[5] = F_Diffuse[4] * 0.91             # <<<<<<<<<<<<<<
  *     F_Direct[5] = F_Direct[4] * (1 - Stream_Reflect)
  * 
  */
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 495, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 496, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_float_0_91); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 495, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_float_0_91); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 496, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 5, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 495, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 5, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":496
+  /* "heatsource9/Stream/PyHeatsource.pyx":497
  *         Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
  *     F_Diffuse[5] = F_Diffuse[4] * 0.91
  *     F_Direct[5] = F_Direct[4] * (1 - Stream_Reflect)             # <<<<<<<<<<<<<<
  * 
  *     #=========================================================
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 497, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Stream_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Stream_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 497, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 497, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 5, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 5, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 497, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":502
+  /* "heatsource9/Stream/PyHeatsource.pyx":503
  *     # 7 - Received by Bed
  *     # Jerlov (1976)
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /             # <<<<<<<<<<<<<<
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_cos); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_atan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_atan); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_sin); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_17, __pyx_n_s_sin); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_17);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -10946,7 +10955,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_t_5 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_v_Zenith) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_Zenith);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 502, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -10962,41 +10971,41 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_14 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_t_5);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 502, __pyx_L1_error)
+  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-  __pyx_t_17 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_14, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __pyx_t_17 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_14, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_17);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":503
+  /* "heatsource9/Stream/PyHeatsource.pyx":504
  *     # Jerlov (1976)
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *             # <<<<<<<<<<<<<<
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":504
+  /* "heatsource9/Stream/PyHeatsource.pyx":505
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))             # <<<<<<<<<<<<<<
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_sin); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_sin); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":503
+  /* "heatsource9/Stream/PyHeatsource.pyx":504
  *     # Jerlov (1976)
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *             # <<<<<<<<<<<<<<
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_19, __pyx_n_s_radians); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_19, __pyx_n_s_radians); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_19);
   __pyx_t_20 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_19))) {
@@ -11010,7 +11019,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_t_15 = (__pyx_t_20) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_20, __pyx_v_Zenith) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_v_Zenith);
   __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
-  if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
   __pyx_t_19 = NULL;
@@ -11026,26 +11035,26 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_2 = (__pyx_t_19) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_19, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_15);
   __Pyx_XDECREF(__pyx_t_19); __pyx_t_19 = 0;
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_2, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Negative(__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Negative(__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":504
+  /* "heatsource9/Stream/PyHeatsource.pyx":505
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))             # <<<<<<<<<<<<<<
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_sin); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_sin); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
-  __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_n_s_radians); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_20, __pyx_n_s_radians); if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);
   __pyx_t_21 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_20))) {
@@ -11059,7 +11068,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   }
   __pyx_t_19 = (__pyx_t_21) ? __Pyx_PyObject_Call2Args(__pyx_t_20, __pyx_t_21, __pyx_v_Zenith) : __Pyx_PyObject_CallOneArg(__pyx_t_20, __pyx_v_Zenith);
   __Pyx_XDECREF(__pyx_t_21); __pyx_t_21 = 0;
-  if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 504, __pyx_L1_error)
+  if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_19);
   __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
   __pyx_t_20 = NULL;
@@ -11075,33 +11084,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_8 = (__pyx_t_20) ? __Pyx_PyObject_Call2Args(__pyx_t_15, __pyx_t_20, __pyx_t_19) : __Pyx_PyObject_CallOneArg(__pyx_t_15, __pyx_t_19);
   __Pyx_XDECREF(__pyx_t_20); __pyx_t_20 = 0;
   __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
-  if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 504, __pyx_L1_error)
+  if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-  __pyx_t_15 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_8, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyFloat_TrueDivideObjC(__pyx_t_8, __pyx_float_1_3333, 1.3333, 0, 0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":503
+  /* "heatsource9/Stream/PyHeatsource.pyx":504
  *     # Jerlov (1976)
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *             # <<<<<<<<<<<<<<
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  * 
  */
-  __pyx_t_8 = PyNumber_Multiply(__pyx_t_2, __pyx_t_15); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 503, __pyx_L1_error)
+  __pyx_t_8 = PyNumber_Multiply(__pyx_t_2, __pyx_t_15); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":504
+  /* "heatsource9/Stream/PyHeatsource.pyx":505
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))             # <<<<<<<<<<<<<<
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  */
-  __pyx_t_15 = __Pyx_PyInt_AddObjC(__pyx_t_8, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyInt_AddObjC(__pyx_t_8, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 505, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_8 = NULL;
@@ -11117,18 +11126,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_14 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_8, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_15);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 504, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":502
+  /* "heatsource9/Stream/PyHeatsource.pyx":503
  *     # 7 - Received by Bed
  *     # Jerlov (1976)
  *     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /             # <<<<<<<<<<<<<<
  *                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  */
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_17, __pyx_t_14); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_17, __pyx_t_14); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
@@ -11145,7 +11154,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_1 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_14, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5);
   __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 502, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -11161,25 +11170,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 502, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_d_w, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 502, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_v_d_w, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Water_Path = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":506
+  /* "heatsource9/Stream/PyHeatsource.pyx":507
  *                                       (sin(radians(Zenith)) / 1.3333) + 1))))
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))             # <<<<<<<<<<<<<<
  *     if Trans_Stream > 1:
  *         Trans_Stream = 1
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_log10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 506, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_log10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Water_Path, __pyx_int_100); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 506, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Water_Path, __pyx_int_100); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -11194,31 +11203,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 506, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_194, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 506, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_0_194, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_415, __pyx_t_4, 0.415, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 506, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_415, __pyx_t_4, 0.415, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Trans_Stream = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":507
+  /* "heatsource9/Stream/PyHeatsource.pyx":508
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  *     if Trans_Stream > 1:             # <<<<<<<<<<<<<<
  *         Trans_Stream = 1
  * 
  */
-  __pyx_t_6 = PyObject_RichCompare(__pyx_v_Trans_Stream, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 507, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 507, __pyx_L1_error)
+  __pyx_t_6 = PyObject_RichCompare(__pyx_v_Trans_Stream, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 508, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 508, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":508
+    /* "heatsource9/Stream/PyHeatsource.pyx":509
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  *     if Trans_Stream > 1:
  *         Trans_Stream = 1             # <<<<<<<<<<<<<<
@@ -11228,7 +11237,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_DECREF_SET(__pyx_v_Trans_Stream, __pyx_int_1);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":507
+    /* "heatsource9/Stream/PyHeatsource.pyx":508
  * 
  *     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
  *     if Trans_Stream > 1:             # <<<<<<<<<<<<<<
@@ -11237,60 +11246,60 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":511
+  /* "heatsource9/Stream/PyHeatsource.pyx":512
  * 
  *     # Direct Solar Radiation attenuated on way down
  *     Dummy1 = F_Direct[5] * (1 - Trans_Stream)             # <<<<<<<<<<<<<<
  * 
  *     # Direct Solar Radiation Hitting Stream bed
  */
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 511, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 511, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 511, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_XDECREF_SET(__pyx_v_Dummy1, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":514
+  /* "heatsource9/Stream/PyHeatsource.pyx":515
  * 
  *     # Direct Solar Radiation Hitting Stream bed
  *     Dummy2 = F_Direct[5] - Dummy1             # <<<<<<<<<<<<<<
  * 
  *     # Reflection Coef. for Direct Solar
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 514, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 515, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_v_Dummy1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 514, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_v_Dummy1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 515, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Dummy2 = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":517
+  /* "heatsource9/Stream/PyHeatsource.pyx":518
  * 
  *     # Reflection Coef. for Direct Solar
  *     Bed_Reflect = exp(0.0214 * (Zenith * pi / 180) - 1.941)             # <<<<<<<<<<<<<<
  *     BedRock = 1 - phi
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_exp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_exp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_pi); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_v_Zenith, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_180, 0xB4, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_0214, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_float_0_0214, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_3, __pyx_float_1_941, 1.941, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 517, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyFloat_SubtractObjC(__pyx_t_3, __pyx_float_1_941, 1.941, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -11306,118 +11315,118 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 517, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 518, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Bed_Reflect = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":518
+  /* "heatsource9/Stream/PyHeatsource.pyx":519
  *     # Reflection Coef. for Direct Solar
  *     Bed_Reflect = exp(0.0214 * (Zenith * pi / 180) - 1.941)
  *     BedRock = 1 - phi             # <<<<<<<<<<<<<<
  * 
  *     # Direct Solar Radiation Absorbed in Bed
  */
-  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_phi, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 518, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_phi, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 519, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_BedRock = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":521
+  /* "heatsource9/Stream/PyHeatsource.pyx":522
  * 
  *     # Direct Solar Radiation Absorbed in Bed
  *     Dummy3 = Dummy2 * (1 - Bed_Reflect)             # <<<<<<<<<<<<<<
  * 
  *     # Direct Solar Radiation Immediately Returned to Water Column as Heat
  */
-  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Bed_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 521, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Bed_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 522, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 521, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 522, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Dummy3 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":524
+  /* "heatsource9/Stream/PyHeatsource.pyx":525
  * 
  *     # Direct Solar Radiation Immediately Returned to Water Column as Heat
  *     Dummy4 = 0.53 * BedRock * Dummy3             # <<<<<<<<<<<<<<
  * 
  *     # Direct Solar Radiation Reflected off Bed
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_53, __pyx_v_BedRock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 524, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_53, __pyx_v_BedRock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 525, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_v_Dummy3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 524, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_v_Dummy3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 525, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Dummy4 = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":527
+  /* "heatsource9/Stream/PyHeatsource.pyx":528
  * 
  *     # Direct Solar Radiation Reflected off Bed
  *     Dummy5 = Dummy2 * Bed_Reflect             # <<<<<<<<<<<<<<
  * 
  *     # Direct Solar Radiation attenuated on way up
  */
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_v_Bed_Reflect); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 527, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_v_Bed_Reflect); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 528, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_Dummy5 = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":530
+  /* "heatsource9/Stream/PyHeatsource.pyx":531
  * 
  *     # Direct Solar Radiation attenuated on way up
  *     Dummy6 = Dummy5 * (1 - Trans_Stream)             # <<<<<<<<<<<<<<
  * 
  *     F_Direct[6] = Dummy1 + Dummy4 + Dummy6
  */
-  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 530, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy5, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 530, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy5, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Dummy6 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":532
+  /* "heatsource9/Stream/PyHeatsource.pyx":533
  *     Dummy6 = Dummy5 * (1 - Trans_Stream)
  * 
  *     F_Direct[6] = Dummy1 + Dummy4 + Dummy6             # <<<<<<<<<<<<<<
  *     F_Direct[7] = Dummy3 - Dummy4
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
  */
-  __pyx_t_1 = PyNumber_Add(__pyx_v_Dummy1, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 532, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_v_Dummy1, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 533, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_Dummy6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 532, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_v_Dummy6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 533, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 6, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 532, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 6, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 533, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":533
+  /* "heatsource9/Stream/PyHeatsource.pyx":534
  * 
  *     F_Direct[6] = Dummy1 + Dummy4 + Dummy6
  *     F_Direct[7] = Dummy3 - Dummy4             # <<<<<<<<<<<<<<
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
  *     if Trans_Stream > 1:
  */
-  __pyx_t_4 = PyNumber_Subtract(__pyx_v_Dummy3, __pyx_v_Dummy4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 533, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_v_Dummy3, __pyx_v_Dummy4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 534, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 7, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 533, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Direct, 7, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 534, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":534
+  /* "heatsource9/Stream/PyHeatsource.pyx":535
  *     F_Direct[6] = Dummy1 + Dummy4 + Dummy6
  *     F_Direct[7] = Dummy3 - Dummy4
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))             # <<<<<<<<<<<<<<
  *     if Trans_Stream > 1:
  *         Trans_Stream = 1
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log10); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 534, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log10); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_int_100, __pyx_v_d_w); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 534, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_int_100, __pyx_v_d_w); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -11432,31 +11441,31 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_6);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 534, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_194, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 534, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_0_194, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_415, __pyx_t_1, 0.415, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 534, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_SubtractCObj(__pyx_float_0_415, __pyx_t_1, 0.415, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_Trans_Stream, __pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":535
+  /* "heatsource9/Stream/PyHeatsource.pyx":536
  *     F_Direct[7] = Dummy3 - Dummy4
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
  *     if Trans_Stream > 1:             # <<<<<<<<<<<<<<
  *         Trans_Stream = 1
  * 
  */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Trans_Stream, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 535, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 535, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_Trans_Stream, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 536, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 536, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_9) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":536
+    /* "heatsource9/Stream/PyHeatsource.pyx":537
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
  *     if Trans_Stream > 1:
  *         Trans_Stream = 1             # <<<<<<<<<<<<<<
@@ -11466,7 +11475,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_DECREF_SET(__pyx_v_Trans_Stream, __pyx_int_1);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":535
+    /* "heatsource9/Stream/PyHeatsource.pyx":536
  *     F_Direct[7] = Dummy3 - Dummy4
  *     Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
  *     if Trans_Stream > 1:             # <<<<<<<<<<<<<<
@@ -11475,49 +11484,49 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":539
+  /* "heatsource9/Stream/PyHeatsource.pyx":540
  * 
  *     # Diffuse Solar Radiation attenuated on way down
  *     Dummy1 = F_Diffuse[5] * (1 - Trans_Stream)             # <<<<<<<<<<<<<<
  * 
  *     # Diffuse Solar Radiation Hitting Stream bed
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 539, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 540, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 539, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 540, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 539, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 540, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy1, __pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":542
+  /* "heatsource9/Stream/PyHeatsource.pyx":543
  * 
  *     # Diffuse Solar Radiation Hitting Stream bed
  *     Dummy2 = F_Diffuse[5] - Dummy1             # <<<<<<<<<<<<<<
  * 
  *     # Reflection Coef. for Diffuse Solar
  */
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 542, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 543, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_6, __pyx_v_Dummy1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 542, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_6, __pyx_v_Dummy1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 543, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy2, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":546
+  /* "heatsource9/Stream/PyHeatsource.pyx":547
  *     # Reflection Coef. for Diffuse Solar
  *     # TODO: The following ALWAYS becomes exp(-1.941)
  *     Bed_Reflect = exp(0.0214 * (0) - 1.941)             # <<<<<<<<<<<<<<
  * 
  *     # Diffuse Solar Radiation Absorbed in Bed
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_exp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_exp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 547, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyFloat_FromDouble(((0.0214 * 0.0) - 1.941)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(((0.0214 * 0.0) - 1.941)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 547, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -11532,249 +11541,249 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 547, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF_SET(__pyx_v_Bed_Reflect, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":549
+  /* "heatsource9/Stream/PyHeatsource.pyx":550
  * 
  *     # Diffuse Solar Radiation Absorbed in Bed
  *     Dummy3 = Dummy2 * (1 - Bed_Reflect)             # <<<<<<<<<<<<<<
  * 
  *     # Diffuse Solar Radiation Immediately Returned to Water Column as Heat
  */
-  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Bed_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 549, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Bed_Reflect, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 549, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 550, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy3, __pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":552
+  /* "heatsource9/Stream/PyHeatsource.pyx":553
  * 
  *     # Diffuse Solar Radiation Immediately Returned to Water Column as Heat
  *     Dummy4 = 0.53 * BedRock * Dummy3             # <<<<<<<<<<<<<<
  * 
  *     # Diffuse Solar Radiation Reflected off Bed
  */
-  __pyx_t_6 = PyNumber_Multiply(__pyx_float_0_53, __pyx_v_BedRock); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_float_0_53, __pyx_v_BedRock); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 553, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_v_Dummy3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_6, __pyx_v_Dummy3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 553, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy4, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":555
+  /* "heatsource9/Stream/PyHeatsource.pyx":556
  * 
  *     # Diffuse Solar Radiation Reflected off Bed
  *     Dummy5 = Dummy2 * Bed_Reflect             # <<<<<<<<<<<<<<
  * 
  *     # Diffuse Solar Radiation attenuated on way up
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_v_Bed_Reflect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 555, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_Dummy2, __pyx_v_Bed_Reflect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 556, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_Dummy5, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":558
+  /* "heatsource9/Stream/PyHeatsource.pyx":559
  * 
  *     # Diffuse Solar Radiation attenuated on way up
  *     Dummy6 = Dummy5 * (1 - Trans_Stream)             # <<<<<<<<<<<<<<
  *     F_Diffuse[6] = Dummy1 + Dummy4 + Dummy6
  *     F_Diffuse[7] = Dummy3 - Dummy4
  */
-  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_Trans_Stream, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 559, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = PyNumber_Multiply(__pyx_v_Dummy5, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_Dummy5, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 559, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF_SET(__pyx_v_Dummy6, __pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":559
+  /* "heatsource9/Stream/PyHeatsource.pyx":560
  *     # Diffuse Solar Radiation attenuated on way up
  *     Dummy6 = Dummy5 * (1 - Trans_Stream)
  *     F_Diffuse[6] = Dummy1 + Dummy4 + Dummy6             # <<<<<<<<<<<<<<
  *     F_Diffuse[7] = Dummy3 - Dummy4
  * 
  */
-  __pyx_t_6 = PyNumber_Add(__pyx_v_Dummy1, __pyx_v_Dummy4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 559, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Add(__pyx_v_Dummy1, __pyx_v_Dummy4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 560, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_v_Dummy6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 559, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_6, __pyx_v_Dummy6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 560, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 559, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 6, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 560, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":560
+  /* "heatsource9/Stream/PyHeatsource.pyx":561
  *     Dummy6 = Dummy5 * (1 - Trans_Stream)
  *     F_Diffuse[6] = Dummy1 + Dummy4 + Dummy6
  *     F_Diffuse[7] = Dummy3 - Dummy4             # <<<<<<<<<<<<<<
  * 
  *     #=========================================================
  */
-  __pyx_t_1 = PyNumber_Subtract(__pyx_v_Dummy3, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 560, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_v_Dummy3, __pyx_v_Dummy4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 561, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 7, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 560, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Diffuse, 7, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 561, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":573
+  /* "heatsource9/Stream/PyHeatsource.pyx":574
  *     # 7 - Received by Bed
  * 
  *     F_Solar[0] = F_Diffuse[0] + F_Direct[0]             # <<<<<<<<<<<<<<
  *     F_Solar[1] = F_Diffuse[1] + F_Direct[1]
  *     F_Solar[2] = F_Diffuse[2] + F_Direct[2]
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 573, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 573, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 573, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 0, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 573, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 0, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 574, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":574
+  /* "heatsource9/Stream/PyHeatsource.pyx":575
  * 
  *     F_Solar[0] = F_Diffuse[0] + F_Direct[0]
  *     F_Solar[1] = F_Diffuse[1] + F_Direct[1]             # <<<<<<<<<<<<<<
  *     F_Solar[2] = F_Diffuse[2] + F_Direct[2]
  *     F_Solar[3] = F_Diffuse[3] + F_Direct[3]
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 574, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 574, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 574, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 1, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 574, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 1, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 575, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":575
+  /* "heatsource9/Stream/PyHeatsource.pyx":576
  *     F_Solar[0] = F_Diffuse[0] + F_Direct[0]
  *     F_Solar[1] = F_Diffuse[1] + F_Direct[1]
  *     F_Solar[2] = F_Diffuse[2] + F_Direct[2]             # <<<<<<<<<<<<<<
  *     F_Solar[3] = F_Diffuse[3] + F_Direct[3]
  *     F_Solar[4] = F_Diffuse[4] + F_Direct[4]
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 576, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 2, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 576, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 576, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 2, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 575, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 2, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 576, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":576
+  /* "heatsource9/Stream/PyHeatsource.pyx":577
  *     F_Solar[1] = F_Diffuse[1] + F_Direct[1]
  *     F_Solar[2] = F_Diffuse[2] + F_Direct[2]
  *     F_Solar[3] = F_Diffuse[3] + F_Direct[3]             # <<<<<<<<<<<<<<
  *     F_Solar[4] = F_Diffuse[4] + F_Direct[4]
  *     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 576, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 576, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 3, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 576, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 576, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 3, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 577, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":577
+  /* "heatsource9/Stream/PyHeatsource.pyx":578
  *     F_Solar[2] = F_Diffuse[2] + F_Direct[2]
  *     F_Solar[3] = F_Diffuse[3] + F_Direct[3]
  *     F_Solar[4] = F_Diffuse[4] + F_Direct[4]             # <<<<<<<<<<<<<<
  *     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
  *     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 577, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 577, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 577, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 577, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 4, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 578, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":578
+  /* "heatsource9/Stream/PyHeatsource.pyx":579
  *     F_Solar[3] = F_Diffuse[3] + F_Direct[3]
  *     F_Solar[4] = F_Diffuse[4] + F_Direct[4]
  *     F_Solar[5] = F_Diffuse[5] + F_Direct[5]             # <<<<<<<<<<<<<<
  *     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
  *     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 5, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 578, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 5, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 578, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 5, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 579, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":579
+  /* "heatsource9/Stream/PyHeatsource.pyx":580
  *     F_Solar[4] = F_Diffuse[4] + F_Direct[4]
  *     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
  *     F_Solar[6] = F_Diffuse[6] + F_Direct[6]             # <<<<<<<<<<<<<<
  *     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
  * 
  */
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 6, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 579, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 6, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 579, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 6, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":580
+  /* "heatsource9/Stream/PyHeatsource.pyx":581
  *     F_Solar[5] = F_Diffuse[5] + F_Direct[5]
  *     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
  *     F_Solar[7] = F_Diffuse[7] + F_Direct[7]             # <<<<<<<<<<<<<<
  * 
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
  */
-  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 7, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_F_Diffuse, 7, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 581, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 7, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_F_Direct, 7, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 581, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 581, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 7, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_F_Solar, 7, __pyx_t_1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1) < 0)) __PYX_ERR(0, 581, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":582
+  /* "heatsource9/Stream/PyHeatsource.pyx":583
  *     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
  * 
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg             # <<<<<<<<<<<<<<
  * 
- * def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,
+ * def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 582, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_F_Solar);
   __Pyx_GIVEREF(__pyx_v_F_Solar);
@@ -11792,10 +11801,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":279
+  /* "heatsource9/Stream/PyHeatsource.pyx":280
  *     return Q_new, Geom
  * 
- * def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
+ * def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
  *                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
  *                  BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
  */
@@ -11815,7 +11824,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   __Pyx_XDECREF(__pyx_t_19);
   __Pyx_XDECREF(__pyx_t_20);
   __Pyx_XDECREF(__pyx_t_21);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetSolarFlux", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_solar_flux", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_FullSunAngle);
@@ -11860,18 +11869,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_8GetSolarFlux(CYT
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":584
+/* "heatsource9/Stream/PyHeatsource.pyx":585
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
  * 
- * def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
+ * def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
  *                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
  *                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes = {"GetGroundFluxes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11get_ground_fluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_11get_ground_fluxes = {"get_ground_fluxes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11get_ground_fluxes, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11get_ground_fluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_cloud = 0;
   PyObject *__pyx_v_wind = 0;
   PyObject *__pyx_v_humidity = 0;
@@ -11901,7 +11910,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes
   PyObject *__pyx_v_F_Solar7 = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("GetGroundFluxes (wrapper)", 0);
+  __Pyx_RefNannySetupContext("get_ground_fluxes (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_cloud,&__pyx_n_s_wind,&__pyx_n_s_humidity,&__pyx_n_s_T_air,&__pyx_n_s_elevation,&__pyx_n_s_phi,&__pyx_n_s_lc_height,&__pyx_n_s_ViewToSky,&__pyx_n_s_SedDepth,&__pyx_n_s_dx,&__pyx_n_s_dt,&__pyx_n_s_SedThermCond,&__pyx_n_s_SedThermDiff,&__pyx_n_s_calcalluv,&__pyx_n_s_T_alluv,&__pyx_n_s_P_w,&__pyx_n_s_W_w,&__pyx_n_s_emergent,&__pyx_n_s_penman,&__pyx_n_s_wind_a,&__pyx_n_s_wind_b,&__pyx_n_s_calcevap,&__pyx_n_s_T_prev,&__pyx_n_s_T_sed,&__pyx_n_s_Q_hyp,&__pyx_n_s_F_Solar5,&__pyx_n_s_F_Solar7,0};
     PyObject* values[27] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -11975,161 +11984,161 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_wind)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 1); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 1); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_humidity)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 2); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 2); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_air)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 3); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 3); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_elevation)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 4); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 4); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_phi)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 5); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 5); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lc_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 6); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 6); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ViewToSky)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 7); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 7); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_SedDepth)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 8); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 8); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 9); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 9); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dt)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 10); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 10); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_SedThermCond)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 11); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 11); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_SedThermDiff)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 12); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 12); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_calcalluv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 13); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 13); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
         if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_alluv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 14); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 14); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
         if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_P_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 15); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 15); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
         if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 16); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 16); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 17:
         if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_emergent)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 17); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 17); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 18:
         if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_penman)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 18); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 18); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 19:
         if (likely((values[19] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_wind_a)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 19); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 19); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 20:
         if (likely((values[20] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_wind_b)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 20); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 20); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 21:
         if (likely((values[21] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_calcevap)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 21); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 21); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 22:
         if (likely((values[22] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 22); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 22); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 23:
         if (likely((values[23] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_sed)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 23); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 23); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 24:
         if (likely((values[24] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_hyp)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 24); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 24); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 25:
         if (likely((values[25] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_F_Solar5)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 25); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 25); __PYX_ERR(0, 585, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 26:
         if (likely((values[26] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_F_Solar7)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, 26); __PYX_ERR(0, 584, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, 26); __PYX_ERR(0, 585, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "GetGroundFluxes") < 0)) __PYX_ERR(0, 584, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_ground_fluxes") < 0)) __PYX_ERR(0, 585, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 27) {
       goto __pyx_L5_argtuple_error;
@@ -12192,20 +12201,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("GetGroundFluxes", 1, 27, 27, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 584, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_ground_fluxes", 1, 27, 27, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 585, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetGroundFluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_ground_fluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes(__pyx_self, __pyx_v_cloud, __pyx_v_wind, __pyx_v_humidity, __pyx_v_T_air, __pyx_v_elevation, __pyx_v_phi, __pyx_v_lc_height, __pyx_v_ViewToSky, __pyx_v_SedDepth, __pyx_v_dx, __pyx_v_dt, __pyx_v_SedThermCond, __pyx_v_SedThermDiff, __pyx_v_calcalluv, __pyx_v_T_alluv, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_emergent, __pyx_v_penman, __pyx_v_wind_a, __pyx_v_wind_b, __pyx_v_calcevap, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_v_F_Solar5, __pyx_v_F_Solar7);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_10get_ground_fluxes(__pyx_self, __pyx_v_cloud, __pyx_v_wind, __pyx_v_humidity, __pyx_v_T_air, __pyx_v_elevation, __pyx_v_phi, __pyx_v_lc_height, __pyx_v_ViewToSky, __pyx_v_SedDepth, __pyx_v_dx, __pyx_v_dt, __pyx_v_SedThermCond, __pyx_v_SedThermDiff, __pyx_v_calcalluv, __pyx_v_T_alluv, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_emergent, __pyx_v_penman, __pyx_v_wind_a, __pyx_v_wind_b, __pyx_v_calcevap, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_v_F_Solar5, __pyx_v_F_Solar7);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_cloud, PyObject *__pyx_v_wind, PyObject *__pyx_v_humidity, PyObject *__pyx_v_T_air, PyObject *__pyx_v_elevation, CYTHON_UNUSED PyObject *__pyx_v_phi, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_SedDepth, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_SedThermCond, PyObject *__pyx_v_SedThermDiff, PyObject *__pyx_v_calcalluv, PyObject *__pyx_v_T_alluv, CYTHON_UNUSED PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_emergent, PyObject *__pyx_v_penman, PyObject *__pyx_v_wind_a, PyObject *__pyx_v_wind_b, PyObject *__pyx_v_calcevap, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_F_Solar5, PyObject *__pyx_v_F_Solar7) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10get_ground_fluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_cloud, PyObject *__pyx_v_wind, PyObject *__pyx_v_humidity, PyObject *__pyx_v_T_air, PyObject *__pyx_v_elevation, CYTHON_UNUSED PyObject *__pyx_v_phi, PyObject *__pyx_v_lc_height, PyObject *__pyx_v_ViewToSky, PyObject *__pyx_v_SedDepth, PyObject *__pyx_v_dx, PyObject *__pyx_v_dt, PyObject *__pyx_v_SedThermCond, PyObject *__pyx_v_SedThermDiff, PyObject *__pyx_v_calcalluv, PyObject *__pyx_v_T_alluv, CYTHON_UNUSED PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_emergent, PyObject *__pyx_v_penman, PyObject *__pyx_v_wind_a, PyObject *__pyx_v_wind_b, PyObject *__pyx_v_calcevap, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_F_Solar5, PyObject *__pyx_v_F_Solar7) {
   double __pyx_v_SedRhoCp;
   int __pyx_v_rhow;
   int __pyx_v_H2O_HeatCapacity;
@@ -12258,25 +12267,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   PyObject *__pyx_t_13 = NULL;
   PyObject *__pyx_t_14 = NULL;
   PyObject *__pyx_t_15 = NULL;
-  __Pyx_RefNannySetupContext("GetGroundFluxes", 0);
+  __Pyx_RefNannySetupContext("get_ground_fluxes", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":593
+  /* "heatsource9/Stream/PyHeatsource.pyx":594
  *     # SedThermDiff units of cm^2/sec
  * 
  *     cdef double SedRhoCp = SedThermCond / (SedThermDiff / 10000)             # <<<<<<<<<<<<<<
  *     # NOTE: SedRhoCp is the product of sediment density and heat capacity
  *     # since thermal conductivity is defined as
  */
-  __pyx_t_1 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedThermDiff, __pyx_int_10000, 0x2710, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 593, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedThermDiff, __pyx_int_10000, 0x2710, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 594, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_v_SedThermCond, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 593, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_v_SedThermCond, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 594, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 593, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 594, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_SedRhoCp = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":601
+  /* "heatsource9/Stream/PyHeatsource.pyx":602
  * 
  *     # Water Variable
  *     cdef int rhow = 1000  #density of water kg / m3             # <<<<<<<<<<<<<<
@@ -12285,7 +12294,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   __pyx_v_rhow = 0x3E8;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":602
+  /* "heatsource9/Stream/PyHeatsource.pyx":603
  *     # Water Variable
  *     cdef int rhow = 1000  #density of water kg / m3
  *     cdef int H2O_HeatCapacity = 4187 #J/(kg *C)             # <<<<<<<<<<<<<<
@@ -12294,49 +12303,49 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   __pyx_v_H2O_HeatCapacity = 0x105B;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":606
+  /* "heatsource9/Stream/PyHeatsource.pyx":607
  *     # Conduction flux (positive is heat into stream)
  *     # units of (W/m2)
  *     cdef double F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2)             # <<<<<<<<<<<<<<
  * 
  *     # Calculate the conduction flux between deeper alluvium
  */
-  __pyx_t_2 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_prev); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 606, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_prev); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_SedThermCond, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 606, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_SedThermCond, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedDepth, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 606, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedDepth, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 606, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 606, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 607, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_F_Cond = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":610
+  /* "heatsource9/Stream/PyHeatsource.pyx":611
  *     # Calculate the conduction flux between deeper alluvium
  *     # & substrate conditionally
  *     cdef double Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0             # <<<<<<<<<<<<<<
  * 
  *     # Hyporheic flux (negative is heat into sediment)
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_calcalluv); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 610, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_calcalluv); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 611, __pyx_L1_error)
   if (__pyx_t_5) {
-    __pyx_t_4 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_alluv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_alluv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 611, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PyNumber_Multiply(__pyx_v_SedThermCond, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_v_SedThermCond, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 611, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedDepth, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_SedDepth, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 611, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 611, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 610, __pyx_L1_error)
+    __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 611, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_3 = __pyx_t_6;
   } else {
@@ -12344,110 +12353,110 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   }
   __pyx_v_Flux_Conduction_Alluvium = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":613
+  /* "heatsource9/Stream/PyHeatsource.pyx":614
  * 
  *     # Hyporheic flux (negative is heat into sediment)
  *     cdef double F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)             # <<<<<<<<<<<<<<
  * 
  *     cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_rhow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_rhow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_Q_hyp, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_Q_hyp, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_H2O_HeatCapacity); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_H2O_HeatCapacity); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_prev); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_sed, __pyx_v_T_prev); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_W_w, __pyx_v_dx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_W_w, __pyx_v_dx); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 613, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 614, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_F_hyp = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":615
+  /* "heatsource9/Stream/PyHeatsource.pyx":616
  *     cdef double F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
  * 
  *     cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp             # <<<<<<<<<<<<<<
  *     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
  *     cdef double T_sed_new = T_sed + DT_Sed
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_Cond); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_Cond); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Subtract(__pyx_v_F_Solar7, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_v_F_Solar7, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Flux_Conduction_Alluvium); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Flux_Conduction_Alluvium); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_hyp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_hyp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 615, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 616, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_NetFlux_Sed = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":616
+  /* "heatsource9/Stream/PyHeatsource.pyx":617
  * 
  *     cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
  *     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)             # <<<<<<<<<<<<<<
  *     cdef double T_sed_new = T_sed + DT_Sed
  *     if T_sed_new > 50 or T_sed_new < 0:
  */
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_NetFlux_Sed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_NetFlux_Sed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_v_dt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_1, __pyx_v_dt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_SedRhoCp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_SedRhoCp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_SedDepth, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_SedDepth, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 617, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_DT_Sed = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":617
+  /* "heatsource9/Stream/PyHeatsource.pyx":618
  *     cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
  *     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
  *     cdef double T_sed_new = T_sed + DT_Sed             # <<<<<<<<<<<<<<
  *     if T_sed_new > 50 or T_sed_new < 0:
  *         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
  */
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_DT_Sed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 617, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_DT_Sed); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 618, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Add(__pyx_v_T_sed, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 617, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_v_T_sed, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 618, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 617, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 618, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_T_sed_new = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":618
+  /* "heatsource9/Stream/PyHeatsource.pyx":619
  *     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
  *     cdef double T_sed_new = T_sed + DT_Sed
  *     if T_sed_new > 50 or T_sed_new < 0:             # <<<<<<<<<<<<<<
@@ -12465,16 +12474,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   __pyx_L4_bool_binop_done:;
   if (unlikely(__pyx_t_5)) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":619
+    /* "heatsource9/Stream/PyHeatsource.pyx":620
  *     cdef double T_sed_new = T_sed + DT_Sed
  *     if T_sed_new > 50 or T_sed_new < 0:
  *         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)             # <<<<<<<<<<<<<<
  *         logger.error(msg)
  *         raise Exception() # TODO RM
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_Sediment_temperature_is_0_must_b, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 619, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Sediment_temperature_is_0_must_b, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PyFloat_FromDouble(__pyx_v_T_sed_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 619, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble(__pyx_v_T_sed_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_8 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -12489,22 +12498,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_4 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 619, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 620, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_msg = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":620
+    /* "heatsource9/Stream/PyHeatsource.pyx":621
  *     if T_sed_new > 50 or T_sed_new < 0:
  *         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
  *         logger.error(msg)             # <<<<<<<<<<<<<<
  *         raise Exception() # TODO RM
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_logger); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 620, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_logger); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 621, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_error); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 620, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_error); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 621, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_1 = NULL;
@@ -12519,25 +12528,25 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     }
     __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_msg);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 620, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 621, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":621
+    /* "heatsource9/Stream/PyHeatsource.pyx":622
  *         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
  *         logger.error(msg)
  *         raise Exception() # TODO RM             # <<<<<<<<<<<<<<
  * 
  *     #=====================================================
  */
-    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0]))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 621, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallNoArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0]))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 622, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_Raise(__pyx_t_4, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 621, __pyx_L1_error)
+    __PYX_ERR(0, 622, __pyx_L1_error)
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":618
+    /* "heatsource9/Stream/PyHeatsource.pyx":619
  *     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
  *     cdef double T_sed_new = T_sed + DT_Sed
  *     if T_sed_new > 50 or T_sed_new < 0:             # <<<<<<<<<<<<<<
@@ -12546,20 +12555,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":629
+  /* "heatsource9/Stream/PyHeatsource.pyx":630
  * 
  *     # mbar (Chapra p. 567)
  *     cdef double Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air))             # <<<<<<<<<<<<<<
  *     cdef double Air_Vapor = humidity * Sat_Vapor
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_exp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_exp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -12576,33 +12585,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   __pyx_t_4 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 629, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 630, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Sat_Vapor = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":630
+  /* "heatsource9/Stream/PyHeatsource.pyx":631
  *     # mbar (Chapra p. 567)
  *     cdef double Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air))
  *     cdef double Air_Vapor = humidity * Sat_Vapor             # <<<<<<<<<<<<<<
  * 
  *     # Stefan-Boltzmann constant (W/m2 K4)
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Sat_Vapor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 630, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Sat_Vapor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 631, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_v_humidity, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 630, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_v_humidity, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 631, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 630, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 631, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_Air_Vapor = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":633
+  /* "heatsource9/Stream/PyHeatsource.pyx":634
  * 
  *     # Stefan-Boltzmann constant (W/m2 K4)
  *     cdef double Sigma = 5.67e-8             # <<<<<<<<<<<<<<
@@ -12611,185 +12620,185 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   __pyx_v_Sigma = 5.67e-8;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":636
+  /* "heatsource9/Stream/PyHeatsource.pyx":637
  * 
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /             # <<<<<<<<<<<<<<
  *                            (273.2 + T_air)) ** (1 / 7)) *
  *                   (1 + 0.22 * cloud ** 2))
  */
-  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_Air_Vapor * 0.1)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 636, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_Air_Vapor * 0.1)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 637, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":637
+  /* "heatsource9/Stream/PyHeatsource.pyx":638
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
  *                            (273.2 + T_air)) ** (1 / 7)) *             # <<<<<<<<<<<<<<
  *                   (1 + 0.22 * cloud ** 2))
  *     #======================================================
  */
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_273_2, __pyx_v_T_air, 273.2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_273_2, __pyx_v_T_air, 273.2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 638, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":636
+  /* "heatsource9/Stream/PyHeatsource.pyx":637
  * 
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /             # <<<<<<<<<<<<<<
  *                            (273.2 + T_air)) ** (1 / 7)) *
  *                   (1 + 0.22 * cloud ** 2))
  */
-  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 636, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 637, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":637
+  /* "heatsource9/Stream/PyHeatsource.pyx":638
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
  *                            (273.2 + T_air)) ** (1 / 7)) *             # <<<<<<<<<<<<<<
  *                   (1 + 0.22 * cloud ** 2))
  *     #======================================================
  */
-  __pyx_t_2 = PyFloat_FromDouble((1.0 / 7.0)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((1.0 / 7.0)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 638, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Power(__pyx_t_9, __pyx_t_2, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Power(__pyx_t_9, __pyx_t_2, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":636
+  /* "heatsource9/Stream/PyHeatsource.pyx":637
  * 
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /             # <<<<<<<<<<<<<<
  *                            (273.2 + T_air)) ** (1 / 7)) *
  *                   (1 + 0.22 * cloud ** 2))
  */
-  __pyx_t_2 = PyNumber_Multiply(__pyx_float_1_72, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 636, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_float_1_72, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 637, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":638
+  /* "heatsource9/Stream/PyHeatsource.pyx":639
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
  *                            (273.2 + T_air)) ** (1 / 7)) *
  *                   (1 + 0.22 * cloud ** 2))             # <<<<<<<<<<<<<<
  *     #======================================================
  *     # Calculate the atmospheric longwave flux
  */
-  __pyx_t_4 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Power(__pyx_v_cloud, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 639, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_22, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_22, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 639, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_9, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_t_9, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 639, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":637
+  /* "heatsource9/Stream/PyHeatsource.pyx":638
  *     # Dingman p 282
  *     cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
  *                            (273.2 + T_air)) ** (1 / 7)) *             # <<<<<<<<<<<<<<
  *                   (1 + 0.22 * cloud ** 2))
  *     #======================================================
  */
-  __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 638, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 637, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 638, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_Emissivity = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":641
+  /* "heatsource9/Stream/PyHeatsource.pyx":642
  *     #======================================================
  *     # Calculate the atmospheric longwave flux
  *     cdef double F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4             # <<<<<<<<<<<<<<
  *     # Calculate the backradiation longwave flux
  *     cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
  */
-  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_96, __pyx_v_ViewToSky); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_96, __pyx_v_ViewToSky); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Emissivity); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Emissivity); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_9, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_9, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Sigma); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Sigma); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_AddObjC(__pyx_v_T_air, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AddObjC(__pyx_v_T_air, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyNumber_Power(__pyx_t_4, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Power(__pyx_t_4, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 641, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 642, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_F_LW_Atm = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":643
+  /* "heatsource9/Stream/PyHeatsource.pyx":644
  *     cdef double F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
  *     # Calculate the backradiation longwave flux
  *     cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4             # <<<<<<<<<<<<<<
  *     # Calculate the vegetation longwave flux
  *     cdef double F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
  */
-  __pyx_t_4 = PyFloat_FromDouble((-0.96 * __pyx_v_Sigma)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble((-0.96 * __pyx_v_Sigma)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 644, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyFloat_AddObjC(__pyx_v_T_prev, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddObjC(__pyx_v_T_prev, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 644, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_9 = PyNumber_Power(__pyx_t_2, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Power(__pyx_t_2, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 644, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 644, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 643, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 644, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_F_LW_Stream = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":645
+  /* "heatsource9/Stream/PyHeatsource.pyx":646
  *     cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
  *     # Calculate the vegetation longwave flux
  *     cdef double F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4             # <<<<<<<<<<<<<<
  *     # Calculate the net longwave flux
  *     cdef double F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg
  */
-  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_ViewToSky, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_v_ViewToSky, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_96, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_96, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_9, __pyx_float_0_96); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_9, __pyx_float_0_96); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Sigma); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Sigma); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyFloat_AddObjC(__pyx_v_T_air, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyFloat_AddObjC(__pyx_v_T_air, __pyx_float_273_2, 273.2, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_2 = PyNumber_Power(__pyx_t_9, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Power(__pyx_t_9, __pyx_int_4, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 645, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 646, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_F_LW_Veg = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":647
+  /* "heatsource9/Stream/PyHeatsource.pyx":648
  *     cdef double F_LW_Veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
  *     # Calculate the net longwave flux
  *     cdef double F_Longwave = F_LW_Atm + F_LW_Stream + F_LW_Veg             # <<<<<<<<<<<<<<
@@ -12798,36 +12807,36 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   __pyx_v_F_Longwave = ((__pyx_v_F_LW_Atm + __pyx_v_F_LW_Stream) + __pyx_v_F_LW_Veg);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":653
+  /* "heatsource9/Stream/PyHeatsource.pyx":654
  *     #===================================================
  *     # Atmospheric Variables
  *     cdef double Pressure = 1013 - 0.1055 * elevation #mbar             # <<<<<<<<<<<<<<
  * 
  *     # mbar (Chapra p. 567)
  */
-  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_1055, __pyx_v_elevation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 653, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_float_0_1055, __pyx_v_elevation); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 654, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1013, __pyx_t_9, 0x3F5, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 653, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_SubtractCObj(__pyx_int_1013, __pyx_t_9, 0x3F5, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 654, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 653, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 654, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Pressure = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":656
+  /* "heatsource9/Stream/PyHeatsource.pyx":657
  * 
  *     # mbar (Chapra p. 567)
  *     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))             # <<<<<<<<<<<<<<
  *     Air_Vapor = humidity * Sat_Vapor
  *     #===================================================
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_exp); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_exp); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_prev); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_prev); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_prev, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_prev, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -12844,59 +12853,59 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_8, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_1);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 656, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 657, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_Sat_Vapor = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":657
+  /* "heatsource9/Stream/PyHeatsource.pyx":658
  *     # mbar (Chapra p. 567)
  *     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
  *     Air_Vapor = humidity * Sat_Vapor             # <<<<<<<<<<<<<<
  *     #===================================================
  *     # Calculate the frictional reduction in wind velocity
  */
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Sat_Vapor); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 657, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Sat_Vapor); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 658, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_humidity, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 657, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_humidity, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 658, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 657, __pyx_L1_error)
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 658, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_Air_Vapor = __pyx_t_3;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":662
+  /* "heatsource9/Stream/PyHeatsource.pyx":663
  *     cdef int Zm
  *     cdef double Zd, Zo, Friction_Velocity
  *     if emergent and lc_height[0][0] > 0:             # <<<<<<<<<<<<<<
  * 
  *         Zm = 2
  */
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_emergent); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_emergent); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
   if (__pyx_t_7) {
   } else {
     __pyx_t_5 = __pyx_t_7;
     goto __pyx_L7_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 663, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 663, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_RichCompare(__pyx_t_9, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __pyx_t_2 = PyObject_RichCompare(__pyx_t_9, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 663, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 662, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_5 = __pyx_t_7;
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":664
+    /* "heatsource9/Stream/PyHeatsource.pyx":665
  *     if emergent and lc_height[0][0] > 0:
  * 
  *         Zm = 2             # <<<<<<<<<<<<<<
@@ -12905,63 +12914,63 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_Zm = 2;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":667
+    /* "heatsource9/Stream/PyHeatsource.pyx":668
  * 
  *         # zm > Zd + Zo
  *         if lc_height[0][0] < 2.5:             # <<<<<<<<<<<<<<
  *             Zd = 0.7 * lc_height[0][0]
  *             Zo = 0.1 * lc_height[0][0]
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 667, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 667, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyObject_RichCompare(__pyx_t_9, __pyx_float_2_5, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 667, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_t_9, __pyx_float_2_5, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 667, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 668, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":668
+      /* "heatsource9/Stream/PyHeatsource.pyx":669
  *         # zm > Zd + Zo
  *         if lc_height[0][0] < 2.5:
  *             Zd = 0.7 * lc_height[0][0]             # <<<<<<<<<<<<<<
  *             Zo = 0.1 * lc_height[0][0]
  * 
  */
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 668, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 669, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 668, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 669, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_7, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 668, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_7, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 669, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 668, __pyx_L1_error)
+      __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 669, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_Zd = __pyx_t_3;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":669
+      /* "heatsource9/Stream/PyHeatsource.pyx":670
  *         if lc_height[0][0] < 2.5:
  *             Zd = 0.7 * lc_height[0][0]
  *             Zo = 0.1 * lc_height[0][0]             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 669, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_lc_height, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 670, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 669, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 670, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 669, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Multiply(__pyx_float_0_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 670, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 669, __pyx_L1_error)
+      __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 670, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_Zo = __pyx_t_3;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":667
+      /* "heatsource9/Stream/PyHeatsource.pyx":668
  * 
  *         # zm > Zd + Zo
  *         if lc_height[0][0] < 2.5:             # <<<<<<<<<<<<<<
@@ -12971,7 +12980,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
       goto __pyx_L9;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":672
+    /* "heatsource9/Stream/PyHeatsource.pyx":673
  * 
  *         else:
  *             Zd = 1.75             # <<<<<<<<<<<<<<
@@ -12981,7 +12990,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     /*else*/ {
       __pyx_v_Zd = 1.75;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":673
+      /* "heatsource9/Stream/PyHeatsource.pyx":674
  *         else:
  *             Zd = 1.75
  *             Zo = 0.25             # <<<<<<<<<<<<<<
@@ -12992,26 +13001,26 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     }
     __pyx_L9:;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":677
+    /* "heatsource9/Stream/PyHeatsource.pyx":678
  *         # Vertical wind Decay Rate using Prandtl-von-Karman
  *         # universal velocity distribution (Dingman 2002 p. 594)
  *         Friction_Velocity = (1 / 0.4) * wind * log((Zm - Zd) / Zo)             # <<<<<<<<<<<<<<
  *     else:
  *         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
  */
-    __pyx_t_2 = PyFloat_FromDouble((1.0 / 0.4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_2 = PyFloat_FromDouble((1.0 / 0.4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_v_wind); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_Multiply(__pyx_t_2, __pyx_v_wind); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_log); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_3 = (__pyx_v_Zm - __pyx_v_Zd);
     if (unlikely(__pyx_v_Zo == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 677, __pyx_L1_error)
+      __PYX_ERR(0, 678, __pyx_L1_error)
     }
-    __pyx_t_8 = PyFloat_FromDouble((__pyx_t_3 / __pyx_v_Zo)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_8 = PyFloat_FromDouble((__pyx_t_3 / __pyx_v_Zo)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -13026,18 +13035,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_8);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 677, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 678, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_Friction_Velocity = __pyx_t_3;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":662
+    /* "heatsource9/Stream/PyHeatsource.pyx":663
  *     cdef int Zm
  *     cdef double Zd, Zo, Friction_Velocity
  *     if emergent and lc_height[0][0] > 0:             # <<<<<<<<<<<<<<
@@ -13047,7 +13056,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     goto __pyx_L6;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":679
+  /* "heatsource9/Stream/PyHeatsource.pyx":680
  *         Friction_Velocity = (1 / 0.4) * wind * log((Zm - Zd) / Zo)
  *     else:
  *         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman             # <<<<<<<<<<<<<<
@@ -13057,7 +13066,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   /*else*/ {
     __pyx_v_Zo = 0.00023;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":680
+    /* "heatsource9/Stream/PyHeatsource.pyx":681
  *     else:
  *         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
  *         Zd = 0 #Brustsaert (1982) p. 277 Dingman             # <<<<<<<<<<<<<<
@@ -13066,7 +13075,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_Zd = 0.0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":681
+    /* "heatsource9/Stream/PyHeatsource.pyx":682
  *         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
  *         Zd = 0 #Brustsaert (1982) p. 277 Dingman
  *         Zm = 2             # <<<<<<<<<<<<<<
@@ -13075,59 +13084,59 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_Zm = 2;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":682
+    /* "heatsource9/Stream/PyHeatsource.pyx":683
  *         Zd = 0 #Brustsaert (1982) p. 277 Dingman
  *         Zm = 2
  *         Friction_Velocity = wind             # <<<<<<<<<<<<<<
  *     #===================================================
  *     # Wind Function f(w)
  */
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_v_wind); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 682, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_v_wind); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 683, __pyx_L1_error)
     __pyx_v_Friction_Velocity = __pyx_t_3;
   }
   __pyx_L6:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":686
+  /* "heatsource9/Stream/PyHeatsource.pyx":687
  *     # Wind Function f(w)
  *     #m/mbar/s
  *     cdef double Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity             # <<<<<<<<<<<<<<
  *     # Wind_Function = 0.000000001505 + 0.0000000016 * Friction_Velocity #m/mbar/s
  * 
  */
-  __pyx_t_3 = __Pyx_PyObject_AsDouble(__pyx_v_wind_a); if (unlikely(__pyx_t_3 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 686, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_AsDouble(__pyx_v_wind_b); if (unlikely(__pyx_t_6 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 686, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_AsDouble(__pyx_v_wind_a); if (unlikely(__pyx_t_3 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 687, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_AsDouble(__pyx_v_wind_b); if (unlikely(__pyx_t_6 == ((double)((double)-1)) && PyErr_Occurred())) __PYX_ERR(0, 687, __pyx_L1_error)
   __pyx_v_Wind_Function = (__pyx_t_3 + (__pyx_t_6 * __pyx_v_Friction_Velocity));
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":691
+  /* "heatsource9/Stream/PyHeatsource.pyx":692
  *     #===================================================
  *     # Latent Heat of Vaporization
  *     cdef double LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg             # <<<<<<<<<<<<<<
  *     #===================================================
  *     # Use Jobson Wind Function
  */
-  __pyx_t_1 = PyNumber_Multiply(__pyx_float_1_83, __pyx_v_T_prev); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_float_1_83, __pyx_v_T_prev); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 692, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_2501_4, __pyx_t_1, 2501.4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AddCObj(__pyx_float_2501_4, __pyx_t_1, 2501.4, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 692, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Multiply(__pyx_int_1000, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_int_1000, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 692, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 692, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_LHV = __pyx_t_6;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":695
+  /* "heatsource9/Stream/PyHeatsource.pyx":696
  *     # Use Jobson Wind Function
  *     cdef double P, Gamma, Delta, NetRadiation, Ea, Evap_Rate, F_Evap, Bowen
  *     if penman:             # <<<<<<<<<<<<<<
  *         #Calculate Evaporation FLUX
  *         P = 998.2 # kg/m3
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_penman); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_penman); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 696, __pyx_L1_error)
   if (__pyx_t_5) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":697
+    /* "heatsource9/Stream/PyHeatsource.pyx":698
  *     if penman:
  *         #Calculate Evaporation FLUX
  *         P = 998.2 # kg/m3             # <<<<<<<<<<<<<<
@@ -13136,7 +13145,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_P = 998.2;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":698
+    /* "heatsource9/Stream/PyHeatsource.pyx":699
  *         #Calculate Evaporation FLUX
  *         P = 998.2 # kg/m3
  *         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/[inserted by cython to avoid comment start]*C  Cuenca p 141             # <<<<<<<<<<<<<<
@@ -13147,24 +13156,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_3 = (__pyx_v_LHV * 0.62198);
     if (unlikely(__pyx_t_3 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 698, __pyx_L1_error)
+      __PYX_ERR(0, 699, __pyx_L1_error)
     }
     __pyx_v_Gamma = (__pyx_t_6 / __pyx_t_3);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":699
+    /* "heatsource9/Stream/PyHeatsource.pyx":700
  *         P = 998.2 # kg/m3
  *         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/[inserted by cython to avoid comment start]*C  Cuenca p 141
  *         Delta = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -             # <<<<<<<<<<<<<<
  *                  6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
  * 
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_exp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_exp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_9 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_air); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_Multiply(__pyx_float_17_27, __pyx_v_T_air); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_9, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -13181,33 +13190,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 699, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":700
+    /* "heatsource9/Stream/PyHeatsource.pyx":701
  *         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/[inserted by cython to avoid comment start]*C  Cuenca p 141
  *         Delta = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
  *                  6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))             # <<<<<<<<<<<<<<
  * 
  *         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_exp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_8 = __Pyx_PyInt_SubtractObjC(__pyx_v_T_air, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_SubtractObjC(__pyx_v_T_air, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = PyNumber_Multiply(__pyx_float_17_27, __pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_Multiply(__pyx_float_17_27, __pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyFloat_AddCObj(__pyx_float_237_3, __pyx_v_T_air, 237.3, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = __Pyx_PyInt_SubtractObjC(__pyx_t_8, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_SubtractObjC(__pyx_t_8, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -13224,45 +13233,45 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_1 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_10, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8);
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 700, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Multiply(__pyx_float_6_1275, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 701, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":699
+    /* "heatsource9/Stream/PyHeatsource.pyx":700
  *         P = 998.2 # kg/m3
  *         Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/[inserted by cython to avoid comment start]*C  Cuenca p 141
  *         Delta = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -             # <<<<<<<<<<<<<<
  *                  6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
  * 
  */
-    __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 700, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_Delta = __pyx_t_3;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":702
+    /* "heatsource9/Stream/PyHeatsource.pyx":703
  *                  6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
  * 
  *         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s             # <<<<<<<<<<<<<<
  * 
  *         if NetRadiation < 0:
  */
-    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_F_Longwave); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 702, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(__pyx_v_F_Longwave); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 703, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = PyNumber_Add(__pyx_v_F_Solar5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 702, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_v_F_Solar5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 703, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 702, __pyx_L1_error)
+    __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 703, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_NetRadiation = __pyx_t_3;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":704
+    /* "heatsource9/Stream/PyHeatsource.pyx":705
  *         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
  * 
  *         if NetRadiation < 0:             # <<<<<<<<<<<<<<
@@ -13272,7 +13281,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_5 = ((__pyx_v_NetRadiation < 0.0) != 0);
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":705
+      /* "heatsource9/Stream/PyHeatsource.pyx":706
  * 
  *         if NetRadiation < 0:
  *             NetRadiation = 0 #J/m2/s             # <<<<<<<<<<<<<<
@@ -13281,7 +13290,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
       __pyx_v_NetRadiation = 0.0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":704
+      /* "heatsource9/Stream/PyHeatsource.pyx":705
  *         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
  * 
  *         if NetRadiation < 0:             # <<<<<<<<<<<<<<
@@ -13290,7 +13299,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":706
+    /* "heatsource9/Stream/PyHeatsource.pyx":707
  *         if NetRadiation < 0:
  *             NetRadiation = 0 #J/m2/s
  *         Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s             # <<<<<<<<<<<<<<
@@ -13299,7 +13308,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_Ea = (__pyx_v_Wind_Function * (__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor));
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":707
+    /* "heatsource9/Stream/PyHeatsource.pyx":708
  *             NetRadiation = 0 #J/m2/s
  *         Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
  *         Evap_Rate = (((NetRadiation * Delta / (P * LHV)) + Ea * Gamma) /             # <<<<<<<<<<<<<<
@@ -13310,11 +13319,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_6 = (__pyx_v_P * __pyx_v_LHV);
     if (unlikely(__pyx_t_6 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 707, __pyx_L1_error)
+      __PYX_ERR(0, 708, __pyx_L1_error)
     }
     __pyx_t_11 = ((__pyx_t_3 / __pyx_t_6) + (__pyx_v_Ea * __pyx_v_Gamma));
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":708
+    /* "heatsource9/Stream/PyHeatsource.pyx":709
  *         Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
  *         Evap_Rate = (((NetRadiation * Delta / (P * LHV)) + Ea * Gamma) /
  *                      (Delta + Gamma))             # <<<<<<<<<<<<<<
@@ -13323,7 +13332,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_t_6 = (__pyx_v_Delta + __pyx_v_Gamma);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":707
+    /* "heatsource9/Stream/PyHeatsource.pyx":708
  *             NetRadiation = 0 #J/m2/s
  *         Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
  *         Evap_Rate = (((NetRadiation * Delta / (P * LHV)) + Ea * Gamma) /             # <<<<<<<<<<<<<<
@@ -13332,11 +13341,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     if (unlikely(__pyx_t_6 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 707, __pyx_L1_error)
+      __PYX_ERR(0, 708, __pyx_L1_error)
     }
     __pyx_v_Evap_Rate = (__pyx_t_11 / __pyx_t_6);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":710
+    /* "heatsource9/Stream/PyHeatsource.pyx":711
  *                      (Delta + Gamma))
  * 
  *         F_Evap = -Evap_Rate * LHV * P #W/m2             # <<<<<<<<<<<<<<
@@ -13345,7 +13354,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_F_Evap = (((-__pyx_v_Evap_Rate) * __pyx_v_LHV) * __pyx_v_P);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":712
+    /* "heatsource9/Stream/PyHeatsource.pyx":713
  *         F_Evap = -Evap_Rate * LHV * P #W/m2
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:             # <<<<<<<<<<<<<<
@@ -13355,32 +13364,32 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_5 = (((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor) != 0.0) != 0);
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":713
+      /* "heatsource9/Stream/PyHeatsource.pyx":714
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:
  *             Bowen = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)             # <<<<<<<<<<<<<<
  *         else:
  *             Bowen = 1
  */
-      __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Gamma); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Gamma); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_prev, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_prev, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyFloat_FromDouble((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_1 = PyFloat_FromDouble((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 714, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_Bowen = __pyx_t_6;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":712
+      /* "heatsource9/Stream/PyHeatsource.pyx":713
  *         F_Evap = -Evap_Rate * LHV * P #W/m2
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:             # <<<<<<<<<<<<<<
@@ -13390,7 +13399,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
       goto __pyx_L12;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":715
+    /* "heatsource9/Stream/PyHeatsource.pyx":716
  *             Bowen = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)
  *         else:
  *             Bowen = 1             # <<<<<<<<<<<<<<
@@ -13402,7 +13411,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     }
     __pyx_L12:;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":695
+    /* "heatsource9/Stream/PyHeatsource.pyx":696
  *     # Use Jobson Wind Function
  *     cdef double P, Gamma, Delta, NetRadiation, Ea, Evap_Rate, F_Evap, Bowen
  *     if penman:             # <<<<<<<<<<<<<<
@@ -13412,7 +13421,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     goto __pyx_L10;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":719
+  /* "heatsource9/Stream/PyHeatsource.pyx":720
  *         #===================================================
  *         # Calculate Evaporation FLUX
  *         Evap_Rate = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s             # <<<<<<<<<<<<<<
@@ -13422,7 +13431,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   /*else*/ {
     __pyx_v_Evap_Rate = (__pyx_v_Wind_Function * (__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor));
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":720
+    /* "heatsource9/Stream/PyHeatsource.pyx":721
  *         # Calculate Evaporation FLUX
  *         Evap_Rate = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
  *         P = 998.2 # kg/m3             # <<<<<<<<<<<<<<
@@ -13431,7 +13440,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_P = 998.2;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":721
+    /* "heatsource9/Stream/PyHeatsource.pyx":722
  *         Evap_Rate = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
  *         P = 998.2 # kg/m3
  *         F_Evap = -Evap_Rate * LHV * P #W/m2             # <<<<<<<<<<<<<<
@@ -13440,7 +13449,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
     __pyx_v_F_Evap = (((-__pyx_v_Evap_Rate) * __pyx_v_LHV) * __pyx_v_P);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":723
+    /* "heatsource9/Stream/PyHeatsource.pyx":724
  *         F_Evap = -Evap_Rate * LHV * P #W/m2
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:             # <<<<<<<<<<<<<<
@@ -13450,48 +13459,48 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
     __pyx_t_5 = (((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor) != 0.0) != 0);
     if (__pyx_t_5) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":724
+      /* "heatsource9/Stream/PyHeatsource.pyx":725
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:
  *             Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_air) /             # <<<<<<<<<<<<<<
  *                      (Sat_Vapor - Air_Vapor))
  *         else:
  */
-      __pyx_t_4 = PyFloat_FromDouble((0.61 * (__pyx_v_Pressure / 1000.0))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 724, __pyx_L1_error)
+      __pyx_t_4 = PyFloat_FromDouble((0.61 * (__pyx_v_Pressure / 1000.0))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_prev, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 724, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Subtract(__pyx_v_T_prev, __pyx_v_T_air); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 724, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Multiply(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":725
+      /* "heatsource9/Stream/PyHeatsource.pyx":726
  *         if (Sat_Vapor - Air_Vapor) != 0:
  *             Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_air) /
  *                      (Sat_Vapor - Air_Vapor))             # <<<<<<<<<<<<<<
  *         else:
  *             Bowen = 1
  */
-      __pyx_t_1 = PyFloat_FromDouble((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 725, __pyx_L1_error)
+      __pyx_t_1 = PyFloat_FromDouble((__pyx_v_Sat_Vapor - __pyx_v_Air_Vapor)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 726, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":724
+      /* "heatsource9/Stream/PyHeatsource.pyx":725
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:
  *             Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_air) /             # <<<<<<<<<<<<<<
  *                      (Sat_Vapor - Air_Vapor))
  *         else:
  */
-      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 724, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 724, __pyx_L1_error)
+      __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 725, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_Bowen = __pyx_t_6;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":723
+      /* "heatsource9/Stream/PyHeatsource.pyx":724
  *         F_Evap = -Evap_Rate * LHV * P #W/m2
  *         # Calculate Convection FLUX
  *         if (Sat_Vapor - Air_Vapor) != 0:             # <<<<<<<<<<<<<<
@@ -13501,7 +13510,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
       goto __pyx_L13;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":727
+    /* "heatsource9/Stream/PyHeatsource.pyx":728
  *                      (Sat_Vapor - Air_Vapor))
  *         else:
  *             Bowen = 1             # <<<<<<<<<<<<<<
@@ -13515,7 +13524,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   }
   __pyx_L10:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":729
+  /* "heatsource9/Stream/PyHeatsource.pyx":730
  *             Bowen = 1
  * 
  *     cdef double F_Conv = F_Evap * Bowen             # <<<<<<<<<<<<<<
@@ -13524,21 +13533,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
  */
   __pyx_v_F_Conv = (__pyx_v_F_Evap * __pyx_v_Bowen);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":730
+  /* "heatsource9/Stream/PyHeatsource.pyx":731
  * 
  *     cdef double F_Conv = F_Evap * Bowen
  *     cdef double E = Evap_Rate*W_w if calcevap else 0             # <<<<<<<<<<<<<<
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
  * 
  */
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_calcevap); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 730, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_calcevap); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 731, __pyx_L1_error)
   if (__pyx_t_5) {
-    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Evap_Rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 730, __pyx_L1_error)
+    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_Evap_Rate); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_W_w); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 730, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_Multiply(__pyx_t_4, __pyx_v_W_w); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 730, __pyx_L1_error)
+    __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_6 = __pyx_t_11;
   } else {
@@ -13546,33 +13555,33 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   }
   __pyx_v_E = __pyx_t_6;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":731
+  /* "heatsource9/Stream/PyHeatsource.pyx":732
  *     cdef double F_Conv = F_Evap * Bowen
  *     cdef double E = Evap_Rate*W_w if calcevap else 0
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E             # <<<<<<<<<<<<<<
  * 
- * def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
+ * def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_F_Cond); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_F_Cond); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_T_sed_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_T_sed_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_Longwave); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_F_Longwave); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_F_LW_Atm); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_F_LW_Atm); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_F_LW_Stream); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_F_LW_Stream); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_F_LW_Veg); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_F_LW_Veg); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_12 = PyFloat_FromDouble(__pyx_v_F_Evap); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_12 = PyFloat_FromDouble(__pyx_v_F_Evap); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = PyFloat_FromDouble(__pyx_v_F_Conv); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_13 = PyFloat_FromDouble(__pyx_v_F_Conv); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_E); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_E); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
-  __pyx_t_15 = PyTuple_New(9); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 731, __pyx_L1_error)
+  __pyx_t_15 = PyTuple_New(9); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 732, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_1);
@@ -13605,10 +13614,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   __pyx_t_15 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":584
+  /* "heatsource9/Stream/PyHeatsource.pyx":585
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
  * 
- * def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
+ * def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
  *                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
  *                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
  */
@@ -13625,7 +13634,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.GetGroundFluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.get_ground_fluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_msg);
@@ -13634,18 +13643,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_10GetGroundFluxes
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":733
+/* "heatsource9/Stream/PyHeatsource.pyx":734
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
  * 
- * def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
+ * def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
  *                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
  *                    T_accr, MixTDelta_dn):
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick = {"CalcMacCormick", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13calc_maccormick(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_13calc_maccormick = {"calc_maccormick", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13calc_maccormick, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13calc_maccormick(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_dt = 0;
   PyObject *__pyx_v_dx = 0;
   PyObject *__pyx_v_U = 0;
@@ -13667,7 +13676,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick(
   PyObject *__pyx_v_MixTDelta_dn = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcMacCormick (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_maccormick (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_dt,&__pyx_n_s_dx,&__pyx_n_s_U,&__pyx_n_s_T_sed,&__pyx_n_s_T_prev,&__pyx_n_s_Q_hyp,&__pyx_n_s_Q_tup,&__pyx_n_s_T_tup,&__pyx_n_s_Q_up,&__pyx_n_s_Delta_T,&__pyx_n_s_Disp,&__pyx_n_s_S1,&__pyx_n_s_S1_value,&__pyx_n_s_T0,&__pyx_n_s_T1,&__pyx_n_s_T2,&__pyx_n_s_Q_accr,&__pyx_n_s_T_accr,&__pyx_n_s_MixTDelta_dn,0};
     PyObject* values[19] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -13725,113 +13734,113 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick(
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 1); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 1); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_U)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 2); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 2); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_sed)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 3); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 3); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 4); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 4); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_hyp)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 5); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 5); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_tup)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 6); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 6); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_tup)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 7); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 7); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_up)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 8); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 8); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Delta_T)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 9); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 9); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Disp)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 10); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 10); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_S1)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 11); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 11); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_S1_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 12); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 12); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T0)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 13); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 13); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
         if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T1)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 14); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 14); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
         if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T2)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 15); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 15); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
         if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_accr)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 16); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 16); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 17:
         if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_accr)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 17); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 17); __PYX_ERR(0, 734, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 18:
         if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_MixTDelta_dn)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, 18); __PYX_ERR(0, 733, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, 18); __PYX_ERR(0, 734, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcMacCormick") < 0)) __PYX_ERR(0, 733, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_maccormick") < 0)) __PYX_ERR(0, 734, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 19) {
       goto __pyx_L5_argtuple_error;
@@ -13878,20 +13887,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick(
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcMacCormick", 1, 19, 19, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 733, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_maccormick", 1, 19, 19, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 734, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcMacCormick", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_maccormick", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(__pyx_self, __pyx_v_dt, __pyx_v_dx, __pyx_v_U, __pyx_v_T_sed, __pyx_v_T_prev, __pyx_v_Q_hyp, __pyx_v_Q_tup, __pyx_v_T_tup, __pyx_v_Q_up, __pyx_v_Delta_T, __pyx_v_Disp, __pyx_v_S1, __pyx_v_S1_value, __pyx_v_T0, __pyx_v_T1, __pyx_v_T2, __pyx_v_Q_accr, __pyx_v_T_accr, __pyx_v_MixTDelta_dn);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_12calc_maccormick(__pyx_self, __pyx_v_dt, __pyx_v_dx, __pyx_v_U, __pyx_v_T_sed, __pyx_v_T_prev, __pyx_v_Q_hyp, __pyx_v_Q_tup, __pyx_v_T_tup, __pyx_v_Q_up, __pyx_v_Delta_T, __pyx_v_Disp, __pyx_v_S1, __pyx_v_S1_value, __pyx_v_T0, __pyx_v_T1, __pyx_v_T2, __pyx_v_Q_accr, __pyx_v_T_accr, __pyx_v_MixTDelta_dn);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dt, PyObject *__pyx_v_dx, PyObject *__pyx_v_U, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_Q_tup, PyObject *__pyx_v_T_tup, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Delta_T, PyObject *__pyx_v_Disp, PyObject *__pyx_v_S1, PyObject *__pyx_v_S1_value, PyObject *__pyx_v_T0, PyObject *__pyx_v_T1, PyObject *__pyx_v_T2, PyObject *__pyx_v_Q_accr, PyObject *__pyx_v_T_accr, PyObject *__pyx_v_MixTDelta_dn) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12calc_maccormick(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dt, PyObject *__pyx_v_dx, PyObject *__pyx_v_U, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_Q_tup, PyObject *__pyx_v_T_tup, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_Delta_T, PyObject *__pyx_v_Disp, PyObject *__pyx_v_S1, PyObject *__pyx_v_S1_value, PyObject *__pyx_v_T0, PyObject *__pyx_v_T1, PyObject *__pyx_v_T2, PyObject *__pyx_v_Q_accr, PyObject *__pyx_v_T_accr, PyObject *__pyx_v_MixTDelta_dn) {
   double __pyx_v_Q_in;
   double __pyx_v_T_in;
   double __pyx_v_T_up;
@@ -13899,7 +13908,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
   double __pyx_v_T_mix;
   double __pyx_v_Qitem;
   double __pyx_v_Titem;
-  Py_ssize_t __pyx_v_i;
+  PyObject *__pyx_v_i = NULL;
   PyObject *__pyx_v_msg = NULL;
   double __pyx_v_Dummy1;
   double __pyx_v_Dummy2;
@@ -13908,31 +13917,30 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
   Py_ssize_t __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  int __pyx_t_7;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *(*__pyx_t_7)(PyObject *);
   int __pyx_t_8;
-  PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  __Pyx_RefNannySetupContext("CalcMacCormick", 0);
+  int __pyx_t_9;
+  int __pyx_t_10;
+  __Pyx_RefNannySetupContext("calc_maccormick", 0);
   __Pyx_INCREF(__pyx_v_T0);
   __Pyx_INCREF(__pyx_v_T2);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":736
- *                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
+  /* "heatsource9/Stream/PyHeatsource.pyx":738
  *                    T_accr, MixTDelta_dn):
+ * 
  *     cdef double Q_in = 0.0             # <<<<<<<<<<<<<<
  *     cdef double T_in = 0.0
  *     cdef double T_up = T0
  */
   __pyx_v_Q_in = 0.0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":737
- *                    T_accr, MixTDelta_dn):
+  /* "heatsource9/Stream/PyHeatsource.pyx":739
+ * 
  *     cdef double Q_in = 0.0
  *     cdef double T_in = 0.0             # <<<<<<<<<<<<<<
  *     cdef double T_up = T0
@@ -13940,17 +13948,17 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
   __pyx_v_T_in = 0.0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":738
+  /* "heatsource9/Stream/PyHeatsource.pyx":740
  *     cdef double Q_in = 0.0
  *     cdef double T_in = 0.0
  *     cdef double T_up = T0             # <<<<<<<<<<<<<<
  *     cdef double numerator = 0.0
  *     cdef double T_mix
  */
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_T0); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_T0); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 740, __pyx_L1_error)
   __pyx_v_T_up = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":739
+  /* "heatsource9/Stream/PyHeatsource.pyx":741
  *     cdef double T_in = 0.0
  *     cdef double T_up = T0
  *     cdef double numerator = 0.0             # <<<<<<<<<<<<<<
@@ -13959,129 +13967,188 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
   __pyx_v_numerator = 0.0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":742
+  /* "heatsource9/Stream/PyHeatsource.pyx":744
  *     cdef double T_mix
  *     cdef double Qitem, Titem
- *     for i in xrange(len(Q_tup)):             # <<<<<<<<<<<<<<
+ *     for i in range(len(Q_tup)):             # <<<<<<<<<<<<<<
  *         Qitem = Q_tup[i]
  *         Titem = T_tup[i]
  */
-  __pyx_t_2 = PyObject_Length(__pyx_v_Q_tup); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 742, __pyx_L1_error)
-  __pyx_t_3 = __pyx_t_2;
-  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_range); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 744, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = PyObject_Length(__pyx_v_Q_tup); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 744, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 744, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_6)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 744, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
+    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_4 = 0;
+    __pyx_t_7 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 744, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_7 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 744, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_7)) {
+      if (likely(PyList_CheckExact(__pyx_t_3))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 744, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 744, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 744, __pyx_L1_error)
+        #else
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 744, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        #endif
+      }
+    } else {
+      __pyx_t_2 = __pyx_t_7(__pyx_t_3);
+      if (unlikely(!__pyx_t_2)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 744, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
+    __pyx_t_2 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":743
+    /* "heatsource9/Stream/PyHeatsource.pyx":745
  *     cdef double Qitem, Titem
- *     for i in xrange(len(Q_tup)):
+ *     for i in range(len(Q_tup)):
  *         Qitem = Q_tup[i]             # <<<<<<<<<<<<<<
  *         Titem = T_tup[i]
  *         # make sure there's a value for discharge. Temp can be
  */
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_Q_tup, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 743, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 743, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_Q_tup, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 745, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 745, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_Qitem = __pyx_t_1;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":744
- *     for i in xrange(len(Q_tup)):
+    /* "heatsource9/Stream/PyHeatsource.pyx":746
+ *     for i in range(len(Q_tup)):
  *         Qitem = Q_tup[i]
  *         Titem = T_tup[i]             # <<<<<<<<<<<<<<
  *         # make sure there's a value for discharge. Temp can be
  *         # blank if discharge is negative (withdrawal)
  */
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_T_tup, __pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 744, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 744, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_T_tup, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 746, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 746, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_Titem = __pyx_t_1;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":747
+    /* "heatsource9/Stream/PyHeatsource.pyx":749
  *         # make sure there's a value for discharge. Temp can be
  *         # blank if discharge is negative (withdrawal)
  *         if Qitem is None or (Qitem > 0 and Titem is None):             # <<<<<<<<<<<<<<
  *             msg="Problem with null value in tributary discharge or temperature"
  *             logger.error(msg)
  */
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Qitem); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 747, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = (__pyx_t_5 == Py_None);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_8 = (__pyx_t_7 != 0);
-    if (!__pyx_t_8) {
+    __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Qitem); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 749, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_9 = (__pyx_t_2 == Py_None);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_10 = (__pyx_t_9 != 0);
+    if (!__pyx_t_10) {
     } else {
-      __pyx_t_6 = __pyx_t_8;
+      __pyx_t_8 = __pyx_t_10;
       goto __pyx_L6_bool_binop_done;
     }
-    __pyx_t_8 = ((__pyx_v_Qitem > 0.0) != 0);
-    if (__pyx_t_8) {
+    __pyx_t_10 = ((__pyx_v_Qitem > 0.0) != 0);
+    if (__pyx_t_10) {
     } else {
-      __pyx_t_6 = __pyx_t_8;
+      __pyx_t_8 = __pyx_t_10;
       goto __pyx_L6_bool_binop_done;
     }
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Titem); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 747, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_8 = (__pyx_t_5 == Py_None);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_7 = (__pyx_t_8 != 0);
-    __pyx_t_6 = __pyx_t_7;
+    __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Titem); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 749, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_10 = (__pyx_t_2 == Py_None);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_9 = (__pyx_t_10 != 0);
+    __pyx_t_8 = __pyx_t_9;
     __pyx_L6_bool_binop_done:;
-    if (unlikely(__pyx_t_6)) {
+    if (unlikely(__pyx_t_8)) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":748
+      /* "heatsource9/Stream/PyHeatsource.pyx":750
  *         # blank if discharge is negative (withdrawal)
  *         if Qitem is None or (Qitem > 0 and Titem is None):
  *             msg="Problem with null value in tributary discharge or temperature"             # <<<<<<<<<<<<<<
  *             logger.error(msg)
  *             raise Exception(msg)
  */
-      __Pyx_INCREF(__pyx_kp_s_Problem_with_null_value_in_tribu);
-      __pyx_v_msg = __pyx_kp_s_Problem_with_null_value_in_tribu;
+      __Pyx_INCREF(__pyx_kp_u_Problem_with_null_value_in_tribu);
+      __pyx_v_msg = __pyx_kp_u_Problem_with_null_value_in_tribu;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":749
+      /* "heatsource9/Stream/PyHeatsource.pyx":751
  *         if Qitem is None or (Qitem > 0 and Titem is None):
  *             msg="Problem with null value in tributary discharge or temperature"
  *             logger.error(msg)             # <<<<<<<<<<<<<<
  *             raise Exception(msg)
  *         if Qitem > 0:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_logger); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 749, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_error); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 749, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_10))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_10);
-        if (likely(__pyx_t_9)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
-          __Pyx_INCREF(__pyx_t_9);
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_logger); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 751, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_error); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 751, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
+        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_6);
+        if (likely(__pyx_t_5)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+          __Pyx_INCREF(__pyx_t_5);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_10, function);
+          __Pyx_DECREF_SET(__pyx_t_6, function);
         }
       }
-      __pyx_t_5 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_9, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_msg);
-      __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 749, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_5, __pyx_v_msg) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_msg);
+      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 751, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":750
+      /* "heatsource9/Stream/PyHeatsource.pyx":752
  *             msg="Problem with null value in tributary discharge or temperature"
  *             logger.error(msg)
  *             raise Exception(msg)             # <<<<<<<<<<<<<<
  *         if Qitem > 0:
  *             Q_in += Qitem
  */
-      __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_v_msg); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 750, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_Raise(__pyx_t_5, 0, 0, 0);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __PYX_ERR(0, 750, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_v_msg); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 752, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __PYX_ERR(0, 752, __pyx_L1_error)
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":747
+      /* "heatsource9/Stream/PyHeatsource.pyx":749
  *         # make sure there's a value for discharge. Temp can be
  *         # blank if discharge is negative (withdrawal)
  *         if Qitem is None or (Qitem > 0 and Titem is None):             # <<<<<<<<<<<<<<
@@ -14090,17 +14157,17 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":751
+    /* "heatsource9/Stream/PyHeatsource.pyx":753
  *             logger.error(msg)
  *             raise Exception(msg)
  *         if Qitem > 0:             # <<<<<<<<<<<<<<
  *             Q_in += Qitem
  *             numerator += Qitem*Titem
  */
-    __pyx_t_6 = ((__pyx_v_Qitem > 0.0) != 0);
-    if (__pyx_t_6) {
+    __pyx_t_8 = ((__pyx_v_Qitem > 0.0) != 0);
+    if (__pyx_t_8) {
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":752
+      /* "heatsource9/Stream/PyHeatsource.pyx":754
  *             raise Exception(msg)
  *         if Qitem > 0:
  *             Q_in += Qitem             # <<<<<<<<<<<<<<
@@ -14109,7 +14176,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
       __pyx_v_Q_in = (__pyx_v_Q_in + __pyx_v_Qitem);
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":753
+      /* "heatsource9/Stream/PyHeatsource.pyx":755
  *         if Qitem > 0:
  *             Q_in += Qitem
  *             numerator += Qitem*Titem             # <<<<<<<<<<<<<<
@@ -14118,7 +14185,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
       __pyx_v_numerator = (__pyx_v_numerator + (__pyx_v_Qitem * __pyx_v_Titem));
 
-      /* "heatsource9/Stream/PyHeatsource.pyx":751
+      /* "heatsource9/Stream/PyHeatsource.pyx":753
  *             logger.error(msg)
  *             raise Exception(msg)
  *         if Qitem > 0:             # <<<<<<<<<<<<<<
@@ -14126,198 +14193,207 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  *             numerator += Qitem*Titem
  */
     }
-  }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":754
+    /* "heatsource9/Stream/PyHeatsource.pyx":744
+ *     cdef double T_mix
+ *     cdef double Qitem, Titem
+ *     for i in range(len(Q_tup)):             # <<<<<<<<<<<<<<
+ *         Qitem = Q_tup[i]
+ *         Titem = T_tup[i]
+ */
+  }
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":756
  *             Q_in += Qitem
  *             numerator += Qitem*Titem
  *     if numerator and (Q_in > 0):             # <<<<<<<<<<<<<<
  *         T_in = numerator/Q_in
- *     # This is basically MixItUp from the VB code
+ *     # This is basically mix_it_up from the VB code
  */
-  __pyx_t_7 = (__pyx_v_numerator != 0);
-  if (__pyx_t_7) {
+  __pyx_t_9 = (__pyx_v_numerator != 0);
+  if (__pyx_t_9) {
   } else {
-    __pyx_t_6 = __pyx_t_7;
+    __pyx_t_8 = __pyx_t_9;
     goto __pyx_L11_bool_binop_done;
   }
-  __pyx_t_7 = ((__pyx_v_Q_in > 0.0) != 0);
-  __pyx_t_6 = __pyx_t_7;
+  __pyx_t_9 = ((__pyx_v_Q_in > 0.0) != 0);
+  __pyx_t_8 = __pyx_t_9;
   __pyx_L11_bool_binop_done:;
-  if (__pyx_t_6) {
+  if (__pyx_t_8) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":755
+    /* "heatsource9/Stream/PyHeatsource.pyx":757
  *             numerator += Qitem*Titem
  *     if numerator and (Q_in > 0):
  *         T_in = numerator/Q_in             # <<<<<<<<<<<<<<
- *     # This is basically MixItUp from the VB code
+ *     # This is basically mix_it_up from the VB code
  *     T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
  */
     if (unlikely(__pyx_v_Q_in == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 755, __pyx_L1_error)
+      __PYX_ERR(0, 757, __pyx_L1_error)
     }
     __pyx_v_T_in = (__pyx_v_numerator / __pyx_v_Q_in);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":754
+    /* "heatsource9/Stream/PyHeatsource.pyx":756
  *             Q_in += Qitem
  *             numerator += Qitem*Titem
  *     if numerator and (Q_in > 0):             # <<<<<<<<<<<<<<
  *         T_in = numerator/Q_in
- *     # This is basically MixItUp from the VB code
+ *     # This is basically mix_it_up from the VB code
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":757
+  /* "heatsource9/Stream/PyHeatsource.pyx":759
  *         T_in = numerator/Q_in
- *     # This is basically MixItUp from the VB code
+ *     # This is basically mix_it_up from the VB code
  *     T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)             # <<<<<<<<<<<<<<
  * 
  *     # Calculate temperature change from mass transfer from hyporheic zone
  */
-  __pyx_t_5 = PyFloat_FromDouble((__pyx_v_Q_in * __pyx_v_T_in)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_T_up); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyNumber_Multiply(__pyx_t_10, __pyx_v_Q_up); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Add(__pyx_t_5, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_10, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 757, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_3 = PyFloat_FromDouble((__pyx_v_Q_in * __pyx_v_T_in)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_T_up); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = PyNumber_Multiply(__pyx_t_2, __pyx_v_Q_up); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 759, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_T_mix = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":760
+  /* "heatsource9/Stream/PyHeatsource.pyx":762
  * 
  *     # Calculate temperature change from mass transfer from hyporheic zone
  *     T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_in))) /             # <<<<<<<<<<<<<<
  *              (Q_hyp + Q_up + Q_in))
  * 
  */
-  __pyx_t_9 = PyNumber_Multiply(__pyx_v_T_sed, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 760, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_T_sed, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 762, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Multiply(__pyx_t_5, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyNumber_Add(__pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":761
+  /* "heatsource9/Stream/PyHeatsource.pyx":763
  *     # Calculate temperature change from mass transfer from hyporheic zone
  *     T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_in))) /
  *              (Q_hyp + Q_up + Q_in))             # <<<<<<<<<<<<<<
  * 
  *     # Calculate temperature change from accretion inflows
  */
-  __pyx_t_10 = PyNumber_Add(__pyx_v_Q_hyp, __pyx_v_Q_up); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 761, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 761, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyNumber_Add(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 761, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = PyNumber_Add(__pyx_v_Q_hyp, __pyx_v_Q_up); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 763, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 763, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 763, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":760
+  /* "heatsource9/Stream/PyHeatsource.pyx":762
  * 
  *     # Calculate temperature change from mass transfer from hyporheic zone
  *     T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_in))) /             # <<<<<<<<<<<<<<
  *              (Q_hyp + Q_up + Q_in))
  * 
  */
-  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_11, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 760, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 762, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_T_mix = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":769
+  /* "heatsource9/Stream/PyHeatsource.pyx":771
  *     # from the total discharge (Q_in) somewhere else, which it is not.
  *     # We should check this eventually.
  *     T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_in + Q_hyp))) /             # <<<<<<<<<<<<<<
  *              (Q_accr + Q_up + Q_in + Q_hyp))
  * 
  */
-  __pyx_t_9 = PyNumber_Multiply(__pyx_v_Q_accr, __pyx_v_T_accr); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 769, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Multiply(__pyx_v_Q_accr, __pyx_v_T_accr); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 771, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_10 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyNumber_Add(__pyx_t_10, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Multiply(__pyx_t_5, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_2 = PyNumber_Add(__pyx_v_Q_up, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyNumber_Add(__pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":770
+  /* "heatsource9/Stream/PyHeatsource.pyx":772
  *     # We should check this eventually.
  *     T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_in + Q_hyp))) /
  *              (Q_accr + Q_up + Q_in + Q_hyp))             # <<<<<<<<<<<<<<
  * 
  *     T_mix -= T_up
  */
-  __pyx_t_10 = PyNumber_Add(__pyx_v_Q_accr, __pyx_v_Q_up); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 770, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 770, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyNumber_Add(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 770, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyNumber_Add(__pyx_t_5, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 770, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_2 = PyNumber_Add(__pyx_v_Q_accr, __pyx_v_Q_up); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_Q_in); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyNumber_Add(__pyx_t_3, __pyx_v_Q_hyp); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":769
+  /* "heatsource9/Stream/PyHeatsource.pyx":771
  *     # from the total discharge (Q_in) somewhere else, which it is not.
  *     # We should check this eventually.
  *     T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_in + Q_hyp))) /             # <<<<<<<<<<<<<<
  *              (Q_accr + Q_up + Q_in + Q_hyp))
  * 
  */
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_11, __pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 769, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 769, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 771, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_T_mix = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":772
+  /* "heatsource9/Stream/PyHeatsource.pyx":774
  *              (Q_accr + Q_up + Q_in + Q_hyp))
  * 
  *     T_mix -= T_up             # <<<<<<<<<<<<<<
@@ -14326,138 +14402,138 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  */
   __pyx_v_T_mix = (__pyx_v_T_mix - __pyx_v_T_up);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":776
+  /* "heatsource9/Stream/PyHeatsource.pyx":778
  *     # We need to adjust the upstream temperature by the tributary mixing
  *     # so the longitudinal slope of change in T is not over predicted.
  *     T0 += T_mix             # <<<<<<<<<<<<<<
  * 
  *     # Similarly we need to adjust the downstream temperature (T2)
  */
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 776, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_9 = PyNumber_InPlaceAdd(__pyx_v_T0, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 776, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF_SET(__pyx_v_T0, __pyx_t_9);
-  __pyx_t_9 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_6 = PyNumber_InPlaceAdd(__pyx_v_T0, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF_SET(__pyx_v_T0, __pyx_t_6);
+  __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":780
+  /* "heatsource9/Stream/PyHeatsource.pyx":782
  *     # Similarly we need to adjust the downstream temperature (T2)
  *     # to account for mixing in that reach.
  *     T2 -= MixTDelta_dn             # <<<<<<<<<<<<<<
  * 
  *     cdef double Dummy1 = -U * (T1 - T0) / dx
  */
-  __pyx_t_9 = PyNumber_InPlaceSubtract(__pyx_v_T2, __pyx_v_MixTDelta_dn); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF_SET(__pyx_v_T2, __pyx_t_9);
-  __pyx_t_9 = 0;
+  __pyx_t_6 = PyNumber_InPlaceSubtract(__pyx_v_T2, __pyx_v_MixTDelta_dn); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF_SET(__pyx_v_T2, __pyx_t_6);
+  __pyx_t_6 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":782
+  /* "heatsource9/Stream/PyHeatsource.pyx":784
  *     T2 -= MixTDelta_dn
  * 
  *     cdef double Dummy1 = -U * (T1 - T0) / dx             # <<<<<<<<<<<<<<
  *     cdef double Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
  *     cdef double S = Dummy1 + Dummy2 + Delta_T / dt
  */
-  __pyx_t_9 = PyNumber_Negative(__pyx_v_U); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = PyNumber_Subtract(__pyx_v_T1, __pyx_v_T0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Negative(__pyx_v_U); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 784, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = PyNumber_Subtract(__pyx_v_T1, __pyx_v_T0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 784, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyNumber_Multiply(__pyx_t_6, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 784, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = PyNumber_Multiply(__pyx_t_9, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_v_dx); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 784, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_11, __pyx_v_dx); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 784, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_Dummy1 = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":783
+  /* "heatsource9/Stream/PyHeatsource.pyx":785
  * 
  *     cdef double Dummy1 = -U * (T1 - T0) / dx
  *     cdef double Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)             # <<<<<<<<<<<<<<
  *     cdef double S = Dummy1 + Dummy2 + Delta_T / dt
  *     cdef double Temp
  */
-  __pyx_t_5 = PyNumber_Multiply(__pyx_int_2, __pyx_v_T1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 783, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_int_2, __pyx_v_T1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 785, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyNumber_Subtract(__pyx_v_T2, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 785, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = PyNumber_Subtract(__pyx_v_T2, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 783, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyNumber_Add(__pyx_t_5, __pyx_v_T0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 785, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Add(__pyx_t_11, __pyx_v_T0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 783, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Multiply(__pyx_v_Disp, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 785, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyNumber_Multiply(__pyx_v_Disp, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 783, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyNumber_Power(__pyx_v_dx, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 785, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_6 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 785, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Power(__pyx_v_dx, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 783, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_11, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 783, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 783, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 785, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_Dummy2 = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":784
+  /* "heatsource9/Stream/PyHeatsource.pyx":786
  *     cdef double Dummy1 = -U * (T1 - T0) / dx
  *     cdef double Dummy2 = Disp * (T2 - 2 * T1 + T0) / (dx**2)
  *     cdef double S = Dummy1 + Dummy2 + Delta_T / dt             # <<<<<<<<<<<<<<
  *     cdef double Temp
  *     if S1:
  */
-  __pyx_t_9 = PyFloat_FromDouble((__pyx_v_Dummy1 + __pyx_v_Dummy2)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 784, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_v_Delta_T, __pyx_v_dt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 784, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble((__pyx_v_Dummy1 + __pyx_v_Dummy2)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 786, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_v_Delta_T, __pyx_v_dt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 786, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 786, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = PyNumber_Add(__pyx_t_9, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 784, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 786, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 784, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __pyx_v_S = __pyx_t_1;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":786
+  /* "heatsource9/Stream/PyHeatsource.pyx":788
  *     cdef double S = Dummy1 + Dummy2 + Delta_T / dt
  *     cdef double Temp
  *     if S1:             # <<<<<<<<<<<<<<
  *         Temp = T_prev + ((S1_value + S) / 2) * dt
  *     else:
  */
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_S1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 786, __pyx_L1_error)
-  if (__pyx_t_6) {
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_v_S1); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 788, __pyx_L1_error)
+  if (__pyx_t_8) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":787
+    /* "heatsource9/Stream/PyHeatsource.pyx":789
  *     cdef double Temp
  *     if S1:
  *         Temp = T_prev + ((S1_value + S) / 2) * dt             # <<<<<<<<<<<<<<
  *     else:
  *         Temp = T1 + S * dt
  */
-    __pyx_t_11 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 787, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_5 = PyNumber_Add(__pyx_v_S1_value, __pyx_t_11); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 789, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_5, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 787, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_3 = PyNumber_Add(__pyx_v_S1_value, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 789, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyNumber_Multiply(__pyx_t_11, __pyx_v_dt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_TrueDivideObjC(__pyx_t_3, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 789, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = PyNumber_Add(__pyx_v_T_prev, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 787, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_5, __pyx_v_dt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 789, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_5 = PyNumber_Add(__pyx_v_T_prev, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 789, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_Temp = __pyx_t_1;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":786
+    /* "heatsource9/Stream/PyHeatsource.pyx":788
  *     cdef double S = Dummy1 + Dummy2 + Delta_T / dt
  *     cdef double Temp
  *     if S1:             # <<<<<<<<<<<<<<
@@ -14467,7 +14543,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
     goto __pyx_L13;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":789
+  /* "heatsource9/Stream/PyHeatsource.pyx":791
  *         Temp = T_prev + ((S1_value + S) / 2) * dt
  *     else:
  *         Temp = T1 + S * dt             # <<<<<<<<<<<<<<
@@ -14475,66 +14551,67 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
  * 
  */
   /*else*/ {
-    __pyx_t_11 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 789, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_5 = PyNumber_Multiply(__pyx_t_11, __pyx_v_dt); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 789, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 791, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = PyNumber_Add(__pyx_v_T1, __pyx_t_5); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 789, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_5, __pyx_v_dt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 791, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_5 = PyNumber_Add(__pyx_v_T1, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 791, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 791, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_Temp = __pyx_t_1;
   }
   __pyx_L13:;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":790
+  /* "heatsource9/Stream/PyHeatsource.pyx":792
  *     else:
  *         Temp = T1 + S * dt
  *     return Temp, S, T_mix             # <<<<<<<<<<<<<<
  * 
- * def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
+ * def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PyFloat_FromDouble(__pyx_v_Temp); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 790, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 790, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_Temp); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 792, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 790, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyTuple_New(3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 790, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_11);
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_S); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 792, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_T_mix); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 792, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 792, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_5);
-  PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_5);
-  __Pyx_GIVEREF(__pyx_t_9);
-  PyTuple_SET_ITEM(__pyx_t_10, 2, __pyx_t_9);
-  __pyx_t_11 = 0;
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_6);
   __pyx_t_5 = 0;
-  __pyx_t_9 = 0;
-  __pyx_r = __pyx_t_10;
-  __pyx_t_10 = 0;
+  __pyx_t_3 = 0;
+  __pyx_t_6 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":733
+  /* "heatsource9/Stream/PyHeatsource.pyx":734
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
  * 
- * def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
+ * def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
  *                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
  *                    T_accr, MixTDelta_dn):
  */
 
   /* function exit code */
   __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcMacCormick", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_maccormick", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_i);
   __Pyx_XDECREF(__pyx_v_msg);
   __Pyx_XDECREF(__pyx_v_T0);
   __Pyx_XDECREF(__pyx_v_T2);
@@ -14543,18 +14620,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_12CalcMacCormick(
   return __pyx_r;
 }
 
-/* "heatsource9/Stream/PyHeatsource.pyx":792
+/* "heatsource9/Stream/PyHeatsource.pyx":794
  *     return Temp, S, T_mix
  * 
- * def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
+ * def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
  *                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
  *                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes = {"CalcHeatFluxes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15calc_heat_fluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_12PyHeatsource_15calc_heat_fluxes = {"calc_heat_fluxes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15calc_heat_fluxes, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15calc_heat_fluxes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_metData = 0;
   PyObject *__pyx_v_C_args = 0;
   PyObject *__pyx_v_d_w = 0;
@@ -14583,7 +14660,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes(
   PyObject *__pyx_v_heatsource8 = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcHeatFluxes (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_heat_fluxes (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_metData,&__pyx_n_s_C_args,&__pyx_n_s_d_w,&__pyx_n_s_area,&__pyx_n_s_P_w,&__pyx_n_s_W_w,&__pyx_n_s_U,&__pyx_n_s_Q_tribs,&__pyx_n_s_T_tribs,&__pyx_n_s_T_prev,&__pyx_n_s_T_sed,&__pyx_n_s_Q_hyp,&__pyx_n_s_T_dn_prev,&__pyx_n_s_ShaderList,&__pyx_n_s_tran,&__pyx_n_s_Disp,&__pyx_n_s_hour,&__pyx_n_s_JD,&__pyx_n_s_daytime,&__pyx_n_s_Altitude,&__pyx_n_s_Zenith,&__pyx_n_s_Q_up_prev,&__pyx_n_s_T_up_prev,&__pyx_n_s_solar_only,&__pyx_n_s_MixTDelta_dn_prev,&__pyx_n_s_heatsource8,0};
     PyObject* values[26] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -14655,155 +14732,155 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes(
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_C_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 1); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 1); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_d_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 2); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 2); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_area)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 3); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 3); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_P_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 4); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 4); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_W_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 5); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 5); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_U)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 6); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 6); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_tribs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 7); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 7); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_tribs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 8); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 8); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 9); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 9); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_sed)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 10); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 10); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_hyp)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 11); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 11); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_dn_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 12); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 12); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ShaderList)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 13); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 13); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
         if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tran)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 14); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 14); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
         if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Disp)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 15); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 15); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
         if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_hour)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 16); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 16); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 17:
         if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JD)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 17); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 17); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 18:
         if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_daytime)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 18); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 18); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 19:
         if (likely((values[19] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Altitude)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 19); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 19); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 20:
         if (likely((values[20] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Zenith)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 20); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 20); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 21:
         if (likely((values[21] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_up_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 21); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 21); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 22:
         if (likely((values[22] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_up_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 22); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 22); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 23:
         if (likely((values[23] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_solar_only)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 23); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 23); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 24:
         if (likely((values[24] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_MixTDelta_dn_prev)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 24); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 24); __PYX_ERR(0, 794, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 25:
         if (likely((values[25] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_heatsource8)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, 25); __PYX_ERR(0, 792, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, 25); __PYX_ERR(0, 794, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcHeatFluxes") < 0)) __PYX_ERR(0, 792, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_heat_fluxes") < 0)) __PYX_ERR(0, 794, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 26) {
       goto __pyx_L5_argtuple_error;
@@ -14864,20 +14941,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes(
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcHeatFluxes", 1, 26, 26, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 792, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_heat_fluxes", 1, 26, 26, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 794, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcHeatFluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_heat_fluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(__pyx_self, __pyx_v_metData, __pyx_v_C_args, __pyx_v_d_w, __pyx_v_area, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_U, __pyx_v_Q_tribs, __pyx_v_T_tribs, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_v_T_dn_prev, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_Disp, __pyx_v_hour, __pyx_v_JD, __pyx_v_daytime, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_Q_up_prev, __pyx_v_T_up_prev, __pyx_v_solar_only, __pyx_v_MixTDelta_dn_prev, __pyx_v_heatsource8);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_12PyHeatsource_14calc_heat_fluxes(__pyx_self, __pyx_v_metData, __pyx_v_C_args, __pyx_v_d_w, __pyx_v_area, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_U, __pyx_v_Q_tribs, __pyx_v_T_tribs, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_v_T_dn_prev, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_Disp, __pyx_v_hour, __pyx_v_JD, __pyx_v_daytime, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_Q_up_prev, __pyx_v_T_up_prev, __pyx_v_solar_only, __pyx_v_MixTDelta_dn_prev, __pyx_v_heatsource8);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_metData, PyObject *__pyx_v_C_args, PyObject *__pyx_v_d_w, PyObject *__pyx_v_area, PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_U, PyObject *__pyx_v_Q_tribs, PyObject *__pyx_v_T_tribs, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_T_dn_prev, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_Disp, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_daytime, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_T_up_prev, PyObject *__pyx_v_solar_only, PyObject *__pyx_v_MixTDelta_dn_prev, PyObject *__pyx_v_heatsource8) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14calc_heat_fluxes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_metData, PyObject *__pyx_v_C_args, PyObject *__pyx_v_d_w, PyObject *__pyx_v_area, PyObject *__pyx_v_P_w, PyObject *__pyx_v_W_w, PyObject *__pyx_v_U, PyObject *__pyx_v_Q_tribs, PyObject *__pyx_v_T_tribs, PyObject *__pyx_v_T_prev, PyObject *__pyx_v_T_sed, PyObject *__pyx_v_Q_hyp, PyObject *__pyx_v_T_dn_prev, PyObject *__pyx_v_ShaderList, PyObject *__pyx_v_tran, PyObject *__pyx_v_Disp, PyObject *__pyx_v_hour, PyObject *__pyx_v_JD, PyObject *__pyx_v_daytime, PyObject *__pyx_v_Altitude, PyObject *__pyx_v_Zenith, PyObject *__pyx_v_Q_up_prev, PyObject *__pyx_v_T_up_prev, PyObject *__pyx_v_solar_only, PyObject *__pyx_v_MixTDelta_dn_prev, PyObject *__pyx_v_heatsource8) {
   PyObject *__pyx_v_cloud = NULL;
   PyObject *__pyx_v_wind = NULL;
   PyObject *__pyx_v_humidity = NULL;
@@ -14952,9 +15029,9 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   int __pyx_t_31;
   int __pyx_t_32;
   int __pyx_t_33;
-  __Pyx_RefNannySetupContext("CalcHeatFluxes", 0);
+  __Pyx_RefNannySetupContext("calc_heat_fluxes", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":798
+  /* "heatsource9/Stream/PyHeatsource.pyx":800
  *                    heatsource8):
  * 
  *     cloud, wind, humidity, T_air = metData             # <<<<<<<<<<<<<<
@@ -14967,7 +15044,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     if (unlikely(size != 4)) {
       if (size > 4) __Pyx_RaiseTooManyValuesError(4);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(0, 798, __pyx_L1_error)
+      __PYX_ERR(0, 800, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -14990,7 +15067,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       Py_ssize_t i;
       PyObject** temps[4] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4};
       for (i=0; i < 4; i++) {
-        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 798, __pyx_L1_error)
+        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 800, __pyx_L1_error)
         __Pyx_GOTREF(item);
         *(temps[i]) = item;
       }
@@ -14999,7 +15076,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   } else {
     Py_ssize_t index = -1;
     PyObject** temps[4] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4};
-    __pyx_t_5 = PyObject_GetIter(__pyx_v_metData); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 798, __pyx_L1_error)
+    __pyx_t_5 = PyObject_GetIter(__pyx_v_metData); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 800, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext;
     for (index=0; index < 4; index++) {
@@ -15007,7 +15084,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       __Pyx_GOTREF(item);
       *(temps[index]) = item;
     }
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 4) < 0) __PYX_ERR(0, 798, __pyx_L1_error)
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 4) < 0) __PYX_ERR(0, 800, __pyx_L1_error)
     __pyx_t_6 = NULL;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L4_unpacking_done;
@@ -15015,7 +15092,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(0, 798, __pyx_L1_error)
+    __PYX_ERR(0, 800, __pyx_L1_error)
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_cloud = __pyx_t_1;
@@ -15027,7 +15104,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_T_air = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":804
+  /* "heatsource9/Stream/PyHeatsource.pyx":806
  *         T_accr, has_prev, transsample_distance, transsample_count, \
  *         BeersData, emergent, wind_a, wind_b, calcevap, penman, \
  *         calcalluv, T_alluv = C_args             # <<<<<<<<<<<<<<
@@ -15040,7 +15117,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     if (unlikely(size != 27)) {
       if (size > 27) __Pyx_RaiseTooManyValuesError(27);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(0, 800, __pyx_L1_error)
+      __PYX_ERR(0, 802, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -15132,7 +15209,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       Py_ssize_t i;
       PyObject** temps[27] = {&__pyx_t_4,&__pyx_t_3,&__pyx_t_2,&__pyx_t_1,&__pyx_t_5,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13,&__pyx_t_14,&__pyx_t_15,&__pyx_t_16,&__pyx_t_17,&__pyx_t_18,&__pyx_t_19,&__pyx_t_20,&__pyx_t_21,&__pyx_t_22,&__pyx_t_23,&__pyx_t_24,&__pyx_t_25,&__pyx_t_26,&__pyx_t_27,&__pyx_t_28};
       for (i=0; i < 27; i++) {
-        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 800, __pyx_L1_error)
+        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 802, __pyx_L1_error)
         __Pyx_GOTREF(item);
         *(temps[i]) = item;
       }
@@ -15141,7 +15218,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   } else {
     Py_ssize_t index = -1;
     PyObject** temps[27] = {&__pyx_t_4,&__pyx_t_3,&__pyx_t_2,&__pyx_t_1,&__pyx_t_5,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13,&__pyx_t_14,&__pyx_t_15,&__pyx_t_16,&__pyx_t_17,&__pyx_t_18,&__pyx_t_19,&__pyx_t_20,&__pyx_t_21,&__pyx_t_22,&__pyx_t_23,&__pyx_t_24,&__pyx_t_25,&__pyx_t_26,&__pyx_t_27,&__pyx_t_28};
-    __pyx_t_29 = PyObject_GetIter(__pyx_v_C_args); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 800, __pyx_L1_error)
+    __pyx_t_29 = PyObject_GetIter(__pyx_v_C_args); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 802, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_29);
     __pyx_t_6 = Py_TYPE(__pyx_t_29)->tp_iternext;
     for (index=0; index < 27; index++) {
@@ -15149,7 +15226,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       __Pyx_GOTREF(item);
       *(temps[index]) = item;
     }
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_29), 27) < 0) __PYX_ERR(0, 800, __pyx_L1_error)
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_29), 27) < 0) __PYX_ERR(0, 802, __pyx_L1_error)
     __pyx_t_6 = NULL;
     __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
     goto __pyx_L6_unpacking_done;
@@ -15157,11 +15234,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
     __pyx_t_6 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(0, 800, __pyx_L1_error)
+    __PYX_ERR(0, 802, __pyx_L1_error)
     __pyx_L6_unpacking_done:;
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":800
+  /* "heatsource9/Stream/PyHeatsource.pyx":802
  *     cloud, wind, humidity, T_air = metData
  * 
  *     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \             # <<<<<<<<<<<<<<
@@ -15223,14 +15300,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_T_alluv = __pyx_t_28;
   __pyx_t_28 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":806
+  /* "heatsource9/Stream/PyHeatsource.pyx":808
  *         calcalluv, T_alluv = C_args
  * 
  *     solar = [0]*8             # <<<<<<<<<<<<<<
  *     diffuse = [0]*8
  *     direct = [0]*8
  */
-  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 806, __pyx_L1_error)
+  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 808, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -15242,14 +15319,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_solar = __pyx_t_28;
   __pyx_t_28 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":807
+  /* "heatsource9/Stream/PyHeatsource.pyx":809
  * 
  *     solar = [0]*8
  *     diffuse = [0]*8             # <<<<<<<<<<<<<<
  *     direct = [0]*8
  * 
  */
-  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 807, __pyx_L1_error)
+  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 809, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -15261,14 +15338,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_diffuse = __pyx_t_28;
   __pyx_t_28 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":808
+  /* "heatsource9/Stream/PyHeatsource.pyx":810
  *     solar = [0]*8
  *     diffuse = [0]*8
  *     direct = [0]*8             # <<<<<<<<<<<<<<
  * 
  *     # plus one for diffuse blocked
  */
-  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 808, __pyx_L1_error)
+  __pyx_t_28 = PyList_New(1 * 8); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 810, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < 8; __pyx_temp++) {
@@ -15280,18 +15357,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_direct = __pyx_t_28;
   __pyx_t_28 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":811
+  /* "heatsource9/Stream/PyHeatsource.pyx":813
  * 
  *     # plus one for diffuse blocked
  *     veg_block = [0]*len(ShaderList[3])+[0]             # <<<<<<<<<<<<<<
  * 
  *     if daytime:
  */
-  __pyx_t_28 = __Pyx_GetItemInt(__pyx_v_ShaderList, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_28 = __Pyx_GetItemInt(__pyx_v_ShaderList, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 813, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
-  __pyx_t_30 = PyObject_Length(__pyx_t_28); if (unlikely(__pyx_t_30 == ((Py_ssize_t)-1))) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_30 = PyObject_Length(__pyx_t_28); if (unlikely(__pyx_t_30 == ((Py_ssize_t)-1))) __PYX_ERR(0, 813, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
-  __pyx_t_28 = PyList_New(1 * ((__pyx_t_30<0) ? 0:__pyx_t_30)); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_28 = PyList_New(1 * ((__pyx_t_30<0) ? 0:__pyx_t_30)); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 813, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < __pyx_t_30; __pyx_temp++) {
@@ -15300,39 +15377,39 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       PyList_SET_ITEM(__pyx_t_28, __pyx_temp, __pyx_int_0);
     }
   }
-  __pyx_t_27 = PyList_New(1); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_27 = PyList_New(1); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 813, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_27);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_27, 0, __pyx_int_0);
-  __pyx_t_26 = PyNumber_Add(__pyx_t_28, __pyx_t_27); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 811, __pyx_L1_error)
+  __pyx_t_26 = PyNumber_Add(__pyx_t_28, __pyx_t_27); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 813, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
   __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
   __Pyx_DECREF(__pyx_t_27); __pyx_t_27 = 0;
   __pyx_v_veg_block = __pyx_t_26;
   __pyx_t_26 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":813
+  /* "heatsource9/Stream/PyHeatsource.pyx":815
  *     veg_block = [0]*len(ShaderList[3])+[0]
  * 
  *     if daytime:             # <<<<<<<<<<<<<<
  * 
  *         (solar, diffuse,
  */
-  __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_daytime); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 813, __pyx_L1_error)
+  __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_daytime); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 815, __pyx_L1_error)
   if (__pyx_t_31) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":816
+    /* "heatsource9/Stream/PyHeatsource.pyx":818
  * 
  *         (solar, diffuse,
- *         direct, veg_block) = GetSolarFlux(hour, JD, Altitude, Zenith,             # <<<<<<<<<<<<<<
+ *         direct, veg_block) = get_solar_flux(hour, JD, Altitude, Zenith,             # <<<<<<<<<<<<<<
  *                                         cloud, d_w, W_b, elevation,
  *                                         TopoFactor, ViewToSky,
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_27, __pyx_n_s_GetSolarFlux); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 816, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_27, __pyx_n_s_get_solar_flux); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 818, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_27);
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":824
+    /* "heatsource9/Stream/PyHeatsource.pyx":826
  *                                         lc_canopy, lc_height, lc_height_rel,
  *                                         lc_k, ShaderList, tran,
  *                                         heatsource8)             # <<<<<<<<<<<<<<
@@ -15354,7 +15431,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_27)) {
       PyObject *__pyx_temp[23] = {__pyx_t_28, __pyx_v_hour, __pyx_v_JD, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_cloud, __pyx_v_d_w, __pyx_v_W_b, __pyx_v_elevation, __pyx_v_TopoFactor, __pyx_v_ViewToSky, __pyx_v_transsample_distance, __pyx_v_transsample_count, __pyx_v_BeersData, __pyx_v_phi, __pyx_v_emergent, __pyx_v_lc_canopy, __pyx_v_lc_height, __pyx_v_lc_height_rel, __pyx_v_lc_k, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_heatsource8};
-      __pyx_t_26 = __Pyx_PyFunction_FastCall(__pyx_t_27, __pyx_temp+1-__pyx_t_32, 22+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 816, __pyx_L1_error)
+      __pyx_t_26 = __Pyx_PyFunction_FastCall(__pyx_t_27, __pyx_temp+1-__pyx_t_32, 22+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 818, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_28); __pyx_t_28 = 0;
       __Pyx_GOTREF(__pyx_t_26);
     } else
@@ -15362,13 +15439,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_27)) {
       PyObject *__pyx_temp[23] = {__pyx_t_28, __pyx_v_hour, __pyx_v_JD, __pyx_v_Altitude, __pyx_v_Zenith, __pyx_v_cloud, __pyx_v_d_w, __pyx_v_W_b, __pyx_v_elevation, __pyx_v_TopoFactor, __pyx_v_ViewToSky, __pyx_v_transsample_distance, __pyx_v_transsample_count, __pyx_v_BeersData, __pyx_v_phi, __pyx_v_emergent, __pyx_v_lc_canopy, __pyx_v_lc_height, __pyx_v_lc_height_rel, __pyx_v_lc_k, __pyx_v_ShaderList, __pyx_v_tran, __pyx_v_heatsource8};
-      __pyx_t_26 = __Pyx_PyCFunction_FastCall(__pyx_t_27, __pyx_temp+1-__pyx_t_32, 22+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 816, __pyx_L1_error)
+      __pyx_t_26 = __Pyx_PyCFunction_FastCall(__pyx_t_27, __pyx_temp+1-__pyx_t_32, 22+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 818, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_28); __pyx_t_28 = 0;
       __Pyx_GOTREF(__pyx_t_26);
     } else
     #endif
     {
-      __pyx_t_25 = PyTuple_New(22+__pyx_t_32); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 816, __pyx_L1_error)
+      __pyx_t_25 = PyTuple_New(22+__pyx_t_32); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 818, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_25);
       if (__pyx_t_28) {
         __Pyx_GIVEREF(__pyx_t_28); PyTuple_SET_ITEM(__pyx_t_25, 0, __pyx_t_28); __pyx_t_28 = NULL;
@@ -15439,7 +15516,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       __Pyx_INCREF(__pyx_v_heatsource8);
       __Pyx_GIVEREF(__pyx_v_heatsource8);
       PyTuple_SET_ITEM(__pyx_t_25, 21+__pyx_t_32, __pyx_v_heatsource8);
-      __pyx_t_26 = __Pyx_PyObject_Call(__pyx_t_27, __pyx_t_25, NULL); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 816, __pyx_L1_error)
+      __pyx_t_26 = __Pyx_PyObject_Call(__pyx_t_27, __pyx_t_25, NULL); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 818, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_26);
       __Pyx_DECREF(__pyx_t_25); __pyx_t_25 = 0;
     }
@@ -15450,7 +15527,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       if (unlikely(size != 4)) {
         if (size > 4) __Pyx_RaiseTooManyValuesError(4);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 815, __pyx_L1_error)
+        __PYX_ERR(0, 817, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -15473,7 +15550,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
         Py_ssize_t i;
         PyObject** temps[4] = {&__pyx_t_27,&__pyx_t_25,&__pyx_t_28,&__pyx_t_24};
         for (i=0; i < 4; i++) {
-          PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 815, __pyx_L1_error)
+          PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 817, __pyx_L1_error)
           __Pyx_GOTREF(item);
           *(temps[i]) = item;
         }
@@ -15483,7 +15560,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     } else {
       Py_ssize_t index = -1;
       PyObject** temps[4] = {&__pyx_t_27,&__pyx_t_25,&__pyx_t_28,&__pyx_t_24};
-      __pyx_t_23 = PyObject_GetIter(__pyx_t_26); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 815, __pyx_L1_error)
+      __pyx_t_23 = PyObject_GetIter(__pyx_t_26); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 817, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_23);
       __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
       __pyx_t_6 = Py_TYPE(__pyx_t_23)->tp_iternext;
@@ -15492,7 +15569,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
         __Pyx_GOTREF(item);
         *(temps[index]) = item;
       }
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_23), 4) < 0) __PYX_ERR(0, 815, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_23), 4) < 0) __PYX_ERR(0, 817, __pyx_L1_error)
       __pyx_t_6 = NULL;
       __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
       goto __pyx_L9_unpacking_done;
@@ -15500,15 +15577,15 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
       __pyx_t_6 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 815, __pyx_L1_error)
+      __PYX_ERR(0, 817, __pyx_L1_error)
       __pyx_L9_unpacking_done:;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":815
+    /* "heatsource9/Stream/PyHeatsource.pyx":817
  *     if daytime:
  * 
  *         (solar, diffuse,             # <<<<<<<<<<<<<<
- *         direct, veg_block) = GetSolarFlux(hour, JD, Altitude, Zenith,
+ *         direct, veg_block) = get_solar_flux(hour, JD, Altitude, Zenith,
  *                                         cloud, d_w, W_b, elevation,
  */
     __Pyx_DECREF_SET(__pyx_v_solar, __pyx_t_27);
@@ -15520,7 +15597,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_DECREF_SET(__pyx_v_veg_block, __pyx_t_24);
     __pyx_t_24 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":813
+    /* "heatsource9/Stream/PyHeatsource.pyx":815
  *     veg_block = [0]*len(ShaderList[3])+[0]
  * 
  *     if daytime:             # <<<<<<<<<<<<<<
@@ -15529,24 +15606,24 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":827
+  /* "heatsource9/Stream/PyHeatsource.pyx":829
  * 
  *     # We're only running shade, so return solar and some empty calories
  *     if solar_only:             # <<<<<<<<<<<<<<
  *         ground = [0]*9
  *         F_Total =  0.0
  */
-  __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_solar_only); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_solar_only); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 829, __pyx_L1_error)
   if (__pyx_t_31) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":828
+    /* "heatsource9/Stream/PyHeatsource.pyx":830
  *     # We're only running shade, so return solar and some empty calories
  *     if solar_only:
  *         ground = [0]*9             # <<<<<<<<<<<<<<
  *         F_Total =  0.0
  *         Delta_T = 0.0
  */
-    __pyx_t_26 = PyList_New(1 * 9); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 828, __pyx_L1_error)
+    __pyx_t_26 = PyList_New(1 * 9); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 830, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_26);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < 9; __pyx_temp++) {
@@ -15558,7 +15635,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __pyx_v_ground = __pyx_t_26;
     __pyx_t_26 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":829
+    /* "heatsource9/Stream/PyHeatsource.pyx":831
  *     if solar_only:
  *         ground = [0]*9
  *         F_Total =  0.0             # <<<<<<<<<<<<<<
@@ -15568,7 +15645,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_INCREF(__pyx_float_0_0);
     __pyx_v_F_Total = __pyx_float_0_0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":830
+    /* "heatsource9/Stream/PyHeatsource.pyx":832
  *         ground = [0]*9
  *         F_Total =  0.0
  *         Delta_T = 0.0             # <<<<<<<<<<<<<<
@@ -15578,14 +15655,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_INCREF(__pyx_float_0_0);
     __pyx_v_Delta_T = __pyx_float_0_0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":831
+    /* "heatsource9/Stream/PyHeatsource.pyx":833
  *         F_Total =  0.0
  *         Delta_T = 0.0
  *         Mac = [0]*3             # <<<<<<<<<<<<<<
  * 
  *         # Boundary node
  */
-    __pyx_t_26 = PyList_New(1 * 3); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 831, __pyx_L1_error)
+    __pyx_t_26 = PyList_New(1 * 3); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 833, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_26);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < 3; __pyx_temp++) {
@@ -15597,18 +15674,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __pyx_v_Mac = __pyx_t_26;
     __pyx_t_26 = 0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":834
+    /* "heatsource9/Stream/PyHeatsource.pyx":836
  * 
  *         # Boundary node
  *         if not has_prev: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T             # <<<<<<<<<<<<<<
  * 
  *         # regular node
  */
-    __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_has_prev); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 834, __pyx_L1_error)
+    __pyx_t_31 = __Pyx_PyObject_IsTrue(__pyx_v_has_prev); if (unlikely(__pyx_t_31 < 0)) __PYX_ERR(0, 836, __pyx_L1_error)
     __pyx_t_33 = ((!__pyx_t_31) != 0);
     if (__pyx_t_33) {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_26 = PyTuple_New(7); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 834, __pyx_L1_error)
+      __pyx_t_26 = PyTuple_New(7); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 836, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_26);
       __Pyx_INCREF(__pyx_v_solar);
       __Pyx_GIVEREF(__pyx_v_solar);
@@ -15636,16 +15713,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       goto __pyx_L0;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":837
+    /* "heatsource9/Stream/PyHeatsource.pyx":839
  * 
  *         # regular node
  *         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac             # <<<<<<<<<<<<<<
  * 
- *     ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,
+ *     ground = get_ground_fluxes(cloud, wind, humidity, T_air, elevation,
  */
     /*else*/ {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_26 = PyTuple_New(8); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 837, __pyx_L1_error)
+      __pyx_t_26 = PyTuple_New(8); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 839, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_26);
       __Pyx_INCREF(__pyx_v_solar);
       __Pyx_GIVEREF(__pyx_v_solar);
@@ -15676,7 +15753,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
       goto __pyx_L0;
     }
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":827
+    /* "heatsource9/Stream/PyHeatsource.pyx":829
  * 
  *     # We're only running shade, so return solar and some empty calories
  *     if solar_only:             # <<<<<<<<<<<<<<
@@ -15685,34 +15762,34 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":839
+  /* "heatsource9/Stream/PyHeatsource.pyx":841
  *         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
  * 
- *     ground = GetGroundFluxes(cloud, wind, humidity, T_air, elevation,             # <<<<<<<<<<<<<<
+ *     ground = get_ground_fluxes(cloud, wind, humidity, T_air, elevation,             # <<<<<<<<<<<<<<
  *                     phi, lc_height, ViewToSky, SedDepth, dx,
  *                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_24, __pyx_n_s_GetGroundFluxes); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 839, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_24, __pyx_n_s_get_ground_fluxes); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 841, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":843
+  /* "heatsource9/Stream/PyHeatsource.pyx":845
  *                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
  *                     P_w, W_w, emergent, penman, wind_a, wind_b,
  *                     calcevap, T_prev, T_sed, Q_hyp, solar[5],             # <<<<<<<<<<<<<<
  *                     solar[7])
  * 
  */
-  __pyx_t_28 = __Pyx_GetItemInt(__pyx_v_solar, 5, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 843, __pyx_L1_error)
+  __pyx_t_28 = __Pyx_GetItemInt(__pyx_v_solar, 5, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 845, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":844
+  /* "heatsource9/Stream/PyHeatsource.pyx":846
  *                     P_w, W_w, emergent, penman, wind_a, wind_b,
  *                     calcevap, T_prev, T_sed, Q_hyp, solar[5],
  *                     solar[7])             # <<<<<<<<<<<<<<
  * 
  *     F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
  */
-  __pyx_t_25 = __Pyx_GetItemInt(__pyx_v_solar, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __pyx_t_25 = __Pyx_GetItemInt(__pyx_v_solar, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 846, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_25);
   __pyx_t_27 = NULL;
   __pyx_t_32 = 0;
@@ -15729,7 +15806,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_24)) {
     PyObject *__pyx_temp[28] = {__pyx_t_27, __pyx_v_cloud, __pyx_v_wind, __pyx_v_humidity, __pyx_v_T_air, __pyx_v_elevation, __pyx_v_phi, __pyx_v_lc_height, __pyx_v_ViewToSky, __pyx_v_SedDepth, __pyx_v_dx, __pyx_v_dt, __pyx_v_SedThermCond, __pyx_v_SedThermDiff, __pyx_v_calcalluv, __pyx_v_T_alluv, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_emergent, __pyx_v_penman, __pyx_v_wind_a, __pyx_v_wind_b, __pyx_v_calcevap, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_t_28, __pyx_t_25};
-    __pyx_t_26 = __Pyx_PyFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 27+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 839, __pyx_L1_error)
+    __pyx_t_26 = __Pyx_PyFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 27+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 841, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_27); __pyx_t_27 = 0;
     __Pyx_GOTREF(__pyx_t_26);
     __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
@@ -15739,7 +15816,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_24)) {
     PyObject *__pyx_temp[28] = {__pyx_t_27, __pyx_v_cloud, __pyx_v_wind, __pyx_v_humidity, __pyx_v_T_air, __pyx_v_elevation, __pyx_v_phi, __pyx_v_lc_height, __pyx_v_ViewToSky, __pyx_v_SedDepth, __pyx_v_dx, __pyx_v_dt, __pyx_v_SedThermCond, __pyx_v_SedThermDiff, __pyx_v_calcalluv, __pyx_v_T_alluv, __pyx_v_P_w, __pyx_v_W_w, __pyx_v_emergent, __pyx_v_penman, __pyx_v_wind_a, __pyx_v_wind_b, __pyx_v_calcevap, __pyx_v_T_prev, __pyx_v_T_sed, __pyx_v_Q_hyp, __pyx_t_28, __pyx_t_25};
-    __pyx_t_26 = __Pyx_PyCFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 27+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 839, __pyx_L1_error)
+    __pyx_t_26 = __Pyx_PyCFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 27+__pyx_t_32); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 841, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_27); __pyx_t_27 = 0;
     __Pyx_GOTREF(__pyx_t_26);
     __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
@@ -15747,7 +15824,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   } else
   #endif
   {
-    __pyx_t_23 = PyTuple_New(27+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 839, __pyx_L1_error)
+    __pyx_t_23 = PyTuple_New(27+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 841, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_23);
     if (__pyx_t_27) {
       __Pyx_GIVEREF(__pyx_t_27); PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_27); __pyx_t_27 = NULL;
@@ -15833,7 +15910,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     PyTuple_SET_ITEM(__pyx_t_23, 26+__pyx_t_32, __pyx_t_25);
     __pyx_t_28 = 0;
     __pyx_t_25 = 0;
-    __pyx_t_26 = __Pyx_PyObject_Call(__pyx_t_24, __pyx_t_23, NULL); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 839, __pyx_L1_error)
+    __pyx_t_26 = __Pyx_PyObject_Call(__pyx_t_24, __pyx_t_23, NULL); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 841, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_26);
     __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
   }
@@ -15841,86 +15918,86 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_ground = __pyx_t_26;
   __pyx_t_26 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":846
+  /* "heatsource9/Stream/PyHeatsource.pyx":848
  *                     solar[7])
  * 
  *     F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]             # <<<<<<<<<<<<<<
  * 
  *     # Vars are Cp (J/kg *C) and P (kgS/m3)
  */
-  __pyx_t_26 = __Pyx_GetItemInt(__pyx_v_solar, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_GetItemInt(__pyx_v_solar, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_23 = PyNumber_Add(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_23 = PyNumber_Add(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
   __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_26 = PyNumber_Add(__pyx_t_23, __pyx_t_24); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_26 = PyNumber_Add(__pyx_t_23, __pyx_t_24); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
   __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 6, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_23 = PyNumber_Add(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_23 = PyNumber_Add(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
   __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_GetItemInt(__pyx_v_ground, 7, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_26 = PyNumber_Add(__pyx_t_23, __pyx_t_24); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_26 = PyNumber_Add(__pyx_t_23, __pyx_t_24); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
   __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
   __pyx_v_F_Total = __pyx_t_26;
   __pyx_t_26 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":849
+  /* "heatsource9/Stream/PyHeatsource.pyx":851
  * 
  *     # Vars are Cp (J/kg *C) and P (kgS/m3)
  *     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2)             # <<<<<<<<<<<<<<
  * 
  *     if not has_prev:
  */
-  __pyx_t_26 = PyNumber_Multiply(__pyx_v_F_Total, __pyx_v_dt); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __pyx_t_26 = PyNumber_Multiply(__pyx_v_F_Total, __pyx_v_dt); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 851, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_24 = __Pyx_PyNumber_Divide(__pyx_v_area, __pyx_v_W_w); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_PyNumber_Divide(__pyx_v_area, __pyx_v_W_w); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 851, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_23 = PyNumber_Multiply(__pyx_t_24, __pyx_int_4182); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __pyx_t_23 = PyNumber_Multiply(__pyx_t_24, __pyx_int_4182); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 851, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
-  __pyx_t_24 = PyNumber_Multiply(__pyx_t_23, __pyx_float_998_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __pyx_t_24 = PyNumber_Multiply(__pyx_t_23, __pyx_float_998_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 851, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
   __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
-  __pyx_t_23 = __Pyx_PyNumber_Divide(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __pyx_t_23 = __Pyx_PyNumber_Divide(__pyx_t_26, __pyx_t_24); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 851, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
   __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
   __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
   __pyx_v_Delta_T = __pyx_t_23;
   __pyx_t_23 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":851
+  /* "heatsource9/Stream/PyHeatsource.pyx":853
  *     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2)
  * 
  *     if not has_prev:             # <<<<<<<<<<<<<<
  *         # Boundary node
  *         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
  */
-  __pyx_t_33 = __Pyx_PyObject_IsTrue(__pyx_v_has_prev); if (unlikely(__pyx_t_33 < 0)) __PYX_ERR(0, 851, __pyx_L1_error)
+  __pyx_t_33 = __Pyx_PyObject_IsTrue(__pyx_v_has_prev); if (unlikely(__pyx_t_33 < 0)) __PYX_ERR(0, 853, __pyx_L1_error)
   __pyx_t_31 = ((!__pyx_t_33) != 0);
   if (__pyx_t_31) {
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":853
+    /* "heatsource9/Stream/PyHeatsource.pyx":855
  *     if not has_prev:
  *         # Boundary node
  *         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T             # <<<<<<<<<<<<<<
  * 
- *     Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
+ *     Mac = calc_maccormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_23 = PyTuple_New(7); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 853, __pyx_L1_error)
+    __pyx_t_23 = PyTuple_New(7); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 855, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_INCREF(__pyx_v_solar);
     __Pyx_GIVEREF(__pyx_v_solar);
@@ -15947,7 +16024,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __pyx_t_23 = 0;
     goto __pyx_L0;
 
-    /* "heatsource9/Stream/PyHeatsource.pyx":851
+    /* "heatsource9/Stream/PyHeatsource.pyx":853
  *     Delta_T = F_Total * dt / ((area / W_w) * 4182 * 998.2)
  * 
  *     if not has_prev:             # <<<<<<<<<<<<<<
@@ -15956,19 +16033,19 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
  */
   }
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":855
+  /* "heatsource9/Stream/PyHeatsource.pyx":857
  *         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
  * 
- *     Mac = CalcMacCormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,             # <<<<<<<<<<<<<<
+ *     Mac = calc_maccormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,             # <<<<<<<<<<<<<<
  *                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
  *                          T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr,
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_24, __pyx_n_s_CalcMacCormick); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 855, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_24, __pyx_n_s_calc_maccormick); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 857, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_26 = __Pyx_GetItemInt(__pyx_v_ground, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 855, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_GetItemInt(__pyx_v_ground, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 857, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":858
+  /* "heatsource9/Stream/PyHeatsource.pyx":860
  *                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
  *                          T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr,
  *                          MixTDelta_dn_prev)             # <<<<<<<<<<<<<<
@@ -15990,7 +16067,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_24)) {
     PyObject *__pyx_temp[20] = {__pyx_t_25, __pyx_v_dt, __pyx_v_dx, __pyx_v_U, __pyx_t_26, __pyx_v_T_prev, __pyx_v_Q_hyp, __pyx_v_Q_tribs, __pyx_v_T_tribs, __pyx_v_Q_up_prev, __pyx_v_Delta_T, __pyx_v_Disp, __pyx_int_0, __pyx_float_0_0, __pyx_v_T_up_prev, __pyx_v_T_prev, __pyx_v_T_dn_prev, __pyx_v_Q_accr, __pyx_v_T_accr, __pyx_v_MixTDelta_dn_prev};
-    __pyx_t_23 = __Pyx_PyFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 19+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 855, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 19+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 857, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_25); __pyx_t_25 = 0;
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
@@ -15999,14 +16076,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_24)) {
     PyObject *__pyx_temp[20] = {__pyx_t_25, __pyx_v_dt, __pyx_v_dx, __pyx_v_U, __pyx_t_26, __pyx_v_T_prev, __pyx_v_Q_hyp, __pyx_v_Q_tribs, __pyx_v_T_tribs, __pyx_v_Q_up_prev, __pyx_v_Delta_T, __pyx_v_Disp, __pyx_int_0, __pyx_float_0_0, __pyx_v_T_up_prev, __pyx_v_T_prev, __pyx_v_T_dn_prev, __pyx_v_Q_accr, __pyx_v_T_accr, __pyx_v_MixTDelta_dn_prev};
-    __pyx_t_23 = __Pyx_PyCFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 19+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 855, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyCFunction_FastCall(__pyx_t_24, __pyx_temp+1-__pyx_t_32, 19+__pyx_t_32); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 857, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_25); __pyx_t_25 = 0;
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
   } else
   #endif
   {
-    __pyx_t_28 = PyTuple_New(19+__pyx_t_32); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 855, __pyx_L1_error)
+    __pyx_t_28 = PyTuple_New(19+__pyx_t_32); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 857, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_28);
     if (__pyx_t_25) {
       __Pyx_GIVEREF(__pyx_t_25); PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_25); __pyx_t_25 = NULL;
@@ -16068,7 +16145,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
     __Pyx_GIVEREF(__pyx_v_MixTDelta_dn_prev);
     PyTuple_SET_ITEM(__pyx_t_28, 18+__pyx_t_32, __pyx_v_MixTDelta_dn_prev);
     __pyx_t_26 = 0;
-    __pyx_t_23 = __Pyx_PyObject_Call(__pyx_t_24, __pyx_t_28, NULL); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 855, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyObject_Call(__pyx_t_24, __pyx_t_28, NULL); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 857, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
   }
@@ -16076,13 +16153,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_v_Mac = __pyx_t_23;
   __pyx_t_23 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":861
+  /* "heatsource9/Stream/PyHeatsource.pyx":863
  * 
  *     # Mac includes Temp, S, T_mix
  *     return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_23 = PyTuple_New(8); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 861, __pyx_L1_error)
+  __pyx_t_23 = PyTuple_New(8); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 863, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
   __Pyx_INCREF(__pyx_v_solar);
   __Pyx_GIVEREF(__pyx_v_solar);
@@ -16112,10 +16189,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __pyx_t_23 = 0;
   goto __pyx_L0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":792
+  /* "heatsource9/Stream/PyHeatsource.pyx":794
  *     return Temp, S, T_mix
  * 
- * def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
+ * def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
  *                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
  *                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
  */
@@ -16150,7 +16227,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_12PyHeatsource_14CalcHeatFluxes(
   __Pyx_XDECREF(__pyx_t_27);
   __Pyx_XDECREF(__pyx_t_28);
   __Pyx_XDECREF(__pyx_t_29);
-  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.CalcHeatFluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.PyHeatsource.calc_heat_fluxes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_cloud);
@@ -16588,11 +16665,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_C2, __pyx_k_C2, sizeof(__pyx_k_C2), 0, 0, 1, 1},
   {&__pyx_n_s_C3, __pyx_k_C3, sizeof(__pyx_k_C3), 0, 0, 1, 1},
   {&__pyx_n_s_C_args, __pyx_k_C_args, sizeof(__pyx_k_C_args), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcFlows, __pyx_k_CalcFlows, sizeof(__pyx_k_CalcFlows), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcHeatFluxes, __pyx_k_CalcHeatFluxes, sizeof(__pyx_k_CalcHeatFluxes), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcMacCormick, __pyx_k_CalcMacCormick, sizeof(__pyx_k_CalcMacCormick), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcMuskingum, __pyx_k_CalcMuskingum, sizeof(__pyx_k_CalcMuskingum), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcSolarPosition, __pyx_k_CalcSolarPosition, sizeof(__pyx_k_CalcSolarPosition), 0, 0, 1, 1},
   {&__pyx_n_s_Clearness_Index, __pyx_k_Clearness_Index, sizeof(__pyx_k_Clearness_Index), 0, 0, 1, 1},
   {&__pyx_n_s_Converge, __pyx_k_Converge, sizeof(__pyx_k_Converge), 0, 0, 1, 1},
   {&__pyx_n_s_D, __pyx_k_D, sizeof(__pyx_k_D), 0, 0, 1, 1},
@@ -16642,16 +16714,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_GeoMeanAnomalySun, __pyx_k_GeoMeanAnomalySun, sizeof(__pyx_k_GeoMeanAnomalySun), 0, 0, 1, 1},
   {&__pyx_n_s_GeoMeanLongSun, __pyx_k_GeoMeanLongSun, sizeof(__pyx_k_GeoMeanLongSun), 0, 0, 1, 1},
   {&__pyx_n_s_Geom, __pyx_k_Geom, sizeof(__pyx_k_Geom), 0, 0, 1, 1},
-  {&__pyx_n_s_GetGroundFluxes, __pyx_k_GetGroundFluxes, sizeof(__pyx_k_GetGroundFluxes), 0, 0, 1, 1},
-  {&__pyx_n_s_GetSolarFlux, __pyx_k_GetSolarFlux, sizeof(__pyx_k_GetSolarFlux), 0, 0, 1, 1},
-  {&__pyx_n_s_GetStreamGeometry, __pyx_k_GetStreamGeometry, sizeof(__pyx_k_GetStreamGeometry), 0, 0, 1, 1},
   {&__pyx_n_s_H2O_HeatCapacity, __pyx_k_H2O_HeatCapacity, sizeof(__pyx_k_H2O_HeatCapacity), 0, 0, 1, 1},
   {&__pyx_n_s_HourAngle, __pyx_k_HourAngle, sizeof(__pyx_k_HourAngle), 0, 0, 1, 1},
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
   {&__pyx_n_s_JD, __pyx_k_JD, sizeof(__pyx_k_JD), 0, 0, 1, 1},
   {&__pyx_n_s_JDC, __pyx_k_JDC, sizeof(__pyx_k_JDC), 0, 0, 1, 1},
   {&__pyx_n_s_K, __pyx_k_K, sizeof(__pyx_k_K), 0, 0, 1, 1},
-  {&__pyx_n_s_LAI, __pyx_k_LAI, sizeof(__pyx_k_LAI), 0, 0, 1, 1},
+  {&__pyx_n_u_LAI, __pyx_k_LAI, sizeof(__pyx_k_LAI), 0, 1, 0, 1},
   {&__pyx_n_s_LHV, __pyx_k_LHV, sizeof(__pyx_k_LHV), 0, 0, 1, 1},
   {&__pyx_n_s_Mac, __pyx_k_Mac, sizeof(__pyx_k_Mac), 0, 0, 1, 1},
   {&__pyx_n_s_MeanObliquity, __pyx_k_MeanObliquity, sizeof(__pyx_k_MeanObliquity), 0, 0, 1, 1},
@@ -16668,7 +16737,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_P_w, __pyx_k_P_w, sizeof(__pyx_k_P_w), 0, 0, 1, 1},
   {&__pyx_n_s_Pressure, __pyx_k_Pressure, sizeof(__pyx_k_Pressure), 0, 0, 1, 1},
   {&__pyx_n_s_Printer, __pyx_k_Printer, sizeof(__pyx_k_Printer), 0, 0, 1, 1},
-  {&__pyx_kp_s_Problem_with_null_value_in_tribu, __pyx_k_Problem_with_null_value_in_tribu, sizeof(__pyx_k_Problem_with_null_value_in_tribu), 0, 0, 1, 0},
+  {&__pyx_kp_u_Problem_with_null_value_in_tribu, __pyx_k_Problem_with_null_value_in_tribu, sizeof(__pyx_k_Problem_with_null_value_in_tribu), 0, 1, 0, 0},
   {&__pyx_n_s_Pw, __pyx_k_Pw, sizeof(__pyx_k_Pw), 0, 0, 1, 1},
   {&__pyx_n_s_Q, __pyx_k_Q, sizeof(__pyx_k_Q), 0, 0, 1, 1},
   {&__pyx_n_s_Q1, __pyx_k_Q1, sizeof(__pyx_k_Q1), 0, 0, 1, 1},
@@ -16696,7 +16765,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_SedRhoCp, __pyx_k_SedRhoCp, sizeof(__pyx_k_SedRhoCp), 0, 0, 1, 1},
   {&__pyx_n_s_SedThermCond, __pyx_k_SedThermCond, sizeof(__pyx_k_SedThermCond), 0, 0, 1, 1},
   {&__pyx_n_s_SedThermDiff, __pyx_k_SedThermDiff, sizeof(__pyx_k_SedThermDiff), 0, 0, 1, 1},
-  {&__pyx_kp_s_Sediment_temperature_is_0_must_b, __pyx_k_Sediment_temperature_is_0_must_b, sizeof(__pyx_k_Sediment_temperature_is_0_must_b), 0, 0, 1, 0},
+  {&__pyx_kp_u_Sediment_temperature_is_0_must_b, __pyx_k_Sediment_temperature_is_0_must_b, sizeof(__pyx_k_Sediment_temperature_is_0_must_b), 0, 1, 0, 0},
   {&__pyx_n_s_ShaderList, __pyx_k_ShaderList, sizeof(__pyx_k_ShaderList), 0, 0, 1, 1},
   {&__pyx_n_s_Shear_Velocity, __pyx_k_Shear_Velocity, sizeof(__pyx_k_Shear_Velocity), 0, 0, 1, 1},
   {&__pyx_n_s_Sigma, __pyx_k_Sigma, sizeof(__pyx_k_Sigma), 0, 0, 1, 1},
@@ -16731,9 +16800,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Trans_Stream, __pyx_k_Trans_Stream, sizeof(__pyx_k_Trans_Stream), 0, 0, 1, 1},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_n_s_U, __pyx_k_U, sizeof(__pyx_k_U), 0, 0, 1, 1},
-  {&__pyx_kp_s_Unknown_error_when_calculating_e, __pyx_k_Unknown_error_when_calculating_e, sizeof(__pyx_k_Unknown_error_when_calculating_e), 0, 0, 1, 0},
-  {&__pyx_kp_s_Unknown_error_when_calculating_r, __pyx_k_Unknown_error_when_calculating_r, sizeof(__pyx_k_Unknown_error_when_calculating_r), 0, 0, 1, 0},
-  {&__pyx_kp_s_Unstable_timestep_Decrease_dt_or, __pyx_k_Unstable_timestep_Decrease_dt_or, sizeof(__pyx_k_Unstable_timestep_Decrease_dt_or), 0, 0, 1, 0},
+  {&__pyx_kp_u_Unknown_error_when_calculating_e, __pyx_k_Unknown_error_when_calculating_e, sizeof(__pyx_k_Unknown_error_when_calculating_e), 0, 1, 0, 0},
+  {&__pyx_kp_u_Unknown_error_when_calculating_r, __pyx_k_Unknown_error_when_calculating_r, sizeof(__pyx_k_Unknown_error_when_calculating_r), 0, 1, 0, 0},
+  {&__pyx_kp_u_Unstable_timestep_Decrease_dt_or, __pyx_k_Unstable_timestep_Decrease_dt_or, sizeof(__pyx_k_Unstable_timestep_Decrease_dt_or), 0, 1, 0, 0},
   {&__pyx_n_s_Utils_Printer, __pyx_k_Utils_Printer, sizeof(__pyx_k_Utils_Printer), 0, 0, 1, 1},
   {&__pyx_n_s_VegetationAngle1, __pyx_k_VegetationAngle1, sizeof(__pyx_k_VegetationAngle1), 0, 0, 1, 1},
   {&__pyx_n_s_VegetationAngle2, __pyx_k_VegetationAngle2, sizeof(__pyx_k_VegetationAngle2), 0, 0, 1, 1},
@@ -16752,7 +16821,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_area, __pyx_k_area, sizeof(__pyx_k_area), 0, 0, 1, 1},
   {&__pyx_n_s_atan, __pyx_k_atan, sizeof(__pyx_k_atan), 0, 0, 1, 1},
   {&__pyx_n_s_bisect, __pyx_k_bisect, sizeof(__pyx_k_bisect), 0, 0, 1, 1},
+  {&__pyx_n_s_builtins, __pyx_k_builtins, sizeof(__pyx_k_builtins), 0, 0, 1, 1},
   {&__pyx_n_s_c_k, __pyx_k_c_k, sizeof(__pyx_k_c_k), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_flows, __pyx_k_calc_flows, sizeof(__pyx_k_calc_flows), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_heat_fluxes, __pyx_k_calc_heat_fluxes, sizeof(__pyx_k_calc_heat_fluxes), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_maccormick, __pyx_k_calc_maccormick, sizeof(__pyx_k_calc_maccormick), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_muskingum, __pyx_k_calc_muskingum, sizeof(__pyx_k_calc_muskingum), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_solar_position, __pyx_k_calc_solar_position, sizeof(__pyx_k_calc_solar_position), 0, 0, 1, 1},
   {&__pyx_n_s_calcalluv, __pyx_k_calcalluv, sizeof(__pyx_k_calcalluv), 0, 0, 1, 1},
   {&__pyx_n_s_calcevap, __pyx_k_calcevap, sizeof(__pyx_k_calcevap), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
@@ -16779,6 +16854,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fraction_passed, __pyx_k_fraction_passed, sizeof(__pyx_k_fraction_passed), 0, 0, 1, 1},
   {&__pyx_n_s_getLogger, __pyx_k_getLogger, sizeof(__pyx_k_getLogger), 0, 0, 1, 1},
+  {&__pyx_n_s_get_ground_fluxes, __pyx_k_get_ground_fluxes, sizeof(__pyx_k_get_ground_fluxes), 0, 0, 1, 1},
+  {&__pyx_n_s_get_solar_flux, __pyx_k_get_solar_flux, sizeof(__pyx_k_get_solar_flux), 0, 0, 1, 1},
+  {&__pyx_n_s_get_stream_geometry, __pyx_k_get_stream_geometry, sizeof(__pyx_k_get_stream_geometry), 0, 0, 1, 1},
   {&__pyx_n_s_ground, __pyx_k_ground, sizeof(__pyx_k_ground), 0, 0, 1, 1},
   {&__pyx_n_s_has_prev, __pyx_k_has_prev, sizeof(__pyx_k_has_prev), 0, 0, 1, 1},
   {&__pyx_n_s_heatsource8, __pyx_k_heatsource8, sizeof(__pyx_k_heatsource8), 0, 0, 1, 1},
@@ -16839,17 +16917,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_wind_a, __pyx_k_wind_a, sizeof(__pyx_k_wind_a), 0, 0, 1, 1},
   {&__pyx_n_s_wind_b, __pyx_k_wind_b, sizeof(__pyx_k_wind_b), 0, 0, 1, 1},
   {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
-  {&__pyx_n_s_xrange, __pyx_k_xrange, sizeof(__pyx_k_xrange), 0, 0, 1, 1},
   {&__pyx_n_s_z, __pyx_k_z, sizeof(__pyx_k_z), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 159, __pyx_L1_error)
-  #if PY_MAJOR_VERSION >= 3
-  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_xrange) __PYX_ERR(0, 742, __pyx_L1_error)
-  #else
-  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_xrange); if (!__pyx_builtin_xrange) __PYX_ERR(0, 742, __pyx_L1_error)
-  #endif
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 81, __pyx_L1_error)
   __pyx_builtin_OverflowError = __Pyx_GetBuiltinName(__pyx_n_s_OverflowError); if (!__pyx_builtin_OverflowError) __PYX_ERR(1, 81, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 84, __pyx_L1_error)
@@ -16863,123 +16934,123 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":155
+  /* "heatsource9/Stream/PyHeatsource.pyx":156
  *     # Determine which landcover transect direction corresponds to the sun azimuth
  *     if heatsource8:  # same as 8 directions but no north
  *         tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1             # <<<<<<<<<<<<<<
  *         Azimuth_mod = Azimuth
  *     else:
  */
-  __pyx_tuple_ = PyTuple_Pack(7, __pyx_float_0_0, __pyx_float_67_5, __pyx_float_112_5, __pyx_float_157_5, __pyx_float_202_5, __pyx_float_247_5, __pyx_float_292_5); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(7, __pyx_float_0_0, __pyx_float_67_5, __pyx_float_112_5, __pyx_float_157_5, __pyx_float_202_5, __pyx_float_247_5, __pyx_float_292_5); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":204
+  /* "heatsource9/Stream/PyHeatsource.pyx":205
  *                 # Damn, missed it. There may be a local minimum confusing
  *                 # us, so we choose another depth at random and try again.
  *                 D_est = randint(1,100)             # <<<<<<<<<<<<<<
  *                 Converge = 0
  *                 count = 0
  */
-  __pyx_tuple__2 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_100); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_100); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":31
+  /* "heatsource9/Stream/PyHeatsource.pyx":32
  * from ..Utils.Printer import Printer as print_console
  * 
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0
  */
-  __pyx_tuple__3 = PyTuple_Pack(41, __pyx_n_s_lat, __pyx_n_s_lon, __pyx_n_s_hour, __pyx_n_s_min, __pyx_n_s_sec, __pyx_n_s_offset, __pyx_n_s_JDC, __pyx_n_s_heatsource8, __pyx_n_s_radial_count, __pyx_n_s_toRadians, __pyx_n_s_toDegrees, __pyx_n_s_MeanObliquity, __pyx_n_s_Obliquity, __pyx_n_s_Eccentricity, __pyx_n_s_GeoMeanLongSun, __pyx_n_s_GeoMeanAnomalySun, __pyx_n_s_Dummy1, __pyx_n_s_Dummy2, __pyx_n_s_Dummy3, __pyx_n_s_Dummy4, __pyx_n_s_SunEqofCenter, __pyx_n_s_SunApparentLong, __pyx_n_s_Declination, __pyx_n_s_SunRadVector, __pyx_n_s_Dummy, __pyx_n_s_Dummy5, __pyx_n_s_Et, __pyx_n_s_SolarTime, __pyx_n_s_HourAngle, __pyx_n_s_Zenith, __pyx_n_s_Azimuth, __pyx_n_s_AtmElevation, __pyx_n_s_RefractionCorrection, __pyx_n_s_Altitude, __pyx_n_s_Daytime, __pyx_n_s_tran, __pyx_n_s_Azimuth_mod, __pyx_n_s_Angle_Incr, __pyx_n_s_DirNumbers, __pyx_n_s_AngleStart, __pyx_n_s_x); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(41, __pyx_n_s_lat, __pyx_n_s_lon, __pyx_n_s_hour, __pyx_n_s_min, __pyx_n_s_sec, __pyx_n_s_offset, __pyx_n_s_JDC, __pyx_n_s_heatsource8, __pyx_n_s_radial_count, __pyx_n_s_toRadians, __pyx_n_s_toDegrees, __pyx_n_s_MeanObliquity, __pyx_n_s_Obliquity, __pyx_n_s_Eccentricity, __pyx_n_s_GeoMeanLongSun, __pyx_n_s_GeoMeanAnomalySun, __pyx_n_s_Dummy1, __pyx_n_s_Dummy2, __pyx_n_s_Dummy3, __pyx_n_s_Dummy4, __pyx_n_s_SunEqofCenter, __pyx_n_s_SunApparentLong, __pyx_n_s_Declination, __pyx_n_s_SunRadVector, __pyx_n_s_Dummy, __pyx_n_s_Dummy5, __pyx_n_s_Et, __pyx_n_s_SolarTime, __pyx_n_s_HourAngle, __pyx_n_s_Zenith, __pyx_n_s_Azimuth, __pyx_n_s_AtmElevation, __pyx_n_s_RefractionCorrection, __pyx_n_s_Altitude, __pyx_n_s_Daytime, __pyx_n_s_tran, __pyx_n_s_Azimuth_mod, __pyx_n_s_Angle_Incr, __pyx_n_s_DirNumbers, __pyx_n_s_AngleStart, __pyx_n_s_x); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(9, 0, 41, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_CalcSolarPosition, 31, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(9, 0, 41, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_calc_solar_position, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 32, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":169
+  /* "heatsource9/Stream/PyHeatsource.pyx":170
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
  *     cdef double Converge = 10
  *     cdef double dy = 0.01
  */
-  __pyx_tuple__5 = PyTuple_Pack(23, __pyx_n_s_Q_est, __pyx_n_s_W_b, __pyx_n_s_z, __pyx_n_s_n, __pyx_n_s_S, __pyx_n_s_D_est, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_Converge, __pyx_n_s_dy, __pyx_n_s_count, __pyx_n_s_power, __pyx_n_s_Fy, __pyx_n_s_thed, __pyx_n_s_Fyy, __pyx_n_s_dFy, __pyx_n_s_A, __pyx_n_s_Pw, __pyx_n_s_Rh, __pyx_n_s_Ww, __pyx_n_s_U, __pyx_n_s_Shear_Velocity, __pyx_n_s_Dispersion); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(23, __pyx_n_s_Q_est, __pyx_n_s_W_b, __pyx_n_s_z, __pyx_n_s_n, __pyx_n_s_S, __pyx_n_s_D_est, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_Converge, __pyx_n_s_dy, __pyx_n_s_count, __pyx_n_s_power, __pyx_n_s_Fy, __pyx_n_s_thed, __pyx_n_s_Fyy, __pyx_n_s_dFy, __pyx_n_s_A, __pyx_n_s_Pw, __pyx_n_s_Rh, __pyx_n_s_Ww, __pyx_n_s_U, __pyx_n_s_Shear_Velocity, __pyx_n_s_Dispersion); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 170, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(8, 0, 23, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_GetStreamGeometry, 169, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(8, 0, 23, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_get_stream_geometry, 170, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 170, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":232
+  /* "heatsource9/Stream/PyHeatsource.pyx":233
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion
  * 
- * def CalcMuskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
+ * def calc_muskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
  *     """Return the values for the Muskigum routing coefficients
  *     using current timestep and optional discharge"""
  */
-  __pyx_tuple__7 = PyTuple_Pack(15, __pyx_n_s_Q_est, __pyx_n_s_U, __pyx_n_s_W_w, __pyx_n_s_S, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_c_k, __pyx_n_s_X, __pyx_n_s_K, __pyx_n_s_dt_stable, __pyx_n_s_msg, __pyx_n_s_D, __pyx_n_s_C1, __pyx_n_s_C2, __pyx_n_s_C3); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(15, __pyx_n_s_Q_est, __pyx_n_s_U, __pyx_n_s_W_w, __pyx_n_s_S, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_c_k, __pyx_n_s_X, __pyx_n_s_K, __pyx_n_s_dt_stable, __pyx_n_s_msg, __pyx_n_s_D, __pyx_n_s_C1, __pyx_n_s_C2, __pyx_n_s_C3); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 233, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(6, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_CalcMuskingum, 232, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(6, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_calc_muskingum, 233, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 233, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":263
+  /* "heatsource9/Stream/PyHeatsource.pyx":264
  *     return C1, C2, C3
  * 
- * def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
+ * def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
  *               inputs, Q_bc):
  *     cdef double Q1, Q2, Q_new
  */
-  __pyx_tuple__9 = PyTuple_Pack(19, __pyx_n_s_U, __pyx_n_s_W_w, __pyx_n_s_W_b, __pyx_n_s_S, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_z, __pyx_n_s_n, __pyx_n_s_D_est, __pyx_n_s_Q, __pyx_n_s_Q_up, __pyx_n_s_Q_up_prev, __pyx_n_s_inputs, __pyx_n_s_Q_bc, __pyx_n_s_Q1, __pyx_n_s_Q2, __pyx_n_s_Q_new, __pyx_n_s_C, __pyx_n_s_Geom); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 263, __pyx_L1_error)
+  __pyx_tuple__9 = PyTuple_Pack(19, __pyx_n_s_U, __pyx_n_s_W_w, __pyx_n_s_W_b, __pyx_n_s_S, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_z, __pyx_n_s_n, __pyx_n_s_D_est, __pyx_n_s_Q, __pyx_n_s_Q_up, __pyx_n_s_Q_up_prev, __pyx_n_s_inputs, __pyx_n_s_Q_bc, __pyx_n_s_Q1, __pyx_n_s_Q2, __pyx_n_s_Q_new, __pyx_n_s_C, __pyx_n_s_Geom); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 264, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(14, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_CalcFlows, 263, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 263, __pyx_L1_error)
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(14, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_calc_flows, 264, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 264, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":279
+  /* "heatsource9/Stream/PyHeatsource.pyx":280
  *     return Q_new, Geom
  * 
- * def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
+ * def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
  *                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
  *                  BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
  */
-  __pyx_tuple__11 = PyTuple_Pack(58, __pyx_n_s_hour, __pyx_n_s_JD, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_cloud, __pyx_n_s_d_w, __pyx_n_s_W_b, __pyx_n_s_elevation, __pyx_n_s_TopoFactor, __pyx_n_s_ViewToSky, __pyx_n_s_transsample_distance, __pyx_n_s_transsample_count, __pyx_n_s_BeersData, __pyx_n_s_phi, __pyx_n_s_emergent, __pyx_n_s_lc_canopy, __pyx_n_s_lc_height, __pyx_n_s_lc_height_rel, __pyx_n_s_lc_k, __pyx_n_s_ShaderList, __pyx_n_s_tran, __pyx_n_s_heatsource8, __pyx_n_s_FullSunAngle, __pyx_n_s_TopoShadeAngle, __pyx_n_s_BankShadeAngle, __pyx_n_s_VegetationAngle1, __pyx_n_s_VegetationAngle2, __pyx_n_s_F_Direct, __pyx_n_s_F_Diffuse, __pyx_n_s_F_Solar, __pyx_n_s_Rad_Vec, __pyx_n_s_Solar_Constant, __pyx_n_s_Air_Mass, __pyx_n_s_Trans_Air, __pyx_n_s_Clearness_Index, __pyx_n_s_Dummy, __pyx_n_s_Diffuse_Fraction, __pyx_n_s_Solar_blocked_byVeg, __pyx_n_s_PLz, __pyx_n_s_Dummy1, __pyx_n_s_s, __pyx_n_s_fraction_passed, __pyx_n_s_RipExtinction, __pyx_n_s_PL, __pyx_n_s_msg, __pyx_n_s_diffuse_blocked, __pyx_n_s_PLe, __pyx_n_s_emergent_distance, __pyx_n_s_Stream_Reflect, __pyx_n_s_Water_Path, __pyx_n_s_Trans_Stream, __pyx_n_s_Dummy2, __pyx_n_s_Bed_Reflect, __pyx_n_s_BedRock, __pyx_n_s_Dummy3, __pyx_n_s_Dummy4, __pyx_n_s_Dummy5, __pyx_n_s_Dummy6); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(58, __pyx_n_s_hour, __pyx_n_s_JD, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_cloud, __pyx_n_s_d_w, __pyx_n_s_W_b, __pyx_n_s_elevation, __pyx_n_s_TopoFactor, __pyx_n_s_ViewToSky, __pyx_n_s_transsample_distance, __pyx_n_s_transsample_count, __pyx_n_s_BeersData, __pyx_n_s_phi, __pyx_n_s_emergent, __pyx_n_s_lc_canopy, __pyx_n_s_lc_height, __pyx_n_s_lc_height_rel, __pyx_n_s_lc_k, __pyx_n_s_ShaderList, __pyx_n_s_tran, __pyx_n_s_heatsource8, __pyx_n_s_FullSunAngle, __pyx_n_s_TopoShadeAngle, __pyx_n_s_BankShadeAngle, __pyx_n_s_VegetationAngle1, __pyx_n_s_VegetationAngle2, __pyx_n_s_F_Direct, __pyx_n_s_F_Diffuse, __pyx_n_s_F_Solar, __pyx_n_s_Rad_Vec, __pyx_n_s_Solar_Constant, __pyx_n_s_Air_Mass, __pyx_n_s_Trans_Air, __pyx_n_s_Clearness_Index, __pyx_n_s_Dummy, __pyx_n_s_Diffuse_Fraction, __pyx_n_s_Solar_blocked_byVeg, __pyx_n_s_PLz, __pyx_n_s_Dummy1, __pyx_n_s_s, __pyx_n_s_fraction_passed, __pyx_n_s_RipExtinction, __pyx_n_s_PL, __pyx_n_s_msg, __pyx_n_s_diffuse_blocked, __pyx_n_s_PLe, __pyx_n_s_emergent_distance, __pyx_n_s_Stream_Reflect, __pyx_n_s_Water_Path, __pyx_n_s_Trans_Stream, __pyx_n_s_Dummy2, __pyx_n_s_Bed_Reflect, __pyx_n_s_BedRock, __pyx_n_s_Dummy3, __pyx_n_s_Dummy4, __pyx_n_s_Dummy5, __pyx_n_s_Dummy6); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(22, 0, 58, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_GetSolarFlux, 279, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(22, 0, 58, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_get_solar_flux, 280, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 280, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":584
+  /* "heatsource9/Stream/PyHeatsource.pyx":585
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
  * 
- * def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
+ * def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
  *                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
  *                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
  */
-  __pyx_tuple__13 = PyTuple_Pack(62, __pyx_n_s_cloud, __pyx_n_s_wind, __pyx_n_s_humidity, __pyx_n_s_T_air, __pyx_n_s_elevation, __pyx_n_s_phi, __pyx_n_s_lc_height, __pyx_n_s_ViewToSky, __pyx_n_s_SedDepth, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_SedThermCond, __pyx_n_s_SedThermDiff, __pyx_n_s_calcalluv, __pyx_n_s_T_alluv, __pyx_n_s_P_w, __pyx_n_s_W_w, __pyx_n_s_emergent, __pyx_n_s_penman, __pyx_n_s_wind_a, __pyx_n_s_wind_b, __pyx_n_s_calcevap, __pyx_n_s_T_prev, __pyx_n_s_T_sed, __pyx_n_s_Q_hyp, __pyx_n_s_F_Solar5, __pyx_n_s_F_Solar7, __pyx_n_s_SedRhoCp, __pyx_n_s_rhow, __pyx_n_s_H2O_HeatCapacity, __pyx_n_s_F_Cond, __pyx_n_s_Flux_Conduction_Alluvium, __pyx_n_s_F_hyp, __pyx_n_s_NetFlux_Sed, __pyx_n_s_DT_Sed, __pyx_n_s_T_sed_new, __pyx_n_s_msg, __pyx_n_s_Sat_Vapor, __pyx_n_s_Air_Vapor, __pyx_n_s_Sigma, __pyx_n_s_Emissivity, __pyx_n_s_F_LW_Atm, __pyx_n_s_F_LW_Stream, __pyx_n_s_F_LW_Veg, __pyx_n_s_F_Longwave, __pyx_n_s_Pressure, __pyx_n_s_Zm, __pyx_n_s_Zd, __pyx_n_s_Zo, __pyx_n_s_Friction_Velocity, __pyx_n_s_Wind_Function, __pyx_n_s_LHV, __pyx_n_s_P, __pyx_n_s_Gamma, __pyx_n_s_Delta, __pyx_n_s_NetRadiation, __pyx_n_s_Ea, __pyx_n_s_Evap_Rate, __pyx_n_s_F_Evap, __pyx_n_s_Bowen, __pyx_n_s_F_Conv, __pyx_n_s_E); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_tuple__13 = PyTuple_Pack(62, __pyx_n_s_cloud, __pyx_n_s_wind, __pyx_n_s_humidity, __pyx_n_s_T_air, __pyx_n_s_elevation, __pyx_n_s_phi, __pyx_n_s_lc_height, __pyx_n_s_ViewToSky, __pyx_n_s_SedDepth, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_SedThermCond, __pyx_n_s_SedThermDiff, __pyx_n_s_calcalluv, __pyx_n_s_T_alluv, __pyx_n_s_P_w, __pyx_n_s_W_w, __pyx_n_s_emergent, __pyx_n_s_penman, __pyx_n_s_wind_a, __pyx_n_s_wind_b, __pyx_n_s_calcevap, __pyx_n_s_T_prev, __pyx_n_s_T_sed, __pyx_n_s_Q_hyp, __pyx_n_s_F_Solar5, __pyx_n_s_F_Solar7, __pyx_n_s_SedRhoCp, __pyx_n_s_rhow, __pyx_n_s_H2O_HeatCapacity, __pyx_n_s_F_Cond, __pyx_n_s_Flux_Conduction_Alluvium, __pyx_n_s_F_hyp, __pyx_n_s_NetFlux_Sed, __pyx_n_s_DT_Sed, __pyx_n_s_T_sed_new, __pyx_n_s_msg, __pyx_n_s_Sat_Vapor, __pyx_n_s_Air_Vapor, __pyx_n_s_Sigma, __pyx_n_s_Emissivity, __pyx_n_s_F_LW_Atm, __pyx_n_s_F_LW_Stream, __pyx_n_s_F_LW_Veg, __pyx_n_s_F_Longwave, __pyx_n_s_Pressure, __pyx_n_s_Zm, __pyx_n_s_Zd, __pyx_n_s_Zo, __pyx_n_s_Friction_Velocity, __pyx_n_s_Wind_Function, __pyx_n_s_LHV, __pyx_n_s_P, __pyx_n_s_Gamma, __pyx_n_s_Delta, __pyx_n_s_NetRadiation, __pyx_n_s_Ea, __pyx_n_s_Evap_Rate, __pyx_n_s_F_Evap, __pyx_n_s_Bowen, __pyx_n_s_F_Conv, __pyx_n_s_E); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 585, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(27, 0, 62, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_GetGroundFluxes, 584, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(27, 0, 62, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_get_ground_fluxes, 585, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 585, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":733
+  /* "heatsource9/Stream/PyHeatsource.pyx":734
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
  * 
- * def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
+ * def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
  *                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
  *                    T_accr, MixTDelta_dn):
  */
-  __pyx_tuple__15 = PyTuple_Pack(32, __pyx_n_s_dt, __pyx_n_s_dx, __pyx_n_s_U, __pyx_n_s_T_sed, __pyx_n_s_T_prev, __pyx_n_s_Q_hyp, __pyx_n_s_Q_tup, __pyx_n_s_T_tup, __pyx_n_s_Q_up, __pyx_n_s_Delta_T, __pyx_n_s_Disp, __pyx_n_s_S1, __pyx_n_s_S1_value, __pyx_n_s_T0, __pyx_n_s_T1, __pyx_n_s_T2, __pyx_n_s_Q_accr, __pyx_n_s_T_accr, __pyx_n_s_MixTDelta_dn, __pyx_n_s_Q_in, __pyx_n_s_T_in, __pyx_n_s_T_up, __pyx_n_s_numerator, __pyx_n_s_T_mix, __pyx_n_s_Qitem, __pyx_n_s_Titem, __pyx_n_s_i, __pyx_n_s_msg, __pyx_n_s_Dummy1, __pyx_n_s_Dummy2, __pyx_n_s_S, __pyx_n_s_Temp); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 733, __pyx_L1_error)
+  __pyx_tuple__15 = PyTuple_Pack(32, __pyx_n_s_dt, __pyx_n_s_dx, __pyx_n_s_U, __pyx_n_s_T_sed, __pyx_n_s_T_prev, __pyx_n_s_Q_hyp, __pyx_n_s_Q_tup, __pyx_n_s_T_tup, __pyx_n_s_Q_up, __pyx_n_s_Delta_T, __pyx_n_s_Disp, __pyx_n_s_S1, __pyx_n_s_S1_value, __pyx_n_s_T0, __pyx_n_s_T1, __pyx_n_s_T2, __pyx_n_s_Q_accr, __pyx_n_s_T_accr, __pyx_n_s_MixTDelta_dn, __pyx_n_s_Q_in, __pyx_n_s_T_in, __pyx_n_s_T_up, __pyx_n_s_numerator, __pyx_n_s_T_mix, __pyx_n_s_Qitem, __pyx_n_s_Titem, __pyx_n_s_i, __pyx_n_s_msg, __pyx_n_s_Dummy1, __pyx_n_s_Dummy2, __pyx_n_s_S, __pyx_n_s_Temp); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 734, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(19, 0, 32, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_CalcMacCormick, 733, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 733, __pyx_L1_error)
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(19, 0, 32, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_calc_maccormick, 734, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 734, __pyx_L1_error)
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":792
+  /* "heatsource9/Stream/PyHeatsource.pyx":794
  *     return Temp, S, T_mix
  * 
- * def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
+ * def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
  *                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
  *                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
  */
-  __pyx_tuple__17 = PyTuple_Pack(65, __pyx_n_s_metData, __pyx_n_s_C_args, __pyx_n_s_d_w, __pyx_n_s_area, __pyx_n_s_P_w, __pyx_n_s_W_w, __pyx_n_s_U, __pyx_n_s_Q_tribs, __pyx_n_s_T_tribs, __pyx_n_s_T_prev, __pyx_n_s_T_sed, __pyx_n_s_Q_hyp, __pyx_n_s_T_dn_prev, __pyx_n_s_ShaderList, __pyx_n_s_tran, __pyx_n_s_Disp, __pyx_n_s_hour, __pyx_n_s_JD, __pyx_n_s_daytime, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_Q_up_prev, __pyx_n_s_T_up_prev, __pyx_n_s_solar_only, __pyx_n_s_MixTDelta_dn_prev, __pyx_n_s_heatsource8, __pyx_n_s_cloud, __pyx_n_s_wind, __pyx_n_s_humidity, __pyx_n_s_T_air, __pyx_n_s_W_b, __pyx_n_s_elevation, __pyx_n_s_TopoFactor, __pyx_n_s_ViewToSky, __pyx_n_s_phi, __pyx_n_s_lc_canopy, __pyx_n_s_lc_height, __pyx_n_s_lc_height_rel, __pyx_n_s_lc_k, __pyx_n_s_SedDepth, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_SedThermCond, __pyx_n_s_SedThermDiff, __pyx_n_s_Q_accr, __pyx_n_s_T_accr, __pyx_n_s_has_prev, __pyx_n_s_transsample_distance, __pyx_n_s_transsample_count, __pyx_n_s_BeersData, __pyx_n_s_emergent, __pyx_n_s_wind_a, __pyx_n_s_wind_b, __pyx_n_s_calcevap, __pyx_n_s_penman, __pyx_n_s_calcalluv, __pyx_n_s_T_alluv, __pyx_n_s_solar, __pyx_n_s_diffuse, __pyx_n_s_direct, __pyx_n_s_veg_block, __pyx_n_s_ground, __pyx_n_s_F_Total, __pyx_n_s_Delta_T, __pyx_n_s_Mac); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 792, __pyx_L1_error)
+  __pyx_tuple__17 = PyTuple_Pack(65, __pyx_n_s_metData, __pyx_n_s_C_args, __pyx_n_s_d_w, __pyx_n_s_area, __pyx_n_s_P_w, __pyx_n_s_W_w, __pyx_n_s_U, __pyx_n_s_Q_tribs, __pyx_n_s_T_tribs, __pyx_n_s_T_prev, __pyx_n_s_T_sed, __pyx_n_s_Q_hyp, __pyx_n_s_T_dn_prev, __pyx_n_s_ShaderList, __pyx_n_s_tran, __pyx_n_s_Disp, __pyx_n_s_hour, __pyx_n_s_JD, __pyx_n_s_daytime, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_Q_up_prev, __pyx_n_s_T_up_prev, __pyx_n_s_solar_only, __pyx_n_s_MixTDelta_dn_prev, __pyx_n_s_heatsource8, __pyx_n_s_cloud, __pyx_n_s_wind, __pyx_n_s_humidity, __pyx_n_s_T_air, __pyx_n_s_W_b, __pyx_n_s_elevation, __pyx_n_s_TopoFactor, __pyx_n_s_ViewToSky, __pyx_n_s_phi, __pyx_n_s_lc_canopy, __pyx_n_s_lc_height, __pyx_n_s_lc_height_rel, __pyx_n_s_lc_k, __pyx_n_s_SedDepth, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_SedThermCond, __pyx_n_s_SedThermDiff, __pyx_n_s_Q_accr, __pyx_n_s_T_accr, __pyx_n_s_has_prev, __pyx_n_s_transsample_distance, __pyx_n_s_transsample_count, __pyx_n_s_BeersData, __pyx_n_s_emergent, __pyx_n_s_wind_a, __pyx_n_s_wind_b, __pyx_n_s_calcevap, __pyx_n_s_penman, __pyx_n_s_calcalluv, __pyx_n_s_T_alluv, __pyx_n_s_solar, __pyx_n_s_diffuse, __pyx_n_s_direct, __pyx_n_s_veg_block, __pyx_n_s_ground, __pyx_n_s_F_Total, __pyx_n_s_Delta_T, __pyx_n_s_Mac); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 794, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(26, 0, 65, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_CalcHeatFluxes, 792, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 792, __pyx_L1_error)
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(26, 0, 65, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_PyHeatsou, __pyx_n_s_calc_heat_fluxes, 794, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 794, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -17383,323 +17454,344 @@ if (!__Pyx_RefNanny) {
   /* "heatsource9/Stream/PyHeatsource.pyx":21
  * 
  * from __future__ import division, print_function
- * from math import pow, sqrt, log, log10, exp, pi             # <<<<<<<<<<<<<<
+ * from builtins import range             # <<<<<<<<<<<<<<
+ * from math import pow, sqrt, log, log10, exp, pi
  * from math import atan, sin, cos, tan, acos, radians, degrees
- * from random import randint
  */
-  __pyx_t_1 = PyList_New(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_s_pow);
-  __Pyx_GIVEREF(__pyx_n_s_pow);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_pow);
-  __Pyx_INCREF(__pyx_n_s_sqrt);
-  __Pyx_GIVEREF(__pyx_n_s_sqrt);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_s_sqrt);
-  __Pyx_INCREF(__pyx_n_s_log);
-  __Pyx_GIVEREF(__pyx_n_s_log);
-  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_s_log);
-  __Pyx_INCREF(__pyx_n_s_log10);
-  __Pyx_GIVEREF(__pyx_n_s_log10);
-  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_n_s_log10);
-  __Pyx_INCREF(__pyx_n_s_exp);
-  __Pyx_GIVEREF(__pyx_n_s_exp);
-  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_n_s_exp);
-  __Pyx_INCREF(__pyx_n_s_pi);
-  __Pyx_GIVEREF(__pyx_n_s_pi);
-  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_n_s_pi);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_math, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_n_s_range);
+  __Pyx_GIVEREF(__pyx_n_s_range);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_range);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_builtins, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_pow); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_range); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pow, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sqrt, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_log); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_log, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_log10); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_log10, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_exp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_exp, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_pi); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pi, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_range, __pyx_t_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/PyHeatsource.pyx":22
  * from __future__ import division, print_function
+ * from builtins import range
+ * from math import pow, sqrt, log, log10, exp, pi             # <<<<<<<<<<<<<<
+ * from math import atan, sin, cos, tan, acos, radians, degrees
+ * from random import randint
+ */
+  __pyx_t_2 = PyList_New(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_n_s_pow);
+  __Pyx_GIVEREF(__pyx_n_s_pow);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_pow);
+  __Pyx_INCREF(__pyx_n_s_sqrt);
+  __Pyx_GIVEREF(__pyx_n_s_sqrt);
+  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_n_s_sqrt);
+  __Pyx_INCREF(__pyx_n_s_log);
+  __Pyx_GIVEREF(__pyx_n_s_log);
+  PyList_SET_ITEM(__pyx_t_2, 2, __pyx_n_s_log);
+  __Pyx_INCREF(__pyx_n_s_log10);
+  __Pyx_GIVEREF(__pyx_n_s_log10);
+  PyList_SET_ITEM(__pyx_t_2, 3, __pyx_n_s_log10);
+  __Pyx_INCREF(__pyx_n_s_exp);
+  __Pyx_GIVEREF(__pyx_n_s_exp);
+  PyList_SET_ITEM(__pyx_t_2, 4, __pyx_n_s_exp);
+  __Pyx_INCREF(__pyx_n_s_pi);
+  __Pyx_GIVEREF(__pyx_n_s_pi);
+  PyList_SET_ITEM(__pyx_t_2, 5, __pyx_n_s_pi);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_math, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_pow); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pow, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sqrt, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_log); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_log, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_log10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_log10, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_exp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_exp, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pi, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "heatsource9/Stream/PyHeatsource.pyx":23
+ * from builtins import range
  * from math import pow, sqrt, log, log10, exp, pi
  * from math import atan, sin, cos, tan, acos, radians, degrees             # <<<<<<<<<<<<<<
  * from random import randint
  * from bisect import bisect
  */
-  __pyx_t_2 = PyList_New(7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_atan);
   __Pyx_GIVEREF(__pyx_n_s_atan);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_atan);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_atan);
   __Pyx_INCREF(__pyx_n_s_sin);
   __Pyx_GIVEREF(__pyx_n_s_sin);
-  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_n_s_sin);
+  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_s_sin);
   __Pyx_INCREF(__pyx_n_s_cos);
   __Pyx_GIVEREF(__pyx_n_s_cos);
-  PyList_SET_ITEM(__pyx_t_2, 2, __pyx_n_s_cos);
+  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_s_cos);
   __Pyx_INCREF(__pyx_n_s_tan);
   __Pyx_GIVEREF(__pyx_n_s_tan);
-  PyList_SET_ITEM(__pyx_t_2, 3, __pyx_n_s_tan);
+  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_n_s_tan);
   __Pyx_INCREF(__pyx_n_s_acos);
   __Pyx_GIVEREF(__pyx_n_s_acos);
-  PyList_SET_ITEM(__pyx_t_2, 4, __pyx_n_s_acos);
+  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_n_s_acos);
   __Pyx_INCREF(__pyx_n_s_radians);
   __Pyx_GIVEREF(__pyx_n_s_radians);
-  PyList_SET_ITEM(__pyx_t_2, 5, __pyx_n_s_radians);
+  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_n_s_radians);
   __Pyx_INCREF(__pyx_n_s_degrees);
   __Pyx_GIVEREF(__pyx_n_s_degrees);
-  PyList_SET_ITEM(__pyx_t_2, 6, __pyx_n_s_degrees);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_math, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_atan); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_1, 6, __pyx_n_s_degrees);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_math, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_atan, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_sin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sin, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_cos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_cos, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_tan); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tan, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_acos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_acos, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_radians); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_radians, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_degrees); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_degrees, __pyx_t_2) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_atan); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_atan, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_sin); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sin, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_cos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_cos, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_tan); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tan, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_acos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_acos, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_radians); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_radians, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_degrees); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_degrees, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":23
+  /* "heatsource9/Stream/PyHeatsource.pyx":24
  * from math import pow, sqrt, log, log10, exp, pi
  * from math import atan, sin, cos, tan, acos, radians, degrees
  * from random import randint             # <<<<<<<<<<<<<<
  * from bisect import bisect
  * 
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_randint);
   __Pyx_GIVEREF(__pyx_n_s_randint);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_randint);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_random, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_randint); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_randint);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_random, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_randint, __pyx_t_1) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_randint); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_randint, __pyx_t_2) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":24
+  /* "heatsource9/Stream/PyHeatsource.pyx":25
  * from math import atan, sin, cos, tan, acos, radians, degrees
  * from random import randint
  * from bisect import bisect             # <<<<<<<<<<<<<<
  * 
  * import logging
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_bisect);
   __Pyx_GIVEREF(__pyx_n_s_bisect);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_bisect);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_bisect, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_bisect); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_bisect);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_bisect, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_bisect, __pyx_t_2) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_bisect); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_bisect, __pyx_t_1) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":26
+  /* "heatsource9/Stream/PyHeatsource.pyx":27
  * from bisect import bisect
  * 
  * import logging             # <<<<<<<<<<<<<<
  * logger = logging.getLogger(__name__)
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_logging, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logging, __pyx_t_1) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_logging, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logging, __pyx_t_2) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":27
+  /* "heatsource9/Stream/PyHeatsource.pyx":28
  * 
  * import logging
  * logger = logging.getLogger(__name__)             # <<<<<<<<<<<<<<
  * 
  * from ..Utils.Printer import Printer as print_console
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_logging); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_getLogger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_logging); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_getLogger); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 27, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logger, __pyx_t_3) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_logger, __pyx_t_3) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":29
+  /* "heatsource9/Stream/PyHeatsource.pyx":30
  * logger = logging.getLogger(__name__)
  * 
  * from ..Utils.Printer import Printer as print_console             # <<<<<<<<<<<<<<
  * 
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,
  */
-  __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_n_s_Printer);
   __Pyx_GIVEREF(__pyx_n_s_Printer);
   PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_Printer);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_Utils_Printer, __pyx_t_3, 2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_Utils_Printer, __pyx_t_3, 2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_Printer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_Printer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_console, __pyx_t_3) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_console, __pyx_t_3) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":31
+  /* "heatsource9/Stream/PyHeatsource.pyx":32
  * from ..Utils.Printer import Printer as print_console
  * 
- * def CalcSolarPosition(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
+ * def calc_solar_position(lat, lon, hour, min, sec, offset,             # <<<<<<<<<<<<<<
  *                       JDC, heatsource8, radial_count):
  *     toRadians = pi/180.0
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_1CalcSolarPosition, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CalcSolarPosition, __pyx_t_1) < 0) __PYX_ERR(0, 31, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_1calc_solar_position, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_calc_solar_position, __pyx_t_2) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":169
+  /* "heatsource9/Stream/PyHeatsource.pyx":170
  *     return Altitude, Zenith, Daytime, tran, Azimuth_mod
  * 
- * def GetStreamGeometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
+ * def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):             # <<<<<<<<<<<<<<
  *     cdef double Converge = 10
  *     cdef double dy = 0.01
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_3GetStreamGeometry, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 169, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GetStreamGeometry, __pyx_t_1) < 0) __PYX_ERR(0, 169, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_3get_stream_geometry, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_stream_geometry, __pyx_t_2) < 0) __PYX_ERR(0, 170, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":232
+  /* "heatsource9/Stream/PyHeatsource.pyx":233
  *     return D_est, A, Pw, Rh, Ww, U, Dispersion
  * 
- * def CalcMuskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
+ * def calc_muskingum(Q_est, U, W_w, S, dx, dt):             # <<<<<<<<<<<<<<
  *     """Return the values for the Muskigum routing coefficients
  *     using current timestep and optional discharge"""
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_5CalcMuskingum, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CalcMuskingum, __pyx_t_1) < 0) __PYX_ERR(0, 232, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_5calc_muskingum, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_calc_muskingum, __pyx_t_2) < 0) __PYX_ERR(0, 233, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":263
+  /* "heatsource9/Stream/PyHeatsource.pyx":264
  *     return C1, C2, C3
  * 
- * def CalcFlows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
+ * def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,             # <<<<<<<<<<<<<<
  *               inputs, Q_bc):
  *     cdef double Q1, Q2, Q_new
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_7CalcFlows, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CalcFlows, __pyx_t_1) < 0) __PYX_ERR(0, 263, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_7calc_flows, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 264, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_calc_flows, __pyx_t_2) < 0) __PYX_ERR(0, 264, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":279
+  /* "heatsource9/Stream/PyHeatsource.pyx":280
  *     return Q_new, Geom
  * 
- * def GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
+ * def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,             # <<<<<<<<<<<<<<
  *                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
  *                  BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_9GetSolarFlux, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GetSolarFlux, __pyx_t_1) < 0) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_9get_solar_flux, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_solar_flux, __pyx_t_2) < 0) __PYX_ERR(0, 280, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":584
+  /* "heatsource9/Stream/PyHeatsource.pyx":585
  *     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
  * 
- * def GetGroundFluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
+ * def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,             # <<<<<<<<<<<<<<
  *                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
  *                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_11GetGroundFluxes, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 584, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_GetGroundFluxes, __pyx_t_1) < 0) __PYX_ERR(0, 584, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_11get_ground_fluxes, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_ground_fluxes, __pyx_t_2) < 0) __PYX_ERR(0, 585, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":733
+  /* "heatsource9/Stream/PyHeatsource.pyx":734
  *     return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
  * 
- * def CalcMacCormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
+ * def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,             # <<<<<<<<<<<<<<
  *                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
  *                    T_accr, MixTDelta_dn):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_13CalcMacCormick, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 733, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CalcMacCormick, __pyx_t_1) < 0) __PYX_ERR(0, 733, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_13calc_maccormick, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 734, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_calc_maccormick, __pyx_t_2) < 0) __PYX_ERR(0, 734, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "heatsource9/Stream/PyHeatsource.pyx":792
+  /* "heatsource9/Stream/PyHeatsource.pyx":794
  *     return Temp, S, T_mix
  * 
- * def CalcHeatFluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
+ * def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,             # <<<<<<<<<<<<<<
  *                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
  *                    tran, Disp, hour, JD, daytime, Altitude, Zenith,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_15CalcHeatFluxes, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 792, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_CalcHeatFluxes, __pyx_t_1) < 0) __PYX_ERR(0, 792, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_12PyHeatsource_15calc_heat_fluxes, NULL, __pyx_n_s_heatsource9_Stream_PyHeatsource); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 794, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_calc_heat_fluxes, __pyx_t_2) < 0) __PYX_ERR(0, 794, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/PyHeatsource.pyx":1
  * # Heat Source, Copyright (C) 2000-2019,             # <<<<<<<<<<<<<<
  * # Oregon Department of Environmental Quality
  * 
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "carray.from_py":77
  * 
@@ -17752,34 +17844,6 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
-
-/* PyObjectGetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
-#endif
-    return PyObject_GetAttr(obj, attr_name);
-}
-#endif
-
-/* GetBuiltinName */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
-    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
-    if (unlikely(!result)) {
-        PyErr_Format(PyExc_NameError,
-#if PY_MAJOR_VERSION >= 3
-            "name '%U' is not defined", name);
-#else
-            "name '%.200s' is not defined", PyString_AS_STRING(name));
-#endif
-    }
-    return result;
-}
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -17999,6 +18063,34 @@ static PyObject* __Pyx_PyFloat_TrueDivideObjC(PyObject *op1, PyObject *op2, doub
         return PyFloat_FromDouble(result);
 }
 #endif
+
+/* PyObjectGetAttrStr */
+  #if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
+}
+#endif
+
+/* GetBuiltinName */
+  static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
+}
 
 /* PyDictVersioning */
   #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
