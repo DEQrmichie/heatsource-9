@@ -18,8 +18,7 @@
 The ModelControl class loads and controls the model run.
 A model instance object is created using the ModelSetup class.
 """
-from __future__ import with_statement, division, print_function
-from __future__ import absolute_import
+from __future__ import division, print_function, absolute_import
 
 # Heat Source modules
 from .Dieties.IniParamsDiety import IniParams
