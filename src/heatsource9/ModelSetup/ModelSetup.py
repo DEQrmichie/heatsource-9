@@ -30,16 +30,9 @@ from builtins import zip
 from builtins import range
 from builtins import object
 from itertools import chain, repeat, count
-from collections import defaultdict
 from math import ceil, log, degrees, atan
-from os.path import exists, join, normpath, isfile
-from os import unlink, makedirs
 from bisect import bisect
-from time import strptime, ctime, strftime, gmtime
-from calendar import timegm
-from datetime import datetime
-import csv
-import operator
+from time import ctime
 import logging
 
 logger = logging.getLogger(__name__)
