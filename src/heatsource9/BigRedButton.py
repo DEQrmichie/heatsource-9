@@ -18,16 +18,16 @@
 The ModelControl class loads and controls the model run.
 A model instance object is created using the ModelSetup class.
 """
-from __future__ import with_statement, division, print_function
+from __future__ import division, print_function, absolute_import
 
 # Heat Source modules
-from Dieties.IniParamsDiety import IniParams
-from ModelSetup.ModelSetup import ModelSetup
-from Dieties.ChronosDiety import Chronos
-from Utils.Printer import Printer as print_console
-from Utils.Output import Output as O
-from __version__ import version_string
-from ModelSetup.Inputs import Inputs
+from .Dieties.IniParamsDiety import IniParams
+from .ModelSetup.ModelSetup import ModelSetup
+from .Dieties.ChronosDiety import Chronos
+from .Utils.Printer import Printer as print_console
+from .Utils.Output import Output as O
+from .__version__ import version_string
+from .ModelSetup.Inputs import Inputs
 
 # Built-in modules
 import logging
@@ -100,7 +100,7 @@ class ModelControl(object):
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
         # headwater, but we want to run the model from headwater to mouth.
-        self.reachlist = sorted(self.HS.reach.itervalues(), reverse=True)
+        self.reachlist = sorted(iter(list(self.HS.reach.values())), reverse=True)
 
         # This if statement prevents us from having to test every 
         # timestep. We just call self.run_all(), which is a classmethod 
@@ -211,7 +211,7 @@ class ModelControl(object):
             # If minute and second are both zero, we are at the top of 
             # the hour. 
             if (minute == 0 and second == 0):
-                ts = cnt.next()  # Number of actual timesteps per tick
+                ts = next(cnt)  # Number of actual timesteps per tick
 
                 # Number of timesteps in one hour
                 hr = 60 / (IniParams["dt"] / 60)
