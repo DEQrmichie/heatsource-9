@@ -1,5 +1,3 @@
-from __future__ import division
-
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import iniRange
 from ..Dieties.IniParamsDiety import dtype
@@ -34,11 +32,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filename='heatsource.log',
                     filemode='w')
 logger = logging.getLogger(__name__)
-
-try:
-    basestring
-except NameError:
-    basestring = str
 
 
 class Inputs(object):
@@ -361,7 +354,7 @@ class Inputs(object):
                         else:
                             raise TypeError("Value in control file line {0} is missing".format(line[0]))
                     # now make sure it's the correct data type
-                    elif dtype[k] is basestring:
+                    elif dtype[k] is str:
                         IniParams[k] = str.strip(line[3])
 
                     elif dtype[k] is int:
@@ -972,7 +965,7 @@ class Inputs(object):
                 # This is to find the correct landcover data 
                 # key since they are all different
                 if "LC" in key:
-                    # basestring
+                    # str
                     k = "LC"
                 elif any(s in key for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
                     # float
@@ -988,12 +981,12 @@ class Inputs(object):
             elif dtype[k] is int:
                 data_v[key] = [int(float(i)) if i is not None else 0 for i in v]
 
-            elif dtype[k] is basestring:
+            elif dtype[k] is str:
                 data_v[key] = [str(i) if i is not None else None for i in v]
 
             # --
                 
-            if (dtype[k] is not basestring and dtype[k] in list(iniRange.keys())):
+            if (dtype[k] is not str and dtype[k] in list(iniRange.keys())):
                 # check the value range
                 for val, i in enumerate(v):
                     if not iniRange[k][0] <= val <= iniRange[k][1]:
