@@ -1439,7 +1439,6 @@ static const char __pyx_k_Daytime[] = "Daytime";
 static const char __pyx_k_Delta_T[] = "Delta_T";
 static const char __pyx_k_F_Solar[] = "F_Solar";
 static const char __pyx_k_F_Total[] = "F_Total";
-static const char __pyx_k_MixItUp[] = "MixItUp";
 static const char __pyx_k_Printer[] = "Printer";
 static const char __pyx_k_Q_tribs[] = "Q_tribs";
 static const char __pyx_k_T_tribs[] = "T_tribs";
@@ -1466,7 +1465,6 @@ static const char __pyx_k_has_prev[] = "has_prev";
 static const char __pyx_k_latitude[] = "latitude";
 static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_streamID[] = "streamID";
-static const char __pyx_k_CalcFlows[] = "CalcFlows";
 static const char __pyx_k_FLIR_Temp[] = "FLIR_Temp";
 static const char __pyx_k_FLIR_Time[] = "FLIR_Time";
 static const char __pyx_k_F_Diffuse[] = "F_Diffuse";
@@ -1478,26 +1476,26 @@ static const char __pyx_k_lc_canopy[] = "lc_canopy";
 static const char __pyx_k_lc_height[] = "lc_height";
 static const char __pyx_k_longitude[] = "longitude";
 static const char __pyx_k_metaclass[] = "__metaclass__";
+static const char __pyx_k_mix_it_up[] = "mix_it_up";
 static const char __pyx_k_veg_block[] = "veg_block";
 static const char __pyx_k_F_DailySum[] = "F_DailySum";
 static const char __pyx_k_F_Longwave[] = "F_Longwave";
-static const char __pyx_k_Initialize[] = "Initialize";
 static const char __pyx_k_PrettyTime[] = "PrettyTime";
 static const char __pyx_k_ShaderList[] = "ShaderList";
 static const char __pyx_k_StreamNode[] = "StreamNode";
 static const char __pyx_k_TopoFactor[] = "TopoFactor";
 static const char __pyx_k_UTC_offset[] = "UTC_offset";
+static const char __pyx_k_calc_flows[] = "calc_flows";
+static const char __pyx_k_initialize[] = "initialize";
 static const char __pyx_k_solar_only[] = "solar_only";
 static const char __pyx_k_Azimuth_mod[] = "Azimuth_mod";
 static const char __pyx_k_F_LW_Stream[] = "F_LW_Stream";
-static const char __pyx_k_GetNodeData[] = "GetNodeData";
-static const char __pyx_k_MacCormick2[] = "MacCormick2";
 static const char __pyx_k_Mix_T_Delta[] = "Mix_T_Delta";
 static const char __pyx_k_canopy_data[] = "canopy_data";
 static const char __pyx_k_heatsource8[] = "heatsource8";
 static const char __pyx_k_hyp_percent[] = "hyp_percent";
+static const char __pyx_k_maccormick2[] = "maccormick2";
 static const char __pyx_k_trans_count[] = "trans_count";
-static const char __pyx_k_CalcHeat_Opt[] = "CalcHeat_Opt";
 static const char __pyx_k_F_Conduction[] = "F_Conduction";
 static const char __pyx_k_F_Convection[] = "F_Convection";
 static const char __pyx_k_Interpolator[] = "Interpolator";
@@ -1511,12 +1509,11 @@ static const char __pyx_k_CalcDischarge[] = "CalcDischarge";
 static const char __pyx_k_F_Evaporation[] = "F_Evaporation";
 static const char __pyx_k_Solar_Blocked[] = "Solar_Blocked";
 static const char __pyx_k_Utils_Printer[] = "Utils.Printer";
+static const char __pyx_k_calc_heat_opt[] = "calc_heat_opt";
+static const char __pyx_k_get_node_data[] = "get_node_data";
 static const char __pyx_k_lc_height_rel[] = "lc_height_rel";
 static const char __pyx_k_print_console[] = "print_console";
 static const char __pyx_k_run_in_python[] = "run_in_python";
-static const char __pyx_k_CalcDispersion[] = "CalcDispersion";
-static const char __pyx_k_CalcHeatFluxes[] = "CalcHeatFluxes";
-static const char __pyx_k_CalcMacCormick[] = "CalcMacCormick";
 static const char __pyx_k_Shear_Velocity[] = "Shear_Velocity";
 static const char __pyx_k_StreamNode___eq[] = "StreamNode.__eq__";
 static const char __pyx_k_StreamNode___ge[] = "StreamNode.__ge__";
@@ -1524,32 +1521,35 @@ static const char __pyx_k_StreamNode___gt[] = "StreamNode.__gt__";
 static const char __pyx_k_StreamNode___le[] = "StreamNode.__le__";
 static const char __pyx_k_StreamNode___lt[] = "StreamNode.__lt__";
 static const char __pyx_k_StreamNode___ne[] = "StreamNode.__ne__";
-static const char __pyx_k_CalcDischarge_Opt[] = "CalcDischarge_Opt";
-static const char __pyx_k_CalcSolarPosition[] = "CalcSolarPosition";
+static const char __pyx_k_calc_dispersion[] = "calc_dispersion";
+static const char __pyx_k_calc_maccormick[] = "calc_maccormick";
+static const char __pyx_k_calc_heat_fluxes[] = "calc_heat_fluxes";
 static const char __pyx_k_StreamNode___init[] = "StreamNode.__init__";
 static const char __pyx_k_StreamNode___repr[] = "StreamNode.__repr__";
 static const char __pyx_k_StreamNode__slots[] = "_StreamNode__slots";
 static const char __pyx_k_transsample_count[] = "transsample_count";
-static const char __pyx_k_CalculateDischarge[] = "CalculateDischarge";
-static const char __pyx_k_StreamNode_MixItUp[] = "StreamNode.MixItUp";
 static const char __pyx_k_Utils_Dictionaries[] = "Utils.Dictionaries";
+static const char __pyx_k_calc_discharge_opt[] = "calc_discharge_opt";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_calc_solar_position[] = "calc_solar_position";
+static const char __pyx_k_calculate_discharge[] = "calculate_discharge";
 static const char __pyx_k_Dieties_ChronosDiety[] = "Dieties.ChronosDiety";
+static const char __pyx_k_StreamNode_mix_it_up[] = "StreamNode.mix_it_up";
 static const char __pyx_k_transsample_distance[] = "transsample_distance";
-static const char __pyx_k_CalcHeat_BoundaryNode[] = "CalcHeat_BoundaryNode";
-static const char __pyx_k_StreamNode_Initialize[] = "StreamNode.Initialize";
+static const char __pyx_k_StreamNode_initialize[] = "StreamNode.initialize";
 static const char __pyx_k_Dieties_IniParamsDiety[] = "Dieties.IniParamsDiety";
-static const char __pyx_k_StreamNode_GetNodeData[] = "StreamNode.GetNodeData";
-static const char __pyx_k_StreamNode_MacCormick2[] = "StreamNode.MacCormick2";
-static const char __pyx_k_StreamNode_CalcHeat_Opt[] = "StreamNode.CalcHeat_Opt";
-static const char __pyx_k_StreamNode_CalcDispersion[] = "StreamNode.CalcDispersion";
-static const char __pyx_k_CalcDischarge_BoundaryNode[] = "CalcDischarge_BoundaryNode";
-static const char __pyx_k_StreamNode_CalcDischarge_Opt[] = "StreamNode.CalcDischarge_Opt";
-static const char __pyx_k_StreamNode_CalculateDischarge[] = "StreamNode.CalculateDischarge";
+static const char __pyx_k_StreamNode_maccormick2[] = "StreamNode.maccormick2";
+static const char __pyx_k_calc_heat_boundary_node[] = "calc_heat_boundary_node";
+static const char __pyx_k_StreamNode_calc_heat_opt[] = "StreamNode.calc_heat_opt";
+static const char __pyx_k_StreamNode_get_node_data[] = "StreamNode.get_node_data";
+static const char __pyx_k_StreamNode_calc_dispersion[] = "StreamNode.calc_dispersion";
+static const char __pyx_k_calc_discharge_boundary_node[] = "calc_discharge_boundary_node";
+static const char __pyx_k_StreamNode_calc_discharge_opt[] = "StreamNode.calc_discharge_opt";
 static const char __pyx_k_heatsource9_Stream_StreamNode[] = "heatsource9.Stream.StreamNode";
+static const char __pyx_k_StreamNode_calculate_discharge[] = "StreamNode.calculate_discharge";
 static const char __pyx_k_Definition_of_an_individual_stre[] = "Definition of an individual stream segment";
-static const char __pyx_k_StreamNode_CalcDischarge_Boundar[] = "StreamNode.CalcDischarge_BoundaryNode";
-static const char __pyx_k_StreamNode_CalcHeat_BoundaryNode[] = "StreamNode.CalcHeat_BoundaryNode";
+static const char __pyx_k_StreamNode_calc_discharge_bounda[] = "StreamNode.calc_discharge_boundary_node";
+static const char __pyx_k_StreamNode_calc_heat_boundary_no[] = "StreamNode.calc_heat_boundary_node";
 static const char __pyx_k_The_channel_is_going_dry_at_0_mo[] = "The channel is going dry at {0}, model time: {1}.";
 static const char __pyx_k_The_channel_is_going_dry_at_km_0[] = "The channel is going dry at km {0}, model time: {1}.";
 static const char __pyx_k_run_in_python_is_not_True_Someth[] = "run_in_python is not True. Something is very wrong";
@@ -1559,17 +1559,7 @@ static PyObject *__pyx_n_s_Altitude;
 static PyObject *__pyx_n_s_Azimuth_mod;
 static PyObject *__pyx_n_s_C_args;
 static PyObject *__pyx_n_s_CalcDischarge;
-static PyObject *__pyx_n_s_CalcDischarge_BoundaryNode;
-static PyObject *__pyx_n_s_CalcDischarge_Opt;
-static PyObject *__pyx_n_s_CalcDispersion;
-static PyObject *__pyx_n_s_CalcFlows;
 static PyObject *__pyx_n_s_CalcHeat;
-static PyObject *__pyx_n_s_CalcHeatFluxes;
-static PyObject *__pyx_n_s_CalcHeat_BoundaryNode;
-static PyObject *__pyx_n_s_CalcHeat_Opt;
-static PyObject *__pyx_n_s_CalcMacCormick;
-static PyObject *__pyx_n_s_CalcSolarPosition;
-static PyObject *__pyx_n_s_CalculateDischarge;
 static PyObject *__pyx_n_s_Chronos;
 static PyObject *__pyx_n_s_Daytime;
 static PyObject *__pyx_kp_s_Definition_of_an_individual_stre;
@@ -1592,17 +1582,13 @@ static PyObject *__pyx_n_s_F_LW_Veg;
 static PyObject *__pyx_n_s_F_Longwave;
 static PyObject *__pyx_n_s_F_Solar;
 static PyObject *__pyx_n_s_F_Total;
-static PyObject *__pyx_n_s_GetNodeData;
 static PyObject *__pyx_n_s_HS;
 static PyObject *__pyx_n_s_IniParams;
-static PyObject *__pyx_n_s_Initialize;
 static PyObject *__pyx_n_s_Interpolator;
 static PyObject *__pyx_n_s_JD;
 static PyObject *__pyx_n_s_JDC;
 static PyObject *__pyx_n_s_Log;
 static PyObject *__pyx_n_s_Mac;
-static PyObject *__pyx_n_s_MacCormick2;
-static PyObject *__pyx_n_s_MixItUp;
 static PyObject *__pyx_n_s_Mix_T_Delta;
 static PyObject *__pyx_n_s_P_w;
 static PyObject *__pyx_n_s_PrettyTime;
@@ -1630,16 +1616,6 @@ static PyObject *__pyx_n_s_Shear_Velocity;
 static PyObject *__pyx_n_s_SolarPos;
 static PyObject *__pyx_n_s_Solar_Blocked;
 static PyObject *__pyx_n_s_StreamNode;
-static PyObject *__pyx_n_s_StreamNode_CalcDischarge_Boundar;
-static PyObject *__pyx_n_s_StreamNode_CalcDischarge_Opt;
-static PyObject *__pyx_n_s_StreamNode_CalcDispersion;
-static PyObject *__pyx_n_s_StreamNode_CalcHeat_BoundaryNode;
-static PyObject *__pyx_n_s_StreamNode_CalcHeat_Opt;
-static PyObject *__pyx_n_s_StreamNode_CalculateDischarge;
-static PyObject *__pyx_n_s_StreamNode_GetNodeData;
-static PyObject *__pyx_n_s_StreamNode_Initialize;
-static PyObject *__pyx_n_s_StreamNode_MacCormick2;
-static PyObject *__pyx_n_s_StreamNode_MixItUp;
 static PyObject *__pyx_n_s_StreamNode___eq;
 static PyObject *__pyx_n_s_StreamNode___ge;
 static PyObject *__pyx_n_s_StreamNode___gt;
@@ -1649,6 +1625,16 @@ static PyObject *__pyx_n_s_StreamNode___lt;
 static PyObject *__pyx_n_s_StreamNode___ne;
 static PyObject *__pyx_n_s_StreamNode___repr;
 static PyObject *__pyx_n_s_StreamNode__slots;
+static PyObject *__pyx_n_s_StreamNode_calc_discharge_bounda;
+static PyObject *__pyx_n_s_StreamNode_calc_discharge_opt;
+static PyObject *__pyx_n_s_StreamNode_calc_dispersion;
+static PyObject *__pyx_n_s_StreamNode_calc_heat_boundary_no;
+static PyObject *__pyx_n_s_StreamNode_calc_heat_opt;
+static PyObject *__pyx_n_s_StreamNode_calculate_discharge;
+static PyObject *__pyx_n_s_StreamNode_get_node_data;
+static PyObject *__pyx_n_s_StreamNode_initialize;
+static PyObject *__pyx_n_s_StreamNode_maccormick2;
+static PyObject *__pyx_n_s_StreamNode_mix_it_up;
 static PyObject *__pyx_n_s_T;
 static PyObject *__pyx_n_s_T_accr;
 static PyObject *__pyx_n_s_T_bc;
@@ -1674,8 +1660,18 @@ static PyObject *__pyx_n_s_Zenith;
 static PyObject *__pyx_n_s_Zone;
 static PyObject *__pyx_n_s_alluviumtemp;
 static PyObject *__pyx_n_s_attr;
+static PyObject *__pyx_n_s_calc_discharge_boundary_node;
+static PyObject *__pyx_n_s_calc_discharge_opt;
+static PyObject *__pyx_n_s_calc_dispersion;
+static PyObject *__pyx_n_s_calc_flows;
+static PyObject *__pyx_n_s_calc_heat_boundary_node;
+static PyObject *__pyx_n_s_calc_heat_fluxes;
+static PyObject *__pyx_n_s_calc_heat_opt;
+static PyObject *__pyx_n_s_calc_maccormick;
+static PyObject *__pyx_n_s_calc_solar_position;
 static PyObject *__pyx_n_s_calcalluvium;
 static PyObject *__pyx_n_s_calcevap;
+static PyObject *__pyx_n_s_calculate_discharge;
 static PyObject *__pyx_n_s_canopy_data;
 static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
@@ -1696,6 +1692,7 @@ static PyObject *__pyx_n_s_error;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_ge;
 static PyObject *__pyx_n_s_getLogger;
+static PyObject *__pyx_n_s_get_node_data;
 static PyObject *__pyx_n_s_ground;
 static PyObject *__pyx_n_s_gt;
 static PyObject *__pyx_n_s_has_prev;
@@ -1707,6 +1704,7 @@ static PyObject *__pyx_n_s_hyp_percent;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_init;
+static PyObject *__pyx_n_s_initialize;
 static PyObject *__pyx_n_s_inputs;
 static PyObject *__pyx_n_s_keys;
 static PyObject *__pyx_n_s_km;
@@ -1723,12 +1721,14 @@ static PyObject *__pyx_n_s_logger;
 static PyObject *__pyx_n_s_logging;
 static PyObject *__pyx_n_s_longitude;
 static PyObject *__pyx_n_s_lt;
+static PyObject *__pyx_n_s_maccormick2;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_math;
 static PyObject *__pyx_n_s_metData;
 static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_n_s_min;
 static PyObject *__pyx_n_s_mix;
+static PyObject *__pyx_n_s_mix_it_up;
 static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_n_s_msg;
 static PyObject *__pyx_n_s_n;
@@ -1778,7 +1778,7 @@ static PyObject *__pyx_n_s_xrange;
 static PyObject *__pyx_n_s_z;
 static PyObject *__pyx_n_s_zone;
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_kwargs); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNodeData(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2get_node_data(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_4__eq__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_other); /* proto */
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_6__ne__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_other); /* proto */
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_8__gt__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_other); /* proto */
@@ -1786,15 +1786,15 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_10__lt
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_12__ge__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_other); /* proto */
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_14__le__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_other); /* proto */
 static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_16__repr__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Initialize(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20CalcDischarge_Opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22CalcDischarge_BoundaryNode(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24CalculateDischarge(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26CalcHeat_Opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, CYTHON_UNUSED PyObject *__pyx_v_min, CYTHON_UNUSED PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, CYTHON_UNUSED PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28CalcHeat_BoundaryNode(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacCormick2(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32CalcDispersion(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixItUp(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_T_up); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18initialize(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20calc_discharge_opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22calc_discharge_boundary_node(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24calculate_discharge(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26calc_heat_opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, CYTHON_UNUSED PyObject *__pyx_v_min, CYTHON_UNUSED PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, CYTHON_UNUSED PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28calc_heat_boundary_node(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30maccormick2(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32calc_dispersion(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34mix_it_up(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_T_up); /* proto */
 static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_keys = {0, &__pyx_n_s_keys, 0, 0, 0};
 static PyObject *__pyx_float_0_0;
 static PyObject *__pyx_float_9_8;
@@ -3057,7 +3057,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode___init
  *         self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]             # <<<<<<<<<<<<<<
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):
+ *     def get_node_data(self):
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3180,7 +3180,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode___init
  *         self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.UTC_offset = IniParams["offset"]             # <<<<<<<<<<<<<<
- *     def GetNodeData(self):
+ *     def get_node_data(self):
  *         data = {}
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_IniParams); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
@@ -3225,26 +3225,26 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode___init
 /* "heatsource9/Stream/StreamNode.pyx":125
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):             # <<<<<<<<<<<<<<
+ *     def get_node_data(self):             # <<<<<<<<<<<<<<
  *         data = {}
  *         for attr in self.__slots:
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3GetNodeData(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_3GetNodeData = {"GetNodeData", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3GetNodeData, METH_O, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3GetNodeData(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3get_node_data(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_3get_node_data = {"get_node_data", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3get_node_data, METH_O, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_3get_node_data(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("GetNodeData (wrapper)", 0);
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNodeData(__pyx_self, ((PyObject *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("get_node_data (wrapper)", 0);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2get_node_data(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNodeData(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2get_node_data(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_data = NULL;
   PyObject *__pyx_v_attr = NULL;
   PyObject *__pyx_r = NULL;
@@ -3253,11 +3253,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNo
   PyObject *__pyx_t_2 = NULL;
   Py_ssize_t __pyx_t_3;
   PyObject *(*__pyx_t_4)(PyObject *);
-  __Pyx_RefNannySetupContext("GetNodeData", 0);
+  __Pyx_RefNannySetupContext("get_node_data", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":126
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):
+ *     def get_node_data(self):
  *         data = {}             # <<<<<<<<<<<<<<
  *         for attr in self.__slots:
  *             data[attr] = getattr(self,attr)
@@ -3268,7 +3268,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNo
   __pyx_t_1 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":127
- *     def GetNodeData(self):
+ *     def get_node_data(self):
  *         data = {}
  *         for attr in self.__slots:             # <<<<<<<<<<<<<<
  *             data[attr] = getattr(self,attr)
@@ -3332,7 +3332,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNo
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "heatsource9/Stream/StreamNode.pyx":127
- *     def GetNodeData(self):
+ *     def get_node_data(self):
  *         data = {}
  *         for attr in self.__slots:             # <<<<<<<<<<<<<<
  *             data[attr] = getattr(self,attr)
@@ -3356,7 +3356,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNo
   /* "heatsource9/Stream/StreamNode.pyx":125
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):             # <<<<<<<<<<<<<<
+ *     def get_node_data(self):             # <<<<<<<<<<<<<<
  *         data = {}
  *         for attr in self.__slots:
  */
@@ -3365,7 +3365,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_2GetNo
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.GetNodeData", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.get_node_data", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_data);
@@ -4244,7 +4244,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_16__re
  *     def __repr__(self):
  *         return '%s @ %.3f km' % (self.__class__.__name__, self.km)             # <<<<<<<<<<<<<<
  * 
- *     def Initialize(self):
+ *     def initialize(self):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_class); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
@@ -4293,27 +4293,27 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_16__re
 /* "heatsource9/Stream/StreamNode.pyx":152
  *         return '%s @ %.3f km' % (self.__class__.__name__, self.km)
  * 
- *     def Initialize(self):             # <<<<<<<<<<<<<<
+ *     def initialize(self):             # <<<<<<<<<<<<<<
  *         """Methods necessary to set initial conditions of the node"""
  *         global _HS, py_HS, C_HS
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19Initialize(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_18Initialize[] = "Methods necessary to set initial conditions of the node";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_19Initialize = {"Initialize", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19Initialize, METH_O, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_18Initialize};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19Initialize(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19initialize(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_18initialize[] = "Methods necessary to set initial conditions of the node";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_19initialize = {"initialize", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19initialize, METH_O, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_18initialize};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_19initialize(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("Initialize (wrapper)", 0);
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Initialize(__pyx_self, ((PyObject *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("initialize (wrapper)", 0);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18initialize(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Initialize(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18initialize(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_has_prev = NULL;
   PyObject *__pyx_v_msg = NULL;
   PyObject *__pyx_r = NULL;
@@ -4346,14 +4346,14 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   PyObject *__pyx_t_26 = NULL;
   PyObject *__pyx_t_27 = NULL;
   PyObject *__pyx_t_28 = NULL;
-  __Pyx_RefNannySetupContext("Initialize", 0);
+  __Pyx_RefNannySetupContext("initialize", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":155
  *         """Methods necessary to set initial conditions of the node"""
  *         global _HS, py_HS, C_HS
  *         has_prev = self.prev_km is not None             # <<<<<<<<<<<<<<
  *         if has_prev:
- *             self.CalcHeat = self.CalcHeat_Opt
+ *             self.CalcHeat = self.calc_heat_opt
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_prev_km); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4368,7 +4368,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
  *         global _HS, py_HS, C_HS
  *         has_prev = self.prev_km is not None
  *         if has_prev:             # <<<<<<<<<<<<<<
- *             self.CalcHeat = self.CalcHeat_Opt
+ *             self.CalcHeat = self.calc_heat_opt
  *         else:
  */
   __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_has_prev); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 156, __pyx_L1_error)
@@ -4377,11 +4377,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
     /* "heatsource9/Stream/StreamNode.pyx":157
  *         has_prev = self.prev_km is not None
  *         if has_prev:
- *             self.CalcHeat = self.CalcHeat_Opt             # <<<<<<<<<<<<<<
+ *             self.CalcHeat = self.calc_heat_opt             # <<<<<<<<<<<<<<
  *         else:
- *             self.CalcHeat = self.CalcHeat_BoundaryNode
+ *             self.CalcHeat = self.calc_heat_boundary_node
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_CalcHeat_Opt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_calc_heat_opt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_CalcHeat, __pyx_t_1) < 0) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4390,21 +4390,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
  *         global _HS, py_HS, C_HS
  *         has_prev = self.prev_km is not None
  *         if has_prev:             # <<<<<<<<<<<<<<
- *             self.CalcHeat = self.CalcHeat_Opt
+ *             self.CalcHeat = self.calc_heat_opt
  *         else:
  */
     goto __pyx_L3;
   }
 
   /* "heatsource9/Stream/StreamNode.pyx":159
- *             self.CalcHeat = self.CalcHeat_Opt
+ *             self.CalcHeat = self.calc_heat_opt
  *         else:
- *             self.CalcHeat = self.CalcHeat_BoundaryNode             # <<<<<<<<<<<<<<
+ *             self.CalcHeat = self.calc_heat_boundary_node             # <<<<<<<<<<<<<<
  * 
  *         if IniParams["run_in_python"]:
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_CalcHeat_BoundaryNode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_calc_heat_boundary_node); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_CalcHeat, __pyx_t_1) < 0) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4412,7 +4412,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   __pyx_L3:;
 
   /* "heatsource9/Stream/StreamNode.pyx":161
- *             self.CalcHeat = self.CalcHeat_BoundaryNode
+ *             self.CalcHeat = self.calc_heat_boundary_node
  * 
  *         if IniParams["run_in_python"]:             # <<<<<<<<<<<<<<
  *             _HS = py_HS
@@ -4440,7 +4440,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /* "heatsource9/Stream/StreamNode.pyx":161
- *             self.CalcHeat = self.CalcHeat_BoundaryNode
+ *             self.CalcHeat = self.calc_heat_boundary_node
  * 
  *         if IniParams["run_in_python"]:             # <<<<<<<<<<<<<<
  *             _HS = py_HS
@@ -4494,7 +4494,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
  *             logger.error(msg)
  *             raise Exception(msg)             # <<<<<<<<<<<<<<
  * 
- *         self.CalcDischarge = self.CalculateDischarge
+ *         self.CalcDischarge = self.calculate_discharge
  */
     __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_v_msg); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 167, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
@@ -4507,18 +4507,18 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   /* "heatsource9/Stream/StreamNode.pyx":169
  *             raise Exception(msg)
  * 
- *         self.CalcDischarge = self.CalculateDischarge             # <<<<<<<<<<<<<<
+ *         self.CalcDischarge = self.calculate_discharge             # <<<<<<<<<<<<<<
  *         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
  *                        self.ViewToSky, self.phi, self.lc_canopy,
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_CalculateDischarge); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_calculate_discharge); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_CalcDischarge, __pyx_t_3) < 0) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":170
  * 
- *         self.CalcDischarge = self.CalculateDischarge
+ *         self.CalcDischarge = self.calculate_discharge
  *         self.C_args = (self.W_b, self.elevation, self.TopoFactor,             # <<<<<<<<<<<<<<
  *                        self.ViewToSky, self.phi, self.lc_canopy,
  *                        self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
@@ -4531,7 +4531,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   __Pyx_GOTREF(__pyx_t_1);
 
   /* "heatsource9/Stream/StreamNode.pyx":171
- *         self.CalcDischarge = self.CalculateDischarge
+ *         self.CalcDischarge = self.calculate_discharge
  *         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
  *                        self.ViewToSky, self.phi, self.lc_canopy,             # <<<<<<<<<<<<<<
  *                        self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
@@ -4686,7 +4686,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
  *                        IniParams["calcalluvium"],
  *                        IniParams["alluviumtemp"])             # <<<<<<<<<<<<<<
  * 
- *     def CalcDischarge_Opt(self, time):
+ *     def calc_discharge_opt(self, time):
  */
   __Pyx_GetModuleGlobalName(__pyx_t_18, __pyx_n_s_IniParams); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_18);
@@ -4696,7 +4696,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
 
   /* "heatsource9/Stream/StreamNode.pyx":170
  * 
- *         self.CalcDischarge = self.CalculateDischarge
+ *         self.CalcDischarge = self.calculate_discharge
  *         self.C_args = (self.W_b, self.elevation, self.TopoFactor,             # <<<<<<<<<<<<<<
  *                        self.ViewToSky, self.phi, self.lc_canopy,
  *                        self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
@@ -4790,7 +4790,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   /* "heatsource9/Stream/StreamNode.pyx":152
  *         return '%s @ %.3f km' % (self.__class__.__name__, self.km)
  * 
- *     def Initialize(self):             # <<<<<<<<<<<<<<
+ *     def initialize(self):             # <<<<<<<<<<<<<<
  *         """Methods necessary to set initial conditions of the node"""
  *         global _HS, py_HS, C_HS
  */
@@ -4826,7 +4826,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
   __Pyx_XDECREF(__pyx_t_26);
   __Pyx_XDECREF(__pyx_t_27);
   __Pyx_XDECREF(__pyx_t_28);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.Initialize", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.initialize", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_has_prev);
@@ -4839,21 +4839,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_18Init
 /* "heatsource9/Stream/StreamNode.pyx":183
  *                        IniParams["alluviumtemp"])
  * 
- *     def CalcDischarge_Opt(self, time):             # <<<<<<<<<<<<<<
- *         """A Version of CalculateDischarge() that does not require
+ *     def calc_discharge_opt(self, time):             # <<<<<<<<<<<<<<
+ *         """A Version of calculate_discharge() that does not require
  *         checking for boundary conditions"""
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21CalcDischarge_Opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_20CalcDischarge_Opt[] = "A Version of CalculateDischarge() that does not require\n        checking for boundary conditions";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_21CalcDischarge_Opt = {"CalcDischarge_Opt", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21CalcDischarge_Opt, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_20CalcDischarge_Opt};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21CalcDischarge_Opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21calc_discharge_opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_20calc_discharge_opt[] = "A Version of calculate_discharge() that does not require\n        checking for boundary conditions";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_21calc_discharge_opt = {"calc_discharge_opt", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21calc_discharge_opt, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_20calc_discharge_opt};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21calc_discharge_opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcDischarge_Opt (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_discharge_opt (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,0};
     PyObject* values[2] = {0,0};
@@ -4877,11 +4877,11 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21Calc
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcDischarge_Opt", 1, 2, 2, 1); __PYX_ERR(0, 183, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_discharge_opt", 1, 2, 2, 1); __PYX_ERR(0, 183, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcDischarge_Opt") < 0)) __PYX_ERR(0, 183, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_discharge_opt") < 0)) __PYX_ERR(0, 183, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -4894,20 +4894,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_21Calc
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcDischarge_Opt", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 183, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_discharge_opt", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 183, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcDischarge_Opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_discharge_opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20CalcDischarge_Opt(__pyx_self, __pyx_v_self, __pyx_v_time);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20calc_discharge_opt(__pyx_self, __pyx_v_self, __pyx_v_time);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20CalcDischarge_Opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20calc_discharge_opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
   PyObject *__pyx_v_inputs = NULL;
   PyObject *__pyx_v_up = NULL;
   PyObject *__pyx_v_Q = NULL;
@@ -4933,10 +4933,10 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
   PyObject *__pyx_t_17 = NULL;
   PyObject *(*__pyx_t_18)(PyObject *);
   int __pyx_t_19;
-  __Pyx_RefNannySetupContext("CalcDischarge_Opt", 0);
+  __Pyx_RefNannySetupContext("calc_discharge_opt", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":186
- *         """A Version of CalculateDischarge() that does not require
+ *         """A Version of calculate_discharge() that does not require
  *         checking for boundary conditions"""
  *         inputs = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E             # <<<<<<<<<<<<<<
  *         self.Q_mass += inputs
@@ -5001,13 +5001,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
   /* "heatsource9/Stream/StreamNode.pyx":192
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
  *             self.Disp) = \
- *             _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,             # <<<<<<<<<<<<<<
+ *             _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,             # <<<<<<<<<<<<<<
  *                           self.dx, self.dt, self.z, self.n,
  *                           self.d_cont, self.Q, up.Q, up.Q_prev,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_HS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_CalcFlows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_calc_flows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_U); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L1_error)
@@ -5021,7 +5021,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
 
   /* "heatsource9/Stream/StreamNode.pyx":193
  *             self.Disp) = \
- *             _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *             _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                           self.dx, self.dt, self.z, self.n,             # <<<<<<<<<<<<<<
  *                           self.d_cont, self.Q, up.Q, up.Q_prev,
  *                           inputs, -1)
@@ -5036,7 +5036,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
   __Pyx_GOTREF(__pyx_t_10);
 
   /* "heatsource9/Stream/StreamNode.pyx":194
- *             _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *             _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                           self.dx, self.dt, self.z, self.n,
  *                           self.d_cont, self.Q, up.Q, up.Q_prev,             # <<<<<<<<<<<<<<
  *                           inputs, -1)
@@ -5215,7 +5215,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
  * 
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,             # <<<<<<<<<<<<<<
  *             self.Disp) = \
- *             _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *             _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  */
   __pyx_v_Q = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5304,7 +5304,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
  * 
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
  *             self.Disp) = \             # <<<<<<<<<<<<<<
- *             _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *             _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                           self.dx, self.dt, self.z, self.n,
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_Disp, __pyx_t_8) < 0) __PYX_ERR(0, 191, __pyx_L1_error)
@@ -5431,7 +5431,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
  *             msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
  *             logger.warning(msg)             # <<<<<<<<<<<<<<
  * 
- *     def CalcDischarge_BoundaryNode(self, time):
+ *     def calc_discharge_boundary_node(self, time):
  */
     __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_logger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 206, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -5467,8 +5467,8 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
   /* "heatsource9/Stream/StreamNode.pyx":183
  *                        IniParams["alluviumtemp"])
  * 
- *     def CalcDischarge_Opt(self, time):             # <<<<<<<<<<<<<<
- *         """A Version of CalculateDischarge() that does not require
+ *     def calc_discharge_opt(self, time):             # <<<<<<<<<<<<<<
+ *         """A Version of calculate_discharge() that does not require
  *         checking for boundary conditions"""
  */
 
@@ -5492,7 +5492,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
   __Pyx_XDECREF(__pyx_t_17);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcDischarge_Opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_discharge_opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_inputs);
@@ -5507,20 +5507,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_20Calc
 /* "heatsource9/Stream/StreamNode.pyx":208
  *             logger.warning(msg)
  * 
- *     def CalcDischarge_BoundaryNode(self, time):             # <<<<<<<<<<<<<<
+ *     def calc_discharge_boundary_node(self, time):             # <<<<<<<<<<<<<<
  *         Q_bc = self.Q_bc[time]
  *         self.Q_mass += Q_bc
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23CalcDischarge_BoundaryNode(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_23CalcDischarge_BoundaryNode = {"CalcDischarge_BoundaryNode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23CalcDischarge_BoundaryNode, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23CalcDischarge_BoundaryNode(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23calc_discharge_boundary_node(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_23calc_discharge_boundary_node = {"calc_discharge_boundary_node", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23calc_discharge_boundary_node, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23calc_discharge_boundary_node(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcDischarge_BoundaryNode (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_discharge_boundary_node (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,0};
     PyObject* values[2] = {0,0};
@@ -5544,11 +5544,11 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23Calc
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcDischarge_BoundaryNode", 1, 2, 2, 1); __PYX_ERR(0, 208, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_discharge_boundary_node", 1, 2, 2, 1); __PYX_ERR(0, 208, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcDischarge_BoundaryNode") < 0)) __PYX_ERR(0, 208, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_discharge_boundary_node") < 0)) __PYX_ERR(0, 208, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -5561,20 +5561,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_23Calc
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcDischarge_BoundaryNode", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 208, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_discharge_boundary_node", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 208, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcDischarge_BoundaryNode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_discharge_boundary_node", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22CalcDischarge_BoundaryNode(__pyx_self, __pyx_v_self, __pyx_v_time);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22calc_discharge_boundary_node(__pyx_self, __pyx_v_self, __pyx_v_time);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22CalcDischarge_BoundaryNode(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22calc_discharge_boundary_node(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
   PyObject *__pyx_v_Q_bc = NULL;
   PyObject *__pyx_v_Q = NULL;
   PyObject *__pyx_r = NULL;
@@ -5595,11 +5595,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   PyObject *__pyx_t_14 = NULL;
   PyObject *(*__pyx_t_15)(PyObject *);
   int __pyx_t_16;
-  __Pyx_RefNannySetupContext("CalcDischarge_BoundaryNode", 0);
+  __Pyx_RefNannySetupContext("calc_discharge_boundary_node", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":209
  * 
- *     def CalcDischarge_BoundaryNode(self, time):
+ *     def calc_discharge_boundary_node(self, time):
  *         Q_bc = self.Q_bc[time]             # <<<<<<<<<<<<<<
  *         self.Q_mass += Q_bc
  *         # We fill the discharge arguments with 0 because it is
@@ -5613,7 +5613,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":210
- *     def CalcDischarge_BoundaryNode(self, time):
+ *     def calc_discharge_boundary_node(self, time):
  *         Q_bc = self.Q_bc[time]
  *         self.Q_mass += Q_bc             # <<<<<<<<<<<<<<
  *         # We fill the discharge arguments with 0 because it is
@@ -5630,13 +5630,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   /* "heatsource9/Stream/StreamNode.pyx":216
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *             self.U, self.Disp) = \
- *                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,             # <<<<<<<<<<<<<<
+ *                 _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,             # <<<<<<<<<<<<<<
  *                               self.dx, self.dt, self.z, self.n,
  *                               self.d_cont,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_HS); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_CalcFlows); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_calc_flows); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_U); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
@@ -5650,7 +5650,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
 
   /* "heatsource9/Stream/StreamNode.pyx":217
  *             self.U, self.Disp) = \
- *                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *                 _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                               self.dx, self.dt, self.z, self.n,             # <<<<<<<<<<<<<<
  *                               self.d_cont,
  *                               0.0, 0.0, 0.0, 0.0, Q_bc)
@@ -5665,7 +5665,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   __Pyx_GOTREF(__pyx_t_10);
 
   /* "heatsource9/Stream/StreamNode.pyx":218
- *                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *                 _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                               self.dx, self.dt, self.z, self.n,
  *                               self.d_cont,             # <<<<<<<<<<<<<<
  *                               0.0, 0.0, 0.0, 0.0, Q_bc)
@@ -5832,7 +5832,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
  * 
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,             # <<<<<<<<<<<<<<
  *             self.U, self.Disp) = \
- *                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *                 _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  */
   __pyx_v_Q = __pyx_t_3;
   __pyx_t_3 = 0;
@@ -5919,7 +5919,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
  * 
  *         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *             self.U, self.Disp) = \             # <<<<<<<<<<<<<<
- *                 _HS.CalcFlows(self.U, self.W_w, self.W_b, self.S,
+ *                 _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
  *                               self.dx, self.dt, self.z, self.n,
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_U, __pyx_t_6) < 0) __PYX_ERR(0, 215, __pyx_L1_error)
@@ -5980,7 +5980,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
  *             #Channel is going dry
  *             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))             # <<<<<<<<<<<<<<
  * 
- *     def CalculateDischarge(self, time):
+ *     def calculate_discharge(self, time):
  */
     __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_s_The_channel_is_going_dry_at_km_0, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -6072,7 +6072,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   /* "heatsource9/Stream/StreamNode.pyx":208
  *             logger.warning(msg)
  * 
- *     def CalcDischarge_BoundaryNode(self, time):             # <<<<<<<<<<<<<<
+ *     def calc_discharge_boundary_node(self, time):             # <<<<<<<<<<<<<<
  *         Q_bc = self.Q_bc[time]
  *         self.Q_mass += Q_bc
  */
@@ -6094,7 +6094,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcDischarge_BoundaryNode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_discharge_boundary_node", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_Q_bc);
@@ -6107,21 +6107,21 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_22Calc
 /* "heatsource9/Stream/StreamNode.pyx":229
  *             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
  * 
- *     def CalculateDischarge(self, time):             # <<<<<<<<<<<<<<
+ *     def calculate_discharge(self, time):             # <<<<<<<<<<<<<<
  *         """Return the discharge for the current timestep
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25CalculateDischarge(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_24CalculateDischarge[] = "Return the discharge for the current timestep\n\n        This method uses the GetKnownDischarges() and GetMuskigum()\n        methods (in C module) to grab the values necessary to calculate\n        the discharge at the current timestep for the channel. If we\n        are at a boundary (spatial or temporal) the appropriate boundary\n        condition is returned. When the new discharge is calculated, the\n        previous discharge value is placed in Q_prev for use by the\n        downstream channel. This method makes some assumptions, one is\n        that Q_bc is a TimeList instance holding boundary conditions\n        for the given node, and that this is only True if this node has\n        no upstream channel. Two is that the values for Q_tribs is a\n        TimeList instance or None, that Q_in and Q_out are values in\n        cubic meters per second of inputs and withdrawals or None. The\n        argument t is for a Python datetime object and can (should) be\n        None if we are not at a spatial boundary. dt is the timestep in\n        minutes, which cannot be None.\n        ";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_25CalculateDischarge = {"CalculateDischarge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25CalculateDischarge, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_24CalculateDischarge};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25CalculateDischarge(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25calculate_discharge(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_24calculate_discharge[] = "Return the discharge for the current timestep\n\n        This method uses the GetKnownDischarges() and GetMuskigum()\n        methods (in C module) to grab the values necessary to calculate\n        the discharge at the current timestep for the channel. If we\n        are at a boundary (spatial or temporal) the appropriate boundary\n        condition is returned. When the new discharge is calculated, the\n        previous discharge value is placed in Q_prev for use by the\n        downstream channel. This method makes some assumptions, one is\n        that Q_bc is a TimeList instance holding boundary conditions\n        for the given node, and that this is only True if this node has\n        no upstream channel. Two is that the values for Q_tribs is a\n        TimeList instance or None, that Q_in and Q_out are values in\n        cubic meters per second of inputs and withdrawals or None. The\n        argument t is for a Python datetime object and can (should) be\n        None if we are not at a spatial boundary. dt is the timestep in\n        minutes, which cannot be None.\n        ";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_25calculate_discharge = {"calculate_discharge", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25calculate_discharge, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_24calculate_discharge};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25calculate_discharge(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalculateDischarge (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calculate_discharge (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,0};
     PyObject* values[2] = {0,0};
@@ -6145,11 +6145,11 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25Calc
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalculateDischarge", 1, 2, 2, 1); __PYX_ERR(0, 229, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calculate_discharge", 1, 2, 2, 1); __PYX_ERR(0, 229, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalculateDischarge") < 0)) __PYX_ERR(0, 229, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calculate_discharge") < 0)) __PYX_ERR(0, 229, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6162,20 +6162,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_25Calc
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalculateDischarge", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 229, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calculate_discharge", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 229, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalculateDischarge", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calculate_discharge", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24CalculateDischarge(__pyx_self, __pyx_v_self, __pyx_v_time);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24calculate_discharge(__pyx_self, __pyx_v_self, __pyx_v_time);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24CalculateDischarge(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24calculate_discharge(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
   PyObject *__pyx_v_inputs = NULL;
   PyObject *__pyx_v_Q = NULL;
   PyObject *__pyx_v_Q_bc = NULL;
@@ -6196,7 +6196,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
   int __pyx_t_12;
   PyObject *__pyx_t_13 = NULL;
   PyObject *(*__pyx_t_14)(PyObject *);
-  __Pyx_RefNannySetupContext("CalculateDischarge", 0);
+  __Pyx_RefNannySetupContext("calculate_discharge", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":248
  *         minutes, which cannot be None.
@@ -6268,13 +6268,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     /* "heatsource9/Stream/StreamNode.pyx":261
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,             # <<<<<<<<<<<<<<
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,             # <<<<<<<<<<<<<<
  *                                   self.dt, self.z, self.n,
  *                                   self.d_cont, 0.0, 0.0, 0.0,
  */
     __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_HS); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 261, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_CalcFlows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_calc_flows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_W_b); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 261, __pyx_L1_error)
@@ -6286,7 +6286,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
 
     /* "heatsource9/Stream/StreamNode.pyx":262
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
  *                                   self.dt, self.z, self.n,             # <<<<<<<<<<<<<<
  *                                   self.d_cont, 0.0, 0.0, 0.0,
  *                                   inputs, Q)
@@ -6299,7 +6299,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     __Pyx_GOTREF(__pyx_t_9);
 
     /* "heatsource9/Stream/StreamNode.pyx":263
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
  *                                   self.dt, self.z, self.n,
  *                                   self.d_cont, 0.0, 0.0, 0.0,             # <<<<<<<<<<<<<<
  *                                   inputs, Q)
@@ -6462,7 +6462,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  * 
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,             # <<<<<<<<<<<<<<
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
  */
     __Pyx_DECREF_SET(__pyx_v_Q, __pyx_t_1);
     __pyx_t_1 = 0;
@@ -6549,7 +6549,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  * 
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *                 self.U, self.Disp) = \             # <<<<<<<<<<<<<<
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S, self.dx,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
  *                                   self.dt, self.z, self.n,
  */
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_U, __pyx_t_5) < 0) __PYX_ERR(0, 260, __pyx_L1_error)
@@ -6560,11 +6560,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     /* "heatsource9/Stream/StreamNode.pyx":268
  *             # If we hit this once, we remap so we can avoid the
  *             # if statements in the future.
- *             self.CalcDischarge = self.CalcDischarge_Opt             # <<<<<<<<<<<<<<
+ *             self.CalcDischarge = self.calc_discharge_opt             # <<<<<<<<<<<<<<
  *         else:
  *             # We're a spatial boundary, use the boundary condition
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_CalcDischarge_Opt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 268, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_calc_discharge_opt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 268, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_CalcDischarge, __pyx_t_3) < 0) __PYX_ERR(0, 268, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6613,13 +6613,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     /* "heatsource9/Stream/StreamNode.pyx":280
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,             # <<<<<<<<<<<<<<
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S,             # <<<<<<<<<<<<<<
  *                                   self.dx, self.dt, self.z, self.n,
  *                                   self.d_cont, 0.0, 0.0, 0.0,
  */
     __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_HS); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_CalcFlows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_calc_flows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_W_b); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 280, __pyx_L1_error)
@@ -6629,7 +6629,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
 
     /* "heatsource9/Stream/StreamNode.pyx":281
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
  *                                   self.dx, self.dt, self.z, self.n,             # <<<<<<<<<<<<<<
  *                                   self.d_cont, 0.0, 0.0, 0.0,
  *                                   inputs, Q_bc)
@@ -6644,7 +6644,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     __Pyx_GOTREF(__pyx_t_8);
 
     /* "heatsource9/Stream/StreamNode.pyx":282
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
  *                                   self.dx, self.dt, self.z, self.n,
  *                                   self.d_cont, 0.0, 0.0, 0.0,             # <<<<<<<<<<<<<<
  *                                   inputs, Q_bc)
@@ -6658,7 +6658,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  *                                   self.d_cont, 0.0, 0.0, 0.0,
  *                                   inputs, Q_bc)             # <<<<<<<<<<<<<<
  * 
- *             self.CalcDischarge = self.CalcDischarge_BoundaryNode
+ *             self.CalcDischarge = self.calc_discharge_boundary_node
  */
     __pyx_t_10 = NULL;
     __pyx_t_12 = 0;
@@ -6807,7 +6807,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  * 
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,             # <<<<<<<<<<<<<<
  *                 self.U, self.Disp) = \
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
  */
     __pyx_v_Q = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -6894,7 +6894,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  * 
  *             Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
  *                 self.U, self.Disp) = \             # <<<<<<<<<<<<<<
- *                     _HS.CalcFlows(0.0, 0.0, self.W_b, self.S,
+ *                     _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
  *                                   self.dx, self.dt, self.z, self.n,
  */
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_U, __pyx_t_2) < 0) __PYX_ERR(0, 279, __pyx_L1_error)
@@ -6905,11 +6905,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
     /* "heatsource9/Stream/StreamNode.pyx":285
  *                                   inputs, Q_bc)
  * 
- *             self.CalcDischarge = self.CalcDischarge_BoundaryNode             # <<<<<<<<<<<<<<
+ *             self.CalcDischarge = self.calc_discharge_boundary_node             # <<<<<<<<<<<<<<
  * 
  *         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_CalcDischarge_BoundaryNode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 285, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_calc_discharge_boundary_node); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_CalcDischarge, __pyx_t_3) < 0) __PYX_ERR(0, 285, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7060,7 +7060,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
  *             msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.PrettyTime())
  *             logger.warning(msg)             # <<<<<<<<<<<<<<
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,
  */
     __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_logger); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 294, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
@@ -7096,7 +7096,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
   /* "heatsource9/Stream/StreamNode.pyx":229
  *             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
  * 
- *     def CalculateDischarge(self, time):             # <<<<<<<<<<<<<<
+ *     def calculate_discharge(self, time):             # <<<<<<<<<<<<<<
  *         """Return the discharge for the current timestep
  * 
  */
@@ -7116,7 +7116,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalculateDischarge", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calculate_discharge", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_inputs);
@@ -7131,16 +7131,16 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_24Calc
 /* "heatsource9/Stream/StreamNode.pyx":296
  *             logger.warning(msg)
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                      JDC, solar_only=False):
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27CalcHeat_Opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_26CalcHeat_Opt[] = "Inlined version of CalcHeat optimized for non-boundary nodes\n        (removes a bunch of if/else statements)";
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_27CalcHeat_Opt = {"CalcHeat_Opt", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27CalcHeat_Opt, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_26CalcHeat_Opt};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27CalcHeat_Opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27calc_heat_opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_26calc_heat_opt[] = "Inlined version of CalcHeat optimized for non-boundary nodes\n        (removes a bunch of if/else statements)";
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_27calc_heat_opt = {"calc_heat_opt", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27calc_heat_opt, METH_VARARGS|METH_KEYWORDS, __pyx_doc_11heatsource9_6Stream_10StreamNode_10StreamNode_26calc_heat_opt};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27calc_heat_opt(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_v_hour = 0;
@@ -7151,14 +7151,14 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27Calc
   PyObject *__pyx_v_solar_only = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcHeat_Opt (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_heat_opt (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,&__pyx_n_s_hour,&__pyx_n_s_min,&__pyx_n_s_sec,&__pyx_n_s_JD,&__pyx_n_s_JDC,&__pyx_n_s_solar_only,0};
     PyObject* values[8] = {0,0,0,0,0,0,0,0};
 
     /* "heatsource9/Stream/StreamNode.pyx":297
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,
  *                      JDC, solar_only=False):             # <<<<<<<<<<<<<<
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  *         (removes a bunch of if/else statements)"""
@@ -7196,37 +7196,37 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27Calc
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 1); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 1); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_hour)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 2); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 2); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 3); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 3); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sec)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 4); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 4); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JD)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 5); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 5); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JDC)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, 6); __PYX_ERR(0, 296, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, 6); __PYX_ERR(0, 296, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
@@ -7236,7 +7236,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27Calc
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcHeat_Opt") < 0)) __PYX_ERR(0, 296, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_heat_opt") < 0)) __PYX_ERR(0, 296, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -7264,18 +7264,18 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27Calc
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcHeat_Opt", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 296, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_heat_opt", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 296, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcHeat_Opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_heat_opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26CalcHeat_Opt(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_JD, __pyx_v_JDC, __pyx_v_solar_only);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26calc_heat_opt(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_JD, __pyx_v_JDC, __pyx_v_solar_only);
 
   /* "heatsource9/Stream/StreamNode.pyx":296
  *             logger.warning(msg)
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                      JDC, solar_only=False):
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  */
@@ -7285,7 +7285,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_27Calc
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26CalcHeat_Opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, CYTHON_UNUSED PyObject *__pyx_v_min, CYTHON_UNUSED PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, CYTHON_UNUSED PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26calc_heat_opt(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, CYTHON_UNUSED PyObject *__pyx_v_min, CYTHON_UNUSED PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, CYTHON_UNUSED PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only) {
   PyObject *__pyx_v_Altitude = NULL;
   PyObject *__pyx_v_Zenith = NULL;
   PyObject *__pyx_v_Daytime = NULL;
@@ -7327,7 +7327,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
   Py_ssize_t __pyx_t_28;
   Py_ssize_t __pyx_t_29;
   PyObject *__pyx_t_30 = NULL;
-  __Pyx_RefNannySetupContext("CalcHeat_Opt", 0);
+  __Pyx_RefNannySetupContext("calc_heat_opt", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":304
  * 
@@ -7446,13 +7446,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
   /* "heatsource9/Stream/StreamNode.pyx":322
  *          self.F_Total,
  *          self.Delta_T,
- *          Mac) = _HS.CalcHeatFluxes(self.metData[time],             # <<<<<<<<<<<<<<
+ *          Mac) = _HS.calc_heat_fluxes(self.metData[time],             # <<<<<<<<<<<<<<
  *                                    self.C_args,
  *                                    self.d_w,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_HS); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_CalcHeatFluxes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_calc_heat_fluxes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_metData); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 322, __pyx_L1_error)
@@ -7463,7 +7463,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
 
   /* "heatsource9/Stream/StreamNode.pyx":323
  *          self.Delta_T,
- *          Mac) = _HS.CalcHeatFluxes(self.metData[time],
+ *          Mac) = _HS.calc_heat_fluxes(self.metData[time],
  *                                    self.C_args,             # <<<<<<<<<<<<<<
  *                                    self.d_w,
  *                                    self.A,
@@ -7472,7 +7472,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
   __Pyx_GOTREF(__pyx_t_6);
 
   /* "heatsource9/Stream/StreamNode.pyx":324
- *          Mac) = _HS.CalcHeatFluxes(self.metData[time],
+ *          Mac) = _HS.calc_heat_fluxes(self.metData[time],
  *                                    self.C_args,
  *                                    self.d_w,             # <<<<<<<<<<<<<<
  *                                    self.A,
@@ -7930,7 +7930,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
  *          ground,
  *          self.F_Total,             # <<<<<<<<<<<<<<
  *          self.Delta_T,
- *          Mac) = _HS.CalcHeatFluxes(self.metData[time],
+ *          Mac) = _HS.calc_heat_fluxes(self.metData[time],
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_F_Total, __pyx_t_20) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
@@ -7939,7 +7939,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
  *          ground,
  *          self.F_Total,
  *          self.Delta_T,             # <<<<<<<<<<<<<<
- *          Mac) = _HS.CalcHeatFluxes(self.metData[time],
+ *          Mac) = _HS.calc_heat_fluxes(self.metData[time],
  *                                    self.C_args,
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_Delta_T, __pyx_t_16) < 0) __PYX_ERR(0, 321, __pyx_L1_error)
@@ -8281,7 +8281,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
  *             self.Solar_Blocked[tran][i] += veg_block[i]
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]             # <<<<<<<<<<<<<<
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,
  */
   __pyx_t_23 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_Solar_Blocked); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 366, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
@@ -8303,7 +8303,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
   /* "heatsource9/Stream/StreamNode.pyx":296
  *             logger.warning(msg)
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                      JDC, solar_only=False):
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  */
@@ -8336,7 +8336,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
   __Pyx_XDECREF(__pyx_t_23);
   __Pyx_XDECREF(__pyx_t_25);
   __Pyx_XDECREF(__pyx_t_30);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcHeat_Opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_heat_opt", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_Altitude);
@@ -8355,15 +8355,15 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_26Calc
 /* "heatsource9/Stream/StreamNode.pyx":368
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                               JDC, solar_only=False):
  *         # Reset temperatures
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29CalcHeat_BoundaryNode(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_29CalcHeat_BoundaryNode = {"CalcHeat_BoundaryNode", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29CalcHeat_BoundaryNode, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29CalcHeat_BoundaryNode(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29calc_heat_boundary_node(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_29calc_heat_boundary_node = {"calc_heat_boundary_node", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29calc_heat_boundary_node, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29calc_heat_boundary_node(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_v_hour = 0;
@@ -8374,14 +8374,14 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29Calc
   PyObject *__pyx_v_solar_only = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcHeat_BoundaryNode (wrapper)", 0);
+  __Pyx_RefNannySetupContext("calc_heat_boundary_node (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,&__pyx_n_s_hour,&__pyx_n_s_min,&__pyx_n_s_sec,&__pyx_n_s_JD,&__pyx_n_s_JDC,&__pyx_n_s_solar_only,0};
     PyObject* values[8] = {0,0,0,0,0,0,0,0};
 
     /* "heatsource9/Stream/StreamNode.pyx":369
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,
  *                               JDC, solar_only=False):             # <<<<<<<<<<<<<<
  *         # Reset temperatures
  *         self.T_prev = self.T
@@ -8419,37 +8419,37 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29Calc
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 1); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 1); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_hour)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 2); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 2); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 3); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 3); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sec)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 4); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 4); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JD)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 5); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 5); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_JDC)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, 6); __PYX_ERR(0, 368, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, 6); __PYX_ERR(0, 368, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
@@ -8459,7 +8459,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29Calc
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "CalcHeat_BoundaryNode") < 0)) __PYX_ERR(0, 368, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calc_heat_boundary_node") < 0)) __PYX_ERR(0, 368, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -8487,18 +8487,18 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29Calc
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("CalcHeat_BoundaryNode", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 368, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("calc_heat_boundary_node", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 368, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcHeat_BoundaryNode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_heat_boundary_node", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28CalcHeat_BoundaryNode(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_JD, __pyx_v_JDC, __pyx_v_solar_only);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28calc_heat_boundary_node(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_hour, __pyx_v_min, __pyx_v_sec, __pyx_v_JD, __pyx_v_JDC, __pyx_v_solar_only);
 
   /* "heatsource9/Stream/StreamNode.pyx":368
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                               JDC, solar_only=False):
  *         # Reset temperatures
  */
@@ -8508,7 +8508,7 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_29Calc
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28CalcHeat_BoundaryNode(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28calc_heat_boundary_node(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_hour, PyObject *__pyx_v_min, PyObject *__pyx_v_sec, PyObject *__pyx_v_JD, PyObject *__pyx_v_JDC, PyObject *__pyx_v_solar_only) {
   PyObject *__pyx_v_Altitude = NULL;
   PyObject *__pyx_v_Zenith = NULL;
   PyObject *__pyx_v_Daytime = NULL;
@@ -8547,7 +8547,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   Py_ssize_t __pyx_t_26;
   Py_ssize_t __pyx_t_27;
   PyObject *__pyx_t_28 = NULL;
-  __Pyx_RefNannySetupContext("CalcHeat_BoundaryNode", 0);
+  __Pyx_RefNannySetupContext("calc_heat_boundary_node", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":371
  *                               JDC, solar_only=False):
@@ -8573,13 +8573,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   /* "heatsource9/Stream/StreamNode.pyx":378
  *          Daytime,
  *          tran,
- *          Azimuth_mod) = _HS.CalcSolarPosition(self.latitude,             # <<<<<<<<<<<<<<
+ *          Azimuth_mod) = _HS.calc_solar_position(self.latitude,             # <<<<<<<<<<<<<<
  *                                               self.longitude,hour,
  *                                               min,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_HS); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_CalcSolarPosition); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_calc_solar_position); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_latitude); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 378, __pyx_L1_error)
@@ -8587,7 +8587,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
 
   /* "heatsource9/Stream/StreamNode.pyx":379
  *          tran,
- *          Azimuth_mod) = _HS.CalcSolarPosition(self.latitude,
+ *          Azimuth_mod) = _HS.calc_solar_position(self.latitude,
  *                                               self.longitude,hour,             # <<<<<<<<<<<<<<
  *                                               min,
  *                                               sec,
@@ -8817,13 +8817,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   /* "heatsource9/Stream/StreamNode.pyx":395
  *          ground,
  *          self.F_Total,
- *          self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],             # <<<<<<<<<<<<<<
+ *          self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],             # <<<<<<<<<<<<<<
  *                                        self.C_args,
  *                                        self.d_w,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_HS); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_CalcHeatFluxes); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_calc_heat_fluxes); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_metData); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 395, __pyx_L1_error)
@@ -8834,7 +8834,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
 
   /* "heatsource9/Stream/StreamNode.pyx":396
  *          self.F_Total,
- *          self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
+ *          self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],
  *                                        self.C_args,             # <<<<<<<<<<<<<<
  *                                        self.d_w,
  *                                        self.A,
@@ -8843,7 +8843,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   __Pyx_GOTREF(__pyx_t_5);
 
   /* "heatsource9/Stream/StreamNode.pyx":397
- *          self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
+ *          self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],
  *                                        self.C_args,
  *                                        self.d_w,             # <<<<<<<<<<<<<<
  *                                        self.A,
@@ -9267,7 +9267,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
  *          veg_block,
  *          ground,
  *          self.F_Total,             # <<<<<<<<<<<<<<
- *          self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],
+ *          self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],
  *                                        self.C_args,
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_F_Total, __pyx_t_19) < 0) __PYX_ERR(0, 394, __pyx_L1_error)
@@ -9276,7 +9276,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   /* "heatsource9/Stream/StreamNode.pyx":395
  *          ground,
  *          self.F_Total,
- *          self.Delta_T) = _HS.CalcHeatFluxes(self.metData[time],             # <<<<<<<<<<<<<<
+ *          self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],             # <<<<<<<<<<<<<<
  *                                        self.C_args,
  *                                        self.d_w,
  */
@@ -9591,7 +9591,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
  *         self.T = self.T_bc[time]
  *         self.T_prev = self.T_bc[time]             # <<<<<<<<<<<<<<
  * 
- *     def MacCormick2(self, time):
+ *     def maccormick2(self, time):
  */
   __pyx_t_22 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_T_bc); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 441, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_22);
@@ -9604,7 +9604,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   /* "heatsource9/Stream/StreamNode.pyx":368
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                               JDC, solar_only=False):
  *         # Reset temperatures
  */
@@ -9635,7 +9635,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
   __Pyx_XDECREF(__pyx_t_22);
   __Pyx_XDECREF(__pyx_t_23);
   __Pyx_XDECREF(__pyx_t_28);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcHeat_BoundaryNode", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_heat_boundary_node", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_Altitude);
@@ -9653,20 +9653,20 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_28Calc
 /* "heatsource9/Stream/StreamNode.pyx":443
  *         self.T_prev = self.T_bc[time]
  * 
- *     def MacCormick2(self, time):             # <<<<<<<<<<<<<<
+ *     def maccormick2(self, time):             # <<<<<<<<<<<<<<
  *         #===================================================
  *         #Set control temps
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacCormick2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacCormick2 = {"MacCormick2", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacCormick2, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacCormick2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31maccormick2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_31maccormick2 = {"maccormick2", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31maccormick2, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31maccormick2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("MacCormick2 (wrapper)", 0);
+  __Pyx_RefNannySetupContext("maccormick2 (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,0};
     PyObject* values[2] = {0,0};
@@ -9690,11 +9690,11 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacC
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("MacCormick2", 1, 2, 2, 1); __PYX_ERR(0, 443, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("maccormick2", 1, 2, 2, 1); __PYX_ERR(0, 443, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "MacCormick2") < 0)) __PYX_ERR(0, 443, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "maccormick2") < 0)) __PYX_ERR(0, 443, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -9707,20 +9707,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacC
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("MacCormick2", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 443, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("maccormick2", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 443, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.MacCormick2", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.maccormick2", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacCormick2(__pyx_self, __pyx_v_self, __pyx_v_time);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30maccormick2(__pyx_self, __pyx_v_self, __pyx_v_time);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacCormick2(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30maccormick2(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time) {
   CYTHON_UNUSED PyObject *__pyx_v_S = NULL;
   CYTHON_UNUSED PyObject *__pyx_v_mix = NULL;
   PyObject *__pyx_r = NULL;
@@ -9751,7 +9751,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   int __pyx_t_24;
   PyObject *__pyx_t_25 = NULL;
   PyObject *(*__pyx_t_26)(PyObject *);
-  __Pyx_RefNannySetupContext("MacCormick2", 0);
+  __Pyx_RefNannySetupContext("maccormick2", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":446
  *         #===================================================
@@ -9790,13 +9790,13 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   /* "heatsource9/Stream/StreamNode.pyx":451
  *         #Throw away S and mix because we won't need them.
  * 
- *         self.T, S, mix = _HS.CalcMacCormick(self.dt, self.dx, self.U,             # <<<<<<<<<<<<<<
+ *         self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,             # <<<<<<<<<<<<<<
  *                                             self.T_sed, self.T_prev,
  *                                             self.Q_hyp,
  */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_HS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_CalcMacCormick); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 451, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_calc_maccormick); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 451, __pyx_L1_error)
@@ -9808,7 +9808,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
 
   /* "heatsource9/Stream/StreamNode.pyx":452
  * 
- *         self.T, S, mix = _HS.CalcMacCormick(self.dt, self.dx, self.U,
+ *         self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,
  *                                             self.T_sed, self.T_prev,             # <<<<<<<<<<<<<<
  *                                             self.Q_hyp,
  *                                             self.Q_tribs[time],
@@ -9819,7 +9819,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   __Pyx_GOTREF(__pyx_t_9);
 
   /* "heatsource9/Stream/StreamNode.pyx":453
- *         self.T, S, mix = _HS.CalcMacCormick(self.dt, self.dx, self.U,
+ *         self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,
  *                                             self.T_sed, self.T_prev,
  *                                             self.Q_hyp,             # <<<<<<<<<<<<<<
  *                                             self.Q_tribs[time],
@@ -9934,7 +9934,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
  *                                             self.Q_in, self.T_in,
  *                                             self.next_km.Mix_T_Delta)             # <<<<<<<<<<<<<<
  * 
- *     def CalcDispersion(self):
+ *     def calc_dispersion(self):
  */
   __pyx_t_22 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_km); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 462, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_22);
@@ -10130,7 +10130,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   /* "heatsource9/Stream/StreamNode.pyx":451
  *         #Throw away S and mix because we won't need them.
  * 
- *         self.T, S, mix = _HS.CalcMacCormick(self.dt, self.dx, self.U,             # <<<<<<<<<<<<<<
+ *         self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,             # <<<<<<<<<<<<<<
  *                                             self.T_sed, self.T_prev,
  *                                             self.Q_hyp,
  */
@@ -10144,7 +10144,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   /* "heatsource9/Stream/StreamNode.pyx":443
  *         self.T_prev = self.T_bc[time]
  * 
- *     def MacCormick2(self, time):             # <<<<<<<<<<<<<<
+ *     def maccormick2(self, time):             # <<<<<<<<<<<<<<
  *         #===================================================
  *         #Set control temps
  */
@@ -10175,7 +10175,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
   __Pyx_XDECREF(__pyx_t_22);
   __Pyx_XDECREF(__pyx_t_23);
   __Pyx_XDECREF(__pyx_t_25);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.MacCormick2", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.maccormick2", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_S);
@@ -10188,26 +10188,26 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_30MacC
 /* "heatsource9/Stream/StreamNode.pyx":464
  *                                             self.next_km.Mix_T_Delta)
  * 
- *     def CalcDispersion(self):             # <<<<<<<<<<<<<<
+ *     def calc_dispersion(self):             # <<<<<<<<<<<<<<
  *         cdef double dx = self.dx
  *         cdef double dt = self.dt
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33CalcDispersion(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_33CalcDispersion = {"CalcDispersion", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33CalcDispersion, METH_O, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33CalcDispersion(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33calc_dispersion(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_33calc_dispersion = {"calc_dispersion", (PyCFunction)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33calc_dispersion, METH_O, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_33calc_dispersion(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("CalcDispersion (wrapper)", 0);
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32CalcDispersion(__pyx_self, ((PyObject *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("calc_dispersion (wrapper)", 0);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32calc_dispersion(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32CalcDispersion(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32calc_dispersion(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   double __pyx_v_dx;
   double __pyx_v_dt;
   double __pyx_v_Shear_Velocity;
@@ -10223,11 +10223,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   double __pyx_t_9;
-  __Pyx_RefNannySetupContext("CalcDispersion", 0);
+  __Pyx_RefNannySetupContext("calc_dispersion", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":465
  * 
- *     def CalcDispersion(self):
+ *     def calc_dispersion(self):
  *         cdef double dx = self.dx             # <<<<<<<<<<<<<<
  *         cdef double dt = self.dt
  *         cdef double Shear_Velocity
@@ -10239,7 +10239,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
   __pyx_v_dx = __pyx_t_2;
 
   /* "heatsource9/Stream/StreamNode.pyx":466
- *     def CalcDispersion(self):
+ *     def calc_dispersion(self):
  *         cdef double dx = self.dx
  *         cdef double dt = self.dt             # <<<<<<<<<<<<<<
  *         cdef double Shear_Velocity
@@ -10424,7 +10424,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
  *         Disp = 0.1
  *         return Disp             # <<<<<<<<<<<<<<
  * 
- *     def MixItUp(self, time, Q_up, T_up):
+ *     def mix_it_up(self, time, Q_up, T_up):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = PyFloat_FromDouble(__pyx_v_Disp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 477, __pyx_L1_error)
@@ -10436,7 +10436,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
   /* "heatsource9/Stream/StreamNode.pyx":464
  *                                             self.next_km.Mix_T_Delta)
  * 
- *     def CalcDispersion(self):             # <<<<<<<<<<<<<<
+ *     def calc_dispersion(self):             # <<<<<<<<<<<<<<
  *         cdef double dx = self.dx
  *         cdef double dt = self.dt
  */
@@ -10448,7 +10448,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.CalcDispersion", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.calc_dispersion", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -10459,22 +10459,22 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_32Calc
 /* "heatsource9/Stream/StreamNode.pyx":479
  *         return Disp
  * 
- *     def MixItUp(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
+ *     def mix_it_up(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
  *         Q_in = 0
  *         T_in = 0
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixItUp(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixItUp = {"MixItUp", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixItUp, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixItUp(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35mix_it_up(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_35mix_it_up = {"mix_it_up", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35mix_it_up, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35mix_it_up(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_time = 0;
   PyObject *__pyx_v_Q_up = 0;
   PyObject *__pyx_v_T_up = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("MixItUp (wrapper)", 0);
+  __Pyx_RefNannySetupContext("mix_it_up (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_time,&__pyx_n_s_Q_up,&__pyx_n_s_T_up,0};
     PyObject* values[4] = {0,0,0,0};
@@ -10502,23 +10502,23 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixI
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_time)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("MixItUp", 1, 4, 4, 1); __PYX_ERR(0, 479, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("mix_it_up", 1, 4, 4, 1); __PYX_ERR(0, 479, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Q_up)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("MixItUp", 1, 4, 4, 2); __PYX_ERR(0, 479, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("mix_it_up", 1, 4, 4, 2); __PYX_ERR(0, 479, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_up)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("MixItUp", 1, 4, 4, 3); __PYX_ERR(0, 479, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("mix_it_up", 1, 4, 4, 3); __PYX_ERR(0, 479, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "MixItUp") < 0)) __PYX_ERR(0, 479, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "mix_it_up") < 0)) __PYX_ERR(0, 479, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -10535,20 +10535,20 @@ static PyObject *__pyx_pw_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixI
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("MixItUp", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 479, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("mix_it_up", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 479, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.MixItUp", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.mix_it_up", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixItUp(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_Q_up, __pyx_v_T_up);
+  __pyx_r = __pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34mix_it_up(__pyx_self, __pyx_v_self, __pyx_v_time, __pyx_v_Q_up, __pyx_v_T_up);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixItUp(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_T_up) {
+static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34mix_it_up(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_time, PyObject *__pyx_v_Q_up, PyObject *__pyx_v_T_up) {
   PyObject *__pyx_v_Q_in = NULL;
   PyObject *__pyx_v_T_in = NULL;
   Py_ssize_t __pyx_v_i;
@@ -10565,11 +10565,11 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixI
   Py_ssize_t __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
   int __pyx_t_7;
-  __Pyx_RefNannySetupContext("MixItUp", 0);
+  __Pyx_RefNannySetupContext("mix_it_up", 0);
 
   /* "heatsource9/Stream/StreamNode.pyx":480
  * 
- *     def MixItUp(self, time, Q_up, T_up):
+ *     def mix_it_up(self, time, Q_up, T_up):
  *         Q_in = 0             # <<<<<<<<<<<<<<
  *         T_in = 0
  *         for i in xrange(len(self.Q_tribs[time])):
@@ -10578,7 +10578,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixI
   __pyx_v_Q_in = __pyx_int_0;
 
   /* "heatsource9/Stream/StreamNode.pyx":481
- *     def MixItUp(self, time, Q_up, T_up):
+ *     def mix_it_up(self, time, Q_up, T_up):
  *         Q_in = 0
  *         T_in = 0             # <<<<<<<<<<<<<<
  *         for i in xrange(len(self.Q_tribs[time])):
@@ -10871,7 +10871,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixI
   /* "heatsource9/Stream/StreamNode.pyx":479
  *         return Disp
  * 
- *     def MixItUp(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
+ *     def mix_it_up(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
  *         Q_in = 0
  *         T_in = 0
  */
@@ -10881,7 +10881,7 @@ static PyObject *__pyx_pf_11heatsource9_6Stream_10StreamNode_10StreamNode_34MixI
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.MixItUp", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("heatsource9.Stream.StreamNode.StreamNode.mix_it_up", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_Q_in);
@@ -10946,17 +10946,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Azimuth_mod, __pyx_k_Azimuth_mod, sizeof(__pyx_k_Azimuth_mod), 0, 0, 1, 1},
   {&__pyx_n_s_C_args, __pyx_k_C_args, sizeof(__pyx_k_C_args), 0, 0, 1, 1},
   {&__pyx_n_s_CalcDischarge, __pyx_k_CalcDischarge, sizeof(__pyx_k_CalcDischarge), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcDischarge_BoundaryNode, __pyx_k_CalcDischarge_BoundaryNode, sizeof(__pyx_k_CalcDischarge_BoundaryNode), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcDischarge_Opt, __pyx_k_CalcDischarge_Opt, sizeof(__pyx_k_CalcDischarge_Opt), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcDispersion, __pyx_k_CalcDispersion, sizeof(__pyx_k_CalcDispersion), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcFlows, __pyx_k_CalcFlows, sizeof(__pyx_k_CalcFlows), 0, 0, 1, 1},
   {&__pyx_n_s_CalcHeat, __pyx_k_CalcHeat, sizeof(__pyx_k_CalcHeat), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcHeatFluxes, __pyx_k_CalcHeatFluxes, sizeof(__pyx_k_CalcHeatFluxes), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcHeat_BoundaryNode, __pyx_k_CalcHeat_BoundaryNode, sizeof(__pyx_k_CalcHeat_BoundaryNode), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcHeat_Opt, __pyx_k_CalcHeat_Opt, sizeof(__pyx_k_CalcHeat_Opt), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcMacCormick, __pyx_k_CalcMacCormick, sizeof(__pyx_k_CalcMacCormick), 0, 0, 1, 1},
-  {&__pyx_n_s_CalcSolarPosition, __pyx_k_CalcSolarPosition, sizeof(__pyx_k_CalcSolarPosition), 0, 0, 1, 1},
-  {&__pyx_n_s_CalculateDischarge, __pyx_k_CalculateDischarge, sizeof(__pyx_k_CalculateDischarge), 0, 0, 1, 1},
   {&__pyx_n_s_Chronos, __pyx_k_Chronos, sizeof(__pyx_k_Chronos), 0, 0, 1, 1},
   {&__pyx_n_s_Daytime, __pyx_k_Daytime, sizeof(__pyx_k_Daytime), 0, 0, 1, 1},
   {&__pyx_kp_s_Definition_of_an_individual_stre, __pyx_k_Definition_of_an_individual_stre, sizeof(__pyx_k_Definition_of_an_individual_stre), 0, 0, 1, 0},
@@ -10979,17 +10969,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_F_Longwave, __pyx_k_F_Longwave, sizeof(__pyx_k_F_Longwave), 0, 0, 1, 1},
   {&__pyx_n_s_F_Solar, __pyx_k_F_Solar, sizeof(__pyx_k_F_Solar), 0, 0, 1, 1},
   {&__pyx_n_s_F_Total, __pyx_k_F_Total, sizeof(__pyx_k_F_Total), 0, 0, 1, 1},
-  {&__pyx_n_s_GetNodeData, __pyx_k_GetNodeData, sizeof(__pyx_k_GetNodeData), 0, 0, 1, 1},
   {&__pyx_n_s_HS, __pyx_k_HS, sizeof(__pyx_k_HS), 0, 0, 1, 1},
   {&__pyx_n_s_IniParams, __pyx_k_IniParams, sizeof(__pyx_k_IniParams), 0, 0, 1, 1},
-  {&__pyx_n_s_Initialize, __pyx_k_Initialize, sizeof(__pyx_k_Initialize), 0, 0, 1, 1},
   {&__pyx_n_s_Interpolator, __pyx_k_Interpolator, sizeof(__pyx_k_Interpolator), 0, 0, 1, 1},
   {&__pyx_n_s_JD, __pyx_k_JD, sizeof(__pyx_k_JD), 0, 0, 1, 1},
   {&__pyx_n_s_JDC, __pyx_k_JDC, sizeof(__pyx_k_JDC), 0, 0, 1, 1},
   {&__pyx_n_s_Log, __pyx_k_Log, sizeof(__pyx_k_Log), 0, 0, 1, 1},
   {&__pyx_n_s_Mac, __pyx_k_Mac, sizeof(__pyx_k_Mac), 0, 0, 1, 1},
-  {&__pyx_n_s_MacCormick2, __pyx_k_MacCormick2, sizeof(__pyx_k_MacCormick2), 0, 0, 1, 1},
-  {&__pyx_n_s_MixItUp, __pyx_k_MixItUp, sizeof(__pyx_k_MixItUp), 0, 0, 1, 1},
   {&__pyx_n_s_Mix_T_Delta, __pyx_k_Mix_T_Delta, sizeof(__pyx_k_Mix_T_Delta), 0, 0, 1, 1},
   {&__pyx_n_s_P_w, __pyx_k_P_w, sizeof(__pyx_k_P_w), 0, 0, 1, 1},
   {&__pyx_n_s_PrettyTime, __pyx_k_PrettyTime, sizeof(__pyx_k_PrettyTime), 0, 0, 1, 1},
@@ -11017,16 +11003,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_SolarPos, __pyx_k_SolarPos, sizeof(__pyx_k_SolarPos), 0, 0, 1, 1},
   {&__pyx_n_s_Solar_Blocked, __pyx_k_Solar_Blocked, sizeof(__pyx_k_Solar_Blocked), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode, __pyx_k_StreamNode, sizeof(__pyx_k_StreamNode), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalcDischarge_Boundar, __pyx_k_StreamNode_CalcDischarge_Boundar, sizeof(__pyx_k_StreamNode_CalcDischarge_Boundar), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalcDischarge_Opt, __pyx_k_StreamNode_CalcDischarge_Opt, sizeof(__pyx_k_StreamNode_CalcDischarge_Opt), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalcDispersion, __pyx_k_StreamNode_CalcDispersion, sizeof(__pyx_k_StreamNode_CalcDispersion), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalcHeat_BoundaryNode, __pyx_k_StreamNode_CalcHeat_BoundaryNode, sizeof(__pyx_k_StreamNode_CalcHeat_BoundaryNode), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalcHeat_Opt, __pyx_k_StreamNode_CalcHeat_Opt, sizeof(__pyx_k_StreamNode_CalcHeat_Opt), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_CalculateDischarge, __pyx_k_StreamNode_CalculateDischarge, sizeof(__pyx_k_StreamNode_CalculateDischarge), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_GetNodeData, __pyx_k_StreamNode_GetNodeData, sizeof(__pyx_k_StreamNode_GetNodeData), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_Initialize, __pyx_k_StreamNode_Initialize, sizeof(__pyx_k_StreamNode_Initialize), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_MacCormick2, __pyx_k_StreamNode_MacCormick2, sizeof(__pyx_k_StreamNode_MacCormick2), 0, 0, 1, 1},
-  {&__pyx_n_s_StreamNode_MixItUp, __pyx_k_StreamNode_MixItUp, sizeof(__pyx_k_StreamNode_MixItUp), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode___eq, __pyx_k_StreamNode___eq, sizeof(__pyx_k_StreamNode___eq), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode___ge, __pyx_k_StreamNode___ge, sizeof(__pyx_k_StreamNode___ge), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode___gt, __pyx_k_StreamNode___gt, sizeof(__pyx_k_StreamNode___gt), 0, 0, 1, 1},
@@ -11036,6 +11012,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_StreamNode___ne, __pyx_k_StreamNode___ne, sizeof(__pyx_k_StreamNode___ne), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode___repr, __pyx_k_StreamNode___repr, sizeof(__pyx_k_StreamNode___repr), 0, 0, 1, 1},
   {&__pyx_n_s_StreamNode__slots, __pyx_k_StreamNode__slots, sizeof(__pyx_k_StreamNode__slots), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calc_discharge_bounda, __pyx_k_StreamNode_calc_discharge_bounda, sizeof(__pyx_k_StreamNode_calc_discharge_bounda), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calc_discharge_opt, __pyx_k_StreamNode_calc_discharge_opt, sizeof(__pyx_k_StreamNode_calc_discharge_opt), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calc_dispersion, __pyx_k_StreamNode_calc_dispersion, sizeof(__pyx_k_StreamNode_calc_dispersion), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calc_heat_boundary_no, __pyx_k_StreamNode_calc_heat_boundary_no, sizeof(__pyx_k_StreamNode_calc_heat_boundary_no), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calc_heat_opt, __pyx_k_StreamNode_calc_heat_opt, sizeof(__pyx_k_StreamNode_calc_heat_opt), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_calculate_discharge, __pyx_k_StreamNode_calculate_discharge, sizeof(__pyx_k_StreamNode_calculate_discharge), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_get_node_data, __pyx_k_StreamNode_get_node_data, sizeof(__pyx_k_StreamNode_get_node_data), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_initialize, __pyx_k_StreamNode_initialize, sizeof(__pyx_k_StreamNode_initialize), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_maccormick2, __pyx_k_StreamNode_maccormick2, sizeof(__pyx_k_StreamNode_maccormick2), 0, 0, 1, 1},
+  {&__pyx_n_s_StreamNode_mix_it_up, __pyx_k_StreamNode_mix_it_up, sizeof(__pyx_k_StreamNode_mix_it_up), 0, 0, 1, 1},
   {&__pyx_n_s_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 1, 1},
   {&__pyx_n_s_T_accr, __pyx_k_T_accr, sizeof(__pyx_k_T_accr), 0, 0, 1, 1},
   {&__pyx_n_s_T_bc, __pyx_k_T_bc, sizeof(__pyx_k_T_bc), 0, 0, 1, 1},
@@ -11061,8 +11047,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Zone, __pyx_k_Zone, sizeof(__pyx_k_Zone), 0, 0, 1, 1},
   {&__pyx_n_s_alluviumtemp, __pyx_k_alluviumtemp, sizeof(__pyx_k_alluviumtemp), 0, 0, 1, 1},
   {&__pyx_n_s_attr, __pyx_k_attr, sizeof(__pyx_k_attr), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_discharge_boundary_node, __pyx_k_calc_discharge_boundary_node, sizeof(__pyx_k_calc_discharge_boundary_node), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_discharge_opt, __pyx_k_calc_discharge_opt, sizeof(__pyx_k_calc_discharge_opt), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_dispersion, __pyx_k_calc_dispersion, sizeof(__pyx_k_calc_dispersion), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_flows, __pyx_k_calc_flows, sizeof(__pyx_k_calc_flows), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_heat_boundary_node, __pyx_k_calc_heat_boundary_node, sizeof(__pyx_k_calc_heat_boundary_node), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_heat_fluxes, __pyx_k_calc_heat_fluxes, sizeof(__pyx_k_calc_heat_fluxes), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_heat_opt, __pyx_k_calc_heat_opt, sizeof(__pyx_k_calc_heat_opt), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_maccormick, __pyx_k_calc_maccormick, sizeof(__pyx_k_calc_maccormick), 0, 0, 1, 1},
+  {&__pyx_n_s_calc_solar_position, __pyx_k_calc_solar_position, sizeof(__pyx_k_calc_solar_position), 0, 0, 1, 1},
   {&__pyx_n_s_calcalluvium, __pyx_k_calcalluvium, sizeof(__pyx_k_calcalluvium), 0, 0, 1, 1},
   {&__pyx_n_s_calcevap, __pyx_k_calcevap, sizeof(__pyx_k_calcevap), 0, 0, 1, 1},
+  {&__pyx_n_s_calculate_discharge, __pyx_k_calculate_discharge, sizeof(__pyx_k_calculate_discharge), 0, 0, 1, 1},
   {&__pyx_n_s_canopy_data, __pyx_k_canopy_data, sizeof(__pyx_k_canopy_data), 0, 0, 1, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
@@ -11083,6 +11079,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_ge, __pyx_k_ge, sizeof(__pyx_k_ge), 0, 0, 1, 1},
   {&__pyx_n_s_getLogger, __pyx_k_getLogger, sizeof(__pyx_k_getLogger), 0, 0, 1, 1},
+  {&__pyx_n_s_get_node_data, __pyx_k_get_node_data, sizeof(__pyx_k_get_node_data), 0, 0, 1, 1},
   {&__pyx_n_s_ground, __pyx_k_ground, sizeof(__pyx_k_ground), 0, 0, 1, 1},
   {&__pyx_n_s_gt, __pyx_k_gt, sizeof(__pyx_k_gt), 0, 0, 1, 1},
   {&__pyx_n_s_has_prev, __pyx_k_has_prev, sizeof(__pyx_k_has_prev), 0, 0, 1, 1},
@@ -11094,6 +11091,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
+  {&__pyx_n_s_initialize, __pyx_k_initialize, sizeof(__pyx_k_initialize), 0, 0, 1, 1},
   {&__pyx_n_s_inputs, __pyx_k_inputs, sizeof(__pyx_k_inputs), 0, 0, 1, 1},
   {&__pyx_n_s_keys, __pyx_k_keys, sizeof(__pyx_k_keys), 0, 0, 1, 1},
   {&__pyx_n_s_km, __pyx_k_km, sizeof(__pyx_k_km), 0, 0, 1, 1},
@@ -11110,12 +11108,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_logging, __pyx_k_logging, sizeof(__pyx_k_logging), 0, 0, 1, 1},
   {&__pyx_n_s_longitude, __pyx_k_longitude, sizeof(__pyx_k_longitude), 0, 0, 1, 1},
   {&__pyx_n_s_lt, __pyx_k_lt, sizeof(__pyx_k_lt), 0, 0, 1, 1},
+  {&__pyx_n_s_maccormick2, __pyx_k_maccormick2, sizeof(__pyx_k_maccormick2), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_math, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
   {&__pyx_n_s_metData, __pyx_k_metData, sizeof(__pyx_k_metData), 0, 0, 1, 1},
   {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
   {&__pyx_n_s_min, __pyx_k_min, sizeof(__pyx_k_min), 0, 0, 1, 1},
   {&__pyx_n_s_mix, __pyx_k_mix, sizeof(__pyx_k_mix), 0, 0, 1, 1},
+  {&__pyx_n_s_mix_it_up, __pyx_k_mix_it_up, sizeof(__pyx_k_mix_it_up), 0, 0, 1, 1},
   {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
   {&__pyx_n_s_msg, __pyx_k_msg, sizeof(__pyx_k_msg), 0, 0, 1, 1},
   {&__pyx_n_s_n, __pyx_k_n, sizeof(__pyx_k_n), 0, 0, 1, 1},
@@ -11222,14 +11222,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "heatsource9/Stream/StreamNode.pyx":125
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):             # <<<<<<<<<<<<<<
+ *     def get_node_data(self):             # <<<<<<<<<<<<<<
  *         data = {}
  *         for attr in self.__slots:
  */
   __pyx_tuple__5 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_data, __pyx_n_s_attr); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_GetNodeData, 125, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_get_node_data, 125, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 125, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":131
  *         return data
@@ -11318,62 +11318,62 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "heatsource9/Stream/StreamNode.pyx":152
  *         return '%s @ %.3f km' % (self.__class__.__name__, self.km)
  * 
- *     def Initialize(self):             # <<<<<<<<<<<<<<
+ *     def initialize(self):             # <<<<<<<<<<<<<<
  *         """Methods necessary to set initial conditions of the node"""
  *         global _HS, py_HS, C_HS
  */
   __pyx_tuple__21 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_has_prev, __pyx_n_s_msg); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 152, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_Initialize, 152, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_initialize, 152, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 152, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":183
  *                        IniParams["alluviumtemp"])
  * 
- *     def CalcDischarge_Opt(self, time):             # <<<<<<<<<<<<<<
- *         """A Version of CalculateDischarge() that does not require
+ *     def calc_discharge_opt(self, time):             # <<<<<<<<<<<<<<
+ *         """A Version of calculate_discharge() that does not require
  *         checking for boundary conditions"""
  */
   __pyx_tuple__23 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_inputs, __pyx_n_s_up, __pyx_n_s_Q, __pyx_n_s_msg); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalcDischarge_Opt, 183, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calc_discharge_opt, 183, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 183, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":208
  *             logger.warning(msg)
  * 
- *     def CalcDischarge_BoundaryNode(self, time):             # <<<<<<<<<<<<<<
+ *     def calc_discharge_boundary_node(self, time):             # <<<<<<<<<<<<<<
  *         Q_bc = self.Q_bc[time]
  *         self.Q_mass += Q_bc
  */
   __pyx_tuple__25 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_Q_bc, __pyx_n_s_Q); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 208, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalcDischarge_BoundaryNode, 208, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 208, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calc_discharge_boundary_node, 208, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 208, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":229
  *             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
  * 
- *     def CalculateDischarge(self, time):             # <<<<<<<<<<<<<<
+ *     def calculate_discharge(self, time):             # <<<<<<<<<<<<<<
  *         """Return the discharge for the current timestep
  * 
  */
   __pyx_tuple__27 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_inputs, __pyx_n_s_Q, __pyx_n_s_Q_bc, __pyx_n_s_msg); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 229, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalculateDischarge, 229, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 229, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calculate_discharge, 229, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 229, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":296
  *             logger.warning(msg)
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                      JDC, solar_only=False):
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  */
   __pyx_tuple__29 = PyTuple_Pack(17, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_hour, __pyx_n_s_min, __pyx_n_s_sec, __pyx_n_s_JD, __pyx_n_s_JDC, __pyx_n_s_solar_only, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_Daytime, __pyx_n_s_tran, __pyx_n_s_Azimuth_mod, __pyx_n_s_veg_block, __pyx_n_s_ground, __pyx_n_s_Mac, __pyx_n_s_i); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(8, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalcHeat_Opt, 296, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 296, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(8, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calc_heat_opt, 296, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 296, __pyx_L1_error)
   __pyx_tuple__31 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
@@ -11381,14 +11381,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "heatsource9/Stream/StreamNode.pyx":368
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                               JDC, solar_only=False):
  *         # Reset temperatures
  */
   __pyx_tuple__32 = PyTuple_Pack(16, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_hour, __pyx_n_s_min, __pyx_n_s_sec, __pyx_n_s_JD, __pyx_n_s_JDC, __pyx_n_s_solar_only, __pyx_n_s_Altitude, __pyx_n_s_Zenith, __pyx_n_s_Daytime, __pyx_n_s_tran, __pyx_n_s_Azimuth_mod, __pyx_n_s_veg_block, __pyx_n_s_ground, __pyx_n_s_i); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__32);
   __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(8, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalcHeat_BoundaryNode, 368, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(8, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calc_heat_boundary_node, 368, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 368, __pyx_L1_error)
   __pyx_tuple__34 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__34);
   __Pyx_GIVEREF(__pyx_tuple__34);
@@ -11396,38 +11396,38 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "heatsource9/Stream/StreamNode.pyx":443
  *         self.T_prev = self.T_bc[time]
  * 
- *     def MacCormick2(self, time):             # <<<<<<<<<<<<<<
+ *     def maccormick2(self, time):             # <<<<<<<<<<<<<<
  *         #===================================================
  *         #Set control temps
  */
   __pyx_tuple__35 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_S, __pyx_n_s_mix); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
-  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_MacCormick2, 443, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_maccormick2, 443, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 443, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":464
  *                                             self.next_km.Mix_T_Delta)
  * 
- *     def CalcDispersion(self):             # <<<<<<<<<<<<<<
+ *     def calc_dispersion(self):             # <<<<<<<<<<<<<<
  *         cdef double dx = self.dx
  *         cdef double dt = self.dt
  */
   __pyx_tuple__37 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_dx, __pyx_n_s_dt, __pyx_n_s_Shear_Velocity, __pyx_n_s_Disp); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_CalcDispersion, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_calc_dispersion, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 464, __pyx_L1_error)
 
   /* "heatsource9/Stream/StreamNode.pyx":479
  *         return Disp
  * 
- *     def MixItUp(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
+ *     def mix_it_up(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
  *         Q_in = 0
  *         T_in = 0
  */
   __pyx_tuple__39 = PyTuple_Pack(11, __pyx_n_s_self, __pyx_n_s_time, __pyx_n_s_Q_up, __pyx_n_s_T_up, __pyx_n_s_Q_in, __pyx_n_s_T_in, __pyx_n_s_i, __pyx_n_s_Q_hyp, __pyx_n_s_Q_accr, __pyx_n_s_T_accr, __pyx_n_s_T_mix); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_MixItUp, 479, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 479, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_heatsource9_Stream_StreamNod, __pyx_n_s_mix_it_up, 479, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -11922,13 +11922,13 @@ if (!__Pyx_RefNanny) {
   /* "heatsource9/Stream/StreamNode.pyx":125
  *         self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
  *         self.UTC_offset = IniParams["offset"]
- *     def GetNodeData(self):             # <<<<<<<<<<<<<<
+ *     def get_node_data(self):             # <<<<<<<<<<<<<<
  *         data = {}
  *         for attr in self.__slots:
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_3GetNodeData, 0, __pyx_n_s_StreamNode_GetNodeData, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_3get_node_data, 0, __pyx_n_s_StreamNode_get_node_data, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_GetNodeData, __pyx_t_2) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_get_node_data, __pyx_t_2) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":131
@@ -12018,111 +12018,111 @@ if (!__Pyx_RefNanny) {
   /* "heatsource9/Stream/StreamNode.pyx":152
  *         return '%s @ %.3f km' % (self.__class__.__name__, self.km)
  * 
- *     def Initialize(self):             # <<<<<<<<<<<<<<
+ *     def initialize(self):             # <<<<<<<<<<<<<<
  *         """Methods necessary to set initial conditions of the node"""
  *         global _HS, py_HS, C_HS
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_19Initialize, 0, __pyx_n_s_StreamNode_Initialize, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_19initialize, 0, __pyx_n_s_StreamNode_initialize, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_Initialize, __pyx_t_2) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_initialize, __pyx_t_2) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":183
  *                        IniParams["alluviumtemp"])
  * 
- *     def CalcDischarge_Opt(self, time):             # <<<<<<<<<<<<<<
- *         """A Version of CalculateDischarge() that does not require
+ *     def calc_discharge_opt(self, time):             # <<<<<<<<<<<<<<
+ *         """A Version of calculate_discharge() that does not require
  *         checking for boundary conditions"""
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_21CalcDischarge_Opt, 0, __pyx_n_s_StreamNode_CalcDischarge_Opt, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_21calc_discharge_opt, 0, __pyx_n_s_StreamNode_calc_discharge_opt, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalcDischarge_Opt, __pyx_t_2) < 0) __PYX_ERR(0, 183, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calc_discharge_opt, __pyx_t_2) < 0) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":208
  *             logger.warning(msg)
  * 
- *     def CalcDischarge_BoundaryNode(self, time):             # <<<<<<<<<<<<<<
+ *     def calc_discharge_boundary_node(self, time):             # <<<<<<<<<<<<<<
  *         Q_bc = self.Q_bc[time]
  *         self.Q_mass += Q_bc
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_23CalcDischarge_BoundaryNode, 0, __pyx_n_s_StreamNode_CalcDischarge_Boundar, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_23calc_discharge_boundary_node, 0, __pyx_n_s_StreamNode_calc_discharge_bounda, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalcDischarge_BoundaryNode, __pyx_t_2) < 0) __PYX_ERR(0, 208, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calc_discharge_boundary_node, __pyx_t_2) < 0) __PYX_ERR(0, 208, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":229
  *             print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
  * 
- *     def CalculateDischarge(self, time):             # <<<<<<<<<<<<<<
+ *     def calculate_discharge(self, time):             # <<<<<<<<<<<<<<
  *         """Return the discharge for the current timestep
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_25CalculateDischarge, 0, __pyx_n_s_StreamNode_CalculateDischarge, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 229, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_25calculate_discharge, 0, __pyx_n_s_StreamNode_calculate_discharge, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 229, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalculateDischarge, __pyx_t_2) < 0) __PYX_ERR(0, 229, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calculate_discharge, __pyx_t_2) < 0) __PYX_ERR(0, 229, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":296
  *             logger.warning(msg)
  * 
- *     def CalcHeat_Opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_opt(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                      JDC, solar_only=False):
  *         """Inlined version of CalcHeat optimized for non-boundary nodes
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_27CalcHeat_Opt, 0, __pyx_n_s_StreamNode_CalcHeat_Opt, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 296, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_27calc_heat_opt, 0, __pyx_n_s_StreamNode_calc_heat_opt, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__31);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalcHeat_Opt, __pyx_t_2) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calc_heat_opt, __pyx_t_2) < 0) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":368
  *         self.Solar_Blocked["diffuse"] += veg_block[-1]
  * 
- *     def CalcHeat_BoundaryNode(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
+ *     def calc_heat_boundary_node(self, time, hour, min, sec, JD,             # <<<<<<<<<<<<<<
  *                               JDC, solar_only=False):
  *         # Reset temperatures
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_29CalcHeat_BoundaryNode, 0, __pyx_n_s_StreamNode_CalcHeat_BoundaryNode, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_29calc_heat_boundary_node, 0, __pyx_n_s_StreamNode_calc_heat_boundary_no, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__34);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalcHeat_BoundaryNode, __pyx_t_2) < 0) __PYX_ERR(0, 368, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calc_heat_boundary_node, __pyx_t_2) < 0) __PYX_ERR(0, 368, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":443
  *         self.T_prev = self.T_bc[time]
  * 
- *     def MacCormick2(self, time):             # <<<<<<<<<<<<<<
+ *     def maccormick2(self, time):             # <<<<<<<<<<<<<<
  *         #===================================================
  *         #Set control temps
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_31MacCormick2, 0, __pyx_n_s_StreamNode_MacCormick2, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_31maccormick2, 0, __pyx_n_s_StreamNode_maccormick2, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_MacCormick2, __pyx_t_2) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_maccormick2, __pyx_t_2) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":464
  *                                             self.next_km.Mix_T_Delta)
  * 
- *     def CalcDispersion(self):             # <<<<<<<<<<<<<<
+ *     def calc_dispersion(self):             # <<<<<<<<<<<<<<
  *         cdef double dx = self.dx
  *         cdef double dt = self.dt
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_33CalcDispersion, 0, __pyx_n_s_StreamNode_CalcDispersion, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_33calc_dispersion, 0, __pyx_n_s_StreamNode_calc_dispersion, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_CalcDispersion, __pyx_t_2) < 0) __PYX_ERR(0, 464, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calc_dispersion, __pyx_t_2) < 0) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":479
  *         return Disp
  * 
- *     def MixItUp(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
+ *     def mix_it_up(self, time, Q_up, T_up):             # <<<<<<<<<<<<<<
  *         Q_in = 0
  *         T_in = 0
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_35MixItUp, 0, __pyx_n_s_StreamNode_MixItUp, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 479, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_11heatsource9_6Stream_10StreamNode_10StreamNode_35mix_it_up, 0, __pyx_n_s_StreamNode_mix_it_up, NULL, __pyx_n_s_heatsource9_Stream_StreamNode, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_MixItUp, __pyx_t_2) < 0) __PYX_ERR(0, 479, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_mix_it_up, __pyx_t_2) < 0) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/StreamNode.pyx":32
