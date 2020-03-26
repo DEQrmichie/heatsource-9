@@ -26,16 +26,9 @@ from ..Utils.Printer import Printer as print_console
 
 # Builtin methods
 from itertools import ifilter, izip, chain, repeat, count
-from collections import defaultdict
 from math import ceil, log, degrees, atan
-from os.path import exists, join, normpath, isfile
-from os import unlink, makedirs
 from bisect import bisect
-from time import strptime, ctime, strftime, gmtime
-from calendar import timegm
-from datetime import datetime
-import csv
-import operator
+from time import ctime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -855,7 +848,6 @@ class ModelSetup(object):
             print_console(msg, True, h + 1, len(keys))
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
-            lc_angle_max = 0
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
@@ -916,7 +908,7 @@ class ModelSetup(object):
                     if not s:
                         # We are at the stream edge, so start over
                         # New value for each transect direction
-                        lc_angle_max = 0
+                        lc_angle_max = 0  # TODO
                     else:
                         # No overhang away from the stream
                         v_overhang = 0
@@ -1146,7 +1138,6 @@ class ModelSetup(object):
             print_console(msg, True, h + 1, len(keys))
 
             node = self.reach[keys[h]]
-            lc_angle_max = 0
             vts_total = 0  # View to sky value
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
@@ -1200,7 +1191,7 @@ class ModelSetup(object):
                     elev = elevation[i * transsample_count + s][h]
 
                     if not s:  # We are at the stream edge, so start over
-                        lc_angle_max = 0  # New value for each transect direction
+                        lc_angle_max = 0  # New value for each transect direction # TODO
                     else:
                         v_overhang = 0  # No overhang away from the stream
                     ##########################################################

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
-from time import ctime, gmtime
+from time import gmtime
 from collections import defaultdict
 from bisect import bisect_right, bisect_left
 

@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division, print_function
+from __future__ import division
 from time import ctime
 from os.path import join
 from copy import deepcopy
-from math import ceil
 import csv
 
 from ..Dieties.IniParamsDiety import IniParams

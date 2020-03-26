@@ -761,7 +761,6 @@ class Inputs(object):
         for filename in filenames:
             with open(join(inputdir, filename.strip()), "rU") as file_object:
                 newfile = [row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
-                numcols = len(newfile[0])
 
             # skip rows    
             newfile = newfile[-(len(newfile) - skiprows):]
@@ -791,7 +790,6 @@ class Inputs(object):
         if not exists(IniParams["outputdir"]):
             makedirs(IniParams["outputdir"])
 
-        now = datetime.now()
         timestamp = self.timestamp()
         timelist = self.datetime_string()
         kmlist = self.stream_kms()
