@@ -21,7 +21,6 @@ from builtins import object
 from time import ctime
 from os.path import join
 from copy import deepcopy
-from math import ceil
 import csv
 
 from ..Dieties.IniParamsDiety import IniParams

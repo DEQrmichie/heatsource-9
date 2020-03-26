@@ -854,7 +854,7 @@ class ModelSetup(object):
             print_console(msg, True, h + 1, len(keys))
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
-            lc_angle_max = 0
+
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
@@ -912,7 +912,7 @@ class ModelSetup(object):
                     v_overhang = overhang[i * transsample_count + s + 1][h]
                     elev = elevation[i * transsample_count + s][h]
 
-                    if not s:
+                    if not s:  # TODO
                         # We are at the stream edge, so start over
                         # New value for each transect direction
                         lc_angle_max = 0
@@ -1146,7 +1146,6 @@ class ModelSetup(object):
             print_console(msg, True, h + 1, len(keys))
 
             node = self.reach[keys[h]]
-            lc_angle_max = 0
             vts_total = 0  # View to sky value
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
@@ -1201,7 +1200,7 @@ class ModelSetup(object):
                     elev = elevation[i * transsample_count + s][h]
 
                     if not s:  # We are at the stream edge, so start over
-                        lc_angle_max = 0  # New value for each transect direction
+                        lc_angle_max = 0  # New value for each transect direction # TODO
                     else:
                         v_overhang = 0  # No overhang away from the stream
                     ##########################################################

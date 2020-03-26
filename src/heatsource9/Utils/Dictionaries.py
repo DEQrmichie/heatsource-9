@@ -16,7 +16,7 @@
 
 from __future__ import division
 from builtins import range
-from time import ctime, gmtime
+from time import gmtime
 from collections import defaultdict
 from bisect import bisect_right, bisect_left
 
