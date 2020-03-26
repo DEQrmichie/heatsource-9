@@ -18,16 +18,16 @@
 The ModelControl class loads and controls the model run.
 A model instance object is created using the ModelSetup class.
 """
-from __future__ import with_statement, division, print_function
+from __future__ import division, absolute_import
 
 # Heat Source modules
-from Dieties.IniParamsDiety import IniParams
-from ModelSetup.ModelSetup import ModelSetup
-from Dieties.ChronosDiety import Chronos
-from Utils.Printer import Printer as print_console
-from Utils.Output import Output as O
-from __version__ import version_string
-from ModelSetup.Inputs import Inputs
+from .Dieties.IniParamsDiety import IniParams
+from .ModelSetup.ModelSetup import ModelSetup
+from .Dieties.ChronosDiety import Chronos
+from .Utils.Printer import Printer as print_console
+from .Utils.Output import Output as O
+from .__version__ import version_string
+from .ModelSetup.Inputs import Inputs
 
 # Built-in modules
 import logging
