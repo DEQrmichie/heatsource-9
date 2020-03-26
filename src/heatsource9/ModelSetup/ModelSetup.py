@@ -1106,8 +1106,8 @@ class ModelSetup(object):
             for i in range(len(keys)):
                 node = self.reach[keys[i]]
                 n = 0
-                for tran in xrange(radial_count + 1):
-                    for s in xrange(transsample_count):
+                for tran in range(radial_count + 1):
+                    for s in range(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
@@ -1157,7 +1157,8 @@ class ModelSetup(object):
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
-            for i in xrange(radial_count):  # Iterate through each transect direction
+            # Iterate through each transect direction
+            for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
                     elevation_list.append(topo_e[h])
