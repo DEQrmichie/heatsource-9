@@ -30,9 +30,6 @@ from .__version__ import version_string
 from .ModelSetup.Inputs import Inputs
 
 # Built-in modules
-from builtins import next
-from builtins import range
-from builtins import object
 import logging
 from itertools import count
 import traceback
@@ -103,7 +100,7 @@ class ModelControl(object):
         # This is the list of StreamNode instances- we sort it in reverse
         # order because we number stream kilometer from the mouth to the
         # headwater, but we want to run the model from headwater to mouth.
-        self.reachlist = sorted(iter(list(self.HS.reach.values())), reverse=True)
+        self.reachlist = sorted(self.HS.reach.itervalues(), reverse=True)
 
         # This if statement prevents us from having to test every 
         # timestep. We just call self.run_all(), which is a classmethod 
@@ -214,8 +211,8 @@ class ModelControl(object):
             # If minute and second are both zero, we are at the top of 
             # the hour. 
             if (minute == 0 and second == 0):
-                ts = next(cnt) # Number of actual timesteps per tick
-                
+                ts = cnt.next()  # Number of actual timesteps per tick
+
                 # Number of timesteps in one hour
                 hr = 60 / (IniParams["dt"] / 60)
                 # This writes a line to the status bar.
