@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division, print_function
+from __future__ import division, absolute_import
 from math import sqrt
 from time import ctime
 import logging
@@ -25,7 +25,6 @@ from ..Dieties.IniParamsDiety import IniParams
 from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
 import PyHeatsource as py_HS
-# import C_Heatsource as C_HS # TODO for the future
 
 _HS = None # Placeholder for heatsource module
 
@@ -202,7 +201,7 @@ class StreamNode(object):
 
         if Q < 0.003:
             # Channel is going dry
-            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
+            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.pretty_time())
             logger.warning(msg)
 
     def calc_discharge_boundary_node(self, time):
@@ -224,7 +223,8 @@ class StreamNode(object):
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
         if Q < 0.003: 
             #Channel is going dry
-            print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
+            msg="The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.pretty_time())
+            logger.warning(msg)
 
     def calculate_discharge(self, time):
         """Return the discharge for the current timestep
