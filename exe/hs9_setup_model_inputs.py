@@ -6,9 +6,24 @@ from Python shell (IDLE) will not identify __file__ correctly and will
 result in an error. It must be executed from a command prompt. Your
 options are to try to double click on this file and execute it 
 using python.exe, or to open a command prompt and execute manually 
-by typing: python -i path/to/this/script/HS9_Setup_Model_Inputs.py"""
+by typing: python -i path/to/this/script/hs9_setup_model_inputs.py
 
-from heatsource9.ModelSetup.Inputs import Inputs
+Command line:
+> hs setup -mi
+
+usage: hs <command> [options]
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -cf, --control-file  Writes a blank control file.
+  -mi, --model-inputs  Write blank input files. Control file must already be
+                       parameterized.
+  -t, --timestamp      Use -t to add a timestamp to the file name.
+  -o, --overwrite      Use -o to overwrite any existing file.
+
+"""
+
+from heatsource9 import BigRedButton
 from os.path import abspath
 from os.path import dirname
 from os.path import exists
@@ -29,10 +44,6 @@ if not exists(join(model_dir, control_file)):
     Move the executable or place the control file in \
     this directory: {0}.".format(model_dir))
 
-inputs = Inputs(model_dir, control_file)
-
-# Control file must already be parameterized
-inputs.import_control_file()
-
 # Write blank input files,
-inputs.setup(use_timestamp=True, overwrite=False)
+BigRedButton.setup_mi(model_dir, control_file,
+                      use_timestamp=True, overwrite=False)

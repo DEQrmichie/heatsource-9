@@ -915,7 +915,7 @@ class ModelSetup(object):
                     if not s:  # TODO
                         # We are at the stream edge, so start over
                         # New value for each transect direction
-                        lc_angle_max = 0
+                        lc_angle_max = 0  # TODO
                     else:
                         # No overhang away from the stream
                         v_overhang = 0
