@@ -1,7 +1,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b24 (beta 24)
+Current Version: heatsource 9.0.0b25 (beta 25)
 
 =========================================================================
 ## ABOUT 
@@ -29,7 +29,7 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 Heat Source 9 should work on Windows, Mac, and Linux.
 
-Requires python 2.7
+Requires python 3.x
 https://www.python.org/downloads/
 
 Download  
