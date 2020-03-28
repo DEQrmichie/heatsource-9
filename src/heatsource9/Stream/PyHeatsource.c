@@ -17382,7 +17382,7 @@ if (!__Pyx_RefNanny) {
 
   /* "heatsource9/Stream/PyHeatsource.pyx":21
  * 
- * from __future__ import division, print_function
+ * from __future__ import division
  * from math import pow, sqrt, log, log10, exp, pi             # <<<<<<<<<<<<<<
  * from math import atan, sin, cos, tan, acos, radians, degrees
  * from random import randint
@@ -17437,7 +17437,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "heatsource9/Stream/PyHeatsource.pyx":22
- * from __future__ import division, print_function
+ * from __future__ import division
  * from math import pow, sqrt, log, log10, exp, pi
  * from math import atan, sin, cos, tan, acos, radians, degrees             # <<<<<<<<<<<<<<
  * from random import randint
