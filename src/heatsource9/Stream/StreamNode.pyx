@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
 from builtins import range
 from builtins import object
 from math import sqrt
@@ -26,7 +25,7 @@ from ..Dieties.ChronosDiety import Chronos
 from ..Dieties.IniParamsDiety import IniParams
 from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
-from . import PyHeatsource as py_HS
+import PyHeatsource as py_HS
 
 _HS = None # Placeholder for heatsource module
 
