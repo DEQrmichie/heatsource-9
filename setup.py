@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from setuptools import setup
-from setuptools import Extension
 from Cython.Build import cythonize
 from sys import version_info as vi
 
@@ -11,7 +10,7 @@ if installed_version != (2,7):
     raise Exception("The default Python version must be 2.7, not {0}.{1}".format(vi[0], vi[1]))
 
 setup(name='heatsource9',
-      version='9.0.0b24',
+      version='9.0.0b25',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -21,7 +20,7 @@ setup(name='heatsource9',
           'Operating System :: MacOS :: MacOS X',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python :: 2.7',
-          'Topic :: Scientific/Engineering',
+          'Topic :: Scientific/Engineering'
           ],
       long_description="""Heat Source is a computer model used by the
       Oregon Department of Environmental Quality to simulate stream
@@ -51,4 +50,4 @@ setup(name='heatsource9',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
       ext_modules = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"})
-        )
+      )
