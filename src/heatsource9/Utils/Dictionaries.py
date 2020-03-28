@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
+from builtins import range
 from time import gmtime
 from collections import defaultdict
 from bisect import bisect_right, bisect_left
@@ -39,7 +40,7 @@ class Interpolator(defaultdict):
             # Since we are assuming no change once created, we will
             # set a lambda function to replace this one because we're
             # not using the method anyway.
-            if not len(self.keys()):
+            if not len(list(self.keys())):
                 self.__missing__ = lambda x: (0.0,)
                 return (0.0,)
             else:
@@ -59,7 +60,7 @@ class Interpolator(defaultdict):
         if isinstance(y0, tuple):
             if not len(y0):
                 return ()  # We have nothing in the tuple, so return a blank tuple (not 'val', which is None)
-            for i in xrange(len(y0)):
+            for i in range(len(y0)):
                 # Try to add value to the tuple of values
                 try:
                     val += y0[i] + ((y1[i] - y0[i]) * (key - x0)) / (x1 - x0),

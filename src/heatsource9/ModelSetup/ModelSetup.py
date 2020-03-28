@@ -25,7 +25,11 @@ from ..Utils.Dictionaries import Interpolator
 from ..Utils.Printer import Printer as print_console
 
 # Builtin methods
-from itertools import ifilter, izip, chain, repeat, count
+from builtins import next
+from builtins import zip
+from builtins import range
+from builtins import object
+from itertools import chain, repeat, count
 from math import ceil, log, degrees, atan
 from bisect import bisect
 from time import ctime
@@ -98,13 +102,13 @@ class ModelSetup(object):
     def orient_nodes(self):
         # Now we manually set each nodes next and previous 
         # kilometer values by stepping through the reach
-        l = sorted(self.reach.keys(), reverse=True)
+        l = sorted(list(self.reach.keys()), reverse=True)
         # The headwater node
         head = self.reach[max(l)]
         # Set the previous and next kilometer of each node.
         slope_problems = []
-        for i in xrange(len(l)):
-            key = l[i]  # The current node's key
+        for i in range(len(l)):
+            key = l[i] # The current node's key
             # Then, set pointers to the next and previous nodes
             if i == 0:
                 pass
@@ -146,13 +150,13 @@ class ModelSetup(object):
         # the bisect module
         sites.sort()
         c = count()
-        l = self.reach.keys()
+        l = list(self.reach.keys())
         # This routine iterates through all nodes and uses bisect to 
         # determine which met site is closest to the node and 
         # initializes that node with the met data that is closest 
         # (up or downstream)
-        for km, node in self.reach.iteritems():
-            if km not in sites:  # if we are not on the node where the
+        for km, node in list(self.reach.items()):
+            if km not in sites: # if we are not on the node where the 
                 # met data is assigned we have t
                 # Kilometer's downstream and upstream
 
@@ -175,8 +179,8 @@ class ModelSetup(object):
                     datasite = self.reach[down]
                 self.reach[km].metData = datasite.metData
             msg = "Assigning Node"
-            current = c.next() + 1
-            logger.debug('{0} {1} {2}'.format(msg, True, current, len(l)))
+            current = next(c)+1
+            logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
 
     def get_boundary_conditions(self):
@@ -196,7 +200,7 @@ class ModelSetup(object):
         # Now set the discharge and temperature 
         # boundary condition dictionaries.
 
-        for i in xrange(len(timelist)):
+        for i in range(len(timelist)):
             time = timelist[i]
             flow = data[i][0]
             temp = data[i][1]
@@ -212,20 +216,20 @@ class ModelSetup(object):
             t_val = temp if temp is not None else 0.0
             self.T_bc[time] = t_val
             msg = "Reading boundary conditions"
-            current = c.next() + 1
-            logger.debug('{0} {1} {2}'.format(msg, current, length))
+            current = next(c)+1
+            logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
         # Flush flow: model start value over entire flush period
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             self.Q_bc[time] = self.Q_bc[IniParams["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             self.T_bc[time] = self.T_bc[first_day_time]
             first_day_time += 3600
@@ -244,7 +248,7 @@ class ModelSetup(object):
         or the model output kilometers"""
 
         t = ()
-        l = self.reach.keys()
+        l = list(self.reach.keys())
         l.sort()
 
         if (ini == "metkm" or
@@ -258,7 +262,7 @@ class ModelSetup(object):
         else:
             kms = tuple([])
 
-        for site in xrange(0, len(kms)):
+        for site in range(0,len(kms)):
             km = kms[site]
             if km is None or not isinstance(km, float):
                 # This is a bad dataset if there's no kilometer
@@ -290,7 +294,7 @@ class ModelSetup(object):
         the control file"""
         timelist = []
         # hourly timestep
-        timelist = range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)
+        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600))
         return tuple(timelist)
 
     def get_timelist_flush_period(self):
@@ -341,9 +345,9 @@ class ModelSetup(object):
                 # Error checking?! Naw!!
                 c = count()
                 for flow, temp in line:
-                    i = c.next()
-                    node = self.reach[kms[i]]  # Index by kilometer
-                    if node not in nodelist or not len(nodelist):
+                    i = next(c)
+                    node = self.reach[kms[i]] # Index by kilometer
+                    if node not in nodelist or not len(nodelist): 
                         nodelist.append(node)
                     if flow is None or (flow > 0 and temp is None):
                         raise Exception("Cannot have a tributary with \
@@ -357,21 +361,21 @@ class ModelSetup(object):
                     node.Q_tribs[time] += flow,
                     node.T_tribs[time] += temp,
                     msg = "Reading inflow data"
-                    current = tm.next() + 1
-                    logger.debug('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
+                    current = next(tm) + 1
+                    logger.info('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
                     print_console(msg, True, current, length * IniParams["inflowsites"])
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
         # Flush flow: model start value over entire flush period
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
                 node.Q_tribs[time] = node.Q_tribs[IniParams["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
                 node.T_tribs[time] = node.T_tribs[first_day_time]
@@ -408,8 +412,8 @@ class ModelSetup(object):
             line = data.pop(0)
             c = count()
             for cloud, wind, humidity, T_air in line:
-                i = c.next()
-
+                i = next(c)
+                
                 # Index by kilometer
                 node = self.reach[kms[i]]
                 # Append this node to a list of all nodes which 
@@ -449,14 +453,14 @@ class ModelSetup(object):
                 node.metData[time] = cloud, wind, humidity, T_air
 
             msg = "Reading meteorological data"
-            current = tm.next() + 1
-            logger.debug('{0} {1} {2}'.format(msg, current, length))
+            current = next(tm) + 1
+            logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
         first_day_time = IniParams["modelstart"]
         second_day = IniParams["modelstart"] + 86400
-        for i in xrange(len(self.flushtimelist)):
+        for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for km in self.metDataSites:
                 node = self.reach[km]
@@ -475,7 +479,7 @@ class ModelSetup(object):
             node = self.reach[km]
             node.metData = node.metData.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
             msg = "Subsetting met data"
-            current = tm.next() + 1
+            current = next(tm)+1
             logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
@@ -499,24 +503,24 @@ class ModelSetup(object):
         """
         # From itertools recipes... We use all but the 
         # first (boundary node) element
-        lst = [i for i in izip(*[chain(iterable[1:], repeat(None, mul - 1))] * mul)]
+        lst = [i for i in zip(*[chain(iterable[1:], repeat(None, mul - 1))] * mul)]
         # Then we tack on the boundary node element
         lst.insert(0, (iterable[0],))
         # Then strip off the None values from the last (if any)
-        lst[-1] = tuple(ifilter(lambda x: x is not None, lst[-1]))
+        lst[-1] = tuple([x for x in lst[-1] if x is not None])
         return self.numify(lst)
 
     def numify(self, lst):
         """Take a list of iterables and remove all values of None or empty strings"""
         # Remove None values at the end of each individual list
-        for i in xrange(len(lst)):
+        for i in range(len(lst)):
             # strip out values of None from the tuple, 
             # returning a new tuple
-            lst[i] = [x for x in ifilter(lambda x: x is not None, lst[i])]
+            lst[i] = [x for x in [x for x in lst[i] if x is not None]]
         # Remove blank strings from within the list
         for l in lst:
             n = []
-            for i in xrange(len(l)):
+            for i in range(len(l)):
                 if l[i] == "":
                     n.append(i)
             n.reverse()
@@ -524,7 +528,7 @@ class ModelSetup(object):
                 del l[i]
         # Make sure there are no zero length lists because they'll 
         # fail if we average
-        for i in xrange(len(lst)):
+        for i in range(len(lst)):
             if len(lst[i]) == 0:
                 lst[i].append(0.0)
         return lst
@@ -543,8 +547,8 @@ class ModelSetup(object):
         # not lazy, but I'm not paid as a programmer, and so I have
         # "better" things to do than optimize our code.) First we strip 
         # off the None values.
-
-        strip_none = lambda y: [i for i in ifilter(lambda x: x is not None, y)]
+        
+        strip_none = lambda y: [i for i in [x for x in y if x is not None]]
         return [predicate(strip_none(x)) for x in self.zipper(iterable, self.multiple)]
 
     def get_columnar_data(self):
@@ -629,7 +633,7 @@ class ModelSetup(object):
         # Build a boundary node
         node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
         # Then set the attributes for everything in the dictionary
-        for k, v in data.iteritems():
+        for k, v in list(data.items()):
             setattr(node, k, v[0])
         # set the flow and temp boundary conditions for the boundary node
         node.Q_bc = self.Q_bc
@@ -649,8 +653,8 @@ class ModelSetup(object):
         num_nodes = int(ceil(round((vars) / self.multiple, 4)))
         for i in range(0, num_nodes):
             node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
-            for k, v in data.iteritems():
-                setattr(node, k, v[i + 1])  # Add one to ignore boundary node
+            for k, v in list(data.items()):
+                setattr(node, k, v[i + 1])# Add one to ignore boundary node
             self.initialize_node(node)
             self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
@@ -678,9 +682,9 @@ class ModelSetup(object):
         average = lambda x: sum(x) / len(x)
         transsample_count = IniParams["transsample_count"]
         radial_count = IniParams["trans_count"]
-
-        keys = self.reach.keys()
-
+        
+        keys = list(self.reach.keys())
+        
         # Downstream sorted list of stream kilometers
         keys.sort(reverse=True)
 
@@ -697,8 +701,8 @@ class ModelSetup(object):
             k = []
 
             # For each column of LULC data
-            for i in xrange(6, radial_count * transsample_count + 7):
-
+            for i in range(6, radial_count * transsample_count + 7):
+                
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
                 elev = [float(LCdata[row][i + radial_count * transsample_count]) for row in range(0, len(LCdata))]
@@ -722,7 +726,7 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][3])
                                                      for x in col],
                                                     average))
-                except KeyError, stderr:
+                except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
                         IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
                 if i > 6:
@@ -736,11 +740,11 @@ class ModelSetup(object):
                 logger.info('{0} {1} {2}'.format(msg, i, radial_count * transsample_count + 7))
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
-            for i in xrange(len(keys)):
+            for i in range(len(keys)):
                 node = self.reach[keys[i]]
                 n = 0
-                for tran in xrange(radial_count + 1):
-                    for s in xrange(transsample_count):
+                for tran in range(radial_count + 1):
+                    for s in range(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_k[tran][s] = k[n][i]
@@ -762,7 +766,7 @@ class ModelSetup(object):
             # using canopy cover data
 
             # For each column of LULC data
-            for i in xrange(6, radial_count * transsample_count + 7):
+            for i in range(6, radial_count * transsample_count + 7):
 
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
@@ -784,10 +788,12 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][2])
                                                      for x in col],
                                                     average))
-                except KeyError, stderr:
+
+                except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
                         IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
                 if i > 6:
+
                     # There isn't a stream center elevation
                     # (that is in the morphology file), so we don't want 
                     # to read in first elevation value which is actually 
@@ -799,11 +805,11 @@ class ModelSetup(object):
                 logger.info('{0} {1} {2}'.format(msg, i, radial_count * transsample_count + 7))
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
-            for i in xrange(len(keys)):
+            for i in range(len(keys)):
                 node = self.reach[keys[i]]
                 n = 0
-                for tran in xrange(radial_count + 1):
-                    for s in xrange(transsample_count):
+                for tran in range(radial_count + 1):
+                    for s in range(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
@@ -842,12 +848,13 @@ class ModelSetup(object):
         # simplify it... yeah, you read that right, simplify it... you 
         # should've seen it earlier!
 
-        for h in xrange(len(keys)):
+        for h in range(len(keys)):
             msg = "Building land cover zones"
             logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
+
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
@@ -855,11 +862,11 @@ class ModelSetup(object):
             # with one of three topographies
             elevation_list = []
             angle_incr = 360.0 / radial_count
-            dir_numbers = range(1, radial_count + 1)
+            dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
 
             # Iterate through each transect direction
-            for i in xrange(radial_count):
+            for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
                     elevation_list.append(topo_e[h])
@@ -881,7 +888,7 @@ class ModelSetup(object):
             # them, and only do the shading calculations if that is true.
 
             # Iterate through each transect direction            
-            for i in xrange(radial_count):
+            for i in range(radial_count):
 
                 # The minimum sun angle needed for full sun
                 t_full = ()
@@ -899,13 +906,13 @@ class ModelSetup(object):
                 w_vdens_dem = 0.0
 
                 # Iterate through each of the zones
-                for s in xrange(transsample_count):
+                for s in range(transsample_count):
                     v_height = vheight[i * transsample_count + s + 1][h]
                     v_can = vcanopy[i * transsample_count + s + 1][h]
                     v_overhang = overhang[i * transsample_count + s + 1][h]
                     elev = elevation[i * transsample_count + s][h]
 
-                    if not s:
+                    if not s:  # TODO
                         # We are at the stream edge, so start over
                         # New value for each transect direction
                         lc_angle_max = 0  # TODO
@@ -995,9 +1002,10 @@ class ModelSetup(object):
         average = lambda x: sum(x) / len(x)
         transsample_count = IniParams["transsample_count"]
         radial_count = IniParams["trans_count"]
+
         shiftcol = radial_count * transsample_count  # Shift to get to each data type column
 
-        keys = self.reach.keys()
+        keys = list(self.reach.keys())
         keys.sort(reverse=True)  # Downstream sorted list of stream kilometers
 
         vheight = []
@@ -1012,7 +1020,7 @@ class ModelSetup(object):
 
             k = []
 
-            for i in xrange(6, shiftcol + 7):  # For each column of LULC data
+            for i in range(6, shiftcol + 7):  # For each column of LULC data
                 heightcol = [float(LCdata[row][i]) for row in range(0, len(LCdata))]
                 elevcol = [float(LCdata[row][i + 1 + shiftcol]) for row in range(0, len(LCdata))]
                 laicol = [float(LCdata[row][i + 1 + (shiftcol * 2)]) for row in range(0, len(LCdata))]
@@ -1029,7 +1037,7 @@ class ModelSetup(object):
                     k.append(self.multiplier([float(x) for x in kcol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
 
-                except KeyError, stderr:
+                except KeyError as stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
                 if i > 6:
                     # There isn't a stream center elevation (that is in 
@@ -1040,11 +1048,11 @@ class ModelSetup(object):
                 logger.debug('{0} {1} {2}'.format(msg, i + 1, shiftcol + 7))
                 print_console(msg, True, i + 1, shiftcol + 7)
 
-            for i in xrange(len(keys)):
+            for i in range(len(keys)):
                 node = self.reach[keys[i]]
                 n = 0
-                for tran in xrange(radial_count + 1):
-                    for s in xrange(transsample_count):
+                for tran in range(radial_count + 1):
+                    for s in range(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_k[tran][s] = k[n][i]
@@ -1066,7 +1074,7 @@ class ModelSetup(object):
             # -------------------------------------------------------------
             # using canopy cover data
 
-            for i in xrange(6, shiftcol + 7):  # For each column of LULC data
+            for i in range(6, shiftcol + 7):  # For each column of LULC data
                 heightcol = [float(LCdata[row][i]) for row in range(0, len(LCdata))]
                 elevcol = [float(LCdata[row][i + 1 + shiftcol]) for row in range(0, len(LCdata))]
                 dencol = [float(LCdata[row][i + 1 + (shiftcol * 2)]) for row in range(0, len(LCdata))]
@@ -1081,8 +1089,8 @@ class ModelSetup(object):
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
                     vcanopy.append(self.multiplier([float(x) for x in dencol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
-
-                except KeyError, stderr:
+                    
+                except KeyError as stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
                 if i > 6:
                     # There isn't a stream center elevation (that is in 
@@ -1095,11 +1103,11 @@ class ModelSetup(object):
                 logger.debug('{0} {1} {2}'.format(msg, i + 1, shiftcol + 7))
                 print_console(msg, True, i + 1, shiftcol + 7)
 
-            for i in xrange(len(keys)):
+            for i in range(len(keys)):
                 node = self.reach[keys[i]]
                 n = 0
-                for tran in xrange(radial_count + 1):
-                    for s in xrange(transsample_count):
+                for tran in range(radial_count + 1):
+                    for s in range(transsample_count):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
@@ -1132,7 +1140,7 @@ class ModelSetup(object):
         # it... yeah, you read that right, simplify it... you should've 
         # seen it earlier!
 
-        for h in xrange(len(keys)):
+        for h in range(len(keys)):
             msg = "Building VegZones"
             logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
@@ -1146,9 +1154,10 @@ class ModelSetup(object):
             # of three topographies
             elevation_list = []
             angle_incr = 360.0 / radial_count
-            dir_numbers = range(1, radial_count + 1)
+            dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
-            for i in xrange(radial_count):  # Iterate through each transect direction
+            # Iterate through each transect direction
+            for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
                     elevation_list.append(topo_e[h])
@@ -1164,7 +1173,7 @@ class ModelSetup(object):
             # two angles so that late we can test whether we are between them, and only do the shading calculations
             # if that is true.
 
-            for i in xrange(radial_count):  # Iterate through each transect direction
+            for i in range(radial_count):  # Iterate through each transect direction
                 # The minimum sun angle needed for full sun
                 t_full = ()
 
@@ -1180,7 +1189,7 @@ class ModelSetup(object):
                 # Denominator for the weighted Veg density calculation
                 w_vdens_dem = 0.0
 
-                for s in xrange(transsample_count):  # Iterate through each of the zones
+                for s in range(transsample_count):  # Iterate through each of the zones
                     v_height = vheight[i * transsample_count + s + 1][h]
                     if v_height < 0 or v_height is None or v_height > 120:
                         raise Exception(
