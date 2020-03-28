@@ -23,7 +23,6 @@ optional arguments:
 """
 
 from heatsource9 import BigRedButton
-#from heatsource9.ModelSetup.Inputs import Inputs
 from os.path import abspath
 from os.path import dirname
 from os.path import join
@@ -40,9 +39,3 @@ control_file = 'HeatSource_Control.csv'
 
 BigRedButton.setup_cf(model_dir, control_file,
                       use_timestamp=False, overwrite=False)
-
-# create an input object
-#inputs = Inputs(model_dir, control_file)
-
-# Write a blank control file
-# inputs.parameterize_cf(overwrite=False)

@@ -24,7 +24,6 @@ optional arguments:
 """
 
 from heatsource9 import BigRedButton
-#from heatsource9.ModelSetup.Inputs import Inputs
 from os.path import abspath
 from os.path import dirname
 from os.path import exists
@@ -45,12 +44,6 @@ if not exists(join(model_dir, control_file)):
     Move the executable or place the control file in \
     this directory: {0}.".format(model_dir))
 
-#inputs = Inputs(model_dir, control_file)
-
-# Control file must already be parameterized
-# inputs.import_control_file()
-
 # Write blank input files,
 BigRedButton.setup_mi(model_dir, control_file,
                       use_timestamp=True, overwrite=False)
-#inputs.setup(use_timestamp=True, overwrite=False)
