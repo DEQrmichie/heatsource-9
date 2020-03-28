@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import iniRange
 from ..Dieties.IniParamsDiety import dtype

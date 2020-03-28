@@ -17,7 +17,6 @@
 """PyHeatsource is the core of the model and where the 
 flux and hydraulic calculations are made."""
 
-from __future__ import division, print_function
 from builtins import range
 from math import pow, sqrt, log, log10, exp, pi
 from math import atan, sin, cos, tan, acos, radians, degrees
