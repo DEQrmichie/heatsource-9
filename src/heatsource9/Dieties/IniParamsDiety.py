@@ -4,10 +4,6 @@ about the model initialization parameters and model inputs.
 It is located here so be they can be accessed globally.
 """
 
-try:
-    basestring
-except NameError:
-    basestring = str
 
 # IniParms mostly holds the control file info.
 # A couple initial values are suggested to make life easy.
