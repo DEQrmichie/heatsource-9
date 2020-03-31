@@ -1,9 +1,9 @@
-from __future__ import division, absolute_import
+from __future__ import division
 
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import iniRange
-from ..Dieties.IniParamsDiety import dtype
-from ..Utils.Printer import Printer as print_console
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import iniRange
+from heatsource9.Dieties.IniParamsDiety import dtype
+from heatsource9.Utils.Printer import Printer as print_console
 
 import csv
 import platform

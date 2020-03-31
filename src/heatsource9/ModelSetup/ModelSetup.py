@@ -17,12 +17,12 @@
 from __future__ import division
 
 # Heat Source Methods
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import head2var
-from .Inputs import Inputs
-from ..Stream.StreamNode import StreamNode
-from ..Utils.Dictionaries import Interpolator
-from ..Utils.Printer import Printer as print_console
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import head2var
+from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.Stream.StreamNode import StreamNode
+from heatsource9.Utils.Dictionaries import Interpolator
+from heatsource9.Utils.Printer import Printer as print_console
 
 # Builtin methods
 from itertools import ifilter, izip, chain, repeat, count
