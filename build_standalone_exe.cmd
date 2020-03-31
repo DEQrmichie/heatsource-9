@@ -3,8 +3,7 @@
 :: This script builds heat source exectubles for windows 
 :: Requires pyinstaller
 
-C:\Python27\python.exe setup.py build_ext --inplace
-
+python setup.py build_ext --inplace
 cython src\heatsource9\Stream\PyHeatsource.pyx --embed
 cython src\heatsource9\Stream\StreamNode.pyx --embed
 
