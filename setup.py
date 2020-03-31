@@ -50,5 +50,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      ext_modules=cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
+      install_requires=['Cython'],
+      ext_modules=cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"}),
+      python_requires='>=3, <4'
       )
