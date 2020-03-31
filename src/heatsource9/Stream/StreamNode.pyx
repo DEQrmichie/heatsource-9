@@ -17,15 +17,13 @@
 from builtins import range
 from builtins import object
 from math import sqrt
-from time import ctime
 import logging
 logger = logging.getLogger(__name__)
 
-from ..Dieties.ChronosDiety import Chronos
-from ..Dieties.IniParamsDiety import IniParams
-from ..Utils.Dictionaries import Interpolator
-from ..Utils.Printer import Printer as print_console
-import PyHeatsource as py_HS
+from heatsource9.Dieties.ChronosDiety import Chronos
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Utils.Dictionaries import Interpolator
+from heatsource9.Stream import PyHeatsource as py_HS
 
 _HS = None # Placeholder for heatsource module
 

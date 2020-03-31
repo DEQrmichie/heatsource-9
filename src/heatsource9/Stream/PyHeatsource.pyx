@@ -26,7 +26,7 @@ from bisect import bisect
 import logging
 logger = logging.getLogger(__name__)
 
-from ..Utils.Printer import Printer as print_console
+from heatsource9.Utils.Printer import Printer as print_console
 
 def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JDC, heatsource8, radial_count):

@@ -1,9 +1,4 @@
-from __future__ import absolute_import
-
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import iniRange
-from ..Dieties.IniParamsDiety import dtype
-from ..Utils.Printer import Printer as print_console
+#from __future__ import absolute_import
 
 from builtins import next
 from builtins import zip
@@ -25,6 +20,11 @@ from collections import defaultdict
 from calendar import timegm
 from datetime import datetime
 from operator import itemgetter
+
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import iniRange
+from heatsource9.Dieties.IniParamsDiety import dtype
+from heatsource9.Utils.Printer import Printer as print_console
 
 import logging
 
@@ -960,7 +960,7 @@ class Inputs(object):
         data_v = {}
         for key, v in list(data.items()):
             
-            # tranlsate removes numbers from the key, e.g. TEMPERATURE2
+            # translate removes numbers from the key, e.g. TEMPERATURE2
             if key.translate(str.maketrans('','', digits)) not in list(dtype.keys()):
                 # This is to find the correct landcover data 
                 # key since they are all different

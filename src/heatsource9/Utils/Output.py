@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-
 from builtins import str
 from builtins import range
 from builtins import object
@@ -24,7 +22,7 @@ from os.path import join
 from copy import deepcopy
 import csv
 
-from ..Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import IniParams
 
 
 class Output(object):
