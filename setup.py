@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
+from setuptools import Extension
 from Cython.Build import cythonize
 from sys import version_info as vi
 
@@ -39,8 +40,8 @@ setup(name='heatsource9',
       author='Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner',
       maintainer='Ryan Michie, Oregon DEQ',
       maintainer_email='michie.ryan@deq.state.or.us',
-      platforms = ['darwin', 'win32'],
-      license = ['GNU General Public License v3 (GPLv3)'],
+      platforms=['darwin', 'win32'],
+      license=['GNU General Public License v3 (GPLv3)'],
       zip_safe=False,
       entry_points={'console_scripts': ['hs = heatsource9.BigRedButton:hs']},
       packages=['heatsource9',
@@ -49,6 +50,5 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      install_requires=['Cython'],
-      ext_modules = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
+      ext_modules=cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
       )
