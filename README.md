@@ -24,64 +24,60 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 [1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
 
-=========================================================================
 ## INSTALL
 
 There are two options for installing and running Heat Source 9:
 
-1. Download the [heat source python wheel][1]
-Requires python 2.7 or 3.x
+1. Download the [heat source python wheel][1]. Requires python 2.7 or 3.x
+
 https://www.python.org/downloads/
 
-From command line:
-```Batchfile
+install the wheel from command line:
+```console
 cd path\to\heatsource9_wheel_directory
 pip install <name of wheel file>
 ```
 
-2. Download the [windows executables][2]
-You can run the model on windows by using the compiled windows executables. 
+2. Download the [windows executables][2]. You can run the model on windows by using the compiled windows executables. 
 Python installation is not required.
 
 [1]: https://github.com/rmichie/heatsource-9/releases
 [2]: https://github.com/rmichie/heatsource-9/releases
 
-=========================================================================
 ## QUICK STEPS TO GET GOING
 
 1. Place the control file (HeatSource_Control.csv) and the model run
    scripts in the same directory. You can generate a template control 
    file by executing *hs_setup_control_file.py* or by using commend line.
-```Batchfile
-cd path\to\model_directory
-hs setup -cf
-```
+   ```console
+   cd path\to\model_directory
+   hs setup -cf
+   ```
 2. Open the control file and parameterize it with your model information. 
    The control file must be named HeatSource_Control.csv
     
 3. Use hs9_setup_model_inputs.py to build template input files or by using commend line. The input files will
    be saved to the input file directory that is specified in the control file).
-```Batchfile
-cd path\to\model_directory
-hs setup -mi
-```   
+   ```console
+   cd path\to\model_directory
+   hs setup -mi
+   ```   
 5. Edit the template csv files with your input data. You can use excel although 
    make sure the datetimes are formatted correctly. Save the files as a csv.
 6. Run the model by executing one of the following model python scripts/executables:
-   hs9_run_hydraulics,
-   hs9_run_solar,
+   hs9_run_hydraulics,<br>
+   hs9_run_solar,<br>
    hs9_run_temperature,
    
    Or you can use command line to run the model:
-```Batchfile
-cd path\to\model_directory
-hs run -t
-```
+   ```console
+   cd path\to\model_directory
+   hs run -t
+   ```
    A console should open and you should see the model running.
    
 7. Outputs are saved in the output directory (specified in the control file).
 
-=========================================================================
 ## INPUT FILES - GENERAL INFORMATION
 
 1. Control and input files are ASCII comma delimited files.
@@ -97,11 +93,11 @@ hs run -t
 7. An input parameter value that is not applicable may be left blank although all values with float
 	data type will be assigned as zero.
 
-Key to model input information:
-Required:  Input value required
-Required (Not Used):  Input value required but not used other than for model setup (may be changed in future versions)
-Optional 1:  Input value optional (can be left blank)
-Optional 2:  Input value may be optional based on control file parameterization
+Key to model input information:<br>
+Required:  Input value required<br>
+Required (Not Used):  Input value required but not used other than for model setup (may be changed in future versions)<br>
+Optional 1:  Input value optional (can be left blank).<br>
+Optional 2:  Input value may be optional based on control file parameterization.<br>
 
 To write blank input files from a python script:
 ```python
@@ -115,41 +111,39 @@ BigRedButton.setup_mi(model_dir, control_file,
                       use_timestamp=True, overwrite=False)
 ```
 To write a blank inputs files from command line:
-```Batchfile
+```console
 hs setup -mi
 ```
-=========================================================================
 ## Using Command Line 
 
 Heat Source can be setup and run directly from command line.
 
 usage: hs <command> [options]
 
-commands:
-    run                 Command to run a model with arguments -t | -s | -hy
-    setup               Command to setup a model with arguments -cf | -mi
+commands:<br>
+    run                 Command to run a model with arguments -t | -s | -hy<br>
+    setup               Command to setup a model with arguments -cf | -mi<br>
 
-run options:
-  -h, --help         show this help message
-  -t, --temperature  Runs a temperature model.
-  -s, --solar        Runs solar routines only.
-  -hy, --hydraulics  Runs hydraulics only.
+run options:<br>
+  -h, --help         show this help message<br>
+  -t, --temperature  Runs a temperature model.<br>
+  -s, --solar        Runs solar routines only.<br>
+  -hy, --hydraulics  Runs hydraulics only.<br>
   
-setup options:
-  -h, --help           show this help message
-  -cf, --control-file  Writes a blank control file.
-  -mi, --model-inputs  Write blank input files. Control file must already be
-                       parameterized.
-  -t, --timestamp      Use -t to add a timestamp to the file name.
+setup options:<br>
+  -h, --help           show this help message<br>
+  -cf, --control-file  Writes a blank control file.<br>
+  -mi, --model-inputs  Write blank input files. Control file must already be parameterized.<br>
+  -t, --timestamp      Use -t to add a timestamp to the file name.<br>
   -o, --overwrite      Use -o to overwrite any existing file.
   
-other options
-  -h, --help            show this help message
-  -v                    The heat source version and install directory.
-  -md [MODEL_DIR], --model-dir [MODEL_DIR]
-                        Path to the model directory. If not used the default is current
+other options<br>
+  -h, --help            show this help message<br>
+  -v                    The heat source version and install directory.<br>
+  -md [MODEL_DIR], --model-dir [MODEL_DIR]<br>
+                        Path to the model directory. If not used the default is current<br>
                         working directory.
-  
+
 =========================================================================
 ### CONTROL FILE  
 HeatSource_Control.csv
