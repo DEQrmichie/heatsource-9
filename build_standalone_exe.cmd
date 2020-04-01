@@ -1,18 +1,18 @@
 @echo OFF
 
-:: This script builds heat source exectubles for windows 
+:: This script builds heat source executables for windows
 :: Requires pyinstaller
 
-python setup.py build_ext --inplace
-cython src\heatsource9\Stream\PyHeatsource.pyx --embed
-cython src\heatsource9\Stream\StreamNode.pyx --embed
+py -3 setup.py build_ext --inplace
+py -3 -m cython src\heatsource9\Stream\PyHeatsource.pyx --embed
+py -3 -m cython src\heatsource9\Stream\StreamNode.pyx --embed
 
-pyinstaller -F exe\hs9_run_hydraulics.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
-pyinstaller -F exe\hs9_run_solar.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
-pyinstaller -F exe\hs9_run_temperature.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
-pyinstaller -F exe\hs9_setup_control_file.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
-pyinstaller -F exe\hs9_setup_model_inputs.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
+py -3 -m PyInstaller -F exe\hs9_run_hydraulics.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
+py -3 -m PyInstaller -F exe\hs9_run_solar.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
+py -3 -m PyInstaller -F exe\hs9_run_temperature.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
+py -3 -m PyInstaller -F exe\hs9_setup_control_file.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
+py -3 -m PyInstaller -F exe\hs9_setup_model_inputs.py --hidden-import=heatsource9.Stream.PyHeatsource --specpath exe\
 echo .
 echo .
-echo 'dist' folder contains exectubles
+echo 'dist' folder contains executables
 pause
