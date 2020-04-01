@@ -3,7 +3,7 @@
 :: This script builds a sdist and wheel for windows and 
 :: then deletes the build folder
 
-python setup.py sdist bdist_wheel
+py -3 setup.py sdist bdist_wheel
 
 rd /S /q build
 echo .
