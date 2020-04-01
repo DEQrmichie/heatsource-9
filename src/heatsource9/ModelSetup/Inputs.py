@@ -1005,7 +1005,7 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
 
         for filename in filenames:
-            with open(join(outputdir, filename), "wb") as file_object:
+            with open(join(outputdir, filename), "w", newline='') as file_object:
                 writer = csv.writer(file_object, dialect="excel")
                 if colnames:
                     writer.writerow(colnames)
