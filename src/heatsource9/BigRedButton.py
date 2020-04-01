@@ -366,9 +366,9 @@ def hs():
 
     # general options
     parser.add_argument('-v', action='version', version='hs {0} installed at {1}.'.format(version_string, pkg_dir),
-                        help='The heat source version.')
+                        help='The heat source version and install directory.')
     parser.add_argument('-md', '--model-dir', nargs='?', default=os.getcwd() + '/',
-                        help='Path to the model directory. Default is current working directory.')
+                        help='Path to the model directory. If not used default is current working directory.')
 
     subparsers = parser.add_subparsers(title='options', dest='command')
 
