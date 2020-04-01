@@ -33,7 +33,7 @@ def getScriptPath():
     return abspath(join(dirname(realpath(__file__)), '.'))
 
 
-model_dir = getScriptPath() + '/'
+model_dir = join(getScriptPath(), '')
 control_file = 'HeatSource_Control.csv'
 
 if not exists(join(model_dir, control_file)):

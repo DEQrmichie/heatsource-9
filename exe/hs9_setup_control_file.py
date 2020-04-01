@@ -34,7 +34,7 @@ def getScriptPath():
     return abspath(join(dirname(realpath(__file__)), '.'))
 
 
-model_dir = getScriptPath() + '/'
+model_dir = join(getScriptPath(), '')
 control_file = 'HeatSource_Control.csv'
 
 BigRedButton.setup_cf(model_dir, control_file,
