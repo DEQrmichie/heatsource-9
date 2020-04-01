@@ -27,47 +27,65 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 =========================================================================
 ## INSTALL
 
-Heat Source 9 should work on Windows, Mac, and Linux.
+There are two options for installing and running Heat Source 9:
 
-Requires python 3.x
+1. Download the [heat source python wheel][1]
+Requires python 2.7 or 3.x
 https://www.python.org/downloads/
 
-Download  
-```git clone git://github.com/rmichie/heatsource-9.git```
+From command line:
+```Batchfile
+cd path\to\heatsource9_wheel_directory
+pip install <name of wheel file>
+```
 
-navigate to setup.py and install  
-```python setup.py install```
-
-*Windows Executables*
+2. Download the [windows executables][2]
 You can run the model on windows by using the compiled windows executables. 
 Python installation is not required.
 
-https://github.com/rmichie/heatsource-9/releases
+[1]: https://github.com/rmichie/heatsource-9/releases
+[2]: https://github.com/rmichie/heatsource-9/releases
 
 =========================================================================
-## RUNNING THE MODEL
+## QUICK STEPS TO GET GOING
 
 1. Place the control file (HeatSource_Control.csv) and the model run
    scripts in the same directory. You can generate a template control 
-   file by executing HS9_Setup_Control_File.py.
+   file by executing *hs_setup_control_file.py* or by using commend line.
+```Batchfile
+cd path\to\model_directory
+hs setup -cf
+```
 2. Open the control file and parameterize it with your model information. 
    The control file must be named HeatSource_Control.csv
-3. Use HS9_Setup_Model_Inputs.py to build template input files (they will
-   be saved to your input file directory that is specified in the control file).
+    
+3. Use hs9_setup_model_inputs.py to build template input files or by using commend line. The input files will
+   be saved to the input file directory that is specified in the control file).
+```Batchfile
+cd path\to\model_directory
+hs setup -mi
+```   
 5. Edit the template csv files with your input data. You can use excel although 
    make sure the datetimes are formatted correctly. Save the files as a csv.
-6. Run the model by executing one of the following model run scripts or executables:
-   HS9_Run_Hydraulics_Only,
-   HS9_Run_Solar_Only,
-   HS9_Run_Temperature,
+6. Run the model by executing one of the following model python scripts/executables:
+   hs9_run_hydraulics,
+   hs9_run_solar,
+   hs9_run_temperature,
+   
+   Or you can use command line to run the model:
+```Batchfile
+cd path\to\model_directory
+hs run -t
+```
    A console should open and you should see the model running.
+   
 7. Outputs are saved in the output directory (specified in the control file).
 
 =========================================================================
 ## INPUT FILES - GENERAL INFORMATION
 
 1. Control and input files are ASCII comma delimited files.
-2. The heat source control file must be named `HeatSource_Control.csv`
+2. The heat source control file must be named `HeatSource_Control.csv`.
 3. The other input files can be named whatever you want 
  (file names are specified in the control file).
 4. Do not change the key names in the control file. Only change 
@@ -83,89 +101,127 @@ Key to model input information:
 Required:  Input value required
 Required (Not Used):  Input value required but not used other than for model setup (may be changed in future versions)
 Optional 1:  Input value optional (can be left blank)
-Optional 2:  Input value may be optional based on control file paramaterization
+Optional 2:  Input value may be optional based on control file parameterization
 
+To write blank input files from a python script:
 ```python
-# write blank inputs
-inputs.setup(use_timestamp=False, overwrite=True)
-```
+# requires a parameterized control file 
+from heatsource9 import BigRedButton
 
+control_file = 'HeatSource_Control.csv'
+model_dir = r'C://path/to/model_directory/'
+
+BigRedButton.setup_mi(model_dir, control_file,
+                      use_timestamp=True, overwrite=False)
+```
+To write a blank inputs files from command line:
+```Batchfile
+hs setup -mi
+```
+=========================================================================
+## Using Command Line 
+
+Heat Source can be setup and run directly from command line.
+
+usage: hs <command> [options]
+
+commands:
+    run                 Command to run a model with arguments -t | -s | -hy
+    setup               Command to setup a model with arguments -cf | -mi
+
+run options:
+  -h, --help         show this help message
+  -t, --temperature  Runs a temperature model.
+  -s, --solar        Runs solar routines only.
+  -hy, --hydraulics  Runs hydraulics only.
+  
+setup options:
+  -h, --help           show this help message
+  -cf, --control-file  Writes a blank control file.
+  -mi, --model-inputs  Write blank input files. Control file must already be
+                       parameterized.
+  -t, --timestamp      Use -t to add a timestamp to the file name.
+  -o, --overwrite      Use -o to overwrite any existing file.
+  
+other options
+  -h, --help            show this help message
+  -v                    The heat source version and install directory.
+  -md [MODEL_DIR], --model-dir [MODEL_DIR]
+                        Path to the model directory. If not used the default is current
+                        working directory.
+  
 =========================================================================
 ### CONTROL FILE  
 HeatSource_Control.csv
 
 The control file is where most of the model operation and initial parameterization is set.
 
-To write a blank template control file from script:
+To write a blank template control file from a python script:
 ```python
-from heatsource9.ModelSetup.Inputs import Inputs
-from heatsource9.Dieties.IniParamsDiety import IniParams
-from heatsource9.Dieties.IniParamsDiety import dtype
+from heatsource9 import BigRedButton
 
 control_file = 'HeatSource_Control.csv'
 model_dir = r'C://path/to/model_directory/'
 
-# create an input object
-inputs = Inputs(model_dir, control_file)
-
-# Write a blank control file
-inputs.parameterize_cf(overwrite=False)
+BigRedButton.setup_cf(model_dir, control_file,
+                      use_timestamp=False, overwrite=False)
+```
+To write a blank template control file from command line:
+```Batchfile
+cd path\to\model_directory
+hs setup -cf
 ```
 
 You can also parameterize the control file directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
 ```python
-from heatsource9.ModelSetup.Inputs import Inputs
-from heatsource9.Dieties.IniParamsDiety import IniParams
-from heatsource9.Dieties.IniParamsDiety import dtype
+from heatsource9 import BigRedButton
+from os.path import join
 
 control_file = 'HeatSource_Control.csv'
 model_dir = r'C://path/to/model_directory/'
 
-# create an input object
-inputs = Inputs(model_dir, control_file)
-
-# Parameterize and write to csv
-inputs.parameterize_cf(overwrite=False,
-                       usertxt = "This model is an example model",
-                       name = "example model", 
-                       inputdir = model_dir + r"inputs/", 
-                       outputdir = model_dir + r"outputs/", 
-                       length = 1.8, 
-                       outputkm = "all", 
-                       datastart = "05/06/2003", 
-                       modelstart = "07/01/2003", 
-                       modelend = "07/14/2003", 
-                       dataend = "09/21/2003", 
-                       flushdays = 1, 
-                       offset = -7, 
-                       dt = 1, 
-                       dx = 30, 
-                       longsample = 50, 
-                       bcfile = "bc.csv", 
-                       inflowsites = 4, 
-                       inflowinfiles = "inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv", 
-                       inflowkm = "1.65, 1.5, 1.3, 0.85", 
-                       accretionfile = "accretion.csv", 
-                       metsites = 4, 
-                       metfiles = "met1.csv, met2.csv, met3.csv, met4.csv", 
-                       metkm = "1.75, 1.45, 1.10, 0.9", 
-                       calcevap = "False", 
-                       evapmethod = "Mass Transfer", 
-                       wind_a = 1.51E-09, 
-                       wind_b = 1.6E-09, 
-                       calcalluvium = "True", 
-                       alluviumtemp = 12.0, 
-                       morphfile = "morphology.csv", 
-                       lcdatafile = "lcdata.csv", 
-                       lccodefile = "lccodes.csv", 
-                       trans_count = 8, 
-                       transsample_count = 4, 
-                       transsample_distance = 8, 
-                       emergent = "True", 
-                       lcdatainput = "Codes", 
-                       canopy_data = "CanopyCover", 
-                       lcsampmethod = "point", 
-                       heatsource8 = "False")
+# Parameterize the control file and write to csv
+BigRedButton.setup_cf(model_dir, control_file, use_timestamp=True, overwrite=False,
+                      usertxt="This model is an example model",
+                      name="example model",
+                      inputdir=join(model_dir, "inputs", ""),
+                      outputdir=join(model_dir, "outputs", ""),
+                      length=1.8,
+                      outputkm="all",
+                      datastart="05/06/2003",
+                      modelstart="07/01/2003",
+                      modelend="07/14/2003",
+                      dataend="09/21/2003",
+                      flushdays=1,
+                      offset=-7,
+                      dt=1,
+                      dx=30,
+                      longsample=50,
+                      bcfile="bc.csv",
+                      inflowsites=4,
+                      inflowinfiles="inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv",
+                      inflowkm="1.65, 1.5, 1.3, 0.85",
+                      accretionfile="accretion.csv",
+                      metsites=4,
+                      metfiles="met1.csv, met2.csv, met3.csv, met4.csv",
+                      metkm="1.75, 1.45, 1.10, 0.9",
+                      calcevap="False",
+                      evapmethod="Mass Transfer",
+                      wind_a=1.51E-09,
+                      wind_b=1.6E-09,
+                      calcalluvium="True",
+                      alluviumtemp=12.0,
+                      morphfile="morphology.csv",
+                      lcdatafile="lcdata.csv",
+                      lccodefile="lccodes.csv",
+                      trans_count=8,
+                      transsample_count=4,
+                      transsample_distance=8,
+                      emergent="True",
+                      lcdatainput="Codes",
+                      canopy_data="CanopyCover",
+                      lcsampmethod="point",
+                      heatsource8="False")
 ```
 
 Below are all the input parameters that must be included in the control file.
@@ -233,8 +289,8 @@ in the mixing calculations
 |1|`STREAM_ID`|Stream ID|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|`NODE_ID`|Node ID|N/A|integer|Required|Required|Required|
 |3|`STREAM_KM`|Stream km|kilometers|float|Required|Required|Required|
-|4|`INFLOW`|Accrection Inflow|cubic meters/second|float|Optional 1|Required|Required|
-|5|`TEMPERATURE`|Accrection Temperature|degrees Celsius|float|Optional 1|Required|Required|
+|4|`INFLOW`|Accretion Inflow|cubic meters/second|float|Optional 1|Required|Required|
+|5|`TEMPERATURE`|Accretion Temperature|degrees Celsius|float|Optional 1|Required|Required|
 |6|`OUTFLOW`|Withdrawal flow|cubic meters/second|float|Optional 1|Required|Required|
 
 
@@ -323,7 +379,7 @@ UserDefinedFileName.csv
 The landcover codes file contains the physical attribute information 
 associated with each land cover code. Land cover codes can be alphanumeric 
 values. Zero should be avoided as a land cover code. The physical 
-attribute such as height, canopy closure, LAI or overhang,  must be numeric.
+attribute such as height, canopy closure, LAI, or overhang must be numeric.
 There cannot be skipped rows 
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
@@ -468,7 +524,7 @@ Refer to the user manual for more information about each parameter.
 
 GNU General Public License v3 (GPLv3)
 
-Heat Source, Copyright (C) 2000-2017, Oregon Department of Environmental Quality
+Heat Source, Copyright (C) 2000-2020, Oregon Department of Environmental Quality
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
