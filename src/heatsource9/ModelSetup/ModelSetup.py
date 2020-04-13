@@ -17,12 +17,12 @@
 from __future__ import division
 
 # Heat Source Methods
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import head2var
-from .Inputs import Inputs
-from ..Stream.StreamNode import StreamNode
-from ..Utils.Dictionaries import Interpolator
-from ..Utils.Printer import Printer as print_console
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import head2var
+from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.Stream.StreamNode import StreamNode
+from heatsource9.Utils.Dictionaries import Interpolator
+from heatsource9.Utils.Printer import Printer as print_console
 
 # Builtin methods
 from itertools import ifilter, izip, chain, repeat, count
@@ -905,15 +905,12 @@ class ModelSetup(object):
                     v_overhang = overhang[i * transsample_count + s + 1][h]
                     elev = elevation[i * transsample_count + s][h]
 
-                    if not s:
-                        # We are at the stream edge, so start over
-                        # New value for each transect direction
-                        lc_angle_max = 0  # TODO
-                    else:
+                    # The below code only works when the samples start at stream edge.
+                    # When that is implemented this can be turned on.
+                    #if s == 0: # TODO
                         # No overhang away from the stream
-                        v_overhang = 0
+                        #v_overhang = 0
 
-                        ####################################################
                     # Calculate the relative ground elevation. This is 
                     # the vertical distance from the stream surface to 
                     # the land surface
@@ -1190,11 +1187,12 @@ class ModelSetup(object):
                     v_overhang = overhang[i * transsample_count + s + 1][h]
                     elev = elevation[i * transsample_count + s][h]
 
-                    if not s:  # We are at the stream edge, so start over
-                        lc_angle_max = 0  # New value for each transect direction # TODO
-                    else:
-                        v_overhang = 0  # No overhang away from the stream
-                    ##########################################################
+                    # The below code only works when the samples start at stream edge.
+                    # When that is implemented this can be turned on.
+                    #if s == 0: # TODO
+                        # No overhang away from the stream
+                        #v_overhang = 0
+
                     # Calculate the relative ground elevation. This is the
                     # vertical distance from the stream surface to the land surface
                     SH = elev - node.elevation

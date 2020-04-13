@@ -803,7 +803,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "src/heatsource9/Stream/PyHeatsource.pyx",
+  "src\\heatsource9\\Stream\\PyHeatsource.pyx",
   "stringsource",
 };
 
@@ -1641,7 +1641,7 @@ static const char __pyx_k_Sediment_temperature_is_0_must_b[] = "Sediment tempera
 static const char __pyx_k_Unknown_error_when_calculating_e[] = "Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ";
 static const char __pyx_k_Unknown_error_when_calculating_r[] = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ";
 static const char __pyx_k_Unstable_timestep_Decrease_dt_or[] = "Unstable timestep. Decrease dt or increase dx.         dT must be < {0}, K={1}, X={2}";
-static const char __pyx_k_src_heatsource9_Stream_PyHeatsou[] = "src/heatsource9/Stream/PyHeatsource.pyx";
+static const char __pyx_k_src_heatsource9_Stream_PyHeatsou[] = "src\\heatsource9\\Stream\\PyHeatsource.pyx";
 static PyObject *__pyx_n_s_A;
 static PyObject *__pyx_n_s_Air_Mass;
 static PyObject *__pyx_n_s_Air_Vapor;
