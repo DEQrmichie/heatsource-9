@@ -1,13 +1,22 @@
 #!/usr/bin/env python
 
 from setuptools import setup
-from Cython.Build import cythonize
+from setuptools import Extension
 from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
 if installed_version != (2,7):
     raise Exception("The default Python version must be 2.7, not {0}.{1}".format(vi[0], vi[1]))
+
+USE_CYTHON = True
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+    extensions = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "2"})
+else:
+    extensions = [Extension('heatsource9.Stream.PyHeatsource', ['src/heatsource9/Stream/PyHeatsource.c']),
+                  Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
       version='9.0.0b25',
@@ -50,6 +59,6 @@ setup(name='heatsource9',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
       install_requires=['Cython'],
-      ext_modules=cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"}),
+      ext_modules=extensions,
       python_requires='==2.7.*'
       )
