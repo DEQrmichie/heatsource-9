@@ -28,12 +28,12 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 There are two options for installing and running Heat Source 9:
 
-1. Download the [heat source python wheel][1]. Requires python 2.7 or 3.x
+1. Download the [heat source python wheel][2]. Requires python 2.7 or 3.x
 
 https://www.python.org/downloads/
 
 install the wheel from command line:
-```console
+```shell
 cd path\to\heatsource9_wheel_directory
 pip install <name of wheel file>
 ```
@@ -41,7 +41,6 @@ pip install <name of wheel file>
 2. Download the [windows executables][2]. You can run the model on windows by using the compiled windows executables. 
 Python installation is not required.
 
-[1]: https://github.com/rmichie/heatsource-9/releases
 [2]: https://github.com/rmichie/heatsource-9/releases
 
 ## QUICK STEPS TO GET GOING
@@ -49,7 +48,7 @@ Python installation is not required.
 1. Place the control file (HeatSource_Control.csv) and the model run
    scripts in the same directory. You can generate a template control 
    file by executing *hs_setup_control_file.py* or by using commend line.
-   ```console
+   ```shell
    cd path\to\model_directory
    hs setup -cf
    ```
@@ -58,7 +57,7 @@ Python installation is not required.
     
 3. Use hs9_setup_model_inputs.py to build template input files or by using commend line. The input files will
    be saved to the input file directory that is specified in the control file).
-   ```console
+   ```shell
    cd path\to\model_directory
    hs setup -mi
    ```   
@@ -70,7 +69,7 @@ Python installation is not required.
    hs9_run_temperature,
    
    Or you can use command line to run the model:
-   ```console
+   ```shell
    cd path\to\model_directory
    hs run -t
    ```
@@ -111,7 +110,7 @@ BigRedButton.setup_mi(model_dir, control_file,
                       use_timestamp=True, overwrite=False)
 ```
 To write a blank inputs files from command line:
-```console
+```shell
 hs setup -mi
 ```
 ## Using Command Line 
