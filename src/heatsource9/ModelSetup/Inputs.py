@@ -927,7 +927,6 @@ class Inputs(object):
         corresponding to the data start and end dates available
         in the control file
         """
-        timelist = []
         # hourly timestep
         timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)) 
         for i, val in enumerate(timelist):

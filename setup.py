@@ -2,13 +2,21 @@
 
 from setuptools import setup
 from setuptools import Extension
-from Cython.Build import cythonize
 from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
 if installed_version < (3, 0):
     raise Exception("The default Python version must be 3.0 or higher, not {0}.{1}".format(vi[0], vi[1]))
+
+USE_CYTHON = True
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+    extensions = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
+else:
+    extensions = [Extension('heatsource9.Stream.PyHeatsource', ['src/heatsource9/Stream/PyHeatsource.c']),
+                  Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
       version='9.0.0b25',
@@ -21,6 +29,10 @@ setup(name='heatsource9',
           'Operating System :: MacOS :: MacOS X',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
           'Topic :: Scientific/Engineering'
       ],
       long_description="""Heat Source is a computer model used by the
@@ -51,6 +63,6 @@ setup(name='heatsource9',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
       install_requires=['Cython'],
-      ext_modules=cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"}),
+      ext_modules=extensions,
       python_requires='>=3, <4'
       )
