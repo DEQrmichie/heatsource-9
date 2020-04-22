@@ -9,6 +9,21 @@ env:
 jobs:
   include:
   - services: docker
+  - os: linux
+    before_install:
+      - python --version
+      - python -m pip install -U pip
+      - python -m pip install -r requirements.txt
+      - python -m pip install cibuildwheel==1.3.0
+    install:
+      - python setup.py develop
+    script:
+      - python -m pip list
+      - hs -v
+      - hs run -h
+      - hs setup -h
+      - python -m cibuildwheel --output-dir wheelhouse
+
   - os: osx
     osx_image: xcode11.2 # Python 3.8.? running on macOS 10.14
     language: shell
@@ -17,21 +32,27 @@ jobs:
       - python3 -m pip install -U pip
       - python3 -m pip install -r requirements.txt
       - python3 -m pip install cibuildwheel==1.3.0
+    install:
+      - python3 setup.py develop
+    script:
+      - python3 -m pip list
+      - hs -v
+      - hs run -h
+      - hs setup -h
+      - python3 -m cibuildwheel --output-dir wheelhouse
   - os: windows
     language: shell
     before_install:
       - choco install python --version 3.8.0
       - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
-install:
-  - python3 setup.py develop
+    script:
+      - python -m pip list
+      - hs -v
+      - hs run -h
+      - hs setup -h
+      - python -m cibuildwheel --output-dir wheelhouse
 branches:
   only:
     - development_py3
 script:
-  - python3 -m pip list
-  - hs -v
-  - hs run -h
-  - hs setup -h
-  # build the wheels, put them into './wheelhouse'
-  - python3 -m cibuildwheel --output-dir wheelhouse
   - ls wheelhouse
