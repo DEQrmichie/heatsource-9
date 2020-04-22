@@ -6,6 +6,9 @@ env:
   - CIBW_BUILD=cp3?-*
   - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
   - CIBW_MANYLINUX_I686_IMAGE=manylinux1
+branches:
+  only:
+    - development_py3
 jobs:
   include:
   - services: docker
@@ -23,7 +26,7 @@ jobs:
       - hs run -h
       - hs setup -h
       - python -m cibuildwheel --output-dir wheelhouse
-
+      - ls wheelhouse
   - os: osx
     osx_image: xcode11.2 # Python 3.8.? running on macOS 10.14
     language: shell
@@ -40,19 +43,22 @@ jobs:
       - hs run -h
       - hs setup -h
       - python3 -m cibuildwheel --output-dir wheelhouse
+      - ls wheelhouse
   - os: windows
     language: shell
     before_install:
       - choco install python --version 3.8.0
       - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+      - python --version
+      - python -m pip install -U pip
+      - python -m pip install -r requirements.txt
+      - python -m pip install cibuildwheel==1.3.0
+    install:
+      - python setup.py develop
     script:
       - python -m pip list
       - hs -v
       - hs run -h
       - hs setup -h
       - python -m cibuildwheel --output-dir wheelhouse
-branches:
-  only:
-    - development_py3
-script:
-  - ls wheelhouse
+      - ls wheelhouse
