@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/rmichie/heatsource-9.svg?branch=development_py3)](https://travis-ci.com/rmichie/heatsource-9)
+
 Heat Source 9
 ============
 
