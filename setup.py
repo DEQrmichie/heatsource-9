@@ -58,7 +58,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      install_requires=['Cython'],
+      install_requires=['Cython==0.29.16'],
       ext_modules=extensions,
       python_requires='==2.7.*'
       )
