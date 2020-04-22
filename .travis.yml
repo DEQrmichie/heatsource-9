@@ -11,14 +11,13 @@ before_install:
 # command to install dependencies
 install:
   python3 setup.py develop
-
 branches:
   only:
   - development_py3
 script:
  - python3 --version
  - pip3 list
- - hs --version
+ - hs -v
  - hs run -h
  - hs setup -h
  - python3 setup.py sdist bdist_wheel
