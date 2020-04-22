@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - python setup.py develop
+branches:
+  only:
+  - development_py3
+script:
+ - python --version
+ - pip list
+ - hs --version
+ - hs run -h
+ - hs setup -h
