@@ -27,6 +27,7 @@ setup(name='heatsource9',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Natural Language :: English',
           'Operating System :: MacOS :: MacOS X',
+          'Operating System :: POSIX :: Linux',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python :: 2.7',
           'Topic :: Scientific/Engineering'
