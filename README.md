@@ -1,4 +1,4 @@
-![Build heatsource py27](https://github.com/rmichie/heatsource-9/workflows/Build%20heatsource%20py27/badge.svg?branch=build_action)
+![Build heatsource py27](https://github.com/rmichie/heatsource-9/workflows/Build%20heatsource%20py27/badge.svg)
 
 Heat Source 9
 ============
