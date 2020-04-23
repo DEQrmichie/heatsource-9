@@ -14,18 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division, print_function
+from builtins import range
+from builtins import object
 from math import sqrt
-from time import ctime
 import logging
 logger = logging.getLogger(__name__)
 
-from ..Dieties.ChronosDiety import Chronos
-from ..Dieties.IniParamsDiety import IniParams
-from ..Utils.Dictionaries import Interpolator
-from ..Utils.Printer import Printer as print_console
-import PyHeatsource as py_HS
-# import C_Heatsource as C_HS # TODO for the future
+from heatsource9.Dieties.ChronosDiety import Chronos
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Utils.Dictionaries import Interpolator
+from heatsource9.Stream import PyHeatsource as py_HS
 
 _HS = None # Placeholder for heatsource module
 
@@ -92,7 +90,7 @@ class StreamNode(object):
         # Define members in __slots__ to ensure that later member names cannot be added accidentally
         # Set all the attributes to bare lists, or set from the constructor
         for attr in __slots:
-            x = kwargs[attr] if attr in kwargs.keys() else None
+            x = kwargs[attr] if attr in list(kwargs.keys()) else None
             setattr(self, attr, x)
         self.__slots = __slots
         self.__slots.sort()
@@ -202,7 +200,7 @@ class StreamNode(object):
 
         if Q < 0.003:
             # Channel is going dry
-            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.TheTime)
+            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.pretty_time())
             logger.warning(msg)
 
     def calc_discharge_boundary_node(self, time):
@@ -224,7 +222,8 @@ class StreamNode(object):
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
         if Q < 0.003: 
             #Channel is going dry
-            print("The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.PrettyTime()))
+            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, Chronos.pretty_time())
+            logger.warning(msg)
 
     def calculate_discharge(self, time):
         """Return the discharge for the current timestep
@@ -290,7 +289,7 @@ class StreamNode(object):
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
 
         if Q < 0.003: #Channel is going dry
-            msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.PrettyTime())
+            msg ="The channel is going dry at {0}, model time: {1}.".format(self, Chronos.pretty_time())
             logger.warning(msg)
 
     def calc_heat_opt(self, time, hour, min, sec, JD,
@@ -479,7 +478,7 @@ class StreamNode(object):
     def mix_it_up(self, time, Q_up, T_up):
         Q_in = 0
         T_in = 0
-        for i in xrange(len(self.Q_tribs[time])):
+        for i in range(len(self.Q_tribs[time])):
             Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
             T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
 

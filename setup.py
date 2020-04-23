@@ -1,17 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from setuptools import setup
 from setuptools import Extension
-from Cython.Build import cythonize
 from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
-if installed_version != (2,7):
-    raise Exception("The default Python version must be 2.7, not {0}.{1}".format(vi[0], vi[1]))
+if installed_version < (3, 0):
+    raise Exception("The default Python version must be 3.0 or higher, not {0}.{1}".format(vi[0], vi[1]))
+
+USE_CYTHON = True
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+    extensions = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
+else:
+    extensions = [Extension('heatsource9.Stream.PyHeatsource', ['src/heatsource9/Stream/PyHeatsource.c']),
+                  Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
-      version='9.0.0b24',
+      version='9.0.0b25',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -19,10 +27,16 @@ setup(name='heatsource9',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Natural Language :: English',
           'Operating System :: MacOS :: MacOS X',
+          'Operating System :: POSIX :: Linux',
           'Operating System :: Microsoft :: Windows',
-          'Programming Language :: Python :: 2.7',
-          'Topic :: Scientific/Engineering',
-          ],
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3 :: Only',
+          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Topic :: Scientific/Engineering'
+      ],
       long_description="""Heat Source is a computer model used by the
       Oregon Department of Environmental Quality to simulate stream
       thermodynamics and hydraulic routing. It was originally developed
@@ -40,8 +54,8 @@ setup(name='heatsource9',
       author='Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner',
       maintainer='Ryan Michie, Oregon DEQ',
       maintainer_email='michie.ryan@deq.state.or.us',
-      platforms = ['darwin', 'win32'],
-      license = ['GNU General Public License v3 (GPLv3)'],
+      platforms=['darwin', 'linux', 'win32'],
+      license=['GNU General Public License v3 (GPLv3)'],
       zip_safe=False,
       entry_points={'console_scripts': ['hs = heatsource9.BigRedButton:hs']},
       packages=['heatsource9',
@@ -50,5 +64,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      ext_modules = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level' : "2"})
-        )
+      install_requires=['Cython==0.29.16'],
+      ext_modules=extensions,
+      python_requires='>=3, <4'
+      )

@@ -5,7 +5,20 @@ from Python shell (IDLE) will not identify __file__ correctly and will
 result in an error. It must be executed from a command prompt. Your
 options are to try to double click on this file and execute it 
 using python.exe, or to open a command prompt and execute manually 
-by typing: python -i path/to/this/script/HS9_Run_Temperature.py"""
+by typing: python -i path/to/this/script/hs9_run_temperature.py
+
+Command line:
+> hs run -t
+
+usage: hs <command> [options]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -t, --temperature  Runs a temperature model.
+  -s, --solar        Runs solar routines only.
+  -hy, --hydraulics  Runs hydraulics only.
+  
+"""
 
 from heatsource9 import BigRedButton
 from os.path import abspath
@@ -20,7 +33,7 @@ def getScriptPath():
     return abspath(join(dirname(realpath(__file__)), '.'))
 
 
-model_dir = getScriptPath() + '/'
+model_dir = join(getScriptPath(), '')
 control_file = 'HeatSource_Control.csv'
 
 if not exists(join(model_dir, control_file)):
@@ -29,4 +42,4 @@ if not exists(join(model_dir, control_file)):
     this directory: {0}.".format(model_dir))
 
 # Run Heat Source Temperature, run_type = 0
-BigRedButton.RunHS(model_dir, control_file)
+BigRedButton.run(model_dir, control_file)

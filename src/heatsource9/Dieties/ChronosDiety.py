@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import division
+from builtins import object
 from time import ctime, gmtime
 
 
@@ -126,10 +126,10 @@ class ChronosDiety(object):
         y, m, d, H, M, S, day, wk, tz = gmtime(self.__current)
 
         if m < 3:
-            m += 12;
-            y -= 1;
+            m += 12
+            y -= 1
 
-        julian_day = int(365.25 * (y + 4716.0)) + int(30.6001 * (m + 1)) + d - 1524.5;
+        julian_day = int(365.25 * (y + 4716.0)) + int(30.6001 * (m + 1)) + d - 1524.5
 
         # This value should only be added if we fall after a certain date
         if julian_day > 2299160.0:

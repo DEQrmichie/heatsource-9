@@ -1,10 +1,10 @@
-from __future__ import division
+#from __future__ import absolute_import
 
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import iniRange
-from ..Dieties.IniParamsDiety import dtype
-from ..Utils.Printer import Printer as print_console
-
+from builtins import next
+from builtins import zip
+from builtins import str
+from builtins import range
+from builtins import object
 import csv
 import platform
 from os import makedirs
@@ -20,6 +20,11 @@ from collections import defaultdict
 from calendar import timegm
 from datetime import datetime
 from operator import itemgetter
+
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.Dieties.IniParamsDiety import iniRange
+from heatsource9.Dieties.IniParamsDiety import dtype
+from heatsource9.Utils.Printer import Printer as print_console
 
 import logging
 
@@ -103,6 +108,7 @@ class Inputs(object):
     def headers_met(self):
         """Returns a list of column headers for
         the met input file(s)."""
+
         ncols = int((IniParams["metsites"] //
                      len(IniParams["metfiles"].split(","))))
         header = ["DATETIME"]
@@ -133,11 +139,11 @@ class Inputs(object):
 
         if IniParams["heatsource8"]:
             tran = ["NE", "E", "SE", "S", "SW", "W", "NW"]
-        else:
+        else:        
             tran = ["T" + str(x) for x in range(1, IniParams["trans_count"] + 1)]
-
-        zone = range(1, int(IniParams["transsample_count"]) + 1)
-
+    
+        zone = list(range(1, int(IniParams["transsample_count"]) + 1))
+    
         # Concatenate the prefix, transect, and zone and order in the correct way
         for p in prefix:
             for t in range(0, len(tran)):
@@ -317,12 +323,12 @@ class Inputs(object):
                        "point"]
         else:
             # This is a setup call, None is ok for all of them
-            none_ok = IniParams.keys()
-
+            none_ok = list(IniParams.keys())
+        
         # This is so the iteration happens in descending order
         # so some of the keys are parameterized earlier for the
         # none list. 
-        keys = cf_dict.keys()
+        keys = list(cf_dict.keys())
         keys.sort(reverse=True)
 
         for k in keys:
@@ -350,7 +356,7 @@ class Inputs(object):
                         else:
                             raise TypeError("Value in control file line {0} is missing".format(line[0]))
                     # now make sure it's the correct data type
-                    elif dtype[k] is basestring:
+                    elif dtype[k] is str:
                         IniParams[k] = str.strip(line[3])
 
                     elif dtype[k] is int:
@@ -568,9 +574,9 @@ class Inputs(object):
         return None
 
     def dict2list(self, data, colnames, skiprows=0, skipcols=0):
-
-        d2 = zip(*[[k] + data[k] for k in colnames])
-
+        
+        d2 = list(zip(*[[k] + data[k] for k in colnames]))
+        
         # skiprows
         d3 = d2[-(len(d2) - skiprows):]
 
@@ -600,13 +606,13 @@ class Inputs(object):
         logger.info(msg)
         print_console(msg)
         cf_dict = self.control_file_dict()
-
-        for k, v in kwargs.items():
+        
+        for k, v in list(kwargs.items()):
             cf_dict[k][3] = v
 
         # sort the list is in the order of the line number
-        cf_sorted = sorted(cf_dict.items(), key=itemgetter(1))
-        cf_list = [line[1] for line in cf_sorted]
+        cf_sorted = sorted(list(cf_dict.items()), key=itemgetter(1))
+        cf_list = [line[1] for line in cf_sorted]        
 
         self.write_to_output(self.model_dir, cf_name,
                              cf_list, self.headers_cf())
@@ -728,12 +734,12 @@ class Inputs(object):
             # set the colnames as the dictionary key 
             reader.fieldnames = colnames
             # skip the header row
-            reader.next()
+            next(reader)
             # read a row as {column1: value1, column2: value2,...}
             for row in reader:
                 # go over each column name and value
-                for k, v in row.items():
-
+                for k, v in list(row.items()):
+                    
                     # if the value is empty '' replace it with a None
                     if v.strip() in ['', None]:
                         v = None
@@ -761,7 +767,6 @@ class Inputs(object):
         for filename in filenames:
             with open(join(inputdir, filename.strip()), "rU") as file_object:
                 newfile = [row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
-                numcols = len(newfile[0])
 
             # skip rows    
             newfile = newfile[-(len(newfile) - skiprows):]
@@ -791,7 +796,6 @@ class Inputs(object):
         if not exists(IniParams["outputdir"]):
             makedirs(IniParams["outputdir"])
 
-        now = datetime.now()
         timestamp = self.timestamp()
         timelist = self.datetime_string()
         kmlist = self.stream_kms()
@@ -923,9 +927,8 @@ class Inputs(object):
         corresponding to the data start and end dates available
         in the control file
         """
-        timelist = []
         # hourly timestep
-        timelist = range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)
+        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)) 
         for i, val in enumerate(timelist):
             timelist[i] = strftime("%m/%d/%Y %H:%M", gmtime(val))
         return timelist
@@ -954,21 +957,21 @@ class Inputs(object):
         and None for string data types.
         """
         data_v = {}
-        for key, v in data.iteritems():
-
-            # tranlsate removes numbers from the key, e.g. TEMPERATURE2
-            if key.translate(None, digits) not in dtype.keys():
+        for key, v in list(data.items()):
+            
+            # translate removes numbers from the key, e.g. TEMPERATURE2
+            if key.translate(str.maketrans('','', digits)) not in list(dtype.keys()):
                 # This is to find the correct landcover data 
                 # key since they are all different
                 if "LC" in key:
-                    # basestring
+                    # str
                     k = "LC"
                 elif any(s in key for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
                     # float
                     k = "ELE"
             else:
-                k = key.translate(None, digits)
-
+                k = key.translate(str.maketrans('','', digits))
+            
             # -- 
 
             if dtype[k] is float:
@@ -977,12 +980,12 @@ class Inputs(object):
             elif dtype[k] is int:
                 data_v[key] = [int(float(i)) if i is not None else 0 for i in v]
 
-            elif dtype[k] is basestring:
+            elif dtype[k] is str:
                 data_v[key] = [str(i) if i is not None else None for i in v]
 
             # --
-
-            if (dtype[k] is not basestring and dtype[k] in iniRange.keys()):
+                
+            if (dtype[k] is not str and dtype[k] in list(iniRange.keys())):
                 # check the value range
                 for val, i in enumerate(v):
                     if not iniRange[k][0] <= val <= iniRange[k][1]:
@@ -1001,7 +1004,7 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
 
         for filename in filenames:
-            with open(join(outputdir, filename), "wb") as file_object:
+            with open(join(outputdir, filename), "w", newline='') as file_object:
                 writer = csv.writer(file_object, dialect="excel")
                 if colnames:
                     writer.writerow(colnames)

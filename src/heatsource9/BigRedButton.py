@@ -18,18 +18,19 @@
 The ModelControl class loads and controls the model run.
 A model instance object is created using the ModelSetup class.
 """
-from __future__ import division, print_function, absolute_import
-
 # Heat Source modules
-from .Dieties.IniParamsDiety import IniParams
-from .ModelSetup.ModelSetup import ModelSetup
-from .Dieties.ChronosDiety import Chronos
-from .Utils.Printer import Printer as print_console
-from .Utils.Output import Output as O
-from .__version__ import version_string
-from .ModelSetup.Inputs import Inputs
+from heatsource9.Dieties.IniParamsDiety import IniParams
+from heatsource9.ModelSetup.ModelSetup import ModelSetup
+from heatsource9.Dieties.ChronosDiety import Chronos
+from heatsource9.Utils.Printer import Printer as print_console
+from heatsource9.Utils.Output import Output as O
+from heatsource9.__version__ import version_string
+from heatsource9.ModelSetup.Inputs import Inputs
 
 # Built-in modules
+from builtins import next
+from builtins import range
+from builtins import object
 import logging
 from itertools import count
 import traceback
@@ -211,8 +212,8 @@ class ModelControl(object):
             # If minute and second are both zero, we are at the top of 
             # the hour. 
             if (minute == 0 and second == 0):
-                ts = next(cnt)  # Number of actual timesteps per tick
-
+                ts = next(cnt) # Number of actual timesteps per tick
+                
                 # Number of timesteps in one hour
                 hr = 60 / (IniParams["dt"] / 60)
                 # This writes a line to the status bar.
@@ -288,7 +289,7 @@ class ModelControl(object):
         [x.CalcHeat(time, H, M, S, JD, JDC, True) for x in self.reachlist]
 
 
-def RunHS(model_dir, control_file):
+def run(model_dir, control_file):
     """Run full temperature model"""
     try:
         HSP = ModelControl(model_dir, control_file, 0)
@@ -300,7 +301,7 @@ def RunHS(model_dir, control_file):
         print_console(msg)
 
 
-def RunSH(model_dir, control_file):
+def run_solar(model_dir, control_file):
     """Run solar routines only"""
     try:
         HSP = ModelControl(model_dir, control_file, 1)
@@ -311,11 +312,44 @@ def RunSH(model_dir, control_file):
         print_console(msg)
 
 
-def RunHY(model_dir, control_file):
+def run_hydraulics(model_dir, control_file):
     """Run hydraulics only"""
     try:
         HSP = ModelControl(model_dir, control_file, 2)
         HSP.run()
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
+        print_console(msg)
+
+
+def setup_cf(model_dir, control_file, use_timestamp=False, overwrite=False, **kwargs):
+    """Write a blank control file or use **kwargs to parameterize it."""
+    try:
+        # create an input object
+        inputs = Inputs(model_dir, control_file)
+        
+        # Write a blank control file
+        inputs.parameterize_cf(use_timestamp=use_timestamp, overwrite=overwrite, **kwargs)
+        
+    except:
+        msg = "Error: {0}".format(traceback.format_exc())
+        logging.error(msg)
+        print_console(msg)
+
+
+def setup_mi(model_dir, control_file, use_timestamp=False, overwrite=False):
+    """Write blank input files. Control file must already be parameterized."""
+    try:
+        # create an input object
+        inputs = Inputs(model_dir, control_file)
+
+        # Control file must already be parameterized
+        inputs.import_control_file()
+        
+        # Write blank input files,
+        inputs.setup(use_timestamp=use_timestamp, overwrite=overwrite)
+
     except:
         msg = "Error: {0}".format(traceback.format_exc())
         logging.error(msg)
@@ -332,9 +366,9 @@ def hs():
 
     # general options
     parser.add_argument('-v', action='version', version='hs {0} installed at {1}.'.format(version_string, pkg_dir),
-                        help='The heat source version.')
+                        help='The heat source version and install directory.')
     parser.add_argument('-md', '--model-dir', nargs='?', default=os.getcwd() + '/',
-                        help='Path to the model directory. Default is current working directory.')
+                        help='Path to the model directory. If not used default is current working directory.')
 
     subparsers = parser.add_subparsers(title='options', dest='command')
 
@@ -357,39 +391,28 @@ def hs():
     arg = parser.parse_args()
     control_file = 'HeatSource_Control.csv'
 
-    try:
-        if arg.command == 'run':
+    if arg.command == 'run':
 
-            if not os.path.exists(os.path.join(arg.model_dir, control_file)):
-                raise Exception("HeatSource_Control.csv not found in {0}.".format(arg.model_dir))
+        if not os.path.exists(os.path.join(arg.model_dir, control_file)):
+                raise Exception("HeatSource_Control.csv not found in {0}.".format(
+                                arg.model_dir))
+            
+        if arg.temperature:
+                run(arg.model_dir, control_file)
 
-            if arg.temperature:
-                HSP = ModelControl(arg.model_dir, control_file, 0)
-                HSP.run()
-            elif arg.solar:
-                HSP = ModelControl(arg.model_dir, control_file, 1)
-                HSP.run()
-            elif arg.run.hydraulics:
-                HSP = ModelControl(arg.model_dir, control_file, 2)
-                HSP.run()
+        elif arg.solar:
+                run_solar(arg.model_dir, control_file)
+                
+        elif arg.run.hydraulics:
+                run_hydraulics(arg.model_dir, control_file)
 
-        if arg.command == 'setup':
+    if arg.command == 'setup':
+        if arg.control_file:
+            # Write a blank control file
+            setup_cf(arg.model_dir, control_file, use_timestamp=arg.timestamp, overwrite = arg.overwrite)
 
-            # create an input object
-            inputs = Inputs(arg.model_dir, control_file)
+        if arg.model_inputs:
+            # Write blank input files,
+            setup_mi(arg.model_dir, control_file,
+                     use_timestamp = arg.timestamp, overwrite = arg.overwrite)
 
-            if arg.control_file:
-                # Write a blank control file
-                inputs.parameterize_cf(use_timestamp=arg.timestamp, overwrite=arg.overwrite)
-
-            if arg.model_inputs:
-                # Control file must already be parameterized
-                inputs.import_control_file()
-
-                # Write blank input files,
-                inputs.setup(use_timestamp=arg.timestamp, overwrite=arg.overwrite)
-
-    except:
-        msg = "Error: {0}".format(traceback.format_exc())
-        logging.error(msg)
-        print_console(msg)
