@@ -144,6 +144,108 @@ read.hs7.shade <- function(output_dir, file_name, sim_name, constituent_name="Ef
   
 }
 
+read.hs8.landcover <- function(output_dir, file_name, sim_name, sheet_name="TTools Data") {
+  # Function to read Landcover input data from heat source 8. Returns the data
+  # as a dataframe. Excel workbook needs to be saved as .xlsx. .xls do not seem to work.
+  
+  library(readxl)
+  
+  #col_names=c("", "Datetime", "value"),
+  #col_types =c("numeric","numeric","numeric")
+  
+  lc.data <- read_excel(path=paste0(output_dir,"/",file_name), sheet=sheet_name, na = c("","N/A", " "),
+                        range=cell_cols("B:BL"),
+                        col_names = FALSE)
+  
+  lc.data <- lc.data[c(4:nrow(lc.data)),c(1:35)]
+  
+  colnames(lc.data) <- c("Stream_km", "long", "lat",
+                         "topo_w", "topo_s", "topo_e", 
+                         "LC_T0_S0", paste0("LC_T", rep(1:7, each = 4), "_S", 1:4)) 
+  
+  lc.data$sim <- sim_name
+  
+  return(lc.data)
+  
+  }
+
+read.hs7.landcover <- function(output_dir, file_name, sim_name, sheet_name="TTools Data") {
+  # Function to read Landcover input data from heat source 7. Returns the data
+  # as a dataframe. Excel workbook needs to be saved as .xlsx. .xls do not seem to work.
+  
+  library(readxl)
+  
+  #col_names=c("", "Datetime", "value"),
+  #col_types =c("numeric","numeric","numeric")
+  
+  lc.data <- read_excel(path=paste0(output_dir,"/",file_name), sheet=sheet_name, na = c("","N/A", " "),
+                        range=cell_cols("C:FE"),
+                        col_names = FALSE)
+  
+  # This keeps everything and only removes unused rows and cols 
+  #lc.data <- lc.data[c(16:nrow(lc.data)),c(1:124,126:133,135:142,144:145,147:148,150:156,158:159)]
+  
+  lc.data <- lc.data[c(16:nrow(lc.data)),c(1:40,144:145,147:148)]
+  
+  colnames(lc.data) <- c("stream_node","long_distance", "Stream_km", "lat", "long", 
+                         "Elevation", "width", "Aspect", "topo_w", "topo_s", "topo_e", 
+                         "LC_T0_S0", paste0("LC_T", rep(1:7, each = 4), "_S", 1:4),
+                         "height_l", "height_r", "density_l", "density_r")
+  
+  # only keep relevant rows for plotting, removes LC codes, elevations, etc
+  #lc.data <- lc.data[c(16:nrow(lc.data)),c(1:11,144:145,147:148)]
+  
+  #colnames(lc.data) <- c("stream_node","long_distance", "Stream_km", "lat", "long", "Elevation", "width", "Aspect", "topo_w", "topo_s", "topo_e", 
+  #                       "height_l", "height_r", "density_l", "density_r")
+  
+  lc.data$sim <- sim_name
+  
+  return(lc.data)
+  
+}
+
+read.hs7.lccodes <- function(output_dir, file_name, sim_name, sheet_name="Land Cover Codes") {
+  # Function to read Landcover code input data from heat source 7. Returns the data
+  # as a dataframe. Excel workbook needs to be saved as .xlsx. .xls do not seem to work.
+  
+  library(readxl)
+  
+  lccode.data <- read_excel(path=paste0(output_dir,"/",file_name), sheet=sheet_name, na = c("","N/A", " "),
+                            range=cell_cols("D:H"),
+                            col_names=c("Landcover", "Code", "Height", "Density", "Overhang"),
+                            col_types =c("text","text","numeric","numeric","numeric"))
+  
+  lccode.data <- lccode.data[c(16:nrow(lccode.data)),c(1:5)]
+  
+  lccode.data$sim <- sim_name
+  
+  return(lccode.data)
+  
+}
+
+read.hs7.morphology <- function(output_dir, file_name, sim_name, sheet_name="Morphology Data") {
+  # Function to read Morphology input data from heat source 7. Returns the data
+  # as a dataframe. Excel workbook needs to be saved as .xlsx. .xls do not seem to work.
+  
+  library(readxl)
+  
+  excel.data <- read_excel(path=paste0(output_dir,"/",file_name), sheet=sheet_name, na = c("","N/A", " "),
+                           range=cell_cols("C:T"),
+                           col_names = FALSE)
+  
+  excel.data <-  excel.data[c(16:nrow(excel.data)),c(1:3,5:18)]
+  
+  colnames(excel.data) <- c("stream_node","long_distance", "Stream_km", "Gradient", "Mannings_n", 
+                            "Rosgen", "WD_Ratio", "Bankfull_Width", "Bottom_Width", "Max_Depth", 
+                            "Mean_Depth","Xsec_Area","AngleZ","X_Factor",
+                            "Bed_Conductivity","Particle_Size","Embeddedness")
+  
+  excel.data$sim <- sim_name
+  
+  return( excel.data)
+  
+}
+
 read.solar.flux.outputs <-function(output_dir, sim_name, hs_ver=8) {
   # Reads all the hourly solar flux outputs from heat source, does some formatting, and returns the data as 
   # a dataframe in long format. 
@@ -317,15 +419,10 @@ obs2simkm <- function(obs_dir, file_name, constituentCode, simkm) {
   # get the constituent
   obs <- obs.raw[obs.raw$constituentCode == constituentCode,]
   
-  # Drop these cols
-  obs$Notes <- NULL
-  obs$constituentCode <- NULL
-  obs$constituent <- NULL
-  obs$statistic <- NULL
-  
   # just get the sites and stream_km
-  obs.wide  <- reshape(obs, timevar= "Datetime", idvar = c("Stream_km","SiteName"), 
-                       direction="wide", drop = c("Date","value","group"))
+  obs.wide <- obs %>%
+    dplyr::select(Stream_km, siteName) %>%
+    dplyr::distinct()
   
   # get unique obs km
   obs.km <- as.numeric(unique(obs$Stream_km))
@@ -437,7 +534,7 @@ calc.7dadm2 <- function(output_dir, sim_name, hs_ver=9, file_name="Temp_H2O", sh
   
   colnames(data.l) <- c("Date","sim","Stream_km","statistic","value")
   
-  data.l$constituent <- constituent_name
+  data.l$constituent <- "Temperature"
   
   # rename the stats
   data.l$statistic <- gsub(pattern="max", replacement="Daily Maximum Temperature", 
