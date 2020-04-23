@@ -24,6 +24,8 @@ jobs:
       - name: Display Python version
         run: python --version
       - name: Install dependencies
+        if: matrix.os == 'windows-latest'
+          run: choco install vcpython27 
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
