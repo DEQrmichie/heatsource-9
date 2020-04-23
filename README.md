@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/rmichie/heatsource-9.svg?branch=development_py3)](https://travis-ci.com/rmichie/heatsource-9)
+![Build Status](https://github.com/rmichie/heatsource-9/workflows/Build%20heatsource%20packages/badge.svg?branch=master)
 
 Heat Source 9
 ============
