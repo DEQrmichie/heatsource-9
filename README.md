@@ -1,4 +1,4 @@
-![Build Status](https://github.com/rmichie/heatsource-9/workflows/Build%20heatsource%20packages/badge.svg?branch=master)
+![Build](https://github.com/rmichie/heatsource-9/workflows/Build/badge.svg?branch=master)
 
 Heat Source 9
 ============
