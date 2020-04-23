@@ -4,9 +4,9 @@ name: Build heatsource packages
 # events but only for the master branch
 on:
   push:
-    branches: [ development_py3]
+    branches: [master, development_py3]
   pull_request:
-    branches: [ development_py3]
+    branches: [master, development_py3]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
