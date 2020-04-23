@@ -51,7 +51,7 @@ jobs:
       steps:
         - uses: actions/checkout@v2
           with:
-            ref: py27
+            ref: 'py27'
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
