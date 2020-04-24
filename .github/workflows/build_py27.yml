@@ -3,7 +3,7 @@ name: Build heatsource py27
 # Controls when the action will run. Triggers the workflow on push or pull request events
 on:
   push:
-    branches: [master, py27]
+    branches: [py27]
   pull_request:
     branches: [py27]
 jobs:
@@ -45,5 +45,5 @@ jobs:
       - name: Upload dist folder
         uses: actions/upload-artifact@v1
         with:
-          name: dist
+          name: dist-py27
           path: dist
