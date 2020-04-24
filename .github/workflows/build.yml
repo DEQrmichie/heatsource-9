@@ -40,8 +40,8 @@ jobs:
           hs run -h
       - name: Build
         run: python setup.py sdist bdist_wheel
-      - name:
+      - name: Upload dist folder
         uses: actions/upload-artifact@v1
         with:
-          name: dist-${{ matrix.os }}-${{ matrix.python }}
+          name: dist
           path: dist
