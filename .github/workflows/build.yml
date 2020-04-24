@@ -40,9 +40,8 @@ jobs:
           hs run -h
       - name: Build
         run: python setup.py sdist bdist_wheel
-      - name: Upload Assets to release
-        uses: AButler/upload-release-assets@v2.0
-        #if: github.event_name == 'release' || github.event_name =='prereleased'
+      - name:
+        uses: actions/upload-artifact@v1
         with:
-          files: 'artifacts/heatsource9*;dist/heatsource9*'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: dist-${{ matrix.os }}-${{ matrix.python }}
+          path: dist
