@@ -15,9 +15,9 @@ Thesis][1] at Oregon State University in the Departments of Bioresource
 Engineering and Civil Engineering. Since then it has grown and changed 
 significantly. Oregon DEQ currently maintains the Heat Source methodology
 and computer programming. Appropriate model use and application are 
-the sole responsibility of the user.
+the sole responsibility of the user. 
 
-Heat Source 7-8 and user manual:
+Heat Source 7-8 and user manual: 
 http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
 
 Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
@@ -30,20 +30,23 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 There are two options for installing and running Heat Source 9:
 
-1. Download the [heat source python wheel][2]. Requires python 2.7 or 3.x
+1. Download the [windows executables][2]. You can run the model on windows by using the compiled windows executables. 
+Python installation is not required. 
+
+2. Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
+Requires install of Python 2.7, 3.5, 3.6, 3.7, or 3.8.
+It is recommend you use Python 3.5+. Python 2.7 is at end of life and will not be supported. 
 
 https://www.python.org/downloads/
 
-install the wheel from command line:
+Install the wheel from command line using pip:
 ```shell
-cd path\to\heatsource9_wheel_directory
+cd path\to\directory_where_you_saved_the_heatsource9_wheel\
 pip install <name of wheel file>
 ```
 
-2. Download the [windows executables][2]. You can run the model on windows by using the compiled windows executables. 
-Python installation is not required.
-
-[2]: https://github.com/rmichie/heatsource-9/releases
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b25/Compiled.Model.Executables.v9.0.0b25.win_amd64.zip
+[3]: https://github.com/rmichie/heatsource-9/releases/tag/v9.0.0b25
 
 ## QUICK STEPS TO GET GOING
 
@@ -55,7 +58,7 @@ Python installation is not required.
    hs setup -cf
    ```
 2. Open the control file and parameterize it with your model information. 
-   The control file must be named HeatSource_Control.csv
+   The control file must be named HeatSource_Control.csv 
     
 3. Use hs9_setup_model_inputs.py to build template input files or by using commend line. The input files will
    be saved to the input file directory that is specified in the control file).
@@ -64,10 +67,11 @@ Python installation is not required.
    hs setup -mi
    ```   
 5. Edit the template csv files with your input data. You can use excel although 
-   make sure the datetimes are formatted correctly. Save the files as a csv.
+   make sure the datetimes are formatted correctly. Save the files as a csv. 
+
 6. Run the model by executing one of the following model python scripts/executables:
-   hs9_run_hydraulics,<br>
-   hs9_run_solar,<br>
+   hs9_run_hydraulics,<br> 
+   hs9_run_solar,<br> 
    hs9_run_temperature,
    
    Or you can use command line to run the model:
