@@ -1,4 +1,4 @@
-name: Build Mac
+name: Build Windows
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -14,14 +14,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
-        architecture: [x64]
+        os: [windows-latest]
+        architecture: [x64, x86]
         python-version: [3.5, 3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
+          architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
       - name: Display Python version
         run: python --version
