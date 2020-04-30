@@ -45,5 +45,5 @@ jobs:
       - name: Upload dist folder
         uses: actions/upload-artifact@v1
         with:
-          name: dist
+          name: dist-win
           path: dist
