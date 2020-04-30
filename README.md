@@ -45,7 +45,7 @@ cd path\to\directory_where_you_saved_the_heatsource9_wheel\
 pip install <name of wheel file>
 ```
 
-[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b25/Compiled.Model.Executables.v9.0.0b25.win_amd64.zip
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b25/Compiled.Model.Executables.v9.0.0b25.win32.zip
 [3]: https://github.com/rmichie/heatsource-9/releases/tag/v9.0.0b25
 
 ## QUICK STEPS TO GET GOING
