@@ -3,9 +3,11 @@ name: Build py27
 # Controls when the action will run. Triggers the workflow on push or pull request events
 on:
   push:
-    branches: [py27]
+    branches:
+      - py27
   pull_request:
-    branches: [py27]
+    branches:
+      - py27
 jobs:
   build:
     runs-on: ${{ matrix.os }}
