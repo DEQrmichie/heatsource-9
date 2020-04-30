@@ -1,4 +1,3 @@
-![Build py27](https://github.com/rmichie/heatsource-9/workflows/Build%20py27/badge.svgbranch=py27)
 
 
 Heat Source 9
