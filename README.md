@@ -1,4 +1,5 @@
-![Build](https://github.com/rmichie/heatsource-9/workflows/Build/badge.svg?branch=master)
+![Build Windows](https://github.com/rmichie/heatsource-9/workflows/Build%20Windows/badge.svg?branch=master) ![Build Linux](https://github.com/rmichie/heatsource-9/workflows/Build%20Linux/badge.svg?branch=master) ![Build Mac](https://github.com/rmichie/heatsource-9/workflows/Build%20Mac/badge.svg?branch=master)
+
 
 Heat Source 9
 ============
