@@ -31,20 +31,20 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 There are two options for installing and running Heat Source 9:
 
-1. Download the [windows executables][2]. You can run the model on windows by using the compiled windows executables. 
-Python installation is not required. 
+1. Download the [windows executables][2]. You can run the model on windows by using the compiled 
+   windows executables. Python installation is not required. 
 
 2. Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
-Requires install of Python 2.7, 3.5, 3.6, 3.7, or 3.8.
-It is recommend you use Python 3.5+. Python 2.7 is at end of life and will not be supported. 
+   Requires install of Python 2.7, 3.5, 3.6, 3.7, or 3.8.
+   It is recommend you use Python 3.5+. Python 2.7 is at end of life and will not be supported. 
 
-https://www.python.org/downloads/
+   https://www.python.org/downloads/
 
-Install the wheel from command line using pip:
-```shell
-cd path\to\directory_where_you_saved_the_heatsource9_wheel\
-pip install <name of wheel file>
-```
+   Install the wheel from command line using pip:
+   ```shell
+   cd path\to\directory_where_you_saved_the_heatsource9_wheel\
+   pip install <name of wheel file>
+   ```
 
 [2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b25/Compiled.Model.Executables.v9.0.0b25.win32.zip
 [3]: https://github.com/rmichie/heatsource-9/releases/tag/v9.0.0b25
