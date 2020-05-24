@@ -322,14 +322,14 @@ def run_hydraulics(model_dir, control_file):
         print_console(msg)
 
 
-def setup_cf(model_dir, control_file, use_timestamp=False, overwrite=False):
+def setup_cf(model_dir, control_file, use_timestamp=False, overwrite=False, **kwargs):
     """Write a blank control file"""
     try:
         # create an input object
         inputs = Inputs(model_dir, control_file)
         
         # Write a blank control file
-        inputs.parameterize_cf(use_timestamp=use_timestamp, overwrite=overwrite)
+        inputs.parameterize_cf(use_timestamp=use_timestamp, overwrite=overwrite, **kwargs)
         
     except:
         msg = "Error: {0}".format(traceback.format_exc())
