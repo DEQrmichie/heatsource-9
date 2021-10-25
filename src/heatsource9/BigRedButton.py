@@ -191,23 +191,7 @@ class ModelControl(object):
                         nd.Solar_Blocked[i] = [0] * IniParams["transsample_count"]
                     nd.Solar_Blocked["diffuse"] = 0
 
-            # Back to every timestep level of the loop. Here we wrap the call to
-            # run_all() in a try block to catch the exceptions thrown.
-            try:
-                # Note that all of the run methods have to have
-                # the same signature
-                # if time == 1056951360.0:
-                #   print_console(msg="error timestep")
-                self.run_all(time, hour, minute, second, JD, JDC)
-            # Shit, there's a problem
-            except:
-                msg = "Error at model km {0} at {1}, model time {2} {3}".format(nd.km, Chronos.pretty_time(),
-                                                                                Chronos.TheTime, traceback.format_exc())
-                logging.error(msg)
-                print_console(msg)
-
-                # Then just die
-                raise SystemExit
+            self.run_all(time, hour, minute, second, JD, JDC)
 
             # If minute and second are both zero, we are at the top of 
             # the hour. 
