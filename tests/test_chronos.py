@@ -7,7 +7,7 @@ from heatsource9.Dieties.ChronosDiety import Chronos
 
 # This test evaluates if using true division will impact HS calculation of julian day.
 # I pulled the relevant method out and comparing HS julian day to what is calculated by the jdcal package.
-# Test resut = All good. HS method produces same result as jdcal package using true division and int division
+# Test result = All good. HS method produces same result as jdcal package using true division and int division
 
 def CalcJulianCentury(start):
     # Then break out the time into a tuple
