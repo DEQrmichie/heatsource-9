@@ -5,6 +5,9 @@ parking_lot.py
 Inputs_xlsx.py
 dependencies/**
 solar_trig_math/**
+tests/**
+*.uml
+*profile.png
 *.docx
 *.log
 *.exe
