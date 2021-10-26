@@ -21,10 +21,10 @@ from calendar import timegm
 from datetime import datetime
 from operator import itemgetter
 
-from heatsource9.Dieties.IniParamsDiety import IniParams
-from heatsource9.Dieties.IniParamsDiety import iniRange
-from heatsource9.Dieties.IniParamsDiety import dtype
-from heatsource9.Utils.Printer import Printer as print_console
+from ..Dieties.IniParamsDiety import IniParams
+from ..Dieties.IniParamsDiety import iniRange
+from ..Dieties.IniParamsDiety import dtype
+from ..Utils.Printer import Printer as print_console
 
 import logging
 
@@ -285,8 +285,6 @@ class Inputs(object):
         """Returns the control file"""
 
         if not exists(join(self.model_dir, self.control_file)):
-            logging.ERROR("HeatSource_Control.csv not \
-            found {0}".format(join(self.model_dir, self.control_file)))
 
             raise Exception("HeatSource_Control.csv not found. \
             Move the executable or place the control file in \
@@ -406,14 +404,14 @@ class Inputs(object):
         if IniParams["calcevap"]:
             IniParams["penman"] = True if IniParams["evapmethod"] == "Penman" else False
 
-        # make sure that the timestep divides into 60 minutes, 
+        # make dt measured in seconds
+        IniParams["dt"] = IniParams["dt"] * 60
+
+        # make sure that the timestep divides into 60 minutes,
         # or we may not land squarely on each hour's starting point.
-        if 60 % IniParams["dt"] != 0:
+        if 3600 % IniParams["dt"] != 0:
             raise ValueError(
-                "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]))
-        else:
-            # make dt measured in seconds
-            IniParams["dt"] = IniParams["dt"] * 60
+                "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]/60))
 
         # Make sure the output directory ends in a 
         # slash based on system platform

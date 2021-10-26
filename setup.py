@@ -19,7 +19,7 @@ else:
                   Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
-      version='9.0.0b25',
+      version='9.0.0b26',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -31,7 +31,6 @@ setup(name='heatsource9',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3 :: Only',
-          'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
@@ -47,13 +46,13 @@ setup(name='heatsource9',
       computer programming. Appropriate model use and application are
       the sole responsibility of the user.""",
       description='One-dimensional stream temperature modeling program',
-      url='http://www.deq.state.or.us/wq/TMDLs/tools.htm',
+      url='https://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx',
       project_urls={
           'Documentation': 'https://www.oregon.gov/deq/FilterDocs/heatsourcemanual.pdf',
-          'Source': 'https://github.com/rmichie/heatsource-9/'},
+          'Source': 'https://github.com/DEQrmichie/heatsource-9/'},
       author='Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner',
       maintainer='Ryan Michie, Oregon DEQ',
-      maintainer_email='michie.ryan@deq.state.or.us',
+      maintainer_email='ryan.michie@deq.state.or.us',
       platforms=['darwin', 'linux', 'win32'],
       license=['GNU General Public License v3 (GPLv3)'],
       zip_safe=False,
@@ -64,7 +63,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      install_requires=['Cython==0.29.16'],
+      install_requires=['Cython==0.29.24'],
       ext_modules=extensions,
       python_requires='>=3, <4'
       )
