@@ -9,11 +9,11 @@ jobs:
       matrix:
         os: [windows-latest]
         architecture: [x64, x86]
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
@@ -23,16 +23,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
-          python -m pip install -r requirements.txt
+          python -m pip install --upgrade Cython==0.29.24
       - name: Install heat source
         run: |
           python -m pip install -e .
           pip list
-      - name: hs tests
-        run: |
-          hs -v
-          hs setup -h
-          hs run -h
       - name: Build
         run: python setup.py sdist bdist_wheel
       - name: Upload dist folder
