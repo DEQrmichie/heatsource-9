@@ -394,25 +394,24 @@ def hs():
     if arg.command == 'run':
 
         if not os.path.exists(os.path.join(arg.model_dir, control_file)):
-                raise Exception("HeatSource_Control.csv not found in {0}.".format(
-                                arg.model_dir))
+            raise Exception("HeatSource_Control.csv not found in {0}.".format(arg.model_dir))
             
         if arg.temperature:
-                run(arg.model_dir, control_file)
+            run(arg.model_dir, control_file)
 
         elif arg.solar:
-                run_solar(arg.model_dir, control_file)
+            run_solar(arg.model_dir, control_file)
                 
         elif arg.run.hydraulics:
-                run_hydraulics(arg.model_dir, control_file)
+            run_hydraulics(arg.model_dir, control_file)
 
     if arg.command == 'setup':
         if arg.control_file:
             # Write a blank control file
-            setup_cf(arg.model_dir, control_file, use_timestamp=arg.timestamp, overwrite = arg.overwrite)
+            setup_cf(arg.model_dir, control_file, use_timestamp=arg.timestamp, overwrite=arg.overwrite)
 
         if arg.model_inputs:
             # Write blank input files,
             setup_mi(arg.model_dir, control_file,
-                     use_timestamp = arg.timestamp, overwrite = arg.overwrite)
+                     use_timestamp = arg.timestamp, overwrite=arg.overwrite)
 
