@@ -4,7 +4,7 @@
 Heat Source 9
 ============
 
-Current Version: heatsource 9.0.0b25 (beta 25)
+Current Version: heatsource 9.0.0b26 (beta 26)
 
 =========================================================================
 ## ABOUT 
@@ -13,7 +13,7 @@ Heat Source is a computer model used by the Oregon Department of
 Environmental Quality to simulate stream thermodynamics and hydraulic 
 routing. It was originally developed by Matt Boyd in 1996 as a [Masters 
 Thesis][1] at Oregon State University in the Departments of Bioresource 
-Engineering and Civil Engineering. Since then it has grown and changed 
+Engineering and Civil Engineering. Since then, it has grown and changed 
 significantly. Oregon DEQ currently maintains the Heat Source methodology
 and computer programming. Appropriate model use and application are 
 the sole responsibility of the user. 
@@ -35,8 +35,8 @@ There are two options for installing and running Heat Source 9:
    windows executables. Python installation is not required. 
 
 2. Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
-   Requires install of Python 2.7, 3.5, 3.6, 3.7, or 3.8.
-   It is recommend you use Python 3.5+. Python 2.7 is at end of life and will not be supported. 
+   Requires install of Python 3.6, 3.7, or 3.8.
+   It is recommended you use Python 3.8. 
 
    https://www.python.org/downloads/
 
