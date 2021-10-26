@@ -26,7 +26,7 @@ from bisect import bisect
 import logging
 logger = logging.getLogger(__name__)
 
-from heatsource9.Utils.Printer import Printer as print_console
+from ..Utils.Printer import Printer as print_console
 
 def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JDC, heatsource8, radial_count):
@@ -240,12 +240,11 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
     if X > 0.5: X = 0.5
     elif X < 0.0: X = 0.0
     cdef double K = dx / c_k
-    cdef double dt_stable
+    cdef double dt_stable = (2 * K * (1 - X)) / 60
     # Check the celerity to ensure stability. These tests are 
     # from the VB code.
     if dt >= (2 * K * (1 - X)):
         # Unstable: Decrease dt or increase dx
-        dt_stable = (2 * K * (1 - X)) / 60
         msg = "Unstable timestep. Decrease dt or increase dx. \
         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
@@ -263,12 +262,18 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
 def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
               inputs, Q_bc):
     cdef double Q1, Q2, Q_new
-    cdef double C[3]              
+    cdef double C[3]
+
     if Q_bc >= 0:
         Q_new = Q_bc
     else:
         Q1 = Q_up + inputs
         Q2 = Q_up_prev + inputs
+
+        #msg="Q2={0}, U={1}, W_w={2}, S={3}, dx={4}, dt={5}".format(Q2, U, W_w, S, dx, dt)
+        #logger.info(msg)
+        #print_console(msg)
+
         C = calc_muskingum(Q2, U, W_w, S, dx, dt)
         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
 

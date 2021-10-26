@@ -20,12 +20,10 @@ from math import sqrt
 import logging
 logger = logging.getLogger(__name__)
 
-from heatsource9.Dieties.ChronosDiety import Chronos
-from heatsource9.Dieties.IniParamsDiety import IniParams
-from heatsource9.Utils.Dictionaries import Interpolator
-from heatsource9.Stream import PyHeatsource as py_HS
-
-_HS = None # Placeholder for heatsource module
+from . import PyHeatsource as py_HS
+from ..Dieties.ChronosDiety import Chronos
+from ..Dieties.IniParamsDiety import IniParams
+from ..Utils.Dictionaries import Interpolator
 
 class StreamNode(object):
     """Definition of an individual stream segment"""
@@ -105,20 +103,20 @@ class StreamNode(object):
         # things the C module needs
         for attr in ["F_Conduction","F_Convection","F_Longwave","F_Evaporation"]:
             setattr(self, attr, 0)
-        self.F_Solar = [0]*8
-        self.F_Direct = [0]*8
-        self.F_Diffuse = [0]*8
+        self.F_Solar = [0.0]*8
+        self.F_Direct = [0.0]*8
+        self.F_Diffuse = [0.0]*8
         self.F_Total = 0.0
         self.ShaderList = ()
         if IniParams["heatsource8"]:
             radial_count = 7
         else:
             radial_count = IniParams["trans_count"]
-        self.lc_height = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
-        self.lc_height_rel = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
-        self.lc_canopy = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
-        self.lc_oh = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
-        self.lc_k = [[[0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_height = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_height_rel = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_canopy = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_oh = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_k = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
     def get_node_data(self):
         data = {}
@@ -149,20 +147,12 @@ class StreamNode(object):
 
     def initialize(self):
         """Methods necessary to set initial conditions of the node"""
-        global _HS, py_HS, C_HS
+        global py_HS
         has_prev = self.prev_km is not None
         if has_prev:
             self.CalcHeat = self.calc_heat_opt
         else:
             self.CalcHeat = self.calc_heat_boundary_node
-        
-        if IniParams["run_in_python"]:
-            _HS = py_HS
-        else:
-            #_HS = C_HS  # TODO place holder for C module
-            msg = "run_in_python is not True. Something is very wrong"
-            logger.error(msg)
-            raise Exception(msg)
 
         self.CalcDischarge = self.calculate_discharge
         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
@@ -184,10 +174,10 @@ class StreamNode(object):
         inputs = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
         self.Q_mass += inputs
         up = self.prev_km
-        
+
         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U,
             self.Disp) = \
-            _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
+            py_HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
                           self.dx, self.dt, self.z, self.n,
                           self.d_cont, self.Q, up.Q, up.Q_prev,
                           inputs, -1)
@@ -208,10 +198,10 @@ class StreamNode(object):
         self.Q_mass += Q_bc
         # We fill the discharge arguments with 0 because it is 
         # unused in the boundary case
-        
+
         Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
             self.U, self.Disp) = \
-                _HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
+                py_HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
                               self.dx, self.dt, self.z, self.n,
                               self.d_cont,
                               0.0, 0.0, 0.0, 0.0, Q_bc)
@@ -253,15 +243,12 @@ class StreamNode(object):
             
             # Add upstream node's discharge at THIS 
             # timestep- prev_km.Q would be next timestep.
-            Q = self.prev_km.Q_prev + inputs 
-            
-            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
-                self.U, self.Disp) = \
-                    _HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
-                                  self.dt, self.z, self.n,
-                                  self.d_cont, 0.0, 0.0, 0.0,
-                                  inputs, Q)
-            
+            Q = self.prev_km.Q_prev + inputs
+
+            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
+                py_HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
+                               self.dt, self.z, self.n, self.d_cont, 0.0, 0.0, 0.0, inputs, Q)
+
             # If we hit this once, we remap so we can avoid the 
             # if statements in the future.
             self.CalcDischarge = self.calc_discharge_opt
@@ -273,14 +260,11 @@ class StreamNode(object):
             self.Q_mass += Q_bc
             # We pad the arguments with 0 because some are 
             # unused (or currently None) in the boundary case
-            
-            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w,
-                self.U, self.Disp) = \
-                    _HS.calc_flows(0.0, 0.0, self.W_b, self.S,
-                                  self.dx, self.dt, self.z, self.n,
-                                  self.d_cont, 0.0, 0.0, 0.0,
-                                  inputs, Q_bc)
-            
+
+            Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
+                py_HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx, self.dt, self.z, self.n,
+                               self.d_cont, 0.0, 0.0, 0.0, inputs, Q_bc)
+
             self.CalcDischarge = self.calc_discharge_boundary_node
 
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
@@ -318,7 +302,7 @@ class StreamNode(object):
          ground,
          self.F_Total,
          self.Delta_T,
-         Mac) = _HS.calc_heat_fluxes(self.metData[time],
+         Mac) = py_HS.calc_heat_fluxes(self.metData[time],
                                    self.C_args,
                                    self.d_w,
                                    self.A,
@@ -374,7 +358,7 @@ class StreamNode(object):
          Zenith,
          Daytime,
          tran,
-         Azimuth_mod) = _HS.calc_solar_position(self.latitude,
+         Azimuth_mod) = py_HS.calc_solar_position(self.latitude,
                                               self.longitude,hour,
                                               min,
                                               sec,
@@ -391,7 +375,7 @@ class StreamNode(object):
          veg_block,
          ground,
          self.F_Total,
-         self.Delta_T) = _HS.calc_heat_fluxes(self.metData[time],
+         self.Delta_T) = py_HS.calc_heat_fluxes(self.metData[time],
                                        self.C_args,
                                        self.d_w,
                                        self.A,
@@ -447,7 +431,7 @@ class StreamNode(object):
         #===================================================
         #Throw away S and mix because we won't need them.
 
-        self.T, S, mix = _HS.calc_maccormick(self.dt, self.dx, self.U,
+        self.T, S, mix = py_HS.calc_maccormick(self.dt, self.dx, self.U,
                                             self.T_sed, self.T_prev,
                                             self.Q_hyp,
                                             self.Q_tribs[time],
@@ -476,17 +460,17 @@ class StreamNode(object):
         return Disp
 
     def mix_it_up(self, time, Q_up, T_up):
-        Q_in = 0
-        T_in = 0
+        Q_in = 0.0
+        T_in = 0.0
         for i in range(len(self.Q_tribs[time])):
-            Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
-            T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0
+            Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0.0
+            T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0.0
 
         # Hyporheic flows if available
-        Q_hyp = self.Q_hyp or 0
+        Q_hyp = self.Q_hyp or 0.0
         # And accretion flows
-        Q_accr = self.Q_in or 0
-        T_accr = self.T_in or 0
+        Q_accr = self.Q_in or 0.0
+        T_accr = self.T_in or 0.0
         #Calculate temperature change from mass transfer from point inflows
         T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
         #Calculate temperature change from mass transfer from hyporheic zone
