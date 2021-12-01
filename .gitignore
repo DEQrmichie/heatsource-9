@@ -1,5 +1,6 @@
 dist/**
 build/**
+Roadmap.md
 **example_model**
 parking_lot.py
 Inputs_xlsx.py
