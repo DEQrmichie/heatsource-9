@@ -2,13 +2,10 @@
 
 
 Heat Source 9
-============
-
+-------------
 Current Version: heatsource 9.0.0b26 (beta 26)
 
-=========================================================================
 ## ABOUT 
-
 Heat Source is a computer model used by the Oregon Department of 
 Environmental Quality to simulate stream thermodynamics and hydraulic 
 routing. It was originally developed by Matt Boyd in 1996 as a [Masters 
@@ -29,25 +26,18 @@ Contact: Ryan Michie, michie.ryan@deq.state.or.us
 
 ## INSTALL
 
-There are two options for installing and running Heat Source 9:
+Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
+Requires install of Python 3.6, 3.7, or 3.8.
+It is recommended you use Python 3.8. 
 
-1. Download the [windows executables][2]. You can run the model on windows by using the compiled 
-   windows executables. Python installation is not required. 
+https://www.python.org/downloads/
 
-2. Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
-   Requires install of Python 3.6, 3.7, or 3.8.
-   It is recommended you use Python 3.8. 
-
-   https://www.python.org/downloads/
-
-   Install the wheel from command line using pip:
-   ```shell
-   cd path\to\directory_where_you_saved_the_heatsource9_wheel\
-   pip install <name of wheel file>
-   ```
-
-[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b25/Compiled.Model.Executables.v9.0.0b25.win32.zip
-[3]: https://github.com/rmichie/heatsource-9/releases/tag/v9.0.0b25
+Install the wheel from command line using pip:
+```shell
+cd path\to\directory_where_you_saved_the_heatsource9_wheel\
+pip install <name of wheel file>
+ ```
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b26
 
 ## QUICK STEPS TO GET GOING
 
@@ -150,8 +140,7 @@ other options<br>
                         Path to the model directory. If not used the default is current<br>
                         working directory.
 
-=========================================================================
-### CONTROL FILE  
+## CONTROL FILE  
 HeatSource_Control.csv
 
 The control file is where most of the model operation and initial parameterization is set.
@@ -269,8 +258,8 @@ Below are all the input parameters that must be included in the control file.
 |	40|Land Cover Sample Method (point/zone)|lcsampmethod|	|
 |	41|Use Heat Source 8 Land Cover Methods (True/False)|heatsource8|	|
 
-=========================================================================
-### ACCRETION INPUT FILE  
+
+## ACCRETION INPUT FILE  
 UserDefinedFileName.csv
 
 The temperature and flow rates of accretion are defined in this file. 
@@ -294,8 +283,7 @@ in the mixing calculations
 |6|`OUTFLOW`|Withdrawal flow|cubic meters/second|float|Optional 1|Required|Required|
 
 
-=========================================================================
-### BOUNDARY CONDITION FILE  
+## BOUNDARY CONDITION FILE  
 UserDefinedFileName.csv
 
 The stream flow and temperature conditions at the upstream model boundary 
@@ -308,8 +296,8 @@ hourly timestep.
 |2|`FLOW`|Boundary condition flow|cubic meters/second|float|Optional 1|Required|Required|
 |3|`TEMPERATURE`|Boundary condition temperature|degrees Celsius|float|Optional 1|Required|Required|
 
-=========================================================================
-### METEOROLOGICAL INPUT FILE/S
+
+## METEOROLOGICAL INPUT FILE/S
 (formally called Continuous data in heat source 8)
 UserDefinedFileName.csv
 
@@ -338,8 +326,7 @@ the input stream km.
 |8|`RELATIVE_HUMIDITY2`|Relative Humidity at site 2|proportion|float|Optional 1|Optional 2|Optional 2|
 |9|`AIR_TEMPERATURE2`|Air Temperature at site 2|degrees Celsius|float|Optional 1|Optional 2|Optional 2|
 
-=========================================================================
-### TRIBUTARY INPUT FILE/S  
+## TRIBUTARY INPUT FILE/S  
 Can also be outflows. Use negative flows.  
 UserDefinedFileName.csv  
 
@@ -372,8 +359,7 @@ the input stream km.
 |4|`FLOW2`|Tributary 2 flow|cubic meters/second|float|Optional 1|Required|Required|
 |5|`TEMPERATURE2`|Tributary 2 Temperature|degrees Celsius|float|Optional 1|Required|Required|
 
-=========================================================================
-### LANDCOVER CODES FILE  
+## LANDCOVER CODES FILE  
 UserDefinedFileName.csv  
 
 The landcover codes file contains the physical attribute information 
@@ -384,12 +370,12 @@ There cannot be skipped rows
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
 
-#### Canopy Type
+### Canopy Type
 
 land cover canopy information can be input as either canopy closure or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
-##### Canopy Closure 
+#### Canopy Closure 
 Input file formatting when ```canopy_data = "CanopyClosure"``` in the control file.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
@@ -401,7 +387,7 @@ Input file formatting when ```canopy_data = "CanopyClosure"``` in the control fi
 |5|`OVERHANG`|Overhang|meters|float|Required|Required (Not Used)|Required|
 
 
-##### LAI
+#### LAI
 Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
@@ -439,8 +425,7 @@ lccodes = [('Active River Channel',100,0,0,0),
 inputs.parameterize_lccodes(lccodes, overwrite=True)
 ```
 
-=========================================================================
-### LANDCOVER DATA  
+## LANDCOVER DATA  
 (formally called TTools in heatsource 8)  
 UserDefinedFileName.csv  
 
@@ -458,7 +443,7 @@ from geospatial data using TTools.
 |7|`TOPO_S`|Topographic shade angle to the south|degrees|float|Required|Required (Not Used)|Required|
 |8|`TOPO_E`|Topographic shade angle to the east|degrees|float|Required|Required (Not Used)|Required|
 
-#### Land Cover Data Input Type
+### Land Cover Data Input Type
 Land cover information can be input into the model in two different ways:
 Using codes or values. If using codes unique land cover attribute information is represented as a unique code.
 The land cover attribute  associated to each code is parameterized in the Land Cover Codes file in long format.
@@ -466,7 +451,7 @@ If using values, the land cover attribute information for each transect sample i
 
 The land cover data input type is identified in the control file.
 
-##### Codes
+#### Codes
 When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
@@ -474,7 +459,7 @@ When ```lcdatainput = "Codes"```, the following columns will be used after colum
 |multiple|`LC_T_S`|Landcover code on transect T for sample S|N/A|string|Required|Required (Not Used)|Required|
 |multiple|`ELE_T_S`|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
-##### Values
+#### Values
 When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the following columns will be used after column 8:
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
@@ -496,8 +481,7 @@ When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following c
 
 Note - the number of columns are dependent on the number of transects and samples specified in the control file.
 
-=========================================================================
-### MORPHOLOGY DATA FILE  
+## MORPHOLOGY DATA FILE  
 UserDefinedFileName.csv  
 
 This file defines channel morphology and substrate information.
@@ -519,12 +503,10 @@ Refer to the user manual for more information about each parameter.
 |12|`HYPORHEIC_PERCENT`|Percent Hyporheic Exchange|proportion (0-1)|float|Optional 1|Required|Required|
 |13|`POROSITY`|Porosity|proportion (0-1)|float|Optional 1|Required|Required|
 
-=========================================================================
 ## LICENSE
-
 GNU General Public License v3 (GPLv3)
 
-Heat Source, Copyright (C) 2000-2020, Oregon Department of Environmental Quality
+Heat Source, Copyright (C) 2000-2021, Oregon Department of Environmental Quality
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -538,35 +520,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-=========================================================================
-## ROADMAP
-
-Roadmap for this version
-- Develop routines to convert heatsource v8 inputs to v9 csv format.
-- Fix/look into the Krieter bug.
-- Reformulate Muskingum calcs using updated methods such as Moramarco et al 2006.
-- Update the user manual.
-- Register heat source with pypi
-- Make a heatsource package mpkg installer for mac.
-
-Future Roadmap
-- Allow variable timeseries input and utilize pandas interpolation methods.
-- Fix the bug where the model ignores tributaries and accretion flows at first node.
-- Look into issues with including evaporation losses (much higher rates in the first reach than rest of the model).
-- Review cloudiness routines.
-- Output hyporheic energy flux.
-- Consider methodology change for hyporheic
-- Output longitudinal landcover data (i.e. like vegematic in heatsource 7).
-- User control over bottom reflection.
-- Input option for solar radiation measurements.
-- Implement a conservative tracer.
-- Provide flexibility on longwave routines.
-- Post processing tools (graphing, analysis, etc). Some already written in R.
-- Better output messages on errors.
-- Allow user specified output dT or sub-hourly time step. The code for this is already there but currently commented out.
-
-- Implement seamless transition to different watershed/stream network scales.
-- Scope implementing solar routines as a separate independent package or something less complex so it can be accessed via GIS routines.
-- Consider using long format for landcover data as opposed to the current wide format (for GIS based solar modeling).
-- Consider moving stream elevation into landcover data (so all GIS sampled data goes in the same location).
