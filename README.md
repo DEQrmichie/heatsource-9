@@ -304,9 +304,9 @@ UserDefinedFileName.csv
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
 |1|`DATETIME`|The date/time|mm/dd/yyyy hh:mm|string|Optional 1|Required|Required|
-|2|`CLOUDINESS1`|Cloudiness|proportion|float|Optional 1|Optional 2|Optional 2|
+|2|`CLOUDINESS1`|Cloudiness|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |3|`WIND_SPEED1`|Wind Speed|meters/second|float|Optional 1|Optional 2|Optional 2|
-|4|`RELATIVE_HUMIDITY1`|Relative Humidity|proportion|float|Optional 1|Optional 2|Optional 2|
+|4|`RELATIVE_HUMIDITY1`|Relative Humidity|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |5|`AIR_TEMPERATURE1`|Air Temperature|degrees Celsius|float|Optional 1|Optional 2|Optional 2|
 
 Note - multiple csv files may be used for each set of meteorological inputs with the 
@@ -317,13 +317,13 @@ the input stream km.
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
 |1|`DATETIME`|The date/time|mm/dd/yyyy hh:mm|string|Optional 1|Required|Required|
-|2|`CLOUDINESS1`|Cloudiness at site 1|proportion|float|Optional 1|Optional 2|Optional 2|
+|2|`CLOUDINESS1`|Cloudiness at site 1|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |3|`WIND_SPEED1`|Wind Speed at site 1|meters/second|float|Optional 1|Optional 2|Optional 2|
-|4|`RELATIVE_HUMIDITY1`|Relative Humidity at site 1|proportion|float|Optional 1|Optional 2|Optional 2|
+|4|`RELATIVE_HUMIDITY1`|Relative Humidity at site 1|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |5|`AIR_TEMPERATURE1`|Air Temperature at site 1|degrees Celsius|float|Optional 1|Optional 2|Optional 2|
-|6|`CLOUDINESS2`|Cloudiness at site 2|proportion|float|Optional 1|Optional 2|Optional 2|
+|6|`CLOUDINESS2`|Cloudiness at site 2|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |7|`WIND_SPEED2`|Wind Speed at site 2|meters/second|float|Optional 1|Optional 2|Optional 2|
-|8|`RELATIVE_HUMIDITY2`|Relative Humidity at site 2|proportion|float|Optional 1|Optional 2|Optional 2|
+|8|`RELATIVE_HUMIDITY2`|Relative Humidity at site 2|decimal fraction (0-1)|float|Optional 1|Optional 2|Optional 2|
 |9|`AIR_TEMPERATURE2`|Air Temperature at site 2|degrees Celsius|float|Optional 1|Optional 2|Optional 2|
 
 ## TRIBUTARY INPUT FILE/S  
@@ -375,15 +375,15 @@ because the model routines see a blank row as the end of the data sequence.
 land cover canopy information can be input as either canopy closure or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
-#### Canopy Closure 
-Input file formatting when ```canopy_data = "CanopyClosure"``` in the control file.
+#### Canopy Cover
+Input file formatting when ```canopy_data = "CanopyCover"``` in the control file.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
 |1|`NAME`|Land cover Name|N/A|string|Optional 1|Optional 1|Optional 1|
 |2|`CODE`|Land cover code|N/A|string|Required|Required (Not Used)|Required|
 |3|`HEIGHT`|Land cover height|meters|float|Required|Required (Not Used)|Required|
-|4|`CANOPY`|Canopy cover|proportion (0-1)|float|Optional 2|Optional 2|Optional 2|
+|4|`CANOPY`|Canopy cover|decimal fraction (0-1)|float|Optional 2|Optional 2|Optional 2|
 |5|`OVERHANG`|Overhang|meters|float|Required|Required (Not Used)|Required|
 
 
@@ -466,7 +466,7 @@ When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyClosure"``` the f
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
 |multiple|`HT_T_S`|Land cover height on transect T for sample S|N/A|string|Required|Required (Not Used)|Required|
 |multiple|`ELE_T_S`|Elevation on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
-|multiple|`CAN_T_S`|Canopy closure on transect T for sample S|proportion (0-1)|float|Required|Required (Not Used)|Required|
+|multiple|`CAN_T_S`|Canopy cover on transect T for sample S|decimal fraction (0-1)|float|Required|Required (Not Used)|Required|
 |multiple|`OH_T_S`|Overhang on transect T for sample S|meters|float|Required|Required (Not Used)|Required|
 
 When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
@@ -500,8 +500,8 @@ Refer to the user manual for more information about each parameter.
 |9|`SED_THERMAL_CONDUCTIVITY`|Sediment Thermal Conductivity|watts/meters/degrees Celsius|float|Optional 1|Required|Required|
 |10|`SED_THERMAL_DIFFUSIVITY`|Sediment Thermal Diffusivity|square centimeters/second|float|Optional 1|Required|Required|
 |11|`SED_HYPORHEIC_THICKNESSS`|Hyporheic Zone Thickness|meters|float|Optional 1|Required|Required|
-|12|`HYPORHEIC_PERCENT`|Percent Hyporheic Exchange|proportion (0-1)|float|Optional 1|Required|Required|
-|13|`POROSITY`|Porosity|proportion (0-1)|float|Optional 1|Required|Required|
+|12|`HYPORHEIC_PERCENT`|Percent Hyporheic Exchange|decimal fraction (0-1)|float|Optional 1|Required|Required|
+|13|`POROSITY`|Porosity|decimal fraction (0-1)|float|Optional 1|Required|Required|
 
 ## LICENSE
 GNU General Public License v3 (GPLv3)
