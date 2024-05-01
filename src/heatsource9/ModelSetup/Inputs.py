@@ -726,7 +726,7 @@ class Inputs(object):
         # each value in each column is appended to a list
         data = defaultdict(list)
 
-        with open(join(inputdir, filename.strip()), "rU") as file_object:
+        with open(join(inputdir, filename.strip()), "r") as file_object:
             reader = csv.DictReader(file_object, dialect="excel")
 
             # set the colnames as the dictionary key 
@@ -763,7 +763,7 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         i = 1
         for filename in filenames:
-            with open(join(inputdir, filename.strip()), "rU") as file_object:
+            with open(join(inputdir, filename.strip()), "r") as file_object:
                 newfile = [row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
 
             # skip rows    
