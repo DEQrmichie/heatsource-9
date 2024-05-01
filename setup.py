@@ -6,20 +6,22 @@ from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
-if installed_version < (3, 0):
-    raise Exception("The default Python version must be 3.0 or higher, not {0}.{1}".format(vi[0], vi[1]))
+if installed_version < (3, 8 ):
+    raise Exception("The default Python version must be 3.8 or higher, not {0}.{1}".format(vi[0], vi[1]))
 
 USE_CYTHON = True
 
 if USE_CYTHON:
     from Cython.Build import cythonize
-    extensions = cythonize('src/heatsource9/Stream/*.pyx', compiler_directives={'language_level': "3"})
+    extensions = cythonize(['src/heatsource9/Stream/StreamNode.pyx',
+                            'src/heatsource9/Stream/PyHeatsource.pyx'],
+                           compiler_directives={'language_level': "3"})
 else:
     extensions = [Extension('heatsource9.Stream.PyHeatsource', ['src/heatsource9/Stream/PyHeatsource.c']),
                   Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
-      version='9.0.0b26',
+      version='9.0.0b27',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -31,9 +33,11 @@ setup(name='heatsource9',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3 :: Only',
-          'Programming Language :: Python :: 3.6',
-          'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3.12',
           'Topic :: Scientific/Engineering'
       ],
       long_description="""Heat Source is a computer model used by the
@@ -54,7 +58,7 @@ setup(name='heatsource9',
       maintainer='Ryan Michie, Oregon DEQ',
       maintainer_email='ryan.michie@deq.state.or.us',
       platforms=['darwin', 'linux', 'win32'],
-      license=['GNU General Public License v3 (GPLv3)'],
+      license='GNU General Public License v3 (GPLv3)',
       zip_safe=False,
       entry_points={'console_scripts': ['hs = heatsource9.BigRedButton:hs']},
       packages=['heatsource9',
@@ -63,7 +67,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      install_requires=['Cython==0.29.24'],
+      install_requires=['Cython==3.0.10'],
       ext_modules=extensions,
-      python_requires='>=3, <4'
+      python_requires='>=3.8, <4'
       )

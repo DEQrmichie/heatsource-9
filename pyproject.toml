@@ -1,3 +1,52 @@
+[project]
+name = "heatsource9"
+version = "9.0.0b27"
+description = "One-dimensional stream temperature modeling program"
+readme = "README.md"
+requires-python = ">=3.8, <4"
+license = {file = "LICENSE.txt"}
+authors = [
+    {name = "Matt Boyd"},
+    {name = "Brian Kasper"},
+    {name = "John Metta"},
+    {name = "Ryan Michie"},
+    {name = "Dan Turner"}
+]
+maintainers = [
+  {name = "Ryan Michie", email = "ryan.michie@deq.state.or.us"}
+]
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Environment :: Console',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Natural Language :: English',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Topic :: Scientific/Engineering'
+]
+
+dependencies = [
+  "Cython==3.0.10"
+]
+
+[project.urls]
+"Source" = "https://github.com/DEQrmichie/heatsource-9/"
+
+[project.scripts]
+hs = "heatsource9.BigRedButton:hs"
+
+[project.entry-points."heatsource9.BigRedButton"]
+hs = "heatsource9.BigRedButton:hs"
+
 [build-system]
-requires = ["setuptools", "wheel", "Cython==0.29.24"]
+requires = ["setuptools", "Cython==3.0.10"]
 build-backend = "setuptools.build_meta"
