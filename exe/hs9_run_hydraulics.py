@@ -1,11 +1,17 @@
-"""This script imports the heatsource module and executes the 
-hydraulic model routines. This script must be located in the same
-directory as HeatSource_control.csv. NOTE that executing this script
-from Python shell (IDLE) will not identify __file__ correctly and will
-result in an error. It must be executed from a command prompt. Your
-options are to try to double click on this file and execute it 
-using python.exe, or to open a command prompt and execute manually 
-by typing: python -i path/to/this/script/hs9_run_hydraulics.py 
+#!/usr/bin/python3
+
+"""This script imports the heatsource module and executes the
+hydraulic model routines. It is used by pyinstaller to build the
+standalone executable. This script can also be used
+directly. It must be located in the same directory as
+HeatSource_control.csv. Run by opening a windows command
+prompt and type:
+
+cd path/to/this/script/
+py -m hs9_run_hydraulics
+
+Or create a .bat file that contains the heat source command:
+hs run -hy
 
 Command line:
 > hs run -hy
@@ -21,19 +27,21 @@ optional arguments:
 """
 
 from heatsource9 import BigRedButton
+import sys
 from os.path import abspath
 from os.path import dirname
 from os.path import exists
 from os.path import join
 from os.path import realpath
 
+if getattr(sys, 'frozen', False):
+    # path to the directory where the exe is being executed from
+    application_path = dirname(sys.executable)
+else:
+    # path to the directory where the script is being executed from
+    application_path = abspath(join(dirname(realpath(__file__)), '.'))
 
-def getScriptPath():
-    """Gets the path to the directory where the script is being executed from."""
-    return abspath(join(dirname(realpath(__file__)), '.'))
-
-
-model_dir = join(getScriptPath(), '')
+model_dir = join(application_path, '')
 control_file = 'HeatSource_Control.csv'
 
 if not exists(join(model_dir, control_file)):
