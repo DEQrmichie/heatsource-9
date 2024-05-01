@@ -38,7 +38,7 @@ class StreamNode(object):
                 "Delta_T", # Current temperature calculated from only local fluxes
                 "Mix_T_Delta", #Change in temperature due to tribs, gw, points sources, accretion
                 "T", "T_prev", # Current and previous stream temperature
-                "TopoFactor", # was Topo_W+Topo_S+Topo_E/(90*3) in original code. From Above stream surface solar flux calculations
+                "TopoFactor", # Topo_W + Topo_S + Topo_E / (90*3). From Above stream surface solar flux calculations
                 "ViewToSky", # Total angle of full sun view
                 "ShaderList", # List of angles and attributes to determine sun shading.
                 "F_DailySum", "F_Total", "Solar_Blocked", # Specific sums of solar fluxes
