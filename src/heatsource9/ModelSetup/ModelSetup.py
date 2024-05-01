@@ -1144,7 +1144,7 @@ class ModelSetup(object):
             vts_total = 0  # View to sky value
             # Now we set the topographic elevations in each direction
             # Topography factor Above Stream Surface
-            node.topo_factor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
+            node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each with one 
             # of three topographies
             elevation_list = []
