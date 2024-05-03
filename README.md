@@ -1,4 +1,4 @@
-![Wheel Build](https://github.com/DEQrmichie/heatsource/actions/workflows/build_wheels.yml/badge.svg?branch=main)
+![Wheel Build](https://github.com/DEQrmichie/heatsource-9/actions/workflows/build_wheels.yml/badge.svg?branch=main)
 
 Heat Source 9
 -------------
