@@ -1,9 +1,8 @@
-![Build Windows](https://github.com/rmichie/heatsource-9/workflows/Build%20Windows/badge.svg?branch=master) ![Build Linux](https://github.com/rmichie/heatsource-9/workflows/Build%20Linux/badge.svg?branch=master) ![Build Mac](https://github.com/rmichie/heatsource-9/workflows/Build%20Mac/badge.svg?branch=master)
-
+![Wheel Build](https://github.com/DEQrmichie/heatsource/actions/workflows/build_wheels.yml/badge.svg?branch=main)
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b26 (beta 26)
+Current Version: heatsource 9.0.0b27 (beta 27)
 
 ## ABOUT 
 Heat Source is a computer model used by the Oregon Department of 
@@ -20,24 +19,35 @@ http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
 
 Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
 
-Contact: Ryan Michie, michie.ryan@deq.state.or.us
+Contact: Ryan Michie, ryan.michie @ deq.oregon.gov
 
 [1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
 
 ## INSTALL
 
 Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
-Requires install of Python 3.6, 3.7, or 3.8.
-It is recommended you use Python 3.8. 
+Python wheels have been built to support Windows, Mac, and Linux.
+DEQ uses windows so other platforms have limited testing. Users of these platforms 
+have reported success. 
+Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
 
 https://www.python.org/downloads/
 
 Install the wheel from command line using pip:
 ```shell
+# These commands are for windows
 cd path\to\directory_where_you_saved_the_heatsource9_wheel\
-pip install <name of wheel file>
+py -m pip install <name of wheel file>
+
+# Installs the Python 3.12 heatsource wheel for windows in the local directory
+py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl --user
+
+# Installs the Python 3.12 heatsource wheel for windows in the global directory
+py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
+
+
  ```
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b26
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b27
 
 ## QUICK STEPS TO GET GOING
 
@@ -61,11 +71,11 @@ pip install <name of wheel file>
    make sure the datetimes are formatted correctly. Save the files as a csv. 
 
 6. Run the model by executing one of the following model python scripts/executables:
-   hs9_run_hydraulics,<br> 
-   hs9_run_solar,<br> 
-   hs9_run_temperature,
+   * hs9_run_hydraulics
+   * hs9_run_solar 
+   * hs9_run_temperature
    
-   Or you can use command line to run the model:
+   Or use command line to run the model:
    ```shell
    cd path\to\model_directory
    hs run -t
@@ -115,23 +125,24 @@ hs setup -mi
 Heat Source can be setup and run directly from command line.
 
 usage: hs <command> [options]
-
 commands:<br>
-    run                 Command to run a model with arguments -t | -s | -hy<br>
-    setup               Command to setup a model with arguments -cf | -mi<br>
+<div style="padding-left: 10px;">
+run Command to run a model with arguments -t | -s | -hy <br>
+setup Command to setup a model with arguments -cf | -mi <br>
+</div>
 
 run options:<br>
-  -h, --help         show this help message<br>
-  -t, --temperature  Runs a temperature model.<br>
-  -s, --solar        Runs solar routines only.<br>
-  -hy, --hydraulics  Runs hydraulics only.<br>
+&nbsp; -h, --help &nbsp;&nbsp; show this help message<br>
+&nbsp; -t, --temperature &nbsp;&nbsp; Runs a temperature model.<br>
+&nbsp; -s, --solar &nbsp;&nbsp; Runs solar routines only.<br>
+&nbsp; -hy, --hydraulics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Runs hydraulics only.<br>
   
 setup options:<br>
-  -h, --help           show this help message<br>
-  -cf, --control-file  Writes a blank control file.<br>
-  -mi, --model-inputs  Write blank input files. Control file must already be parameterized.<br>
-  -t, --timestamp      Use -t to add a timestamp to the file name.<br>
-  -o, --overwrite      Use -o to overwrite any existing file.
+&nbsp; -h, --help           show this help message<br>
+&nbsp; -cf, --control-file  Writes a blank control file.<br>
+&nbsp; -mi, --model-inputs  Write blank input files. Control file must already be parameterized.<br>
+&nbsp; -t, --timestamp      Use -t to add a timestamp to the file name.<br>
+&nbsp; -o, --overwrite      Use -o to overwrite any existing file.
   
 other options<br>
   -h, --help            show this help message<br>
@@ -161,7 +172,7 @@ cd path\to\model_directory
 hs setup -cf
 ```
 
-You can also parameterize the control file directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
+You can also parameterize the control file in python directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
 ```python
 from heatsource9 import BigRedButton
 from os.path import join
@@ -271,7 +282,7 @@ longer distances than discrete subsurface inflows (i.e. a spring).
 When accretion flows are close enough so that more than one occurs 
 in a model distance step, the accretion flow rates will be summed and a 
 flow based average accretion temperature will be derived and used 
-in the mixing calculations
+in the mixing calculations.
 
 |COLUMN NUMBER |COLUMN NAME |DESCRIPTION |UNITS |DATA TYPE |SOLAR RUNS |HYDRAULIC RUNS|TEMPERATURE RUNS |
 |-------------:|:-----------|:-----------|:-----|:---------|:---------:|:------------:|:---------------:|
@@ -333,7 +344,7 @@ UserDefinedFileName.csv
 The tributary input files define the inflow/outflow rates and temperatures
 at different points along the model stream. Inflows refers to localized 
 (non-accretion) type flows such as tributaries, springs, returns, point 
-sources, etc. Outflows can be various types of water withdrawals. They 
+sources, etc. Outflows can be various types of water withdrawals. Outflows 
 are input with a negative flow rate. Temperatures for outflows are not 
 used by the model.
 
@@ -365,14 +376,14 @@ UserDefinedFileName.csv
 The landcover codes file contains the physical attribute information 
 associated with each land cover code. Land cover codes can be alphanumeric 
 values. Zero should be avoided as a land cover code. The physical 
-attribute such as height, canopy closure, LAI, or overhang must be numeric.
+attribute such as height, canopy cover, LAI, or overhang must be numeric.
 There cannot be skipped rows 
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
 
 ### Canopy Type
 
-land cover canopy information can be input as either canopy closure or 
+land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
 #### Canopy Cover
@@ -398,7 +409,7 @@ Input file formatting when ```canopy_data = "LAI"``` in the control file.
 |4|`LAI`|Effective Leaf Area Index|dimensionless|float|Optional 2|Optional 2|Optional 2|
 |5|`k`|k extinction coefficient|dimensionless|float|Optional 2|Optional 2|Optional 2|
 
-The landcover codes file can be paramaterized from script.
+The landcover codes file can be parameterized from script.
 ```python
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
@@ -505,8 +516,6 @@ Refer to the user manual for more information about each parameter.
 
 ## LICENSE
 GNU General Public License v3 (GPLv3)
-
-Heat Source, Copyright (C) 2000-2021, Oregon Department of Environmental Quality
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
