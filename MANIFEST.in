@@ -1,1 +1,3 @@
 include LICENSE.txt README.md pyproject.toml
+graft src
+global-exclude *.py[cod]
