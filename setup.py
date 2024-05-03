@@ -6,7 +6,7 @@ from sys import version_info as vi
 
 installed_version = (vi[0], vi[1])
 
-if installed_version < (3, 8 ):
+if installed_version < (3, 8):
     raise Exception("The default Python version must be 3.8 or higher, not {0}.{1}".format(vi[0], vi[1]))
 
 USE_CYTHON = True
