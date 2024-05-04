@@ -3,7 +3,8 @@
 name: Wheels
 on:
   push:
-    branches: [main]
+    tags:
+      - - "*"
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
