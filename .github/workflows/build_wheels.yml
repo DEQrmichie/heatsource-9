@@ -4,7 +4,7 @@ name: Wheels
 on:
   push:
     tags:
-      - - "*"
+      - "*"
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
