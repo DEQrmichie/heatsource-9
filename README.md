@@ -25,18 +25,27 @@ Contact: Ryan Michie, ryan.michie @ deq.oregon.gov
 
 ## INSTALL
 
-Download the [heat source python wheel][3] appropriate to your OS platform and python version. 
-Python wheels have been built to support Windows, Mac, and Linux.
-DEQ uses windows so other platforms have limited testing. Users of these platforms 
-have reported success. 
-Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
+There are two options for installing and running Heat Source 9:
 
+1. Download the [windows executables][2]. Place the executables in the directory with your model files. Double-click 
+the executable to run the model. That's it. Python installation is not required. These executables were 
+developed on Windows 10. They have not been tested on other versions of Windows.
+
+2. Install the model as a Python pacakge. Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
 https://www.python.org/downloads/
 
-Install the wheel from command line using pip:
+After python has been installed, install the heat source package from command line using pip.
+```shell
+# This command installs heat source version 9.0.0b27 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b27"
+```
+Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
+your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
+DEQ uses windows so other platforms have limited testing. We've heard folks having success on both Mac and Linux.
+After downloading the wheel, install from command line using pip.
 ```shell
 # These commands are for windows
-cd path\to\directory_where_you_saved_the_heatsource9_wheel\
+cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heatsource wheel for windows in the local directory
@@ -44,9 +53,8 @@ py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl --user
 
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
 py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
-
-
  ```
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b27/Model.Executables.v9.0.0b27.win32.zip
 [3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b27
 
 ## QUICK STEPS TO GET GOING
@@ -135,7 +143,7 @@ run options:<br>
 &nbsp; -h, --help &nbsp;&nbsp; show this help message<br>
 &nbsp; -t, --temperature &nbsp;&nbsp; Runs a temperature model.<br>
 &nbsp; -s, --solar &nbsp;&nbsp; Runs solar routines only.<br>
-&nbsp; -hy, --hydraulics &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Runs hydraulics only.<br>
+&nbsp; -hy, --hydraulics &nbsp;&nbsp; Runs hydraulics only.<br>
   
 setup options:<br>
 &nbsp; -h, --help           show this help message<br>
@@ -172,7 +180,8 @@ cd path\to\model_directory
 hs setup -cf
 ```
 
-You can also parameterize the control file in python directly using `**kwargs`. Any control file key arguments passed will be parameterized into the control file.
+The control file can also parameterized in python directly using `**kwargs`. Any control file key arguments passed will 
+be written into the output csv.
 ```python
 from heatsource9 import BigRedButton
 from os.path import join
