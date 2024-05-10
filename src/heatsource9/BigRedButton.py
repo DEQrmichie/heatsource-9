@@ -368,7 +368,7 @@ def hs():
                               help='Write blank input files. Control file must already be parameterized.')
     setup_parser.add_argument('-csv', '--csv-mode', action='store_true',
                               help='Use -csv to write a csv (Unicode UTF-8) formatted control file. If this option is '
-                                   'not included an Excel file (.xlsx) is written.')
+                                   'not used an Excel file (.xlsx) is written.')
     setup_parser.add_argument('-t', '--timestamp', action='store_true',
                               help='Use -t to add a timestamp to the file name.')
     setup_parser.add_argument('-o', '--overwrite', action='store_true',
