@@ -5,7 +5,7 @@
     "distutils": {
         "name": "heatsource9.Stream.StreamNode",
         "sources": [
-            "src/heatsource9/Stream\\StreamNode.pyx"
+            "src/heatsource9/Stream/StreamNode.pyx"
         ]
     },
     "module_name": "heatsource9.Stream.StreamNode"
