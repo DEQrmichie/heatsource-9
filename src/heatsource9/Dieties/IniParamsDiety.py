@@ -4,7 +4,6 @@ about the model initialization parameters and model inputs.
 It is located here so be they can be accessed globally.
 """
 
-
 # IniParms mostly holds the control file info.
 # A couple initial values are suggested to make life easy.
 IniParams = {"run_in_python": True,
@@ -58,6 +57,14 @@ IniParams = {"run_in_python": True,
 # upon import. See Inputs class validate() and import_control_file() 
 # for details.
 
+sheetnames = {"accretionfile": "Accretion Flow",
+              "bcfile": "Boundary Conditions",
+              "controlfile": "Control Settings",
+              "inflowinfiles": "Tributaries",
+              "metfiles": "Meteorological Data",
+              "morphfile": "Morphology Data",
+              "lccodefile": "Land Cover Codes",
+              "lcdatafile": "Land Cover Data"}
 
 dtype = {"run_in_python": bool,
          "usertxt": str,
@@ -66,10 +73,10 @@ dtype = {"run_in_python": bool,
          "outputdir": str,
          "length": float,
          "outputkm": str,
-         "datastart": str,
-         "modelstart": str,
-         "modelend": str,
-         "dataend": str,
+         "datastart": "datetime",
+         "modelstart": "datetime",
+         "modelend": "datetime",
+         "dataend": "datetime",
          "flushdays": int,
          "offset": int,
          "dt": float,
@@ -138,7 +145,7 @@ dtype = {"run_in_python": bool,
          "INFLOW": float,
          "TEMPERATURE": float,
          "OUTFLOW": float,
-         "DATETIME": str,
+         "DATETIME": "datetime",
          "CLOUDINESS": float,
          "WIND_SPEED": float,
          "RELATIVE_HUMIDITY": float,
