@@ -26,7 +26,7 @@ optional arguments:
                        parameterized.
   -t, --timestamp      Use -t to add a timestamp to the file name.
   -o, --overwrite      Use -o to overwrite any existing file.
-  -csv, --csv-mode     Use -c to write a csv (Unicode UTF-8) formatted control instead of .xlsx. Default is .xlsx.
+  -csv, --csv-mode     Use -csv to write a csv (Unicode UTF-8) formatted control file instead of .xlsx. Default is .xlsx.
 
 """
 
