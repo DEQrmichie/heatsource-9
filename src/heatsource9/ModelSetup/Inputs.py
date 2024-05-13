@@ -783,7 +783,7 @@ class Inputs(object):
         wb = load_workbook(join(inputdir, filename.strip()), read_only=True, data_only=True)
 
         if sheetname not in wb.sheetnames:
-            raise ValueError("Worksheet must be named {0] in file {1}.".format(sheetname, filename))
+            raise ValueError("Worksheet must be named {0} in file {1}.".format(sheetname, filename))
 
         sheet = wb[sheetname]
 
@@ -1149,12 +1149,12 @@ class Inputs(object):
                 ws.append(colnames)
                 # format header cells
                 for cell in ws["1:1"]:
-                    cell.font = Font(name='MS Sans Serif', size=10, color='000080', bold=True)
+                    cell.font = Font(name='Arial', size=10, color='000080', bold=True)
                     cell.fill = PatternFill(start_color='D9D9D9', end_color='D9D9D9', fill_type="solid")
             for i, row in enumerate(outlist):
                 ws.append(row)
                 for cell in ws["{0}:{0}".format(i + 2)]:
-                    cell.font = Font(name='MS Sans Serif', size=9)
+                    cell.font = Font(name='Arial', size=9)
 
             wb.save(join(outputdir, filename))
 
