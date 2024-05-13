@@ -330,8 +330,8 @@ hourly timestep.
 
 
 ## METEOROLOGICAL INPUT FILE/S
-(formally called Continuous data in heat source 8)
 UserDefinedFileName.xlsx
+(formally called Continuous data in heat source 8)
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------------|:------------------|:-----------------------|:---------:|------------|:--------------:|:----------------:|
@@ -359,8 +359,8 @@ the input stream km.
 |       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   | Optional 1 |   Optional 2   |    Optional 2    |
 
 ## TRIBUTARY INPUT FILE/S  
-Can also be outflows. Use negative flows.  
 UserDefinedFileName.xlsx
+Can also be outflows. Use negative flows.
 
 The tributary input files define the inflow/outflow rates and temperatures
 at different points along the model stream. Inflows refers to localized 
