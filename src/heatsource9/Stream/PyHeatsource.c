@@ -5,7 +5,7 @@
     "distutils": {
         "name": "heatsource9.Stream.PyHeatsource",
         "sources": [
-            "src/heatsource9/Stream\\PyHeatsource.pyx"
+            "src/heatsource9/Stream/PyHeatsource.pyx"
         ]
     },
     "module_name": "heatsource9.Stream.PyHeatsource"

@@ -1,5 +1,5 @@
 #from __future__ import absolute_import
-
+from ast import literal_eval
 from builtins import next
 from builtins import zip
 from builtins import str
@@ -11,6 +11,7 @@ from os import makedirs
 from os.path import exists
 from os.path import isfile
 from os.path import join
+from os.path import splitext
 from math import ceil
 from time import gmtime
 from time import strptime
@@ -19,11 +20,18 @@ from string import digits
 from collections import defaultdict
 from calendar import timegm
 from datetime import datetime
+from datetime import timezone
 from operator import itemgetter
+from openpyxl import load_workbook
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from openpyxl.styles import PatternFill
+from openpyxl.utils import datetime as pyxl_datetime
 
 from ..Dieties.IniParamsDiety import IniParams
 from ..Dieties.IniParamsDiety import iniRange
 from ..Dieties.IniParamsDiety import dtype
+from ..Dieties.IniParamsDiety import sheetnames
 from ..Utils.Printer import Printer as print_console
 
 import logging
@@ -47,8 +55,7 @@ class Inputs(object):
         model_dir: path to the directory where the
         control file is located.
 
-        control_file: the control file name. It must be a comma
-        delimtted text file.
+        control_file: the control file name. It must be a UTF-8 CSV file, or an Excel .xlsx file.
 
         """
 
@@ -56,11 +63,19 @@ class Inputs(object):
         self.model_dir = model_dir
         self.control_file = control_file
 
-        # For when reading and writing from excel is availiable
-        self.read_to_list = self.read_csv_to_list
-        self.read_to_dict = self.read_csv_to_dict
-        self.write_to_output = self.write_to_csv
-        self.setup = self.setup_csv
+        if splitext(control_file)[1] == ".csv":
+            # csv mode
+            self.read_to_list = self.read_csv_to_list
+            self.read_to_dict = self.read_csv_to_dict
+            self.write_to_output = self.write_to_csv
+            self.datetime_format = self.datetime_string
+        else:
+            self.read_to_list = self.read_xlsx_to_list
+            self.read_to_dict = self.read_xlsx_to_dict
+            self.write_to_output = self.write_to_xlsx
+            self.datetime_format = self.datetime_xlsx
+
+        self.setup = self.setup_files
 
     def headers(self, input_file="all"):
         """Returns the input file column headers"""
@@ -245,13 +260,15 @@ class Inputs(object):
         """Returns the accretion input data"""
         return self.read_to_dict(IniParams["inputdir"],
                                  IniParams["accretionfile"],
-                                 self.headers_accretion())
+                                 colnames=self.headers_accretion(),
+                                 sheetname=sheetnames["accretionfile"])
 
     def import_bc(self, return_list=True, skiprows=1, skipcols=1):
         """Returns the boundary condition data"""
         data = self.read_to_dict(IniParams["inputdir"],
                                  IniParams["bcfile"],
-                                 self.headers_bc())
+                                 colnames=self.headers_bc(),
+                                 sheetname=sheetnames["bcfile"])
 
         if return_list:
             return self.dict2list(data, self.headers_bc(),
@@ -269,7 +286,8 @@ class Inputs(object):
         for i, filename in enumerate(filenames):
             d1 = self.read_to_dict(IniParams["inputdir"],
                                    filename,
-                                   self.headers_met())
+                                   colnames=self.headers_met(),
+                                   sheetname=sheetnames["metfiles"])
 
             d2 = self.dict2list(d1, self.headers_met(),
                                 skiprows, skipcols)
@@ -297,7 +315,8 @@ class Inputs(object):
         cf_dict = self.control_file_dict()
         cf_list = self.read_to_list(self.model_dir,
                                     self.control_file,
-                                    skiprows=1, skipcols=0)
+                                    skiprows=1, skipcols=0,
+                                    sheetname=sheetnames["controlfile"])
 
         # set up a list to check if a missing value in
         # the control file is ok
@@ -361,27 +380,30 @@ class Inputs(object):
                         IniParams[k] = int(float(str.strip(line[3])))
 
                     elif dtype[k] is bool:
-                        if str.strip(line[3]).upper() in ["TRUE", "FALSE"]:
-                            IniParams[k] = str.strip(line[3]).upper() == "TRUE"
+                        if str.strip(line[3]).title() in ["True", "False"]:
+                            IniParams[k] = literal_eval(str.strip(line[3]).title())
                         else:
                             raise TypeError("Control file line {0} must be True or False".format(line[0]))
 
                     elif dtype[k] is float:
                         IniParams[k] = float(str.strip(line[3]))
 
+                    elif dtype[k] == "datetime":
+                        IniParams[k] = str.strip(line[3])
+
         # Make dates into seconds since UTC epoch
-        IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00", "%m/%d/%Y %H:%M:%S"))
-        IniParams["dataend"] = timegm(strptime(IniParams["dataend"], "%m/%d/%Y")) + 86400
+        IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
+        IniParams["dataend"] = timegm(strptime(IniParams["dataend"], "%Y-%m-%d")) + 86400
 
         if IniParams["modelstart"] is None:
             IniParams["modelstart"] = IniParams["datastart"]
         else:
-            IniParams["modelstart"] = timegm(strptime(IniParams["modelstart"] + " 00:00:00", "%m/%d/%Y %H:%M:%S"))
+            IniParams["modelstart"] = timegm(strptime(IniParams["modelstart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
 
         if IniParams["modelend"] is None:
             IniParams["modelend"] = IniParams["dataend"]
         else:
-            IniParams["modelend"] = timegm(strptime(IniParams["modelend"], "%m/%d/%Y")) + 86400
+            IniParams["modelend"] = timegm(strptime(IniParams["modelend"], "%Y-%m-%d")) + 86400
 
         IniParams["flushtimestart"] = IniParams["modelstart"] - IniParams["flushdays"] * 86400
 
@@ -421,7 +443,7 @@ class Inputs(object):
         if (platform.system() == "Darwin" and IniParams["outputdir"][-1] != "/"):
             raise ValueError("Output directory needs to have a forward slash at the end of the path. ../outputfolder/")
 
-            # the distance step must be an exact, greater or equal to one,
+        # the distance step must be an exact, greater or equal to one,
         # multiple of the sample rate.
         if (IniParams["dx"] % IniParams["longsample"]
                 or IniParams["dx"] < IniParams["longsample"]):
@@ -440,10 +462,10 @@ class Inputs(object):
                    "outputdir": [5, "Output Directory Path", "outputdir", None],
                    "length": [6, "Stream Length (kilometers)", "length", None],
                    "outputkm": [7, "Output Stream Kilometers", "outputkm", None],
-                   "datastart": [8, "Data Start Date (mm/dd/yyyy)", "datastart", None],
-                   "modelstart": [9, "Modeling Start Date (mm/dd/yyyy)", "modelstart", None],
-                   "modelend": [10, "Modeling End Date (mm/dd/yyyy)", "modelend", None],
-                   "dataend": [11, "Data End Date (mm/dd/yyyy)", "dataend", None],
+                   "datastart": [8, "Data Start Date (yyyy-mm-dd)", "datastart", None],
+                   "modelstart": [9, "Modeling Start Date (yyyy-mm-dd)", "modelstart", None],
+                   "modelend": [10, "Modeling End Date (yyyy-mm-dd)", "modelend", None],
+                   "dataend": [11, "Data End Date (yyyy-mm-dd)", "dataend", None],
                    "flushdays": [12, "Flush Initial Condition (days)", "flushdays", None],
                    "offset": [13, "Time Offset From UTC (hours)", "offset", None],
                    "dt": [14, "Model Time Step (minutes)", "dt", None],
@@ -483,13 +505,15 @@ class Inputs(object):
         """Returns the land cover codes data."""
         return self.read_to_dict(IniParams["inputdir"],
                                  IniParams["lccodefile"],
-                                 self.headers_lccodes())
+                                 colnames=self.headers_lccodes(),
+                                 sheetname=sheetnames["lccodefile"])
 
     def import_lcdata(self, return_list=True, skiprows=1, skipcols=2):
         """Returns the land cover data."""
         data = self.read_to_dict(IniParams["inputdir"],
                                  IniParams["lcdatafile"],
-                                 self.headers_lcdata())
+                                 colnames=self.headers_lcdata(),
+                                 sheetname=sheetnames["lcdatafile"])
 
         if return_list:
             return self.dict2list(data, self.headers_lcdata(),
@@ -520,7 +544,8 @@ class Inputs(object):
             for i, filename in enumerate(filenames):
                 d1 = self.read_to_dict(IniParams["inputdir"],
                                        filename,
-                                       self.headers_inflow())
+                                       colnames=self.headers_inflow(),
+                                       sheetname=sheetnames["inflowinfiles"])
 
                 d2 = self.dict2list(d1, self.headers_inflow(),
                                     skiprows, skipcols)
@@ -539,7 +564,8 @@ class Inputs(object):
         """Returns the channel morphology data"""
         return self.read_to_dict(IniParams["inputdir"],
                                  IniParams["morphfile"],
-                                 self.headers_morph())
+                                 colnames=self.headers_morph(),
+                                 sheetname=sheetnames["morphfile"])
 
     def lookup_lccode(self, code, lookup_list):
         """
@@ -595,7 +621,7 @@ class Inputs(object):
 
         # check to see if the file exists 
         if not overwrite and isfile(join(self.model_dir, cf_name)):
-            msg = "HeatSource_Control.csv already exists. It will not be overwritten"
+            msg = "{0} already exists. It will not be overwritten".format(cf_name)
             logger.warning(msg)
             print_console(msg)
             return
@@ -613,15 +639,16 @@ class Inputs(object):
         cf_list = [line[1] for line in cf_sorted]        
 
         self.write_to_output(self.model_dir, cf_name,
-                             cf_list, self.headers_cf())
+                             cf_list, colnames=self.headers_cf(),
+                             sheetname=sheetnames["controlfile"])
 
     def timestamp(self, name=""):
         """Returns the name with timestamp prefixed. Name must be a string.
 
-        E.g. 20200314_031415_name
+        E.g. 2020-03-14_031415_name
         """
         now = datetime.now()
-        timestamp = now.strftime("%Y%m%d_%H%M%S")
+        timestamp = now.strftime("%Y-%m-%d_%H%M%S")
         new_name = timestamp + "_" + name
 
         return new_name
@@ -715,9 +742,10 @@ class Inputs(object):
 
         self.write_to_output(IniParams["inputdir"],
                              IniParams["lccodefile"],
-                             lccodes, self.headers_lccodes())
+                             lccodes, colnames=self.headers_lccodes(),
+                             sheetname=sheetnames["lccodefile"])
 
-    def read_csv_to_dict(self, inputdir, filename, colnames):
+    def read_csv_to_dict(self, inputdir, filename, colnames, **kwargs):
         """
         Reads a comma delimited text file and returns the data
         as a dictionary with the column header as the key.
@@ -726,7 +754,7 @@ class Inputs(object):
         # each value in each column is appended to a list
         data = defaultdict(list)
 
-        with open(join(inputdir, filename.strip()), "r") as file_object:
+        with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8") as file_object:
             reader = csv.DictReader(file_object, dialect="excel")
 
             # set the colnames as the dictionary key 
@@ -748,7 +776,43 @@ class Inputs(object):
 
         return self.validate(data)
 
-    def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols):
+    def read_xlsx_to_dict(self, inputdir, filename, colnames, sheetname):
+        """
+        Reads an excel file and returns the data
+        as a dictionary with the column header as the key.
+        """
+        # each value in each column is appended to a list
+        data = defaultdict(list)
+
+        wb = load_workbook(join(inputdir, filename.strip()), read_only=True, data_only=True)
+
+        if sheetname not in wb.sheetnames:
+            raise ValueError("Worksheet must be named {0} in file {1}.".format(sheetname, filename))
+
+        sheet = wb[sheetname]
+
+        for r, row in enumerate(sheet.iter_rows(values_only=True)):
+            if r == 0:
+                # set the colnames as the dictionary key
+                data = defaultdict(list, {k: [] for k in colnames})
+                continue
+            for c, cell in enumerate(row[0:len(colnames)]):
+                if type(cell) is datetime:
+                    # Make it a string
+                    v = cell.strftime("%Y-%m-%d %H:%M")
+                else:
+                    v = str(cell)
+                    if v.strip() in ['', 'None']:
+                        # if the value is empty '' replace it with a None
+                        v = None
+
+                # append the value into the appropriate
+                # list based on column name k
+                data[colnames[c]].append(v)
+        wb.close()
+        return self.validate(data)
+
+    def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols, **kwargs):
         """Reads a comma delimited text file into a
         list of lists indexed by row number. If there is more than
         one file it appends the data to the row.
@@ -763,7 +827,7 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         i = 1
         for filename in filenames:
-            with open(join(inputdir, filename.strip()), "r") as file_object:
+            with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8") as file_object:
                 newfile = [row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
 
             # skip rows    
@@ -777,9 +841,58 @@ class Inputs(object):
             i = i + 1
         return data
 
-    def setup_csv(self, use_timestamp=True, overwrite=True):
+    def read_xlsx_to_list(self, inputdir, filenames, skiprows, skipcols, sheetname):
+        """Reads an excel worksheet into a
+        list of lists indexed by row number. If there is more than
+        one file it appends the data to the row.
+
+        adds another index for the number of filenames.
+        The return data takes this form:
+        data[row][filenameindex][filecolumn]"""
+
+        # split by comma if multiple files
+        filenames = filenames.split(",")
+
+        filenames = [filenames] if not isinstance(filenames, list) else filenames
+        i = 1
+        for filename in filenames:
+            wb = load_workbook(join(inputdir, filename.strip()), read_only=True, data_only=True)
+
+            if sheetname not in wb.sheetnames:
+                raise ValueError("Worksheet must be named {0] in file {1}.".format(sheetname, filename))
+
+            sheet = wb[sheetname]
+
+            newfile = []
+
+            for row in sheet.iter_rows(values_only=True):
+                newrow = []
+                for cell in row[0:4]:
+                    if type(cell) is datetime:
+                        # Make it a string
+                        v = cell.strftime("%Y-%m-%d")
+                    else:
+                        v = str(cell)
+                    newrow.append(v)
+                newfile.append(newrow)
+
+            # skip rows
+            newfile = newfile[-(len(newfile) - skiprows):]
+            # skip cols
+            newfile = [line[+skipcols:] for line in newfile]
+            if i == 1:
+                data = newfile
+            else:
+                data = [data[row] + newfile[row] for row in range(0, len(newfile))]
+            i = i + 1
+
+        wb.close()
+
+        return data
+
+    def setup_files(self, use_timestamp=True, overwrite=True):
         """
-        Writes blank input csv files based on settings in the control file
+        Formats blank input csv or xlsx files based on settings in the control file
         """
 
         msg = "Starting input file setup"
@@ -788,6 +901,7 @@ class Inputs(object):
 
         # check if the input/output directories exist and 
         # create them if not
+
         if not exists(IniParams["inputdir"]):
             makedirs(IniParams["inputdir"])
 
@@ -795,7 +909,7 @@ class Inputs(object):
             makedirs(IniParams["outputdir"])
 
         timestamp = self.timestamp()
-        timelist = self.datetime_string()
+        timelist = self.datetime_format()
         kmlist = self.stream_kms()
 
         # For inflow and met data there can be a single input 
@@ -812,7 +926,7 @@ class Inputs(object):
                       (len(self.headers_lcdata()) - 3) for km in kmlist]
         morphlist = [[None, None, km] + [None] * 10 for km in kmlist]
 
-        # This writes to csv using the file name from the control 
+        # This writes to csv or xlsx using the file name from the control
         # file and adds a timestamp
 
         if use_timestamp:
@@ -831,54 +945,64 @@ class Inputs(object):
                 lccodes_file = IniParams["lccodefile"]
             morph_file = IniParams["morphfile"]
 
-        msg = "Writing empty csv files"
+        msg = "Writing empty input files"
         logging.info(msg)
         print_console(msg)
 
         if overwrite:
             # overwrite the inputs regardless if they exist or not
-            self.write_to_csv(IniParams["inputdir"], acc_file,
-                              acclist, self.headers_accretion())
+            self.write_to_output(IniParams["inputdir"], acc_file,
+                                 acclist, colnames=self.headers_accretion(),
+                                 sheetname=sheetnames["accretionfile"])
 
-            self.write_to_csv(IniParams["inputdir"], bc_file,
-                              bclist, self.headers_bc())
-
-            self.write_to_csv(IniParams["inputdir"], lcdata_file,
-                              lcdatalist, self.headers_lcdata())
+            self.write_to_output(IniParams["inputdir"], bc_file,
+                                 bclist, colnames=self.headers_bc(),
+                                 sheetname=sheetnames["bcfile"])
 
             if IniParams["lcdatainput"] == "Codes":
-                self.write_to_csv(IniParams["inputdir"], lccodes_file,
-                                  [[None]], self.headers_lccodes())
+                self.write_to_output(IniParams["inputdir"], lccodes_file,
+                                     [[None]], colnames=self.headers_lccodes(),
+                                     sheetname=sheetnames["lccodefile"])
             else:
-                print_console("...Landcover input type = Values. land cover codes file not written")
+                print_console("...Land cover input type = Values. land cover codes file not written")
 
-            self.write_to_csv(IniParams["inputdir"], morph_file,
-                              morphlist, self.headers_morph())
+            self.write_to_output(IniParams["inputdir"], lcdata_file,
+                                 lcdatalist, colnames=self.headers_lcdata(),
+                                 sheetname=sheetnames["lcdatafile"])
+
+            self.write_to_output(IniParams["inputdir"], morph_file,
+                                 morphlist, colnames=self.headers_morph(),
+                                 sheetname=sheetnames["morphfile"])
 
         else:
             # check to see if the files exists and write if not
             if not isfile(join(IniParams["inputdir"], acc_file)):
-                self.write_to_csv(IniParams["inputdir"], acc_file,
-                                  acclist, self.headers_accretion())
+                self.write_to_output(IniParams["inputdir"], acc_file,
+                                     acclist, colnames=self.headers_accretion(),
+                                     sheetname=sheetnames["accretionfile"])
 
             if not isfile(join(IniParams["inputdir"], bc_file)):
-                self.write_to_csv(IniParams["inputdir"], bc_file,
-                                  bclist, self.headers_bc())
-
-            if not isfile(join(IniParams["inputdir"], lcdata_file)):
-                self.write_to_csv(IniParams["inputdir"], lcdata_file,
-                                  lcdatalist, self.headers_lcdata())
+                self.write_to_output(IniParams["inputdir"], bc_file,
+                                     bclist, colnames=self.headers_bc(),
+                                     sheetname=sheetnames["bcfile"])
 
             if IniParams["lcdatainput"] == "Codes":
                 if not isfile(join(IniParams["inputdir"], lccodes_file)):
-                    self.write_to_csv(IniParams["inputdir"], lccodes_file,
-                                      [[None]], self.headers_lccodes())
+                    self.write_to_output(IniParams["inputdir"], lccodes_file,
+                                         [[None]], colnames=self.headers_lccodes(),
+                                         sheetname=sheetnames["lccodefile"])
             else:
                 print_console("...Landcover input type = Values. land cover codes file not written")
 
+            if not isfile(join(IniParams["inputdir"], lcdata_file)):
+                self.write_to_output(IniParams["inputdir"], lcdata_file,
+                                     lcdatalist, colnames=self.headers_lcdata(),
+                                     sheetname=sheetnames["lcdatafile"])
+
             if not isfile(join(IniParams["inputdir"], morph_file)):
-                self.write_to_csv(IniParams["inputdir"], morph_file,
-                                  morphlist, self.headers_morph())
+                self.write_to_output(IniParams["inputdir"], morph_file,
+                                     morphlist, colnames=self.headers_morph(),
+                                     sheetname=sheetnames["morphfile"])
 
         for file in metfiles:
             metlist = [[t] + [None] * 4 * int((IniParams["metsites"] // len(metfiles))) for t in timelist]
@@ -889,14 +1013,16 @@ class Inputs(object):
                 met_filename = file.strip()
 
             if overwrite:
-                self.write_to_csv(IniParams["inputdir"],
-                                  met_filename,
-                                  metlist, self.headers_met())
+                self.write_to_output(IniParams["inputdir"],
+                                     met_filename,
+                                     metlist, colnames=self.headers_met(),
+                                     sheetname=sheetnames["metfiles"])
             else:
                 if not isfile(join(IniParams["inputdir"], met_filename)):
-                    self.write_to_csv(IniParams["inputdir"],
-                                      met_filename,
-                                      metlist, self.headers_met())
+                    self.write_to_output(IniParams["inputdir"],
+                                          met_filename,
+                                          metlist, colnames=self.headers_met(),
+                                          sheetname=sheetnames["metfiles"])
 
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
@@ -908,27 +1034,42 @@ class Inputs(object):
                     trib_filename = file.strip()
 
                 if overwrite:
-                    self.write_to_csv(IniParams["inputdir"], trib_filename,
-                                      inflowlist, self.headers_inflow())
+                    self.write_to_output(IniParams["inputdir"], trib_filename,
+                                         inflowlist, colnames=self.headers_inflow(),
+                                         sheetname=sheetnames["inflowinfiles"])
                 else:
                     if not isfile(join(IniParams["inputdir"], trib_filename)):
-                        self.write_to_csv(IniParams["inputdir"], trib_filename,
-                                          inflowlist, self.headers_inflow())
+                        self.write_to_output(IniParams["inputdir"], trib_filename,
+                                             inflowlist, colnames=self.headers_inflow(),
+                                             sheetname=sheetnames["inflowinfiles"])
         else:
             print_console("Inflow Sites = 0, inflow file not written")
 
         print_console("Finished input file setup")
 
+    def datetime_xlsx(self):
+        """
+        Return a date time list in excel serial format
+        corresponding to the data start and end dates available
+        in the control file
+        """
+        # hourly timestep
+        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600))
+        for i, val in enumerate(timelist):
+            timelist[i] = pyxl_datetime.to_excel(dt=datetime.fromtimestamp(val, timezone.utc),
+                                                 epoch=datetime(1899, 12, 30, 0, 0, tzinfo=timezone.utc))
+        return timelist
+
     def datetime_string(self):
         """
-        Return a date time list in string format (MM/DD/YYYY HH:MM)
+        Return a date time list in string iso 8601 format (YYYY-MM-DD HH:MM)
         corresponding to the data start and end dates available
         in the control file
         """
         # hourly timestep
         timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)) 
         for i, val in enumerate(timelist):
-            timelist[i] = strftime("%m/%d/%Y %H:%M", gmtime(val))
+            timelist[i] = strftime("%Y-%m-%d %H:%M", gmtime(val))
         return timelist
 
     def stream_kms(self):
@@ -981,6 +1122,9 @@ class Inputs(object):
             elif dtype[k] is str:
                 data_v[key] = [str(i) if i is not None else None for i in v]
 
+            elif dtype[k] == "datetime":
+                data_v[key] = [str(i) if i is not None else None for i in v]
+
             # --
                 
             if (dtype[k] is not str and dtype[k] in list(iniRange.keys())):
@@ -991,19 +1135,56 @@ class Inputs(object):
 
         return data_v
 
-    def write_to_csv(self, outputdir, filenames, outlist, colnames=None):
+    def write_to_csv(self, outputdir, filenames, outlist, colnames=None, **kwargs):
         """Write the outlist to a comma delimited text file
         colnames are optional.
         """
 
         # split by comma if multiple files
         filenames = filenames.split(",")
-
         filenames = [filenames] if not isinstance(filenames, list) else filenames
 
         for filename in filenames:
-            with open(join(outputdir, filename), "w", newline='') as file_object:
+            with open(file=join(outputdir, filename), mode="w", newline='', encoding="utf-8") as file_object:
                 writer = csv.writer(file_object, dialect="excel")
                 if colnames:
                     writer.writerow(colnames)
                 writer.writerows(outlist)
+
+    def write_to_xlsx(self, outputdir, filenames, outlist, colnames=None, sheetname=None):
+        """Write the outlist to excel. Colnames are optional."""
+
+        # split by comma if multiple files
+        filenames = filenames.split(",")
+        filenames = [filenames] if not isinstance(filenames, list) else filenames
+
+        for filename in filenames:
+
+            if exists(join(outputdir, filename)):
+                wb = load_workbook(join(outputdir, filename))
+                wb.create_sheet(title=sheetname)
+                ws = wb[sheetname]
+
+            else:
+                wb = Workbook()
+                ws = wb.active
+                ws.title = sheetname
+
+            if colnames:
+                ws.append(colnames)
+                # format header cells
+                for cell in ws["1:1"]:
+                    cell.font = Font(name='Arial', size=10, color='000080', bold=True)
+                    cell.fill = PatternFill(start_color='D9D9D9', end_color='D9D9D9', fill_type="solid")
+            for i, row in enumerate(outlist):
+                ws.append(row)
+                for cell in ws["{0}:{0}".format(i + 2)]:
+                    cell.font = Font(name='Arial', size=9)
+
+            if sheetname in ["Boundary Conditions", "Tributary Data", "Meteorological Data"]:
+                for cell in ws["A"]:
+                    cell.number_format = "yyyy-mm-dd hh:mm"
+
+            wb.save(join(outputdir, filename))
+            wb.close()
+

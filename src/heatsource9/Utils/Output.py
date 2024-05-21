@@ -153,7 +153,8 @@ class Output(object):
 
             # Now create a file object in the dictionary, and write 
             # the header
-            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "w", newline=""))
+            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "w",
+                                              newline="", encoding="utf-8"))
             self.files[key].writerows(header)
 
     def __call__(self, time, hour, minute=0, second=0):

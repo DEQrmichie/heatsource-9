@@ -35,6 +35,7 @@ import logging
 from itertools import count
 import traceback
 import os
+from glob import glob
 import argparse
 from time import time as Time
 
@@ -80,9 +81,9 @@ class ModelControl(object):
         IniParams["run_type"] = run_type
 
         msg = ("\n")
-
-        msg += ("Heat Source, Copyright (C) 2000-2019, "
-                "Oregon Department of Environmental Quality\n\n"
+        msg += "Heat Source Version:  {0}\n".format(IniParams["version"])
+        msg += ("\n\n")
+        msg += ("Oregon Department of Environmental Quality\n\n"
                 "This program comes with ABSOLUTELY NO WARRANTY. "
                 "Appropriate model \n"
                 "use and application are the sole responsibility "
@@ -90,7 +91,6 @@ class ModelControl(object):
                 "This is free software, and you are welcome to "
                 "redistribute it under \n"
                 "certain conditions described in the License.\n\n")
-        msg += "Heat Source Version:  {0}\n".format(IniParams["version"])
 
         print_console(msg)
         logger.info(msg)
@@ -366,18 +366,33 @@ def hs():
     setup_parser.add_argument('-cf', '--control-file', action='store_true', help='Writes a blank control file.')
     setup_parser.add_argument('-mi', '--model-inputs', action='store_true',
                               help='Write blank input files. Control file must already be parameterized.')
+    setup_parser.add_argument('-csv', '--csv-mode', action='store_true',
+                              help='Use -csv to write a csv (Unicode UTF-8) formatted control file. If this option is '
+                                   'not used an Excel file (.xlsx) is written.')
     setup_parser.add_argument('-t', '--timestamp', action='store_true',
                               help='Use -t to add a timestamp to the file name.')
     setup_parser.add_argument('-o', '--overwrite', action='store_true',
                               help='Use -o to overwrite any existing file.')
 
     arg = parser.parse_args()
-    control_file = 'HeatSource_Control.csv'
 
     if arg.command == 'run':
 
-        if not os.path.exists(os.path.join(arg.model_dir, control_file)):
-            raise Exception("HeatSource_Control.csv not found in {0}.".format(arg.model_dir))
+        full_path = glob(os.path.join(arg.model_dir, "HeatSource_Control.*"))
+
+        # checks to make sure HeatSource_Control.xlsx or HeatSource_Control.csv exists
+        if len(full_path) == 0:
+            raise Exception("HeatSource_Control file not found in {0}.".format(arg.model_dir))
+
+        if len(full_path) > 1:
+            raise Exception("There is more than one file named 'HeatSource_Control.' \
+        in this directory: {0}. Only one file can exist.".format(arg.model_dir))
+
+        control_file = os.path.split(full_path[0])[1]
+        control_ext = os.path.splitext(control_file)[1]
+
+        if control_ext not in [".xlsx", ".csv"]:
+            raise Exception("{0} must be an Excel '.xlsx' or '.csv' file.".format(control_file))
             
         if arg.temperature:
             run(arg.model_dir, control_file)
@@ -389,6 +404,12 @@ def hs():
             run_hydraulics(arg.model_dir, control_file)
 
     if arg.command == 'setup':
+
+        if arg.csv_mode:
+            control_file = 'HeatSource_Control.csv'
+        else:
+            control_file = 'HeatSource_Control.xlsx'
+
         if arg.control_file:
             # Write a blank control file
             setup_cf(arg.model_dir, control_file, use_timestamp=arg.timestamp, overwrite=arg.overwrite)
@@ -396,5 +417,5 @@ def hs():
         if arg.model_inputs:
             # Write blank input files,
             setup_mi(arg.model_dir, control_file,
-                     use_timestamp = arg.timestamp, overwrite=arg.overwrite)
+                     use_timestamp=arg.timestamp, overwrite=arg.overwrite)
 

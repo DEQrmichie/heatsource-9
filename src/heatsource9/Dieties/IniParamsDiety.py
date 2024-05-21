@@ -4,7 +4,6 @@ about the model initialization parameters and model inputs.
 It is located here so be they can be accessed globally.
 """
 
-
 # IniParms mostly holds the control file info.
 # A couple initial values are suggested to make life easy.
 IniParams = {"run_in_python": True,
@@ -50,6 +49,17 @@ IniParams = {"run_in_python": True,
              "lcsampmethod": "point",
              "heatsource8": "False", }
 
+# name of excel sheets
+
+sheetnames = {"accretionfile": "Accretion Flow",
+              "bcfile": "Boundary Conditions",
+              "controlfile": "Control Settings",
+              "inflowinfiles": "Tributary Data",
+              "metfiles": "Meteorological Data",
+              "morphfile": "Morphology Data",
+              "lccodefile": "Land Cover Codes",
+              "lcdatafile": "Land Cover Data"}
+
 # dype is a dictionary holding the data type for every input. Includes 
 # model variable names and input file names. Note the datetime inputs
 # are identified as strings here but are converted to integers
@@ -58,7 +68,6 @@ IniParams = {"run_in_python": True,
 # upon import. See Inputs class validate() and import_control_file() 
 # for details.
 
-
 dtype = {"run_in_python": bool,
          "usertxt": str,
          "name": str,
@@ -66,10 +75,10 @@ dtype = {"run_in_python": bool,
          "outputdir": str,
          "length": float,
          "outputkm": str,
-         "datastart": str,
-         "modelstart": str,
-         "modelend": str,
-         "dataend": str,
+         "datastart": "datetime",
+         "modelstart": "datetime",
+         "modelend": "datetime",
+         "dataend": "datetime",
          "flushdays": int,
          "offset": int,
          "dt": float,
@@ -138,7 +147,7 @@ dtype = {"run_in_python": bool,
          "INFLOW": float,
          "TEMPERATURE": float,
          "OUTFLOW": float,
-         "DATETIME": str,
+         "DATETIME": "datetime",
          "CLOUDINESS": float,
          "WIND_SPEED": float,
          "RELATIVE_HUMIDITY": float,
