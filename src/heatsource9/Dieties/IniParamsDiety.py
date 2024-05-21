@@ -49,13 +49,7 @@ IniParams = {"run_in_python": True,
              "lcsampmethod": "point",
              "heatsource8": "False", }
 
-# dype is a dictionary holding the data type for every input. Includes 
-# model variable names and input file names. Note the datetime inputs
-# are identified as strings here but are converted to integers
-# after import. And not to be confusing but the variables identified as 
-# bool type here are str in the input files and converted to bool
-# upon import. See Inputs class validate() and import_control_file() 
-# for details.
+# name of excel sheets
 
 sheetnames = {"accretionfile": "Accretion Flow",
               "bcfile": "Boundary Conditions",
@@ -65,6 +59,14 @@ sheetnames = {"accretionfile": "Accretion Flow",
               "morphfile": "Morphology Data",
               "lccodefile": "Land Cover Codes",
               "lcdatafile": "Land Cover Data"}
+
+# dype is a dictionary holding the data type for every input. Includes 
+# model variable names and input file names. Note the datetime inputs
+# are identified as strings here but are converted to integers
+# after import. And not to be confusing but the variables identified as 
+# bool type here are str in the input files and converted to bool
+# upon import. See Inputs class validate() and import_control_file() 
+# for details.
 
 dtype = {"run_in_python": bool,
          "usertxt": str,
