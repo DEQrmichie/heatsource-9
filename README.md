@@ -102,7 +102,7 @@ py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
 5. The column header names can be changed but the data needs to be in 
  the correct column number (see below).
 6. Use the specified unit and data formats identified in the control file 
- and input files. Example mm/dd/yyyy hh:mm is 07/01/2001 16:00
+ and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
 7. An input parameter value that is not applicable may be left blank although all values with float
 	data type will be assigned as zero.
 
@@ -209,10 +209,10 @@ BigRedButton.setup_cf(model_dir, control_file, use_timestamp=True, overwrite=Fal
                       outputdir=join(model_dir, "outputs", ""),
                       length=1.8,
                       outputkm="all",
-                      datastart="05/06/2003",
-                      modelstart="07/01/2003",
-                      modelend="07/14/2003",
-                      dataend="09/21/2003",
+                      datastart="2003-05-06",
+                      modelstart="2003-07-01",
+                      modelend="2003-07-14",
+                      dataend="2003-09-21",
                       flushdays=1,
                       offset=-7,
                       dt=1,
@@ -255,10 +255,10 @@ Below are all the input parameters that must be included in the control file.
 |    5 | Output Directory Path                             | outputdir            |       |
 |    6 | Stream Length (kilometers)                        | length               |       |
 |    7 | Output Stream Kilometers                          | outputkm             |       |
-|    8 | Data Start Date (mm/dd/yyyy)                      | datastart            |       |
-|    9 | Modeling Start Date (mm/dd/yyyy)                  | modelstart           |       |
-|   10 | Modeling End Date (mm/dd/yyyy)                    | modelend             |       |
-|   11 | Data End Date (mm/dd/yyyy)                        | dataend              |       |
+|    8 | Data Start Date (yyyy-mm-dd)                      | datastart            |       |
+|    9 | Modeling Start Date (yyyy-mm-dd)                  | modelstart           |       |
+|   10 | Modeling End Date (yyyy-mm-dd)                    | modelend             |       |
+|   11 | Data End Date (yyyy-mm-dd)                        | dataend              |       |
 |   12 | Flush Initial Condition (days)                    | flushdays            |       |
 |   13 | Time Offset From UTC (hours)                      | offset               |       |
 |   14 | Model Time Step (minutes)                         | dt                   |       |
@@ -324,7 +324,7 @@ hourly timestep.
 
 | COLUMN NUMBER | COLUMN NAME   | DESCRIPTION                    | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:--------------|:-------------------------------|:--------------------|:----------|------------|:--------------:|:----------------:|
-|       1       | `DATETIME`    | The date/time                  | mm/dd/yyyy hh:mm    | string    | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`    | The date/time                  | yyyy-mm-dd hh:mm    | string    | Optional 1 |    Required    |     Required     |
 |       2       | `FLOW`        | Boundary condition flow        | cubic meters/second | float     | Optional 1 |    Required    |     Required     |
 |       3       | `TEMPERATURE` | Boundary condition temperature | degrees Celsius     | float     | Optional 1 |    Required    |     Required     |
 
@@ -335,7 +335,7 @@ UserDefinedFileName.xlsx
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------------|:------------------|:-----------------------|:---------:|------------|:--------------:|:----------------:|
-|       1       | `DATETIME`           | The date/time     | mm/dd/yyyy hh:mm       |  string   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`           | The date/time     | yyyy-mm-dd hh:mm       |  string   | Optional 1 |    Required    |     Required     |
 |       2       | `CLOUDINESS1`        | Cloudiness        | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
 |       3       | `WIND_SPEED1`        | Wind Speed        | meters/second          |   float   | Optional 1 |   Optional 2   |    Optional 2    |
 |       4       | `RELATIVE_HUMIDITY1` | Relative Humidity | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
@@ -348,7 +348,7 @@ the input stream km.
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION                 | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------------|:----------------------------|:-----------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`           | The date/time               | mm/dd/yyyy hh:mm       |  string   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   | Optional 1 |    Required    |     Required     |
 |       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
 |       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   | Optional 1 |   Optional 2   |    Optional 2    |
 |       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
@@ -374,7 +374,7 @@ The flow and temperature are defined at an hourly timestep.
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION           | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------|:----------------------|:--------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`     | The date/time         | mm/dd/yyyy hh:mm    |  string   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`     | The date/time         | yyyy-mm-dd hh:mm    |  string   | Optional 1 |    Required    |     Required     |
 |       2       | `FLOW1`        | Tributary flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
 |       3       | `TEMPERATURE1` | Tributary Temperature | degrees Celsius     |   float   | Optional 1 |    Required    |     Required     |
 
@@ -385,7 +385,7 @@ the input stream km.
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------|:------------------------|:--------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`     | The date/time           | mm/dd/yyyy hh:mm    |  string   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   | Optional 1 |    Required    |     Required     |
 |       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
 |       3       | `TEMPERATURE1` | Tributary 1 Temperature | degrees Celsius     |   float   | Optional 1 |    Required    |     Required     |
 |       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
