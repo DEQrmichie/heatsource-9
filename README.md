@@ -531,7 +531,7 @@ Refer to the user manual for more information about each parameter.
 |             8 | `MANNINGS_n`               | Manning's n                   | seconds/meter                | float     | Optional 1 |      Required       |     Required     |
 |             9 | `SED_THERMAL_CONDUCTIVITY` | Sediment Thermal Conductivity | watts/meters/degrees Celsius | float     | Optional 1 |      Required       |     Required     |
 |            10 | `SED_THERMAL_DIFFUSIVITY`  | Sediment Thermal Diffusivity  | square centimeters/second    | float     | Optional 1 |      Required       |     Required     |
-|            11 | `SED_HYPORHEIC_THICKNESSS` | Hyporheic Zone Thickness      | meters                       | float     | Optional 1 |      Required       |     Required     |
+|            11 | `SED_HYPORHEIC_THICKNESS`  | Hyporheic Zone Thickness      | meters                       | float     | Optional 1 |      Required       |     Required     |
 |            12 | `HYPORHEIC_PERCENT`        | Percent Hyporheic Exchange    | decimal fraction (0-1)       | float     | Optional 1 |      Required       |     Required     |
 |            13 | `POROSITY`                 | Porosity                      | decimal fraction (0-1)       | float     | Optional 1 |      Required       |     Required     |
 

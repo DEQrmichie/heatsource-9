@@ -217,7 +217,7 @@ class Inputs(object):
                 "GRADIENT", "BOTTOM_WIDTH", "CHANNEL_ANGLE_Z",
                 "MANNINGS_n", "SED_THERMAL_CONDUCTIVITY",
                 "SED_THERMAL_DIFFUSIVITY",
-                "SED_HYPORHEIC_THICKNESSS",
+                "SED_HYPORHEIC_THICKNESS",
                 "HYPORHEIC_PERCENT", "POROSITY"]
 
     def import_all(self, input_file="all"):
