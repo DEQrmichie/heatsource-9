@@ -391,6 +391,8 @@ class Inputs(object):
                     elif dtype[k] == "datetime":
                         IniParams[k] = str.strip(line[3])
 
+                    break
+
         # Make dates into seconds since UTC epoch
         IniParams["datastart"] = timegm(strptime(IniParams["datastart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
         IniParams["dataend"] = timegm(strptime(IniParams["dataend"], "%Y-%m-%d")) + 86400
@@ -434,14 +436,6 @@ class Inputs(object):
         if 3600 % IniParams["dt"] != 0:
             raise ValueError(
                 "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]/60))
-
-        # Make sure the output directory ends in a 
-        # slash based on system platform
-        if (platform.system() == "Windows" and IniParams["outputdir"][-1] != "\\"):
-            raise ValueError("Output directory needs to have a backslash at end of the path. ..\\outputfolder\\")
-
-        if (platform.system() == "Darwin" and IniParams["outputdir"][-1] != "/"):
-            raise ValueError("Output directory needs to have a forward slash at the end of the path. ../outputfolder/")
 
         # the distance step must be an exact, greater or equal to one,
         # multiple of the sample rate.
