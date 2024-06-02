@@ -35,7 +35,8 @@ classifiers = [
 ]
 
 dependencies = [
-  "Cython==3.0.10"
+    "Cython==3.0.10",
+    "openpyxl <= 3.1.3"
 ]
 
 [project.urls]

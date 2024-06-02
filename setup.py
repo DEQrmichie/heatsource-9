@@ -67,7 +67,7 @@ setup(name='heatsource9',
                 'heatsource9.Stream',
                 'heatsource9.Utils'],
       package_dir={'': 'src'},
-      install_requires=['Cython==3.0.10'],
+      install_requires=['Cython==3.0.10', 'openpyxl <= 3.1.3'],
       ext_modules=extensions,
       python_requires='>=3.8, <4'
       )
