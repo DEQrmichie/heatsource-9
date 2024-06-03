@@ -69,8 +69,8 @@ class ModelControl(object):
         model_dir is the path to the directory where the
         control file is located.
         
-        control_file is the control file name. It must be a comma
-        delimited text file.
+        control_file is the control file name. It must be an Excel
+        (.xlsx) or a csv (UTF-8 Unicode) file.
         
         run_type is one of 0, 1, or 2 for Heat Source (Temperature),
         Solar only, hydraulics only respectively.
@@ -400,7 +400,7 @@ def hs():
         elif arg.solar:
             run_solar(arg.model_dir, control_file)
                 
-        elif arg.run.hydraulics:
+        elif arg.hydraulics:
             run_hydraulics(arg.model_dir, control_file)
 
     if arg.command == 'setup':
