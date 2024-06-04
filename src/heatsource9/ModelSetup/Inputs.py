@@ -1,4 +1,3 @@
-#from __future__ import absolute_import
 from ast import literal_eval
 from builtins import next
 from builtins import zip
@@ -6,7 +5,6 @@ from builtins import str
 from builtins import range
 from builtins import object
 import csv
-import platform
 from os import makedirs
 from os.path import exists
 from os.path import isfile
@@ -154,11 +152,11 @@ class Inputs(object):
 
         if IniParams["heatsource8"]:
             tran = ["NE", "E", "SE", "S", "SW", "W", "NW"]
-        else:        
+        else:
             tran = ["T" + str(x) for x in range(1, IniParams["trans_count"] + 1)]
-    
+
         zone = list(range(1, int(IniParams["transsample_count"]) + 1))
-    
+
         # Concatenate the prefix, transect, and zone and order in the correct way
         for p in prefix:
             for t in range(0, len(tran)):
@@ -303,7 +301,6 @@ class Inputs(object):
         """Returns the control file"""
 
         if not exists(join(self.model_dir, self.control_file)):
-
             raise Exception("HeatSource_Control.csv not found. \
             Move the executable or place the control file in \
             this directory: {0}.".format(self.model_dir))
@@ -334,6 +331,7 @@ class Inputs(object):
         elif IniParams["run_type"] == 2:
             # For hydraulic runs None is ok for these inputs
             none_ok = ["usertxt", "name", "lcdatafile", "lccodefile",
+                       "metsites", "metfile", "metkm",
                        "trans_count", "transsample_count",
                        "transsample_distance", "emergent",
                        "lcdatainput", "canopy_data", "lcsampmethod",
@@ -341,7 +339,7 @@ class Inputs(object):
         else:
             # This is a setup call, None is ok for all of them
             none_ok = list(IniParams.keys())
-        
+
         # This is so the iteration happens in descending order
         # so some of the keys are parameterized earlier for the
         # none list. 
@@ -435,7 +433,7 @@ class Inputs(object):
         # or we may not land squarely on each hour's starting point.
         if 3600 % IniParams["dt"] != 0:
             raise ValueError(
-                "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"]/60))
+                "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(IniParams["dt"] / 60))
 
         # the distance step must be an exact, greater or equal to one,
         # multiple of the sample rate.
@@ -592,9 +590,9 @@ class Inputs(object):
         return None
 
     def dict2list(self, data, colnames, skiprows=0, skipcols=0):
-        
+
         d2 = list(zip(*[[k] + data[k] for k in colnames]))
-        
+
         # skiprows
         d3 = d2[-(len(d2) - skiprows):]
 
@@ -624,13 +622,13 @@ class Inputs(object):
         logger.info(msg)
         print_console(msg)
         cf_dict = self.control_file_dict()
-        
+
         for k, v in list(kwargs.items()):
             cf_dict[k][3] = v
 
         # sort the list is in the order of the line number
         cf_sorted = sorted(list(cf_dict.items()), key=itemgetter(1))
-        cf_list = [line[1] for line in cf_sorted]        
+        cf_list = [line[1] for line in cf_sorted]
 
         self.write_to_output(self.model_dir, cf_name,
                              cf_list, colnames=self.headers_cf(),
@@ -759,16 +757,17 @@ class Inputs(object):
             for row in reader:
                 # go over each column name and value
                 for k, v in list(row.items()):
-                    
+
                     # if the value is empty '' replace it with a None
                     if v.strip() in ['', None]:
                         v = None
                     # append the value into the appropriate 
                     # list based on column name k
                     # if there is more than one cl
-                    data[k].append(v)
+                    v_validated = self.validate(v, k, filename)
+                    data[k].append(v_validated)
 
-        return self.validate(data)
+        return data
 
     def read_xlsx_to_dict(self, inputdir, filename, colnames, sheetname):
         """
@@ -800,11 +799,12 @@ class Inputs(object):
                         # if the value is empty '' replace it with a None
                         v = None
 
+                v_validated = self.validate(v, colnames[c], filename)
                 # append the value into the appropriate
-                # list based on column name k
-                data[colnames[c]].append(v)
+                # list based on column name
+                data[colnames[c]].append(v_validated)
         wb.close()
-        return self.validate(data)
+        return data
 
     def read_csv_to_list(self, inputdir, filenames, skiprows, skipcols, **kwargs):
         """Reads a comma delimited text file into a
@@ -1014,9 +1014,9 @@ class Inputs(object):
             else:
                 if not isfile(join(IniParams["inputdir"], met_filename)):
                     self.write_to_output(IniParams["inputdir"],
-                                          met_filename,
-                                          metlist, colnames=self.headers_met(),
-                                          sheetname=sheetnames["metfiles"])
+                                         met_filename,
+                                         metlist, colnames=self.headers_met(),
+                                         sheetname=sheetnames["metfiles"])
 
         if IniParams["inflowsites"] > 0:
             for file in tribfiles:
@@ -1061,7 +1061,7 @@ class Inputs(object):
         in the control file
         """
         # hourly timestep
-        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600)) 
+        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600))
         for i, val in enumerate(timelist):
             timelist[i] = strftime("%Y-%m-%d %H:%M", gmtime(val))
         return timelist
@@ -1083,51 +1083,47 @@ class Inputs(object):
         kmlist.sort(reverse=True)
         return kmlist
 
-    def validate(self, data):
+    def validate(self, value, column, file):
         """
         Checks the data type and range.
         If value is blank (None), returns 0.0 for float, 0 for integer,
         and None for string data types.
         """
-        data_v = {}
-        for key, v in list(data.items()):
-            
-            # translate removes numbers from the key, e.g. TEMPERATURE2
-            if key.translate(str.maketrans('','', digits)) not in list(dtype.keys()):
-                # This is to find the correct landcover data 
-                # key since they are all different
-                if "LC" in key:
-                    # str
-                    k = "LC"
-                elif any(s in key for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
-                    # float
-                    k = "ELE"
-            else:
-                k = key.translate(str.maketrans('','', digits))
-            
-            # -- 
 
-            if dtype[k] is float:
-                data_v[key] = [float(i) if i is not None else 0.0 for i in v]
+        # translate removes numbers from the key, e.g. TEMPERATURE2
+        if column.translate(str.maketrans('', '', digits)) not in list(dtype.keys()):
+            # This is to find the correct landcover data
+            # key since they are all different
+            if "LC" in column:
+                # str
+                k = "LC"
+            elif any(s in column for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
+                # float
+                k = "ELE"
+        else:
+            k = column.translate(str.maketrans('', '', digits))
 
-            elif dtype[k] is int:
-                data_v[key] = [int(float(i)) if i is not None else 0 for i in v]
+        if dtype[k] is float:
+            value_v = float(value) if value is not None else 0.0
 
-            elif dtype[k] is str:
-                data_v[key] = [str(i) if i is not None else None for i in v]
+        elif dtype[k] is int:
+            value_v = int(float(value)) if value is not None else 0
 
-            elif dtype[k] == "datetime":
-                data_v[key] = [str(i) if i is not None else None for i in v]
+        elif dtype[k] is str:
+            value_v = str(value) if value is not None else None
 
-            # --
-                
-            if (dtype[k] is not str and dtype[k] in list(iniRange.keys())):
-                # check the value range
-                for val, i in enumerate(v):
-                    if not iniRange[k][0] <= val <= iniRange[k][1]:
-                        raise ValueError("The value ({0} in {1} is out of range".format(val, k))
+        elif dtype[k] == "datetime":
+            value_v = str(value) if value is not None else None
 
-        return data_v
+        if (dtype[k] is not str and k in list(iniRange.keys())):
+            # check the value range
+            if not iniRange[k][0] <= value_v <= iniRange[k][1]:
+                msg = "The {0} value of {1} in the file named {2} is out of range." \
+                                 .format(column, value, file)
+                print_console(msg)
+                raise ValueError(msg)
+
+        return value_v
 
     def write_to_csv(self, outputdir, filenames, outlist, colnames=None, **kwargs):
         """Write the outlist to a comma delimited text file
@@ -1181,4 +1177,3 @@ class Inputs(object):
 
             wb.save(join(outputdir, filename))
             wb.close()
-
