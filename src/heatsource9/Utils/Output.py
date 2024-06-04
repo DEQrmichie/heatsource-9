@@ -28,7 +28,7 @@ from heatsource9.Dieties.IniParamsDiety import IniParams
 class Output(object):
     """Data and file object storage class"""
 
-    def __init__(self, reach, start_time, run_type):
+    def __init__(self, reach, start_time, stop_time, run_type):
         # Store a sorted list of StreamNodes.
 
         if str(IniParams["outputkm"]).lower() == "all":
@@ -42,6 +42,8 @@ class Output(object):
         # A reference to the model's starting time 
         # (i.e. when spin-up is over)
         self.start_time = start_time
+
+        self.stop_time = stop_time
 
         # run_type is a bit hack-y. If we are running only hydraulics,
         # we fail on division of solar parameters- if running only solar,
@@ -153,13 +155,13 @@ class Output(object):
 
             # Now create a file object in the dictionary, and write 
             # the header
-            self.files[key] = csv.writer(open(join(IniParams["outputdir"], key + ".csv"), "w",
-                                              newline="", encoding="utf-8"))
-            self.files[key].writerows(header)
+            self.files[key] = open(join(IniParams["outputdir"], key + ".csv"), "w", newline="", encoding="utf-8")
+            csv.writer(self.files[key]).writerows(header)
+            self.files[key].flush()
 
     def __call__(self, time, hour, minute=0, second=0):
         """Call the storage method with a time and an hour"""
-        # Ignore this if we're still spinning up of if this is the first
+        # Ignore this if we're still spinning up or if this is the first
         # hour run (because we don't have channel geometry calculated).
         if time < self.start_time:
             return
@@ -237,6 +239,9 @@ class Output(object):
         # if (((23 - hour) * 3600) + ((60-minute) * 60) <=  IniParams["dt"]):
         # self.write_to_csv(self.run_type < 2, timestamp)
 
+        if time >= self.stop_time:
+            self.close()
+
     def daily(self, timestamp):
         """Compile and store data that is collected every hour"""
         nodes = self.nodes
@@ -253,7 +258,8 @@ class Output(object):
         # localize the data
         data = self.data
         # Cycle through the file objects
-        for name, fileobj in list(self.files.items()):
+        for name, openfile in list(self.files.items()):
+            fileobj = csv.writer(openfile)
             # Each time is a single line, so we want to iterate over all 
             # the times stored so far. We can do this because everytime 
             # we store data, we append the time string to self.times
@@ -284,6 +290,12 @@ class Output(object):
 
             # finally, write all the lines to the file
             fileobj.writerows(line)
+            self.files[name].flush()
         del data
         # Now empty out the dictionary by simply copying a new one.
         self.data = deepcopy(self.empty_vars)
+
+    def close(self):
+        """Close the csv files"""
+        for key in list(self.files.keys()):
+            self.files[key].close()

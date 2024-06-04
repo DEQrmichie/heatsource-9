@@ -128,7 +128,7 @@ class ModelControl(object):
         # This is the output class, which is essentially just a list
         # of file objects and an append method which writes to them
         # every so often.
-        self.Output = O(self.HS.reach, IniParams["modelstart"], run_type)
+        self.Output = O(self.HS.reach, IniParams["modelstart"], IniParams["modelend"], run_type)
 
     def run(self):
         """Run the model one time
