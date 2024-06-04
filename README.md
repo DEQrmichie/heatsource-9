@@ -4,7 +4,7 @@ Heat Source 9
 -------------
 Current Version: heatsource 9.0.0b27 (beta 27)
 
-## ABOUT 
+## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of 
 Environmental Quality to simulate stream thermodynamics and hydraulic 
 routing. It was originally developed by Matt Boyd in 1996 as a [Master's 
@@ -23,7 +23,7 @@ Contact: Ryan Michie, ryan.michie @ deq.oregon.gov
 
 [1]: http://ir.library.oregonstate.edu/xmlui/handle/1957/27036
 
-## INSTALL
+## 2.0 INSTALL
 
 There are two options for installing and running Heat Source 9:
 
@@ -57,7 +57,7 @@ py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
 [2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b27/Model.Executables.v9.0.0b27.win32.zip
 [3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b27
 
-## QUICK STEPS TO GET GOING
+## 3.0 QUICK STEPS TO GET GOING
 
 1. Place the control file (HeatSource_Control.xlsx) and the model run
    scripts in the same directory. You can generate a template control 
@@ -75,7 +75,7 @@ py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
    cd path\to\model_directory
    hs setup -mi
    ```   
-4. Add your input data to the template files.
+4. Add the input data to the template files.
 
 5. Run the model by executing one of the following model python scripts/executables:
    * hs9_run_hydraulics
@@ -91,44 +91,7 @@ py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
    
 6. Outputs are saved in the output directory (specified in the control file).
 
-## INPUT FILES - GENERAL INFORMATION
-
-1. The control file and input files are set up as excel (.xlsx) files by default. They can also be csv (UTF-8) comma
-   delimited files.
-2. The heat source control file must be named `HeatSource_Control.[xlsx|csv]`.
-3. The other input files can be named whatever you want (file names are specified in the control file).
-4. Do not change the key names in the control file. Only change 
-   the VALUE column (column 4).
-5. The column header names can be changed but the data needs to be in 
- the correct column number (see below).
-6. Use the specified unit and data formats identified in the control file 
- and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
-7. An input parameter value that is not applicable may be left blank although all values with float
-	data type will be assigned as zero.
-
-Key to model input information:<br>
-Required:  Input value required<br>
-Required (Not Used):  Input value required but not used other than for model setup. This may be changed in future versions<br>
-Optional 1:  Input value optional (can be left blank).<br>
-Optional 2:  Input value may be optional based on control file parameterization.<br>
-
-To write blank input files from a python script:
-```python
-# requires a parameterized control file 
-from heatsource9 import BigRedButton
-
-control_file = 'HeatSource_Control.xlsx'
-model_dir = r'C://path/to/model_directory/'
-
-BigRedButton.setup_mi(model_dir, control_file,
-                      use_timestamp=True, overwrite=False)
-```
-To write a blank inputs files from command line:
-```shell
-hs setup -mi
-```
-
-## CSV MODE
+## 4.0 CSV MODE
 By default, the template control file and input files are written as Excel files (.xlsx). Some users may want to 
 use csv formatted files instead. To switch from Excel to csv, resave the control file as a csv (UTF-8 Unicode). 
 A template csv control file can also be generated from command line using the following:
@@ -136,10 +99,10 @@ A template csv control file can also be generated from command line using the fo
 hs setup -cf -csv
 ```
 The model will read/and write input files using the same format as the control file. If the control file is formatted 
-as a csv, the input files must also be csv. If the control file is an Excel file, the input files must also be 
+as a csv, the input files must also be csv. If the control file is an Excel file (.xlsx), the input files must also be 
 saved as Excel files. Model output files are always written as csv (UTF-8 Unicode) files. 
 
-## Using Command Line 
+## 5.0 Using Command Line 
 
 Heat Source can be setup and run directly from command line.
 
@@ -171,10 +134,60 @@ other options<br>
                         Path to the model directory. If not used the default is current<br>
                         working directory.
 
-## CONTROL FILE  
+## 6.0 MODEL FILES
+The following table summarizes what input files are needed to run each type of model.
+More specific details about the format and content of each input file is included in the sections below.
+
+Key to model input information:<br>
+Required:  Input value required<br>
+Required (Not Used):  Input value required but not used other than for model setup. This may be changed in future versions<br>
+Optional :  Input value optional (can be left blank).<br>
+
+| INPUT FILE         | FILE NAME            | xlsx SHEET NAME     | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------------|----------------------|:--------------------|:----------:|:--------------:|:----------------:|
+| CONTROL FILE       | `HeatSource_Control` | Control Settings    |  Required  |    Required    |     Required     |
+| ACCRETION          | User Defined         | Accretion Flow      |  Optional  |    Required    |     Required     |
+| BOUNDARY CONDITION | User Defined         | Boundary Conditions |  Optional  |    Required    |     Required     |
+| METEOROLOGICAL     | User Defined         | Meteorological Data |  Optional  |    Required    |     Required     |
+| TRIBUTARY          | User Defined         | Tributary Data      |  Optional  |    Required    |     Required     |
+| LAND COVER CODES   | User Defined         | Land Cover Codes    |  Required  |    Optional    |     Required     |
+| LAND COVER DATA    | User Defined         | Land Cover Data     |  Required  |    Optional    |     Required     |
+| MORPHOLOGY DATA    | User Defined         | Morphology Data     |  Required  |    Optional    |     Required     |
+
+General Information
+1. The control file and input files are set up as excel (.xlsx) files by default. They can also be csv (UTF-8) comma
+   delimited files.
+2. The heat source control file must be named `HeatSource_Control.[xlsx|csv]`.
+3. The other input files can be named whatever you want (file names are specified in the control file).
+5. The column header names can be changed but the data needs to be in the correct column number\.
+6. Use the specified unit and data formats identified in the control file 
+ and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
+7. An input parameter value that is optional may be left blank although all values with float
+	data type will be assigned as zero.
+
+To write blank input files from a python script:
+```python
+# requires a parameterized control file 
+from heatsource9 import BigRedButton
+
+control_file = 'HeatSource_Control.xlsx'
+model_dir = r'C://path/to/model_directory/'
+
+BigRedButton.setup_mi(model_dir, control_file,
+                      use_timestamp=True, overwrite=False)
+```
+To write a blank inputs files from command line:
+```shell
+hs setup -mi
+```
+
+### 6.1 CONTROL FILE  
 HeatSource_Control.xlsx
 
-The control file is where most of the model operation and initial parameterization is set.
+xlsx sheet name: `Control Settings`
+
+The control file is where most of the model operation and initial parameterization is set. 
+Do not change the key names in the control file. Only change the VALUE column (column 4).
 
 To write a blank template control file from a python script:
 ```python
@@ -290,9 +303,10 @@ Below are all the input parameters that must be included in the control file.
 |   40 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
 |   41 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
 
-
-## ACCRETION INPUT FILE  
+### 6.2 ACCRETION INPUT FILE  
 UserDefinedFileName.xlsx
+
+xlsx sheet name: `Accretion Flow`
 
 The temperature and flow rates of accretion are defined in this file. 
 
@@ -306,40 +320,44 @@ flow based average accretion temperature will be derived and used
 in the mixing calculations.
 
 | COLUMN NUMBER | COLUMN NAME   | DESCRIPTION           | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:--------------|:----------------------|:--------------------|:----------|------------|:--------------:|:----------------:|
-|       1       | `STREAM_ID`   | Stream ID             | N/A                 | string    | Optional 1 |   Optional 1   |    Optional 1    |
-|       2       | `NODE_ID`     | Node ID               | N/A                 | integer   |  Required  |    Required    |     Required     |
-|       3       | `STREAM_KM`   | Stream km             | kilometers          | float     |  Required  |    Required    |     Required     |
-|       4       | `INFLOW`      | Accretion Inflow      | cubic meters/second | float     | Optional 1 |    Required    |     Required     |
-|       5       | `TEMPERATURE` | Accretion Temperature | degrees Celsius     | float     | Optional 1 |    Required    |     Required     |
-|       6       | `OUTFLOW`     | Withdrawal flow       | cubic meters/second | float     | Optional 1 |    Required    |     Required     |
+|:-------------:|:--------------|:----------------------|:--------------------|:----------|:----------:|:--------------:|:----------------:|
+|       1       | `STREAM_ID`   | Stream ID             | N/A                 | string    |  Optional  |    Optional    |     Optional     |
+|       2       | `NODE_ID`     | Node ID               | N/A                 | integer   |  Optional  |    Required    |     Required     |
+|       3       | `STREAM_KM`   | Stream km             | kilometers          | float     |  Optional  |    Required    |     Required     |
+|       4       | `INFLOW`      | Accretion Inflow      | cubic meters/second | float     |  Optional  |    Required    |     Required     |
+|       5       | `TEMPERATURE` | Accretion Temperature | degrees Celsius     | float     |  Optional  |    Required    |     Required     |
+|       6       | `OUTFLOW`     | Withdrawal flow       | cubic meters/second | float     |  Optional  |    Required    |     Required     |
 
 
-## BOUNDARY CONDITION FILE  
+### 6.3 BOUNDARY CONDITION FILE  
 UserDefinedFileName.xlsx
+
+xlsx sheet name: `Boundary Conditions`
 
 The stream flow and temperature conditions at the upstream model boundary 
 are defined in this file. The boundary conditions are defined at an 
 hourly timestep.
 
 | COLUMN NUMBER | COLUMN NAME   | DESCRIPTION                    | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:--------------|:-------------------------------|:--------------------|:----------|------------|:--------------:|:----------------:|
-|       1       | `DATETIME`    | The date/time                  | yyyy-mm-dd hh:mm    | string    | Optional 1 |    Required    |     Required     |
-|       2       | `FLOW`        | Boundary condition flow        | cubic meters/second | float     | Optional 1 |    Required    |     Required     |
-|       3       | `TEMPERATURE` | Boundary condition temperature | degrees Celsius     | float     | Optional 1 |    Required    |     Required     |
+|:-------------:|:--------------|:-------------------------------|:--------------------|:----------|:----------:|:--------------:|:----------------:|
+|       1       | `DATETIME`    | The date/time                  | yyyy-mm-dd hh:mm    | string    |  Optional  |    Required    |     Required     |
+|       2       | `FLOW`        | Boundary condition flow        | cubic meters/second | float     |  Optional  |    Required    |     Required     |
+|       3       | `TEMPERATURE` | Boundary condition temperature | degrees Celsius     | float     |  Optional  |    Required    |     Required     |
 
 
-## METEOROLOGICAL INPUT FILE/S
+### 6.4 METEOROLOGICAL INPUT FILE/S
 UserDefinedFileName.xlsx
+
+xlsx sheet name: `Meteorological Data`
 (formally called Continuous data in heat source 8)
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:---------------------|:------------------|:-----------------------|:---------:|------------|:--------------:|:----------------:|
-|       1       | `DATETIME`           | The date/time     | yyyy-mm-dd hh:mm       |  string   | Optional 1 |    Required    |     Required     |
-|       2       | `CLOUDINESS1`        | Cloudiness        | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       3       | `WIND_SPEED1`        | Wind Speed        | meters/second          |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       5       | `AIR_TEMPERATURE1`   | Air Temperature   | degrees Celsius        |   float   | Optional 1 |   Optional 2   |    Optional 2    |
+|:-------------:|:---------------------|:------------------|:-----------------------|:---------:|:----------:|:--------------:|:----------------:|
+|       1       | `DATETIME`           | The date/time     | yyyy-mm-dd hh:mm       |  string   |  Required  |    Optional    |     Required     |
+|       2       | `CLOUDINESS1`        | Cloudiness        | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
+|       3       | `WIND_SPEED1`        | Wind Speed        | meters/second          |   float   |  Optional  |    Optional    |     Required     |
+|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity | decimal fraction (0-1) |   float   |  Optional  |    Optional    |     Required     |
+|       5       | `AIR_TEMPERATURE1`   | Air Temperature   | degrees Celsius        |   float   |  Optional  |    Optional    |     Required     |
 
 Note - multiple xlsx/csv files may be used for each set of meteorological inputs with the 
 format above or all data can be saved in the same file as shown in the example below. 
@@ -348,19 +366,20 @@ the input stream km.
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION                 | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------------|:----------------------------|:-----------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   | Optional 1 |    Required    |     Required     |
-|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   | Optional 1 |   Optional 2   |    Optional 2    |
-|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   | Optional 1 |   Optional 2   |    Optional 2    |
+|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   |  Required  |    Optional    |     Required     |
+|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
+|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   |  Optional  |    Optional    |     Required     |
+|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   |  Optional  |    Optional    |     Required     |
+|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        |   float   |  Optional  |    Optional    |     Required     |
+|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
+|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          |   float   |  Optional  |    Optional    |     Required     |
+|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   |  Optional  |    Optional    |     Required     |
+|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |  Optional  |    Optional    |     Required     |
 
-## TRIBUTARY INPUT FILE/S  
+### 6.5 TRIBUTARY INPUT FILE/S  
 UserDefinedFileName.xlsx
-Can also be outflows. Use negative flows.
+
+xlsx sheet name: `Tributary Data`
 
 The tributary input files define the inflow/outflow rates and temperatures
 at different points along the model stream. Inflows refers to localized 
@@ -374,9 +393,9 @@ The flow and temperature are defined at an hourly timestep.
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION           | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------|:----------------------|:--------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`     | The date/time         | yyyy-mm-dd hh:mm    |  string   | Optional 1 |    Required    |     Required     |
-|       2       | `FLOW1`        | Tributary flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
-|       3       | `TEMPERATURE1` | Tributary Temperature | degrees Celsius     |   float   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`     | The date/time         | yyyy-mm-dd hh:mm    |  string   |  Optional  |    Required    |     Required     |
+|       2       | `FLOW1`        | Tributary flow        | cubic meters/second |   float   |  Optional  |    Required    |     Required     |
+|       3       | `TEMPERATURE1` | Tributary Temperature | degrees Celsius     |   float   |  Optional  |    Required    |     Required     |
 
 Note - multiple excel/csv files may be created for each tributary input with the
 format above or all data can be saved in the same file as shown in the example below.
@@ -385,14 +404,16 @@ the input stream km.
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:---------------|:------------------------|:--------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   | Optional 1 |    Required    |     Required     |
-|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
-|       3       | `TEMPERATURE1` | Tributary 1 Temperature | degrees Celsius     |   float   | Optional 1 |    Required    |     Required     |
-|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   | Optional 1 |    Required    |     Required     |
-|       5       | `TEMPERATURE2` | Tributary 2 Temperature | degrees Celsius     |   float   | Optional 1 |    Required    |     Required     |
+|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   |  Optional  |    Required    |     Required     |
+|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   |  Optional  |    Required    |     Required     |
+|       3       | `TEMPERATURE1` | Tributary 1 Temperature | degrees Celsius     |   float   |  Optional  |    Required    |     Required     |
+|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   |  Optional  |    Required    |     Required     |
+|       5       | `TEMPERATURE2` | Tributary 2 Temperature | degrees Celsius     |   float   |  Optional  |    Required    |     Required     |
 
-## LAND COVER CODES FILE  
-UserDefinedFileName.xlsx  
+### 6.6 LAND COVER CODES FILE  
+UserDefinedFileName.xlsx
+
+xlsx sheet name: `Land Cover Codes`
 
 The land cover codes file contains the physical attribute information 
 associated with each land cover code. Land cover codes can be alphanumeric 
@@ -402,33 +423,33 @@ There cannot be skipped rows
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
 
-### Canopy Type
+#### 6.6.1 Canopy Type
 
 land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
-#### Canopy Cover
+##### Canopy Cover
 Input file formatting when ```canopy_data = "CanopyCover"``` in the control file.
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
-|:-------------:|:------------|:------------------|:-----------------------|:---------:|:----------:|:-------------------:|:----------------:|
-|       1       | `NAME`      | Land cover Name   | N/A                    |  string   | Optional 1 |     Optional 1      |    Optional 1    |
-|       2       | `CODE`      | Land cover code   | N/A                    |  string   |  Required  | Required (Not Used) |     Required     |
-|       3       | `HEIGHT`    | Land cover height | meters                 |   float   |  Required  | Required (Not Used) |     Required     |
-|       4       | `CANOPY`    | Canopy cover      | decimal fraction (0-1) |   float   | Optional 2 |     Optional 2      |    Optional 2    |
-|       5       | `OVERHANG`  | Overhang          | meters                 |   float   |  Required  | Required (Not Used) |     Required     |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:------------------|:-----------------------|:---------:|:----------:|:--------------:|:----------------:|
+|       1       | `NAME`      | Land cover Name   | N/A                    |  string   |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`      | Land cover code   | N/A                    |  string   |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`    | Land cover height | meters                 |   float   |  Required  |    Optional    |     Required     |
+|       4       | `CANOPY`    | Canopy cover      | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
+|       5       | `OVERHANG`  | Overhang          | meters                 |   float   |  Required  |    Optional    |     Required     |
 
 
-#### LAI
+##### LAI
 Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION               | UNITS         | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
-|:-------------:|:------------|:--------------------------|:--------------|:---------:|:----------:|:-------------------:|:----------------:|
-|       1       | `NAME`      | Land cover Name           | N/A           |  string   | Optional 1 |     Optional 1      |    Optional 1    |
-|       2       | `CODE`      | Land cover code           | N/A           |  string   |  Required  | Required (Not Used) |     Required     |
-|       3       | `HEIGHT`    | Land cover height         | meters        |   float   |  Required  | Required (Not Used) |     Required     |
-|       4       | `LAI`       | Effective Leaf Area Index | dimensionless |   float   | Optional 2 |     Optional 2      |    Optional 2    |
-|       5       | `k`         | k extinction coefficient  | dimensionless |   float   | Optional 2 |     Optional 2      |    Optional 2    |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION               | UNITS         | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:--------------------------|:--------------|:---------:|:----------:|:--------------:|:----------------:|
+|       1       | `NAME`      | Land cover Name           | N/A           |  string   |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`      | Land cover code           | N/A           |  string   |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`    | Land cover height         | meters        |   float   |  Required  |    Optional    |     Required     |
+|       4       | `LAI`       | Effective Leaf Area Index | dimensionless |   float   |  Required  |    Optional    |     Required     |
+|       5       | `k`         | k extinction coefficient  | dimensionless |   float   |  Required  |    Optional    |     Required     |
 
 The landcover codes file can be parameterized from script.
 ```python
@@ -457,25 +478,27 @@ lccodes = [('Active River Channel',100,0,0,0),
 inputs.parameterize_lccodes(lccodes, overwrite=True)
 ```
 
-## LAND COVER DATA  
+### 6.7 LAND COVER DATA  
 (formally called TTools in heatsource 8)  
-UserDefinedFileName.xlsx  
+UserDefinedFileName.xlsx
+
+xlsx sheet name: `Land Cover Data`
 
 This file defines land cover information. This data can be derived 
 from geospatial data using TTools.
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                          | UNITS           | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS      | TEMPERATURE RUNS |
-|:-------------:|:------------|:-------------------------------------|:----------------|:----------|:-----------|:--------------------|:-----------------|
-|       1       | `STREAM_ID` | Stream ID                            | N/A             | string    | Optional 1 | Optional 1          | Optional 1       |
-|       2       | `NODE_ID`   | Node ID                              | N/A             | integer   | Required   | Required            | Required         |
-|       3       | `STREAM_KM` | Stream km                            | kilometer       | float     | Required   | Required (Not Used) | Required         |
-|       4       | `LONGITUDE` | Node Longitude                       | decimal degrees | float     | Required   | Required (Not Used) | Required         |
-|       5       | `LATITUDE`  | Node Latitude                        | decimal degrees | float     | Required   | Required (Not Used) | Required         |
-|       6       | `TOPO_W`    | Topographic shade angle to the west  | degrees         | float     | Required   | Required (Not Used) | Required         |
-|       7       | `TOPO_S`    | Topographic shade angle to the south | degrees         | float     | Required   | Required (Not Used) | Required         |
-|       8       | `TOPO_E`    | Topographic shade angle to the east  | degrees         | float     | Required   | Required (Not Used) | Required         |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                          | UNITS           | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:-------------------------------------|:----------------|:----------|:----------:|:--------------:|:----------------:|
+|       1       | `STREAM_ID` | Stream ID                            | N/A             | string    |  Optional  |    Optional    |     Optional     |
+|       2       | `NODE_ID`   | Node ID                              | N/A             | integer   |  Required  |    Optional    |     Required     |
+|       3       | `STREAM_KM` | Stream km                            | kilometer       | float     |  Required  |    Optional    |     Required     |
+|       4       | `LONGITUDE` | Node Longitude                       | decimal degrees | float     |  Required  |    Optional    |     Required     |
+|       5       | `LATITUDE`  | Node Latitude                        | decimal degrees | float     |  Required  |    Optional    |     Required     |
+|       6       | `TOPO_W`    | Topographic shade angle to the west  | degrees         | float     |  Required  |    Optional    |     Required     |
+|       7       | `TOPO_S`    | Topographic shade angle to the south | degrees         | float     |  Required  |    Optional    |     Required     |
+|       8       | `TOPO_E`    | Topographic shade angle to the east  | degrees         | float     |  Required  |    Optional    |     Required     |
 
-### Land Cover Data Input Type
+#### Land Cover Data Input Type
 Land cover information can be input into the model in two different ways:
 Using codes or values. If using codes unique land cover attribute information is represented as a unique code.
 The land cover attribute  associated to each code is parameterized in the Land Cover Codes file in long format.
@@ -483,59 +506,61 @@ If using values, the land cover attribute information for each transect sample i
 
 The land cover data input type is identified in the control file.
 
-#### Codes
+##### Codes
 When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS  | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
-|:-------------:|:------------|:------------------------------------------|:-------|:----------|:----------:|:-------------------:|:----------------:|
-|   multiple    | `LC_T_S`    | Landcover code on transect T for sample S | N/A    | string    |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S      | meters | float     |  Required  | Required (Not Used) |     Required     |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:------------------------------------------|:-------|:----------|:----------:|:--------------:|:----------------:|
+|   multiple    | `LC_T_S`    | Landcover code on transect T for sample S | N/A    | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S      | meters | float     |  Required  |    Optional    |     Required     |
 
-#### Values
+##### Values
 When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyCover"``` the following columns will be used after column 8:
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                  | UNITS                  | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
-|:-------------:|:------------|:---------------------------------------------|:-----------------------|:----------|:----------:|:-------------------:|:----------------:|
-|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S | N/A                    | string    |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S         | meters                 | float     |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `CAN_T_S`   | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `OH_T_S`    | Overhang on transect T for sample S          | meters                 | float     |  Required  | Required (Not Used) |     Required     |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                  | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:---------------------------------------------|:-----------------------|:----------|:----------:|:--------------:|:----------------:|
+|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S | N/A                    | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S         | meters                 | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `CAN_T_S`   | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `OH_T_S`    | Overhang on transect T for sample S          | meters                 | float     |  Required  |    Optional    |     Required     |
 
 When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                          | UNITS         | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
-|:-------------:|:------------|:-----------------------------------------------------|:--------------|:----------|:----------:|:-------------------:|:----------------:|
-|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S         | N/A           | string    |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S                 | meters        | float     |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `LAI_T_S`   | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `k_T_S`     | k extinction coefficient on transect T for sample S  | dimensionless | float     |  Required  | Required (Not Used) |     Required     |
-|   multiple    | `OH_T_S`    | Overhang on transect T for sample S                  | meters        | float     |  Required  | Required (Not Used) |     Required     |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                          | UNITS         | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:-----------------------------------------------------|:--------------|:----------|:----------:|:--------------:|:----------------:|
+|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S         | N/A           | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S                 | meters        | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `LAI_T_S`   | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `k_T_S`     | k extinction coefficient on transect T for sample S  | dimensionless | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `OH_T_S`    | Overhang on transect T for sample S                  | meters        | float     |  Required  |    Optional    |     Required     |
 
 Note - the number of columns are dependent on the number of transects and samples specified in the control file.
 
-## MORPHOLOGY DATA FILE  
-UserDefinedFileName.xlsx  
+### 6.8 MORPHOLOGY DATA FILE  
+UserDefinedFileName.xlsx
+
+xlsx sheet name: `Morphology Data`
 
 This file defines channel morphology and substrate information.
 Refer to the user manual for more information about each parameter.
 
 | COLUMN NUMBER | COLUMN NAME                | DESCRIPTION                   | UNITS                        | DATA TYPE | SOLAR RUNS |   HYDRAULIC RUNS    | TEMPERATURE RUNS |
 |--------------:|:---------------------------|:------------------------------|:-----------------------------|:----------|:----------:|:-------------------:|:----------------:|
-|             1 | `STREAM_ID`                | Stream ID                     | N/A                          | string    | Optional 1 |     Optional 1      |    Optional 1    |
+|             1 | `STREAM_ID`                | Stream ID                     | N/A                          | string    |  Optional  |      Optional       |     Optional     |
 |             2 | `NODE_ID`                  | Node ID                       | N/A                          | integer   |  Required  |      Required       |     Required     |
 |             3 | `STREAM_KM`                | Stream km                     | kilometers                   | float     |  Required  |      Required       |     Required     |
 |             4 | `ELEVATION`                | Stream Elevation              | meters                       | float     |  Required  | Required (Not Used) |     Required     |
-|             5 | `GRADIENT`                 | Stream Gradient               | meters/meters                | float     | Optional 1 |      Required       |     Required     |
-|             6 | `BOTTOM_WIDTH`             | Bottom Width                  | meters                       | float     | Optional 1 |      Required       |     Required     |
-|             7 | `CHANNEL_ANGLE_Z`          | Channel Angle z               | meters/meters                | float     | Optional 1 |      Required       |     Required     |
-|             8 | `MANNINGS_n`               | Manning's n                   | seconds/meter                | float     | Optional 1 |      Required       |     Required     |
-|             9 | `SED_THERMAL_CONDUCTIVITY` | Sediment Thermal Conductivity | watts/meters/degrees Celsius | float     | Optional 1 |      Required       |     Required     |
-|            10 | `SED_THERMAL_DIFFUSIVITY`  | Sediment Thermal Diffusivity  | square centimeters/second    | float     | Optional 1 |      Required       |     Required     |
-|            11 | `SED_HYPORHEIC_THICKNESS`  | Hyporheic Zone Thickness      | meters                       | float     | Optional 1 |      Required       |     Required     |
-|            12 | `HYPORHEIC_PERCENT`        | Percent Hyporheic Exchange    | decimal fraction (0-1)       | float     | Optional 1 |      Required       |     Required     |
-|            13 | `POROSITY`                 | Porosity                      | decimal fraction (0-1)       | float     | Optional 1 |      Required       |     Required     |
+|             5 | `GRADIENT`                 | Stream Gradient               | meters/meters                | float     |  Optional  |      Required       |     Required     |
+|             6 | `BOTTOM_WIDTH`             | Bottom Width                  | meters                       | float     |  Optional  |      Required       |     Required     |
+|             7 | `CHANNEL_ANGLE_Z`          | Channel Angle z               | meters/meters                | float     |  Optional  |      Required       |     Required     |
+|             8 | `MANNINGS_n`               | Manning's n                   | seconds/meter                | float     |  Optional  |      Required       |     Required     |
+|             9 | `SED_THERMAL_CONDUCTIVITY` | Sediment Thermal Conductivity | watts/meters/degrees Celsius | float     |  Optional  |      Required       |     Required     |
+|            10 | `SED_THERMAL_DIFFUSIVITY`  | Sediment Thermal Diffusivity  | square centimeters/second    | float     |  Optional  |      Required       |     Required     |
+|            11 | `SED_HYPORHEIC_THICKNESS`  | Hyporheic Zone Thickness      | meters                       | float     |  Optional  |      Required       |     Required     |
+|            12 | `HYPORHEIC_PERCENT`        | Percent Hyporheic Exchange    | decimal fraction (0-1)       | float     |  Optional  |      Required       |     Required     |
+|            13 | `POROSITY`                 | Porosity                      | decimal fraction (0-1)       | float     |  Optional  |      Required       |     Required     |
 
-## LICENSE
+## 7.0 LICENSE
 GNU General Public License v3 (GPLv3)
 
 This program is free software: you can redistribute it and/or modify
