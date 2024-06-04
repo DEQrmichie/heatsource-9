@@ -2,7 +2,7 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b27 (beta 27)
+Current Version: heatsource 9.0.0b28 (beta 28)
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of 
@@ -36,8 +36,8 @@ https://www.python.org/downloads/
 
 After python has been installed, install the heat source package from command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b27 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b27"
+# This command installs heat source version 9.0.0b28 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b28"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -49,13 +49,13 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heatsource wheel for windows in the local directory
-py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl --user
+py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl --user
 
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
-py -m pip install heatsource9-9.0.0b27-cp312-cp312-win32.whl
+py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl
  ```
-[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b27/Model.Executables.v9.0.0b27.win32.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b27
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b28/Model.Executables.v9.0.0b28.win32.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b28
 
 ## 3.0 QUICK STEPS TO GET GOING
 
