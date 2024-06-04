@@ -50,7 +50,7 @@ class ModelSetup(object):
         logger.info(msg)
         print_console(msg)
 
-        # create an input object to mange the data
+        # create an input object to manage the data
         self.inputs = Inputs(model_dir, control_file)
 
         # read control file and parameterize IniParams
@@ -78,16 +78,37 @@ class ModelSetup(object):
 
         # Start through the steps of building a reach 
         # full of StreamNodes
-        self.get_boundary_conditions()
-        self.build_nodes()
-        if IniParams["lcdatainput"] == "Values":
-            self.build_zones_w_values()
-        else:
-            self.build_zones_w_codes()
-        self.get_tributary_data()
-        self.get_met_data()
-        self.set_atmospheric_data()
-        self.orient_nodes()
+        if IniParams["run_type"] == 0:
+            # Temperature
+            self.get_boundary_conditions()
+            self.build_nodes()
+            if IniParams["lcdatainput"] == "Values":
+                self.build_zones_w_values()
+            else:
+                self.build_zones_w_codes()
+            self.get_tributary_data()
+            self.get_met_data()
+            self.set_atmospheric_data()
+            self.orient_nodes()
+
+        elif IniParams["run_type"] == 1:
+            # Solar
+            self.get_boundary_conditions()
+            self.build_nodes()
+            if IniParams["lcdatainput"] == "Values":
+                self.build_zones_w_values()
+            else:
+                self.build_zones_w_codes()
+            self.get_met_data()
+            self.set_atmospheric_data()
+            self.orient_nodes()
+
+        elif IniParams["run_type"] == 2:
+            # Hydraulics
+            self.get_boundary_conditions()
+            self.build_nodes()
+            self.get_tributary_data()
+            self.orient_nodes()
 
         # setup output km
         if not IniParams["outputkm"] == "all":
@@ -188,8 +209,12 @@ class ModelSetup(object):
         timelist = self.continuoustimelist
 
         # the data block is a tuple of tuples, each corresponding 
-        # to a timestamp.      
-        data = self.inputs.import_bc()
+        # to a timestamp.
+        if self.run_type == 1:
+            # Solar doesn't need a boundary condition
+            data = [[0, 0] for i in timelist]
+        else:
+            data = self.inputs.import_bc()
 
         # Check out GetTributaryData() for details on this
         # reformatting of the data for the progress bar
@@ -418,36 +443,6 @@ class ModelSetup(object):
                 # have met data
                 if node.km not in self.metDataSites:
                     self.metDataSites.append(node.km)
-                # Perform some tests for data accuracy and validity
-                if cloud is None:
-                    cloud = 0.0
-                if wind is None:
-                    wind = 0.0
-                if cloud < 0 or cloud > 1:
-                    # Alright in shade-a-lator 
-                    # # TODO zeros should not get a passed in 
-                    # solar only runs, fix
-                    if self.run_type == 1:
-                        cloud = 0.0
-                    else:
-                        raise Exception(
-                            "Cloudiness (value of '%s' in Meteorological Data) must be greater than zero and less "
-                            "than one." % cloud)
-                        # TODO RM fix this so it gives the km in exception - do for all
-                if humidity < 0 or humidity is None or humidity > 1:
-                    if self.run_type == 1:  # Alright in shade-a-lator
-                        humidity = 0.0
-                    else:
-                        raise Exception(
-                            "Humidity (value of '%s' in Meteorological Data) must be greater than zero and less than "
-                            "one." % humidity)
-                if T_air is None or T_air < -90 or T_air > 58:
-                    if self.run_type == 1:  # Alright in shade-a-lator
-                        T_air = 0.0
-                    else:
-                        raise Exception(
-                            "Air temperature input (value of '%s' in Meteorological Data) outside of world records, "
-                            "-89 to 58 deg C." % T_air)
                 node.metData[time] = cloud, wind, humidity, T_air
 
             msg = "Reading meteorological data"
@@ -512,7 +507,7 @@ class ModelSetup(object):
         """Take a list of iterables and remove all values of None or empty strings"""
         # Remove None values at the end of each individual list
         for i in range(len(lst)):
-            # strip out values of None from the tuple, 
+            # strip out values of None from the tuple,
             # returning a new tuple
             lst[i] = [x for x in [x for x in lst[i] if x is not None]]
         # Remove blank strings from within the list
@@ -524,7 +519,7 @@ class ModelSetup(object):
             n.reverse()
             for i in n:
                 del l[i]
-        # Make sure there are no zero length lists because they'll 
+        # Make sure there are no zero length lists because they'll
         # fail if we average
         for i in range(len(lst)):
             if len(lst[i]) == 0:
@@ -554,10 +549,11 @@ class ModelSetup(object):
         Return a dictionary of input attributes that are
         averaged or summed as appropriate
         """
-        # columns from we grab from the inputs
+        # columns we grab from the inputs
         lc = ["STREAM_ID", "NODE_ID", "STREAM_KM", "LONGITUDE", "LATITUDE"]
 
-        morph = ["ELEVATION", "GRADIENT", "BOTTOM_WIDTH",
+        morph = ["STREAM_ID", "NODE_ID", "STREAM_KM",
+                 "ELEVATION", "GRADIENT", "BOTTOM_WIDTH",
                  "CHANNEL_ANGLE_Z", "MANNINGS_n",
                  "SED_THERMAL_CONDUCTIVITY",
                  "SED_THERMAL_DIFFUSIVITY",
@@ -566,28 +562,49 @@ class ModelSetup(object):
 
         flow = ["INFLOW", "TEMPERATURE", "OUTFLOW"]
 
-        # Ways that we grab the columns (named as model variables)
-        # These are summed, not averaged
-        sums = ["hyp_percent", "Q_in", "Q_out"]
-        mins = ["km"]
-        aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
-                "SedThermCond", "SedThermDiff", "SedDepth", "phi",
-                "Q_cont", "d_cont", "T_in"]
+        # Operator methods to combine km values (named as model variables)
+        # sums = ["hyp_percent", "Q_in", "Q_out"]
+        # mins = ["km"]
+        # aves = ["longitude", "latitude", "elevation", "S",
+        #         "W_b", "z", "n",
+        #        "SedThermCond", "SedThermDiff", "SedDepth",
+        #        "phi", "Q_cont", "d_cont", "T_in"]
 
-        # sums = ["HYPORHEIC_PERCENT","INFLOW","OUTFLOW"]
+        # Operator methods to combine row values (named as input column names)
+        # sums = ["HYPORHEIC_PERCENT", "INFLOW", "OUTFLOW"]
         # mins = ["STREAM_KM"]
-        # aves = ["LONGITUDE","LATITUDE","ELEVATION","GRADIENT",
-        # "BOTTOM_WIDTH","CHANNEL_ANGLE_Z","MANNINGS_n",
-        # "SED_THERMAL_CONDUCTIVITY",
-        # "SED_THERMAL_DIFFUSIVITY", "SED_HYPORHEIC_THICKNESS",
-        # "POROSITY", "Q_cont","d_cont", "TEMPERATURE"]
+        # aves = ["LONGITUDE", "LATITUDE", "ELEVATION", "GRADIENT",
+        #         "BOTTOM_WIDTH","CHANNEL_ANGLE_Z","MANNINGS_n",
+        #         "SED_THERMAL_CONDUCTIVITY", "SED_THERMAL_DIFFUSIVITY", "SED_HYPORHEIC_THICKNESS",
+        #         "POROSITY", "Q_cont","d_cont", "TEMPERATURE"]
 
         data = {}
 
         # Read data into a dictionary
-        lcdata = self.inputs.import_lcdata(return_list=False)
-        morphdata = self.inputs.import_morph(return_list=False)
-        accdata = self.inputs.import_accretion()
+        if self.run_type == 0:
+            lcdata = self.inputs.import_lcdata(return_list=False)
+            morphdata = self.inputs.import_morph(return_list=False)
+            accdata = self.inputs.import_accretion()
+            sums = ["hyp_percent", "Q_in", "Q_out"]
+            mins = ["km"]
+            aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
+                    "SedThermCond", "SedThermDiff", "SedDepth", "phi",
+                    "Q_cont", "d_cont", "T_in"]
+
+        elif self.run_type == 1:
+            lcdata = self.inputs.import_lcdata(return_list=False)
+            morphdata = self.inputs.import_morph(return_list=False)
+            sums = []
+            mins = ["km"]
+            aves = ["longitude", "latitude", "elevation"]
+
+        elif self.run_type == 2:
+            morphdata = self.inputs.import_morph(return_list=False)
+            accdata = self.inputs.import_accretion()
+            sums = ["hyp_percent", "Q_in", "Q_out"]
+            mins = ["km"]
+            aves = ["elevation", "S", "W_b", "z", "n",
+                    "Q_cont", "d_cont"]
 
         # Add these columns to morph data since they do not 
         # exist in the input file. 
@@ -600,14 +617,16 @@ class ModelSetup(object):
         # we have to switch the key names because they are not 
         # consistent with model variable names. This needs to be fixed. 
         # TODO
-        for k in lc:
-            data[head2var[k]] = [i for i in lcdata[k]]
-
         for k in morph:
             data[head2var[k]] = [i for i in morphdata[k]]
 
-        for k in flow:
-            data[head2var[k]] = [i for i in accdata[k]]
+        if self.run_type in [0, 1]:
+            for k in lc:
+                data[head2var[k]] = [i for i in lcdata[k]]
+
+        if self.run_type in [0, 2]:
+            for k in flow:
+                data[head2var[k]] = [i for i in accdata[k]]
 
         # Then sum and average things as appropriate. 
         # multiplier() takes a tuple and applies the given lambda 
@@ -652,7 +671,8 @@ class ModelSetup(object):
         for i in range(0, num_nodes):
             node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
             for k, v in list(data.items()):
-                setattr(node, k, v[i + 1])# Add one to ignore boundary node
+                # Add one to ignore boundary node
+                setattr(node, k, v[i + 1])
             self.initialize_node(node)
             self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
@@ -1272,7 +1292,7 @@ class ModelSetup(object):
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def get_lc_codes(self):
-        """Return the codes from the Land Cover Codes csv input file
+        """Return the codes from the Land Cover Codes input file
         as a dictionary of dictionaries"""
 
         data = self.inputs.import_lccodes()
