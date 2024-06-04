@@ -4,7 +4,7 @@
 hydraulic model routines. It is used by pyinstaller to build the
 standalone executable. This script can also be used
 directly. It must be located in the same directory as
-HeatSource_control.csv. Run by opening a windows command
+HeatSource_control.[xlsx|csv]. Run by opening a windows command
 prompt and type:
 
 cd path/to/this/script/
@@ -30,7 +30,6 @@ from heatsource9 import BigRedButton
 import sys
 from os.path import abspath
 from os.path import dirname
-from os.path import exists
 from os.path import join
 from os.path import realpath
 from os.path import split

@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 
-"""This script writes a control file with empty values.
+"""This script writes a xlsx control file with empty values.
+The control file is written to the same directory as this script.
 It is used by pyinstaller to build the
 standalone executable. This script can also be used
-directly. It must be located in the same directory as
-HeatSource_control.csv. Run by opening a windows command
-prompt and type:
+directly. Run by opening a windows command prompt and type:
 
 cd path/to/this/script/
 py -m hs9_setup_model_inputs
@@ -44,7 +43,7 @@ else:
     application_path = abspath(join(dirname(realpath(__file__)), '.'))
 
 model_dir = join(application_path, '')
-control_file = 'HeatSource_Control.csv'
+control_file = 'HeatSource_Control.xlsx'
 
 BigRedButton.setup_cf(model_dir, control_file,
                       use_timestamp=False, overwrite=False)

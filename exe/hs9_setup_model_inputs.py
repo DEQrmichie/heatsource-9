@@ -2,11 +2,10 @@
 
 """This script is used for model setup and writes empty input files
 specific to the parametrization settings in the control file.
-It is used by pyinstaller to build the
-standalone executable. This script can also be used
-directly. It must be located in the same directory as
-HeatSource_control.csv. Run by opening a windows command
-prompt and type:
+It is used by pyinstaller to build the standalone executable.
+This script can also be used directly. It must be located in the
+same directory as HeatSource_control.[xlsx|csv]. Run by opening a
+windows command prompt and type:
 
 cd path/to/this/script/
 py -m hs9_setup_model_inputs
