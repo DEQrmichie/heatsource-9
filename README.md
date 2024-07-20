@@ -17,7 +17,7 @@ the sole responsibility of the user.
 Heat Source 7-8 and user manual: 
 http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
 
-Authors: Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner
+Authors: Matt Boyd, Brian Kasper, Terra Metta, Ryan Michie, Dan Turner
 
 Contact: Ryan Michie, ryan.michie @ deq.oregon.gov
 
