@@ -4,7 +4,6 @@ about the model initialization parameters and model inputs.
 It is located here so be they can be accessed globally.
 """
 
-
 # IniParms mostly holds the control file info.
 # A couple initial values are suggested to make life easy.
 IniParams = {"run_in_python": True,
@@ -50,6 +49,17 @@ IniParams = {"run_in_python": True,
              "lcsampmethod": "point",
              "heatsource8": "False", }
 
+# name of excel sheets
+
+sheetnames = {"accretionfile": "Accretion Flow",
+              "bcfile": "Boundary Conditions",
+              "controlfile": "Control Settings",
+              "inflowinfiles": "Tributary Data",
+              "metfiles": "Meteorological Data",
+              "morphfile": "Morphology Data",
+              "lccodefile": "Land Cover Codes",
+              "lcdatafile": "Land Cover Data"}
+
 # dype is a dictionary holding the data type for every input. Includes 
 # model variable names and input file names. Note the datetime inputs
 # are identified as strings here but are converted to integers
@@ -58,7 +68,6 @@ IniParams = {"run_in_python": True,
 # upon import. See Inputs class validate() and import_control_file() 
 # for details.
 
-
 dtype = {"run_in_python": bool,
          "usertxt": str,
          "name": str,
@@ -66,10 +75,10 @@ dtype = {"run_in_python": bool,
          "outputdir": str,
          "length": float,
          "outputkm": str,
-         "datastart": str,
-         "modelstart": str,
-         "modelend": str,
-         "dataend": str,
+         "datastart": "datetime",
+         "modelstart": "datetime",
+         "modelend": "datetime",
+         "dataend": "datetime",
          "flushdays": int,
          "offset": int,
          "dt": float,
@@ -138,7 +147,7 @@ dtype = {"run_in_python": bool,
          "INFLOW": float,
          "TEMPERATURE": float,
          "OUTFLOW": float,
-         "DATETIME": str,
+         "DATETIME": "datetime",
          "CLOUDINESS": float,
          "WIND_SPEED": float,
          "RELATIVE_HUMIDITY": float,
@@ -168,7 +177,7 @@ dtype = {"run_in_python": bool,
          "MANNINGS_n": float,
          "SED_THERMAL_CONDUCTIVITY": float,
          "SED_THERMAL_DIFFUSIVITY": float,
-         "SED_HYPORHEIC_THICKNESSS": float,
+         "SED_HYPORHEIC_THICKNESS": float,
          "HYPORHEIC_PERCENT": float,
          "POROSITY": float
          }
@@ -191,7 +200,7 @@ head2var = {"STREAM_ID": "streamID",
             "MANNINGS_n": "n",
             "SED_THERMAL_CONDUCTIVITY": "SedThermCond",
             "SED_THERMAL_DIFFUSIVITY": "SedThermDiff",
-            "SED_HYPORHEIC_THICKNESSS": "SedDepth",
+            "SED_HYPORHEIC_THICKNESS": "SedDepth",
             "HYPORHEIC_PERCENT": "hyp_percent",
             "POROSITY": "phi",
             "Q_cont": "Q_cont",
@@ -208,7 +217,7 @@ iniRange = {"STREAM_KM": [0, 999999],
             "CLOUDINESS": [0, 1],
             "WIND_SPEED": [0, 120],
             "RELATIVE_HUMIDITY": [0, 1],
-            "AIR_TEMPERATURE": [-22, 266],
+            "AIR_TEMPERATURE": [-90, 60],
             "FLOW": [-3000, 3000],
             "HEIGHT": [0, 2000],
             "CANOPY": [0, 1],
@@ -229,9 +238,9 @@ iniRange = {"STREAM_KM": [0, 999999],
             "BOTTOM_WIDTH": [0, 20000],
             "CHANNEL_ANGLE_Z": [0, 90],
             "MANNINGS_n": [0, 2],
-            "SED_THERMAL_CONDUCTIVITY": [0, 10],
+            "SED_THERMAL_CONDUCTIVITY": [0, 40],
             "SED_THERMAL_DIFFUSIVITY": [0, 0.3],
-            "SED_HYPORHEIC_THICKNESSS": [0, 20],
+            "SED_HYPORHEIC_THICKNESS": [0, 20],
             "HYPORHEIC_PERCENT": [0, 1],
             "POROSITY": [0, 1]
             }
