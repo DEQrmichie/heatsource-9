@@ -7,7 +7,8 @@ from sys import version_info as vi
 installed_version = (vi[0], vi[1])
 
 if installed_version < (3, 8):
-    raise Exception("The default Python version must be 3.8 or higher, not {0}.{1}".format(vi[0], vi[1]))
+    raise Exception(
+        "The default Python version must be 3.8 or higher, not {0}.{1}".format(vi[0], vi[1]))
 
 USE_CYTHON = True
 
@@ -54,7 +55,7 @@ setup(name='heatsource9',
       project_urls={
           'Documentation': 'https://www.oregon.gov/deq/FilterDocs/heatsourcemanual.pdf',
           'Source': 'https://github.com/DEQrmichie/heatsource-9/'},
-      author='Matt Boyd, Brian Kasper, John Metta, Ryan Michie, Dan Turner',
+      author='Matt Boyd, Brian Kasper, Terra Metta, Ryan Michie, Dan Turner',
       maintainer='Ryan Michie, Oregon DEQ',
       maintainer_email='ryan.michie@deq.state.or.us',
       platforms=['darwin', 'linux', 'win32'],
