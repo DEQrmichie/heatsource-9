@@ -8,7 +8,7 @@ license = {file = "LICENSE.txt"}
 authors = [
     {name = "Matt Boyd"},
     {name = "Brian Kasper"},
-    {name = "John Metta"},
+    {name = "Terra Metta"},
     {name = "Ryan Michie"},
     {name = "Dan Turner"}
 ]
