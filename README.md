@@ -31,7 +31,7 @@ There are two options for installing and running Heat Source 9:
 the executable to run the model. That's it. Python installation is not required. These executables were 
 developed on Windows 10. They have not been tested on other versions of Windows.
 
-2. Install the model as a Python pacakge. Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
+2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
 https://www.python.org/downloads/
 
 After python has been installed, install the heat source package from command line using pip.
