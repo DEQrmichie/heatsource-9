@@ -28,7 +28,7 @@ from builtins import zip
 from builtins import range
 from builtins import object
 from itertools import chain, repeat, count
-from math import ceil, log, degrees, atan
+from math import ceil, log, degrees, atan, exp
 from bisect import bisect
 from time import ctime
 import logging
@@ -979,12 +979,11 @@ class ModelSetup(object):
                         # use LAI data
                         Vk = k[i * transsample_count + s + 1][h]
 
-                        # Purpose here is to calculate a LAI where 
-                        # gap fraction = 0.1% (basically zero)
-                        LAI_den = v_can / -log(0.001) / Vk
-                        if LAI_den > 1:
-                            LAI_den = 1
-                        w_vdens_num += veg_angle * float(LAI_den)
+                        # calculate canopy cover from LAI and k
+                        LAI_can = 1 - exp(-Vk * v_can)
+                        if LAI_can > 1:
+                            LAI_can = 1
+                        w_vdens_num += veg_angle * float(LAI_can)
                     else:
                         w_vdens_num += veg_angle * float(v_can)
                     w_vdens_dem += veg_angle
@@ -1261,14 +1260,12 @@ class ModelSetup(object):
                         # use LAI data
 
                         Vk = k[i * transsample_count + s + 1][h]
-                        # use LAI data
-                        # Purpose here is to calculate a LAI where 
-                        # gap fraction = 0.01% (basically zero)
-                        LAI_den = v_can / -log(0.001) / Vk
 
-                        if LAI_den > 1:
-                            LAI_den = 1
-                        w_vdens_num += veg_angle * float(LAI_den)
+                        # calculate canopy cover from LAI and k
+                        LAI_can = 1 - exp(-Vk * v_can)
+                        if LAI_can > 1:
+                            LAI_can = 1
+                        w_vdens_num += veg_angle * float(LAI_can)
                     else:
                         w_vdens_num += veg_angle * float(v_can)
                     w_vdens_dem += veg_angle
