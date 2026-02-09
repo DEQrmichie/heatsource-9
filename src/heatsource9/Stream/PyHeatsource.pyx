@@ -299,34 +299,49 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # JulianDay = -DateDiff("d", theTime, DateSerial(year(theTime), 1, 1))
     # This calculation for Rad_Vec should be checked, with 
     # respect to the DST hour/24 part.
+    
+    # Radius Vector (Wunderlich 1972)
     Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - JD + hour / 24))
+    
+    # Solar Constant (Dingman 2002)
     Solar_Constant = 1367 # W/m2
     
-    # Global Direct Solar Radiation
+    # Global Direct Solar Radiation Flux at the Edge of the Atmosphere (Wunderlich 1972)
     F_Direct[0] = ((Solar_Constant / (Rad_Vec ** 2)) *
                    sin(radians(Altitude)))
     
     F_Diffuse[0] = 0
     #======================================================
     # 1 - Above Topography
+    
+    # Optical Air Mass Thickness (Ibqal 1983)
     Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
         exp(-0.0001184 * elevation)
+    
+    # Atmospheric Transmissivity (Ibqal 1983)
     Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
-    #Calculate Diffuse Fraction
+    
+    # Direct Beam Solar Radiation above Topographic Features
+    # (Wunderlich 1972, Martin and McCutcheon 1999)
     F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
                                                            cloud ** 2)
+    # Clearness Index (Chen 1994)
     if F_Direct[0] == 0:
         Clearness_Index = 1
     else:
         Clearness_Index = F_Direct[1] / F_Direct[0]
 
     Dummy = F_Direct[1]
+    
+    # Diffuse Fraction (Chen 1994)
     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
         (5.14 * (Clearness_Index ** 2)) + \
         (2.98 * (Clearness_Index ** 3)) - \
         (sin(2 * pi * (JD - 40) / 365)) * \
         (0.009 - 0.078 * Clearness_Index)
     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
+    
+    # Diffuse above Topographic Features (Chen 1994)
     F_Diffuse[1] = Dummy * (Diffuse_Fraction) * (1 - 0.65 * cloud ** 2)
 
     #======================================================
@@ -380,9 +395,12 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 if BeersData == "LAI":
                     
                     # use LAI and k to calculate the riparian extinction value
-                    RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
-                    fraction_passed = exp(-1 * RipExtinction * PLz)
-                    
+                    try:
+                        RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
+                        fraction_passed = exp(-1 * RipExtinction * PLz)
+                    except:
+                        # can't divide by height zero
+                        fraction_passed = 0
                 else:
                     # Use canopy cover to calculate 
                     # the riparian extinction value
@@ -489,6 +507,8 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         
     #=========================================================
     # 5 - Entering Stream
+    
+    # Stream Surface Reflectivity (Sellers 1965)
     if Zenith > 80:
         Stream_Reflect = 0.0515 * (Zenith) - 3.636
     else:
@@ -503,11 +523,15 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     #=========================================================
     # 6 - Received by Water Column
     # 7 - Received by Bed
-    # Jerlov (1976)
+    
+    # Direct Beam Solar Radiation Water Column Path Length (Jerlov 1976)
     Water_Path = (d_w / cos(atan((sin(radians(Zenith)) / 1.3333) /
                                  sqrt(-(sin(radians(Zenith)) / 1.3333) *
                                       (sin(radians(Zenith)) / 1.3333) + 1))))
     
+    
+    # Transmissivity of Water for Direct Beam Solar Radiation 
+    # (Austin and Halikas 1976)
     Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
     if Trans_Stream > 1:
         Trans_Stream = 1
@@ -518,7 +542,8 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # Direct Solar Radiation Hitting Stream bed
     Dummy2 = F_Direct[5] - Dummy1
     
-    # Reflection Coef. for Direct Solar
+    # Stream Bed Reflection Coef. for Direct Solar
+    # (Beschta and Weathered 1984 adopted from Sellers 1965)
     Bed_Reflect = exp(0.0214 * (Zenith * pi / 180) - 1.941)
     BedRock = 1 - phi
     
@@ -642,7 +667,7 @@ def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
                            (273.2 + T_air)) ** (1 / 7)) *
                   (1 + 0.22 * cloud ** 2))
     #======================================================
-    # Calculate the atmospheric longwave flux
+    # Calculate the atmospheric longwave flux (McCutcheon 1989)
     cdef double F_LW_Atm = 0.96 * ViewToSky * Emissivity * Sigma * (T_air + 273.2) ** 4
     # Calculate the backradiation longwave flux
     cdef double F_LW_Stream = -0.96 * Sigma * (T_prev + 273.2) ** 4
