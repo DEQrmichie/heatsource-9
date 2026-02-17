@@ -4,7 +4,7 @@ version = "9.0.0b28"
 description = "One-dimensional stream temperature modeling program"
 readme = "README.md"
 requires-python = ">=3.8, <4"
-license = {file = "LICENSE.txt"}
+license = "GPL-3.0"
 authors = [
     {name = "Matt Boyd"},
     {name = "Brian Kasper"},
@@ -13,17 +13,17 @@ authors = [
     {name = "Dan Turner"}
 ]
 maintainers = [
-  {name = "Ryan Michie", email = "ryan.michie@deq.state.or.us"}
+  {name = "Ryan Michie", email = "ryan.michie@deq.oregon.gov"}
 ]
 classifiers = [
     'Development Status :: 4 - Beta',
     'Environment :: Console',
     'Intended Audience :: Science/Research',
-    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Natural Language :: English',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Cython',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3 :: Only',
     'Programming Language :: Python :: 3.8',
@@ -31,12 +31,14 @@ classifiers = [
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Topic :: Scientific/Engineering'
 ]
 
 dependencies = [
-    "Cython==3.0.10",
-    "openpyxl <= 3.1.3"
+    "Cython==3.1.4",
+    "openpyxl <= 3.1.5"
 ]
 
 [project.urls]
@@ -49,5 +51,5 @@ hs = "heatsource9.BigRedButton:hs"
 hs = "heatsource9.BigRedButton:hs"
 
 [build-system]
-requires = ["setuptools", "Cython==3.0.10"]
+requires = ["setuptools", "Cython==3.1.4"]
 build-backend = "setuptools.build_meta"
