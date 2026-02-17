@@ -746,6 +746,10 @@ class Inputs(object):
         # each value in each column is appended to a list
         data = defaultdict(list)
 
+        if not exists(join(inputdir, filename.strip())):
+            msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
+            raise ValueError(msg)
+
         with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8") as file_object:
             reader = csv.DictReader(file_object, dialect="excel")
 
@@ -777,10 +781,15 @@ class Inputs(object):
         # each value in each column is appended to a list
         data = defaultdict(list)
 
+        if not exists(join(inputdir, filename.strip())):
+            msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
+            raise ValueError(msg)
+
         wb = load_workbook(join(inputdir, filename.strip()), read_only=True, data_only=True)
 
         if sheetname not in wb.sheetnames:
-            raise ValueError("Worksheet must be named {0} in file {1}.".format(sheetname, filename))
+            msg = "Worksheet must be named '{0}' in file {1}.".format(sheetname, filename)
+            raise ValueError(msg)
 
         sheet = wb[sheetname]
 
@@ -821,6 +830,11 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         i = 1
         for filename in filenames:
+
+            if not exists(join(inputdir, filename.strip())):
+                msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
+                raise ValueError(msg)
+
             with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8") as file_object:
                 newfile = [row for row in csv.reader(file_object.read().splitlines(), dialect="excel")]
 
@@ -828,6 +842,14 @@ class Inputs(object):
             newfile = newfile[-(len(newfile) - skiprows):]
             # skip cols
             newfile = [line[+skipcols:] for line in newfile]
+
+            # remove blank rows at the end of the file
+            while newfile and all(cell.strip() == '' for cell in newfile[-1]):
+                newfile.pop()
+                msg = "Skipping blank rows at end of {0}. Please remove blank rows.".format(filename)
+                logger.warning(msg)
+                print_console(msg)
+
             if i == 1:
                 data = newfile
             else:
@@ -850,10 +872,16 @@ class Inputs(object):
         filenames = [filenames] if not isinstance(filenames, list) else filenames
         i = 1
         for filename in filenames:
+
+            if not exists(join(inputdir, filename.strip())):
+                msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
+                raise ValueError(msg)
+
             wb = load_workbook(join(inputdir, filename.strip()), read_only=True, data_only=True)
 
             if sheetname not in wb.sheetnames:
-                raise ValueError("Worksheet must be named {0] in file {1}.".format(sheetname, filename))
+                msg = "Worksheet must be named '{0}' in file {1}.".format(sheetname, filename)
+                raise ValueError(msg)
 
             sheet = wb[sheetname]
 
