@@ -68,4 +68,4 @@ if control_ext not in [".xlsx", ".csv"]:
 
 # Write blank input files,
 BigRedButton.setup_mi(model_dir, control_file,
-                      use_timestamp=True, overwrite=False)
+                      use_timestamp=False, overwrite=False)
