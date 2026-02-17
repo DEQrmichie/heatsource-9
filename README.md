@@ -31,7 +31,7 @@ There are two options for installing and running Heat Source 9:
 the executable to run the model. That's it. Python installation is not required. These executables were 
 developed on Windows 10. They have not been tested on other versions of Windows.
 
-2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, or 3.12.
+2. Install the model as a Python package. Requires install of Python 3.8 +.
 https://www.python.org/downloads/
 
 After python has been installed, install the heat source package from command line using pip.
@@ -224,7 +224,7 @@ cd path\to\model_directory
 hs setup -cf
 ```
 
-The control file can also parameterized in python directly using `**kwargs`. Any control file key arguments passed will 
+The control file can also be parameterized in python directly using `**kwargs`. Any control file key arguments passed will 
 be written into the output csv.
 ```python
 from heatsource9 import BigRedButton
@@ -445,19 +445,19 @@ This is controlled in the control file with `inflowinfiles` by using multiple fi
 
 Control file setup with multiple excel files for each tributary input.
 
-| LINE | PARAMETER                                         | KEY                  | VALUE                                             |
-|-----:|:--------------------------------------------------|:---------------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites                            | inflowsites          | 2                                                 |
-|   19 | Tributary Inflow Input File Name                  | inflowinfiles        | "trib1_quarter_branch.xlsx, trib2_dry_creek.xlsx" |
-|   20 | Tributary Inflow Model kilometers                 | inflowkm             | "4.05, 3.35"                                      |
+| LINE | PARAMETER                                         | KEY           | VALUE                                             |
+|-----:|:--------------------------------------------------|:--------------|:--------------------------------------------------|
+|   18 | Tributary Inflow Sites                            | inflowsites   | 2                                                 |
+|   19 | Tributary Inflow Input File Name                  | inflowinfiles | "trib1_quarter_branch.xlsx, trib2_dry_creek.xlsx" |
+|   20 | Tributary Inflow Model kilometers                 | inflowkm      | "4.05, 3.35"                                      |
 
 Control file setup with single excel file for all tributary inputs.
 
-| LINE | PARAMETER                                         | KEY                  | VALUE                                             |
-|-----:|:--------------------------------------------------|:---------------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites                            | inflowsites          | 2                                                 |
-|   19 | Tributary Inflow Input File Name                  | inflowinfiles        | tribs.xlsx                                        |
-|   20 | Tributary Inflow Model kilometers                 | inflowkm             | "4.05, 3.35"                                      |
+| LINE | PARAMETER                                         | KEY           | VALUE                                             |
+|-----:|:--------------------------------------------------|:--------------|:--------------------------------------------------|
+|   18 | Tributary Inflow Sites                            | inflowsites   | 2                                                 |
+|   19 | Tributary Inflow Input File Name                  | inflowinfiles | tribs.xlsx                                        |
+|   20 | Tributary Inflow Model kilometers                 | inflowkm      | "4.05, 3.35"                                      |
 
 ### 6.6 LAND COVER CODES FILE  
 File name: UserDefinedFileName.[xlsx|csv]
@@ -549,40 +549,42 @@ from geospatial data using TTools.
 #### Land Cover Data Input Type
 Land cover information can be input into the model in two different ways:
 Using codes or values. If using codes unique land cover attribute information is represented as a unique code.
-The land cover attribute  associated to each code is parameterized in the Land Cover Codes file in long format.
+The land cover attribute associated to each code is parameterized in the Land Cover Codes file in long format.
 If using values, the land cover attribute information for each transect sample is explicitly in the land cover data file.
 
 The land cover data input type is identified in the control file.
+
+The number of columns are dependent on the number of transects and samples specified in the control file. The '#'
+in the column name will be a number and refers to the specific transect (T) number or sample (S) number. For example LC_T2_S4 refers to the 
+land cover sample on transect 2, sample number 4.
 
 ##### Codes
 When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:------------------------------------------|:-------|:----------|:----------:|:--------------:|:----------------:|
-|   multiple    | `LC_T_S`    | Landcover code on transect T for sample S | N/A    | string    |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S      | meters | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `LC_T#_S#`  | Landcover code on transect T for sample S | N/A    | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S      | meters | float     |  Required  |    Optional    |     Required     |
 
 ##### Values
 When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyCover"``` the following columns will be used after column 8:
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                  | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:---------------------------------------------|:-----------------------|:----------|:----------:|:--------------:|:----------------:|
-|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S | N/A                    | string    |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S         | meters                 | float     |  Required  |    Optional    |     Required     |
-|   multiple    | `CAN_T_S`   | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |  Required  |    Optional    |     Required     |
-|   multiple    | `OH_T_S`    | Overhang on transect T for sample S          | meters                 | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `HT_T#_S#`  | Land cover height on transect T for sample S | N/A                    | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S         | meters                 | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `CAN_T#_S#` | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S          | meters                 | float     |  Required  |    Optional    |     Required     |
 
 When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                          | UNITS         | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:-----------------------------------------------------|:--------------|:----------|:----------:|:--------------:|:----------------:|
-|   multiple    | `HT_T_S`    | Land cover height on transect T for sample S         | N/A           | string    |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T_S`   | Elevation on transect T for sample S                 | meters        | float     |  Required  |    Optional    |     Required     |
-|   multiple    | `LAI_T_S`   | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |  Required  |    Optional    |     Required     |
-|   multiple    | `k_T_S`     | k extinction coefficient on transect T for sample S  | dimensionless | float     |  Required  |    Optional    |     Required     |
-|   multiple    | `OH_T_S`    | Overhang on transect T for sample S                  | meters        | float     |  Required  |    Optional    |     Required     |
-
-Note - the number of columns are dependent on the number of transects and samples specified in the control file.
+|   multiple    | `HT_T#_S#`  | Land cover height on transect T for sample S         | N/A           | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S                 | meters        | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `LAI_T#_S#` | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `k_T#_S#`   | k extinction coefficient on transect T for sample S  | dimensionless | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S                  | meters        | float     |  Required  |    Optional    |     Required     |
 
 ### 6.8 MORPHOLOGY DATA FILE  
 File name: UserDefinedFileName.[xlsx|csv]
