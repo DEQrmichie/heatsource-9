@@ -170,7 +170,7 @@ Field details:
 | LAND COVER DATA | User Defined | Land Cover Data |
 | MORPHOLOGY DATA | User Defined | Morphology Data |
 
-Run requirements:
+Model run requirements:
 | INPUT FILE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:---|:---|:---|:---|
 | CONTROL FILE | Required | Required | Required |
@@ -503,7 +503,7 @@ Input file formatting when ```canopy_data = "CanopyCover"``` in the control file
 |       6       | `CANOPY_DEPTH` | Canopy depth      | meters                 |   float   |  Optional  |    Optional    |     Optional     |
 
 
-- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used instead.
+- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used internally in the model for canopy depth.
 
 
 ##### LAI
@@ -519,7 +519,7 @@ Input file formatting when ```canopy_data = "LAI"``` in the control file.
 |       6       | `OVERHANG`     | Overhang                  | meters        |   float   |  Required  |    Optional    |     Required     |
 |       7       | `CANOPY_DEPTH` | Canopy depth              | meters        |   float   |  Optional  |    Optional    |     Optional     |
 
-- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used instead.
+- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used internally in the model for canopy depth.
 
 The land cover codes file can be parameterized from script.
 ```python
@@ -609,7 +609,7 @@ When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following c
 |   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S                  | meters        | float     |  Required  |    Optional    |     Required     |
 |   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S              | meters        | float     |  Optional  |    Optional    |     Optional     |
 
-- For backward compatibility with older land cover data files, if the `CD_T#_S#` columns are not present, the model uses the vegetation height values in `HT_T#_S#`. 
+- For backward compatibility with older land cover data files, if the `CD_T#_S#` columns are not present, the model uses the vegetation height values in `HT_T#_S#` for canopy depth. 
 
 ### 6.8 MORPHOLOGY DATA FILE  
 File name: UserDefinedFileName.[xlsx|csv]
