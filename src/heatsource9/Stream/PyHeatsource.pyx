@@ -283,7 +283,7 @@ def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
 
 def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, phi, emergent, lc_canopy, lc_height, lc_height_rel, lc_k,
+                 BeersData, phi, lcsampmethod, emergent, lc_canopy, lc_height, lc_height_rel, lc_k, lc_oh, lc_canopy_depth,
                  ShaderList, tran, heatsource8):
     """ """
     FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
@@ -374,29 +374,78 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         # 3 - Below Landcover (Above Bank Shade & Emergent)
         Dummy1 = F_Direct[2]
 
-        # Now calculate the fraction of radiation passed through the canopy
         s = transsample_count - 1
-        
+
+        # Now calculate the fraction of radiation passed through the canopy
         while s >= 0:
             if Altitude >= VegetationAngle1[s]:
                 # no shading
                 fraction_passed = 1
             else:
-                
-                # First calculate path length through the canopy sample 
-                if Altitude <= VegetationAngle2[s]:
-                    # solar incoming from the side of the canopy
-                    PLz = transsample_distance / cos(radians(Altitude))
-                else:
-                    # solar incoming from top of the canopy (not from the side)
-                    PLz = (lc_height_rel[tran][s] - (tan(radians(Altitude)) * (transsample_distance*s))) / sin(radians(Altitude))
-                
                 # shading is occurring from this sample
+                if heatsource8 and BeersData != "LAI":
+                    # Calculate riparian path length.
+                    cos_altitude = cos(radians(Altitude))
+                    if abs(cos_altitude) < 1e-6:
+                        cos_altitude = 1e-6
+                    PLz = transsample_distance / cos_altitude
+                else:
+                    adjust = 0.5 if lcsampmethod == "zone" else 0.0
+                    x_near = transsample_distance * (s + 1 - adjust)
+                    x_far = transsample_distance * (s + 2 - adjust)
+                    if s == 0:
+                        x_near -= lc_oh[tran][s]
+                    if x_near <= 0:
+                        x_near = 1e-5
+
+                    zone_width = x_far - x_near
+                    if zone_width <= 0:
+                        zone_width = transsample_distance
+                    if zone_width <= 0:
+                        zone_width = 1e-5
+
+                    altitude_rad = radians(Altitude)
+                    cos_altitude = cos(altitude_rad)
+                    if abs(cos_altitude) < 1e-6:
+                        cos_altitude = 1e-6
+
+                    tan_altitude = tan(altitude_rad)
+                    if abs(tan_altitude) < 1e-6:
+                        tan_altitude = 1e-6
+
+                    H_top = lc_height_rel[tran][s]
+                    if BeersData == "LAI":
+                        H_base = 0.0
+                    else:
+                        H_canopy_depth = lc_canopy_depth[tran][s]
+                        H_base = H_top - H_canopy_depth
+
+                    x_base = H_base / tan_altitude
+                    x_top = H_top / tan_altitude
+
+                    if Altitude <= VegetationAngle2[s]:
+                        # Side entry path length
+                        x_enter = max(x_near, x_base)
+                        x_exit = min(x_far, x_top)
+                        if x_exit <= x_enter:
+                            PLz = 0.0
+                        else:
+                            PLz = (x_exit - x_enter) / cos_altitude
+                    else:
+                        # Top entry
+                        x_enter = max(x_near, x_base)
+                        x_exit = min(max(x_top, x_near), x_far)
+                        if x_exit <= x_enter:
+                            PLz = 0.0
+                        else:
+                            PLz = (x_exit - x_enter) / cos_altitude
+                if PLz < 0:
+                    PLz = 0.0
+
                 if BeersData == "LAI":
-                    
                     # use LAI and k to calculate the riparian extinction value
                     try:
-                        RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_height[tran][s]
+                        RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
                         fraction_passed = exp(-1 * RipExtinction * PLz)
                     except:
                         # can't divide by height zero
@@ -406,11 +455,11 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     # the riparian extinction value
                     if heatsource8:
                         #---------  Boyd and Kasper 2007 
-                        # from original heat source model
+                        # from heat source model 7 and 8
                         PL = 10
                     else:
-                        #--------- Norman and Welles 1983, Chen et al 1998
-                        PL = lc_height[tran][s]
+                        #--------- Welles and Cohen 1996 (Canopy Depth), Chen et al 1998 (Vegetation Height)
+                        PL = lc_canopy_depth[tran][s]
                     
                     try:
                         RipExtinction = -log(1- lc_canopy[tran][s]) / PL
@@ -457,11 +506,53 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         else:
             # sun vector is passing through the canopy
             
-            if heatsource8:
-                #---------  Boyd and Kasper 2007
-                PLe = 10
+            if heatsource8 and BeersData != "LAI":
+                H = lc_height_rel[0][0]
+                H_canopy_depth = lc_canopy_depth[0][0]
+                H_base = H - H_canopy_depth
+                C = lc_canopy[0][0]
+
+                if C <= 0 or H <= 0:
+                    direct_passed = 1.0
+                    diffuse_passed = 1.0
+                elif C >= 1:
+                    # direct is fully blocked, diffuse is near fully blocked. These are the exact values from HS8
+                    direct_passed = 0.0
+                    diffuse_passed = 0.0001
+                else:
+                    width_cap = W_b if W_b > 0 else transsample_distance
+                    altitude_rad = radians(Altitude)
+                    cos_altitude = cos(altitude_rad)
+                    if abs(cos_altitude) < 1e-6:
+                        cos_altitude = 1e-6
+                    tan_altitude = tan(altitude_rad)
+                    if abs(tan_altitude) < 1e-6:
+                        tan_altitude = 1e-6
+
+                    x_near = 0.0
+                    x_far = width_cap
+                    x_base = H_base / tan_altitude
+                    x_top = H / tan_altitude
+                    x_enter = max(x_near, x_base)
+                    x_exit = min(x_far, x_top)
+                    if x_exit <= x_enter:
+                        path_emergent = 0.0
+                    else:
+                        path_emergent = (x_exit - x_enter) / cos_altitude
+
+                    # HS8 10m canopy depth. Boyd and Kasper 2003
+                    rip_ext_direct = -log(1 - C) / 10.0
+                    direct_passed = exp(-rip_ext_direct * path_emergent)
+
+                    # HS8 uses full emergent veg height
+                    rip_ext_diffuse = -log(1 - C) / H_canopy_depth
+                    diffuse_passed = exp(-rip_ext_diffuse * H_canopy_depth)
+
+                F_Direct[4] = F_Direct[4] * direct_passed
+                F_Diffuse[4] = F_Diffuse[4] * diffuse_passed
+                fraction_passed = 1.0
             else:
-                #--------- (Norman and Welles 1983)
+                #--------- (Welles and Cohen 1996)
                 # PLe is the path length of the sun vector through 
                 # the vegetation in the emergent sample
         
@@ -474,21 +565,47 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 else:
                     emergent_distance = W_b * 0.5
                 
-                if Altitude <= degrees(atan(lc_height_rel[0][0]/emergent_distance)):
-                    PLe = emergent_distance / cos(radians(Altitude))
+                H_top = lc_height_rel[0][0]
+                if BeersData == "LAI":
+                    H_base = 0.0
                 else:
-                    PLe = (lc_height_rel[0][0] - (tan(radians(Altitude)) * (emergent_distance))) / sin(radians(Altitude))
+                    H_canopy_depth = lc_canopy_depth[0][0]
+                    H_base = H_top - H_canopy_depth
+
+                altitude_rad = radians(Altitude)
+                cos_altitude = cos(altitude_rad)
+                if abs(cos_altitude) < 1e-6:
+                    cos_altitude = 1e-6
+                tan_altitude = tan(altitude_rad)
+                if abs(tan_altitude) < 1e-6:
+                    tan_altitude = 1e-6
+
+                x_near = 0.0
+                x_far = emergent_distance
+                x_base = H_base / tan_altitude
+                x_top = H_top / tan_altitude
+
+                if Altitude <= degrees(atan(H_top/emergent_distance)):
+                    x_enter = max(x_near, x_base)
+                    x_exit = min(x_far, x_top)
+                else:
+                    x_enter = max(x_near, x_base)
+                    x_exit = min(max(x_top, x_near), x_far)
+                if x_exit <= x_enter:
+                    PLe = 0.0
+                else:
+                    PLe = (x_exit - x_enter) / cos_altitude
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
-                RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_height[0][0]
+                RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
                 fraction_passed = exp(-1 * RipExtinction * PLe)
                 
             else:
                 try:
                     # Use canopy cover to calculate 
                     # the riparian extinction value
-                    RipExtinction = -log(1- lc_canopy[0][0]) / lc_height[0][0]
+                    RipExtinction = -log(1- lc_canopy[0][0]) / lc_canopy_depth[0][0]
                     fraction_passed = exp(-1* RipExtinction * PLe)
                     
                 except:
@@ -502,8 +619,9 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         print_console(msg)
                         raise Exception
                 
-        F_Direct[4] = F_Direct[4] * fraction_passed
-        F_Diffuse[4] = F_Diffuse[4] * fraction_passed
+        if not (heatsource8 and BeersData != "LAI"):
+            F_Direct[4] = F_Direct[4] * fraction_passed
+            F_Diffuse[4] = F_Diffuse[4] * fraction_passed
         
     #=========================================================
     # 5 - Entering Stream
@@ -688,23 +806,20 @@ def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
     #===================================================
     # Calculate the frictional reduction in wind velocity
     cdef int Zm
-    cdef double Zd, Zo, Friction_Velocity
+    cdef double Zd, Zo, Friction_Velocity, ratio
     if emergent and lc_height[0][0] > 0:
         
         Zm = 2
         
         # zm > Zd + Zo
-        if lc_height[0][0] < 2.5:
-            Zd = 0.7 * lc_height[0][0]
-            Zo = 0.1 * lc_height[0][0]
+        Zd = 0.7 * lc_height[0][0]
+        Zo = 0.1 * lc_height[0][0]
+        ratio = (Zm - Zd) / Zo
 
+        if ratio > 1.0:
+            Friction_Velocity = wind * 0.4 / log(ratio)
         else:
-            Zd = 1.75
-            Zo = 0.25
-
-        # Vertical wind Decay Rate using Prandtl-von-Karman 
-        # universal velocity distribution (Dingman 2002 p. 594)
-        Friction_Velocity = (1 / 0.4) * wind * log((Zm - Zd) / Zo)
+            Friction_Velocity = wind
     else:
         Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
         Zd = 0 #Brustsaert (1982) p. 277 Dingman
@@ -829,9 +944,9 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     cloud, wind, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
-        lc_height_rel, lc_k, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
+        lc_height_rel, lc_k, lc_oh, lc_canopy_depth, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
-        BeersData, emergent, wind_a, wind_b, calcevap, penman, \
+        BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, T_alluv = C_args
 
     solar = [0]*8
@@ -849,9 +964,9 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                                         TopoFactor, ViewToSky,
                                         transsample_distance,
                                         transsample_count,
-                                        BeersData, phi, emergent,
+                                        BeersData, phi, lcsampmethod, emergent,
                                         lc_canopy, lc_height, lc_height_rel,
-                                        lc_k, ShaderList, tran,
+                                        lc_k, lc_oh, lc_canopy_depth, ShaderList, tran,
                                         heatsource8)
 
     # We're only running shade, so return solar and some empty calories

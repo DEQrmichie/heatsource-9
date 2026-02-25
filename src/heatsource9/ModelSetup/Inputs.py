@@ -141,9 +141,9 @@ class Inputs(object):
         if IniParams["lcdatainput"] == "Values":
             if IniParams["canopy_data"] == "LAI":
                 # Use LAI methods
-                prefix = ["HT", "ELE", "LAI", "k", "OH"]
+                prefix = ["HT", "ELE", "LAI", "k", "OH", "CD"]
             else:
-                prefix = ["HT", "ELE", "CAN", "OH"]
+                prefix = ["HT", "ELE", "CAN", "OH", "CD"]
         else:
             prefix = ["LC", "ELE"]
 
@@ -177,9 +177,9 @@ class Inputs(object):
         """
         if IniParams["lcdatainput"] == "Codes":
             if IniParams["canopy_data"] == "LAI":
-                return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG"]
+                return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG", "CANOPY_DEPTH"]
             else:
-                return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG"]
+                return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG", "CANOPY_DEPTH"]
         else:
             return [None]
 
@@ -495,10 +495,23 @@ class Inputs(object):
 
     def import_lccodes(self):
         """Returns the land cover codes data."""
-        return self.read_to_dict(IniParams["inputdir"],
+        data = self.read_to_dict(IniParams["inputdir"],
                                  IniParams["lccodefile"],
                                  colnames=self.headers_lccodes(),
                                  sheetname=sheetnames["lccodefile"])
+
+        # Backward compatibility for old lccodes files missing CANOPY_DEPTH.
+        nrows = len(data.get("CODE", []))
+        if "CANOPY_DEPTH" not in data:
+            data["CANOPY_DEPTH"] = [0.0] * nrows
+            msg = "Canopy depth column not found in {0}, using vegetation height instead.".format(
+                IniParams["lccodefile"])
+            logger.warning(msg)
+            print_console(msg)
+        elif len(data["CANOPY_DEPTH"]) < nrows:
+            data["CANOPY_DEPTH"].extend([0.0] * (nrows - len(data["CANOPY_DEPTH"])))
+
+        return data
 
     def import_lcdata(self, return_list=True, skiprows=1, skipcols=2):
         """Returns the land cover data."""
@@ -654,8 +667,8 @@ class Inputs(object):
         
         lccodes: Optional list of tuples with the landcover code
         information. List takes the form:
-        [(landcover name, code, ht, canopy, overhang),] or
-        [(landcover name, code, ht, lai, k, overhang),]
+        [(landcover name, code, ht, canopy, overhang, canopy_depth),] or
+        [(landcover name, code, ht, lai, k, overhang, canopy_depth),]
         
         If lccodes=None the lcdata file identified in
         the control file will be read instead to identify the unique codes.
@@ -712,7 +725,8 @@ class Inputs(object):
                     lai = self.lookup_lccode(code, lai_list)
                     k = self.lookup_lccode(code, k_list)
                     oh = self.lookup_lccode(code, oh_list)
-                    lccodes.append([None, code, ht, lai, k, oh])
+                    canopy_depth = ht
+                    lccodes.append([None, code, ht, lai, k, oh, canopy_depth])
 
             else:
                 for code in codes:
@@ -721,7 +735,8 @@ class Inputs(object):
                         ht = float(code)
                     can = self.lookup_lccode(code, can_list)
                     oh = self.lookup_lccode(code, oh_list)
-                    lccodes.append([None, code, ht, can, oh])
+                    canopy_depth = ht
+                    lccodes.append([None, code, ht, can, oh, canopy_depth])
 
                     # lccodes = [[None, code, float(code), lai, k, oh] for code in codes]
                 # else:
@@ -889,7 +904,7 @@ class Inputs(object):
 
             for row in sheet.iter_rows(values_only=True):
                 newrow = []
-                for cell in row[0:4]:
+                for cell in row[0:len(row)]:
                     if type(cell) is datetime:
                         # Make it a string
                         v = cell.strftime("%Y-%m-%d")
@@ -1125,7 +1140,7 @@ class Inputs(object):
             if "LC" in column:
                 # str
                 k = "LC"
-            elif any(s in column for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
+            elif any(s in column for s in ["HT", "ELE", "LAI", "k", "CAN", "OH", "CD"]):
                 # float
                 k = "ELE"
         else:
