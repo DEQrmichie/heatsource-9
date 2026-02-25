@@ -31,18 +31,18 @@ There are two options for installing and running Heat Source 9:
 the executable to run the model. That's it. Python installation is not required. These executables were 
 developed on Windows 10. They have not been tested on other versions of Windows.
 
-2. Install the model as a Python package. Requires install of Python 3.8 +.
+2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, or 3.14.
 https://www.python.org/downloads/
 
-After python has been installed, install the heat source package from command line using pip.
+After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
 # This command installs heat source version 9.0.0b28 directly from the GitHub repository.
 pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b28"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
-DEQ uses windows so other platforms have limited testing. We've heard folks having success on both Mac and Linux.
-After downloading the wheel, install from command line using pip.
+DEQ uses Windows so other platforms have limited testing. We've heard folks having success on both Mac and Linux.
+After downloading the wheel, install from the command line using pip.
 ```shell
 # These commands are for windows
 cd path\to\directory_where_the_heatsource9_wheel_was_saved\
@@ -61,7 +61,7 @@ py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl
 
 1. Place the control file (HeatSource_Control.xlsx) and the model run
    scripts in the same directory. You can generate a template control 
-   file by executing *hs_setup_control_file* or by using commend line.
+   file by executing *hs_setup_control_file* or by using command line.
    ```shell
    cd path\to\model_directory
    hs setup -cf
@@ -69,7 +69,7 @@ py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl
 2. Open the control file and parameterize it with your model information. 
    The control file must be named HeatSource_Control.xlsx 
     
-3. Use *hs9_setup_model_inputs* to build template input files or by using commend line. The input files will
+3. Use *hs9_setup_model_inputs* to build template input files or by using command line. The input files will
    be saved to the input file directory that is specified in the control file.
    ```shell
    cd path\to\model_directory
@@ -91,83 +91,96 @@ py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl
 6. Outputs are saved in the output directory (specified in the control file).
 
 ## 4.0 CSV MODE
-By default, the template control file and input files are written as Excel files (.xlsx). Some users may want to 
-use csv formatted files instead. To switch from Excel to csv, resave the control file as a csv (UTF-8 Unicode). 
-A template csv control file can also be generated from command line using the following:
+By default, the template control file and input files are written as Excel files (.xlsx). Some users may want to
+use CSV formatted files instead. To switch from Excel to CSV, resave the control file as a CSV (UTF-8 Unicode).
+A template CSV control file can also be generated from command line using the following:
 ```shell
 hs setup -cf -csv
 ```
-The model will read/and write input files using the same format as the control file. If the control file is formatted 
-as a csv, the input files must also be csv. If the control file is an Excel file (.xlsx), the input files must also be 
-saved as Excel files. Model output files are always written as csv (UTF-8 Unicode) files. 
+The model will read and write input files using the same format as the control file. If the control file is formatted
+as a CSV, the input files must also be CSV. If the control file is an Excel file (.xlsx), the input files must also be
+saved as Excel files. Model output files are always written as CSV (UTF-8 Unicode) files.
 
 ## 5.0 Using Command Line 
 
-Heat Source can be setup and run directly from command line. Using command line requires the python package be installed.
+Heat Source can be set up and run directly from the command line. Using command line requires the Python package be installed.
 
 Usage: 
 ``` shell
 hs <command> [options]
 ```
-Examples:
+Command forms:
 ``` shell
-hs setup -mi
+hs [-md MODEL_DIR] run -t | -s | -hy
+hs [-md MODEL_DIR] setup (-cf | -mi) [setup options]
+```
+
+Global options:
+``` shell
+-h / --help              : show help
+-md / --model-dir        : path to the model directory
+-v / --version           : print Heat Source version
+```
+
+Run types:
+``` shell
+-t / --temperature       : run the full temperature model
+-s / --solar             : run solar routines only
+-hy / --hydraulics       : run hydraulics only
+```
+
+Run options:
+``` shell
+(none)
+```
+
+Setup types:
+``` shell
+-cf / --control-file     : write a blank control file template
+-mi / --model-inputs     : write blank input files from a parameterized control file
+```
+
+Setup options:
+``` shell
+-csv / --csv-mode        : with -cf, write a CSV control file instead of XLSX
+-t / --timestamp         : add a timestamp to the file name
+-o / --overwrite         : overwrite existing files (default is to keep existing files)
+```
+
+Usage examples:
+``` shell
+hs setup -cf -md /path/to/model_dir
+hs setup -mi -o
 hs run -t
-hs -v
-```
-
-run command options:
-``` shell
--t, --temperature     Runs a temperature model
-
--s, --solar           Runs solar routines only
-
--hy, --hydraulics     Runs hydraulics only
-
--h, --help            Show this help message
-```
-
-setup command options:
-``` shell
--cf, --control-file   Writes a blank control file.
-
--mi, --model-inputs   Write blank input files. Control file must already be   
-                      parameterized.
-
--t, --timestamp       Use -t to add a timestamp to the file name.
-
--csv, --csv-mode      Use -csv to write a csv (Unicode UTF-8) formatted control
-                      file instead of .xlsx. Default is .xlsx.
-
--o, --overwrite       Use -o to overwrite any existing file.
-
--h, --help            Show this help message
-```
-
-other options:
-``` shell
--v                  The heat source version and install directory.
-
--md [MODEL_DIR]     Path to the model directory. If not used the default is current
-                    working directory.
-                    
--h, --help          Show this help message
 ```
 
 ## 6.0 MODEL FILES
 The following table summarizes what input files are needed to run each type of model. More specific details about the 
 format and content of each input file is included in the sections below.
 
-| INPUT FILE         | FILE NAME          | xlsx SHEET NAME     |      SOLAR RUNS      | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------------|:-------------------|:--------------------|:--------------------:|:--------------:|:----------------:|
-| CONTROL FILE       | HeatSource_Control | Control Settings    |       Required       |    Required    |     Required     |
-| ACCRETION          | User Defined       | Accretion Flow      |       Optional       |    Required    |     Required     |
-| BOUNDARY CONDITION | User Defined       | Boundary Conditions |       Optional       |    Required    |     Required     |
-| METEOROLOGICAL     | User Defined       | Meteorological Data | Required<sup>1</sup> |    Required    |     Required     |
-| TRIBUTARY          | User Defined       | Tributary Data      |       Optional       |    Required    |     Required     |
-| LAND COVER CODES   | User Defined       | Land Cover Codes    |       Required       |    Optional    |     Required     |
-| LAND COVER DATA    | User Defined       | Land Cover Data     |       Required       |    Optional    |     Required     |
-| MORPHOLOGY DATA    | User Defined       | Morphology Data     |       Required       |    Optional    |     Required     |
+Field details:
+| INPUT FILE | FILE NAME | xlsx SHEET NAME |
+|:---|:---|:---|
+| CONTROL FILE | HeatSource_Control | Control Settings |
+| ACCRETION | User Defined | Accretion Flow |
+| BOUNDARY CONDITION | User Defined | Boundary Conditions |
+| METEOROLOGICAL | User Defined | Meteorological Data |
+| TRIBUTARY | User Defined | Tributary Data |
+| LAND COVER CODES | User Defined | Land Cover Codes |
+| LAND COVER DATA | User Defined | Land Cover Data |
+| MORPHOLOGY DATA | User Defined | Morphology Data |
+
+Run requirements:
+| INPUT FILE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:---|:---|:---|:---|
+| CONTROL FILE | Required | Required | Required |
+| ACCRETION | Optional | Required | Required |
+| BOUNDARY CONDITION | Optional | Required | Required |
+| METEOROLOGICAL | Required<sup>1</sup> | Required | Required |
+| TRIBUTARY | Optional | Required | Required |
+| LAND COVER CODES | Required | Optional | Required |
+| LAND COVER DATA | Required | Optional | Required |
+| MORPHOLOGY DATA | Required | Optional | Required |
 
 Key to model input information:
 
@@ -177,11 +190,11 @@ Key to model input information:
  <sup>1 Cloudiness required, other met fields can be blank.</sup>
 
 General Information
-1. The control file and input files are set up as excel (.xlsx) files by default. They can also be csv (UTF-8) comma delimited files.
-2. The heat source control file must be named `HeatSource_Control.[xlsx|csv]`. The other input files can be named whatever you want (file names are specified in the control file).
+1. The control file and input files are set up as Excel (.xlsx) files by default. They can also be CSV (UTF-8) comma delimited files.
+2. The Heat Source control file must be named `HeatSource_Control.[xlsx|csv]`. The other input files can be named whatever you want (file names are specified in the control file).
 3. The column header names can be changed but the data needs to be in the correct column number.
-4. Use the specified unit and data formats identified in the control file  and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
-5. An input parameter value that is optional may be left blank although all values with float  data type will be assigned as zero.
+4. Use the specified unit and data formats identified in the control file and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
+5. An input parameter value that is optional may be left blank although all values with float data type will be assigned as zero.
 
 To write blank input files from a python script:
 ```python
@@ -194,7 +207,7 @@ model_dir = r'C://path/to/model_directory/'
 BigRedButton.setup_mi(model_dir, control_file,
                       use_timestamp=True, overwrite=False)
 ```
-To write a blank inputs files from command line:
+To write blank input files from command line:
 ```shell
 hs setup -mi
 ```
@@ -205,7 +218,7 @@ File name: HeatSource_Control.[xlsx|csv]
 xlsx sheet name: `Control Settings`
 
 The control file is where most of the model operation and initial parameterization is set. 
-Do not change the key names in the control file. Only change the VALUE column (column 4). The heat source control file 
+Do not change the key names in the control file. Only change the VALUE column (column 4). The Heat Source control file 
 must be named `HeatSource_Control.[xlsx|csv]`.
 
 To write a blank template control file from a python script:
@@ -224,8 +237,8 @@ cd path\to\model_directory
 hs setup -cf
 ```
 
-The control file can also be parameterized in python directly using `**kwargs`. Any control file key arguments passed will 
-be written into the output csv.
+The control file can also be parameterized in python directly using `**kwargs`. Any control file key arguments passed will
+be written into the output control file.
 ```python
 from heatsource9 import BigRedButton
 from os.path import join
@@ -233,7 +246,7 @@ from os.path import join
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-# Parameterize the control file and write to csv
+# Parameterize the control file and write to CSV
 BigRedButton.setup_cf(model_dir, control_file, use_timestamp=True, overwrite=False,
                       usertxt="This model is an example model",
                       name="example model",
@@ -394,7 +407,7 @@ using multiple files names separated by a comma, or a single file name.
 |       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   |  Optional  |    Optional    |     Required     |
 |       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |  Optional  |    Optional    |     Required     |
 
-Control file setup with multiple excel files for each tributary input.
+Control file setup with multiple excel files for each meteorological input.
 
 | LINE | PARAMETER                                         | KEY                  | VALUE                           |
 |-----:|:--------------------------------------------------|:---------------------|:--------------------------------|
@@ -402,7 +415,7 @@ Control file setup with multiple excel files for each tributary input.
 |   23 | Meteorological Data Input File Name               | metfiles             | "met_site1.xlsx, met_site2.xlsx"|
 |   24 | Meteorological Data Model kilometers              | metkm                | "5.45, 0.30"                    |
 
-Control file setup with single excel file for all tributary inputs.
+Control file setup with single excel file for all meteorological inputs.
 
 | LINE | PARAMETER                                          | KEY                  | VALUE                           |
 |-----:|:---------------------------------------------------|:---------------------|:--------------------------------|
@@ -416,7 +429,7 @@ File name: UserDefinedFileName.[xlsx|csv]
 xlsx sheet name: `Tributary Data`
 
 The tributary input files define the inflow/outflow rates and temperatures
-at different points along the model stream. Inflows refers to localized 
+at different points along the model stream. Inflows refer to localized 
 (non-accretion) type flows such as tributaries, springs, returns, point 
 sources, etc. Outflows can be various types of water withdrawals. Outflows 
 are input with a negative flow rate. Temperatures for outflows are not 
@@ -474,7 +487,7 @@ because the model routines see a blank row as the end of the data sequence.
 
 #### 6.6.1 Canopy Type
 
-land cover canopy information can be input as either canopy cover or 
+Land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
 ##### Canopy Cover
@@ -482,11 +495,15 @@ Input file formatting when ```canopy_data = "CanopyCover"``` in the control file
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION       | UNITS                  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:------------------|:-----------------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `NAME`      | Land cover Name   | N/A                    |  string   |  Optional  |    Optional    |     Optional     |
-|       2       | `CODE`      | Land cover code   | N/A                    |  string   |  Required  |    Optional    |     Required     |
-|       3       | `HEIGHT`    | Land cover height | meters                 |   float   |  Required  |    Optional    |     Required     |
-|       4       | `CANOPY`    | Canopy cover      | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
-|       5       | `OVERHANG`  | Overhang          | meters                 |   float   |  Required  |    Optional    |     Required     |
+|       1       | `NAME`         | Land cover Name   | N/A                    |  string   |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`         | Land cover code   | N/A                    |  string   |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`       | Land cover height | meters                 |   float   |  Required  |    Optional    |     Required     |
+|       4       | `CANOPY`       | Canopy cover      | decimal fraction (0-1) |   float   |  Required  |    Optional    |     Required     |
+|       5       | `OVERHANG`     | Overhang          | meters                 |   float   |  Required  |    Optional    |     Required     |
+|       6       | `CANOPY_DEPTH` | Canopy depth      | meters                 |   float   |  Optional  |    Optional    |     Optional     |
+
+
+- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used instead.
 
 
 ##### LAI
@@ -494,13 +511,17 @@ Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION               | UNITS         | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:--------------------------|:--------------|:---------:|:----------:|:--------------:|:----------------:|
-|       1       | `NAME`      | Land cover Name           | N/A           |  string   |  Optional  |    Optional    |     Optional     |
-|       2       | `CODE`      | Land cover code           | N/A           |  string   |  Required  |    Optional    |     Required     |
-|       3       | `HEIGHT`    | Land cover height         | meters        |   float   |  Required  |    Optional    |     Required     |
-|       4       | `LAI`       | Effective Leaf Area Index | dimensionless |   float   |  Required  |    Optional    |     Required     |
-|       5       | `k`         | k extinction coefficient  | dimensionless |   float   |  Required  |    Optional    |     Required     |
+|       1       | `NAME`         | Land cover Name           | N/A           |  string   |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`         | Land cover code           | N/A           |  string   |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`       | Land cover height         | meters        |   float   |  Required  |    Optional    |     Required     |
+|       4       | `LAI`          | Effective Leaf Area Index | dimensionless |   float   |  Required  |    Optional    |     Required     |
+|       5       | `k`            | k extinction coefficient  | dimensionless |   float   |  Required  |    Optional    |     Required     |
+|       6       | `OVERHANG`     | Overhang                  | meters        |   float   |  Required  |    Optional    |     Required     |
+|       7       | `CANOPY_DEPTH` | Canopy depth              | meters        |   float   |  Optional  |    Optional    |     Optional     |
 
-The landcover codes file can be parameterized from script.
+- For backward compatibility with older files, if a `CANOPY_DEPTH` column is not present in the landcover codes file, the vegetation `HEIGHT` is used instead.
+
+The land cover codes file can be parameterized from script.
 ```python
 from heatsource9.ModelSetup.Inputs import Inputs
 from heatsource9.Dieties.IniParamsDiety import IniParams
@@ -516,13 +537,13 @@ inputs = Inputs(model_dir, control_file)
 inputs.import_control_file()
 
 # Parameterize the lccodes input. Uses canopy closure data.
-lccodes = [('Active River Channel',100,0,0,0), 
-           ('Barren - Clearcut',127,0,0,0), 
-           ('Brush',128,1,0.4,0), 
-           ('Dominate Coniferous',133,32,0.7,1.5), 
-           ('Dominate Broadleaf (Riparian)',149,32,0.5,2), 
-           ('Dominate Broadleaf (Upland)',150,32,0.5,2), 
-           ('Road Unpaved',255,0,0,0)]
+lccodes = [('Active River Channel',100,0,0,0,0),
+           ('Barren - Clearcut',127,0,0,0,0),
+           ('Brush',128,1,0.4,0,0),
+           ('Dominate Coniferous',133,32,0.7,1.5,0),
+           ('Dominate Broadleaf (Riparian)',149,32,0.5,2,0),
+           ('Dominate Broadleaf (Upland)',150,32,0.5,2,0),
+           ('Road Unpaved',255,0,0,0,0)]
 
 inputs.parameterize_lccodes(lccodes, overwrite=True)
 ```
@@ -530,7 +551,7 @@ inputs.parameterize_lccodes(lccodes, overwrite=True)
 ### 6.7 LAND COVER DATA  
 File name: UserDefinedFileName.[xlsx|csv]
 
-xlsx sheet name: `Land Cover Data` (formally called TTools in heatsource 8) 
+xlsx sheet name: `Land Cover Data` (formally called TTools in Heat Source 8) 
 
 This file defines land cover information. This data can be derived 
 from geospatial data using TTools.
@@ -554,7 +575,7 @@ If using values, the land cover attribute information for each transect sample i
 
 The land cover data input type is identified in the control file.
 
-The number of columns are dependent on the number of transects and samples specified in the control file. The '#'
+The number of columns is dependent on the number of transects and samples specified in the control file. The '#'
 in the column name will be a number and refers to the specific transect (T) number or sample (S) number. For example LC_T2_S4 refers to the 
 land cover sample on transect 2, sample number 4.
 
@@ -563,7 +584,7 @@ When ```lcdatainput = "Codes"```, the following columns will be used after colum
 
 | COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS  | DATA TYPE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:-------------:|:------------|:------------------------------------------|:-------|:----------|:----------:|:--------------:|:----------------:|
-|   multiple    | `LC_T#_S#`  | Landcover code on transect T for sample S | N/A    | string    |  Required  |    Optional    |     Required     |
+|   multiple    | `LC_T#_S#`  | Land cover code on transect T for sample S | N/A    | string    |  Required  |    Optional    |     Required     |
 |   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S      | meters | float     |  Required  |    Optional    |     Required     |
 
 ##### Values
@@ -575,6 +596,7 @@ When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyCover"``` the fol
 |   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S         | meters                 | float     |  Required  |    Optional    |     Required     |
 |   multiple    | `CAN_T#_S#` | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |  Required  |    Optional    |     Required     |
 |   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S          | meters                 | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S      | meters                 | float     |  Optional  |    Optional    |     Optional     |
 
 When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
@@ -585,6 +607,9 @@ When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following c
 |   multiple    | `LAI_T#_S#` | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |  Required  |    Optional    |     Required     |
 |   multiple    | `k_T#_S#`   | k extinction coefficient on transect T for sample S  | dimensionless | float     |  Required  |    Optional    |     Required     |
 |   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S                  | meters        | float     |  Required  |    Optional    |     Required     |
+|   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S              | meters        | float     |  Optional  |    Optional    |     Optional     |
+
+- For backward compatibility with older land cover data files, if the `CD_T#_S#` columns are not present, the model uses the vegetation height values in `HT_T#_S#`. 
 
 ### 6.8 MORPHOLOGY DATA FILE  
 File name: UserDefinedFileName.[xlsx|csv]
