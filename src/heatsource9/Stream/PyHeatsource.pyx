@@ -352,7 +352,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
-    PLz =[0]*transsample_count
+    PLz = 0.0
     
     if Altitude <= TopoShadeAngle:
         # Topographic shade is occurring
@@ -374,9 +374,9 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         # 3 - Below Landcover (Above Bank Shade & Emergent)
         Dummy1 = F_Direct[2]
 
-        s = transsample_count - 1
-
         # Now calculate the fraction of radiation passed through the canopy
+        s = transsample_count - 1
+        
         while s >= 0:
             if Altitude >= VegetationAngle1[s]:
                 # no shading
@@ -395,15 +395,6 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     x_far = transsample_distance * (s + 2 - adjust)
                     if s == 0:
                         x_near -= lc_oh[tran][s]
-                    if x_near <= 0:
-                        x_near = 1e-5
-
-                    zone_width = x_far - x_near
-                    if zone_width <= 0:
-                        zone_width = transsample_distance
-                    if zone_width <= 0:
-                        zone_width = 1e-5
-
                     altitude_rad = radians(Altitude)
                     cos_altitude = cos(altitude_rad)
                     if abs(cos_altitude) < 1e-6:
@@ -415,7 +406,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
 
                     H_top = lc_height_rel[tran][s]
                     if BeersData == "LAI":
-                        H_base = 0.0
+                        H_base = H_top - lc_canopy_depth[tran][s]
                     else:
                         H_canopy_depth = lc_canopy_depth[tran][s]
                         H_base = H_top - H_canopy_depth
@@ -442,7 +433,9 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 if PLz < 0:
                     PLz = 0.0
 
+                # shading is occurring from this sample
                 if BeersData == "LAI":
+
                     # use LAI and k to calculate the riparian extinction value
                     try:
                         RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
@@ -508,45 +501,29 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
             
             if heatsource8 and BeersData != "LAI":
                 H = lc_height_rel[0][0]
-                H_canopy_depth = lc_canopy_depth[0][0]
-                H_base = H - H_canopy_depth
                 C = lc_canopy[0][0]
 
                 if C <= 0 or H <= 0:
                     direct_passed = 1.0
                     diffuse_passed = 1.0
                 elif C >= 1:
-                    # direct is fully blocked, diffuse is near fully blocked. These are the exact values from HS8
+                    # HS8 behavior, direct is fully blocked, diffuse is near fully blocked.
+                    # These are the exact values from HS8
                     direct_passed = 0.0
                     diffuse_passed = 0.0001
                 else:
                     width_cap = W_b if W_b > 0 else transsample_distance
-                    altitude_rad = radians(Altitude)
-                    cos_altitude = cos(altitude_rad)
-                    if abs(cos_altitude) < 1e-6:
-                        cos_altitude = 1e-6
-                    tan_altitude = tan(altitude_rad)
-                    if abs(tan_altitude) < 1e-6:
-                        tan_altitude = 1e-6
-
-                    x_near = 0.0
-                    x_far = width_cap
-                    x_base = H_base / tan_altitude
-                    x_top = H / tan_altitude
-                    x_enter = max(x_near, x_base)
-                    x_exit = min(x_far, x_top)
-                    if x_exit <= x_enter:
-                        path_emergent = 0.0
-                    else:
-                        path_emergent = (x_exit - x_enter) / cos_altitude
+                    path_emergent = H / sin(radians(Altitude))
+                    if path_emergent > width_cap:
+                        path_emergent = width_cap
 
                     # HS8 10m canopy depth. Boyd and Kasper 2003
                     rip_ext_direct = -log(1 - C) / 10.0
                     direct_passed = exp(-rip_ext_direct * path_emergent)
 
                     # HS8 uses full emergent veg height
-                    rip_ext_diffuse = -log(1 - C) / H_canopy_depth
-                    diffuse_passed = exp(-rip_ext_diffuse * H_canopy_depth)
+                    rip_ext_diffuse = -log(1 - C) / H
+                    diffuse_passed = exp(-rip_ext_diffuse * H)
 
                 F_Direct[4] = F_Direct[4] * direct_passed
                 F_Diffuse[4] = F_Diffuse[4] * diffuse_passed
@@ -554,11 +531,11 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
             else:
                 #--------- (Welles and Cohen 1996)
                 # PLe is the path length of the sun vector through 
-                # the vegetation in the emergent sample
+                # the canopy depth in the emergent sample.
         
                 # The emergent zone can't be wider than half the 
                 # wetted width. if this is a solar only run the wetted 
-                # width is not calculated so W_b = 0. The sample zone 
+                # width is not calculated so W_b = 0. The transect sample
                 # width is used instead.
                 if W_b == 0: 
                     emergent_distance = transsample_distance 
@@ -566,11 +543,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     emergent_distance = W_b * 0.5
                 
                 H_top = lc_height_rel[0][0]
-                if BeersData == "LAI":
-                    H_base = 0.0
-                else:
-                    H_canopy_depth = lc_canopy_depth[0][0]
-                    H_base = H_top - H_canopy_depth
+                H_base = H_top - lc_canopy_depth[0][0]
 
                 altitude_rad = radians(Altitude)
                 cos_altitude = cos(altitude_rad)
@@ -607,7 +580,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     # the riparian extinction value
                     RipExtinction = -log(1- lc_canopy[0][0]) / lc_canopy_depth[0][0]
                     fraction_passed = exp(-1* RipExtinction * PLe)
-                    
+
                 except:
                     if lc_canopy[0][0] >= 1:
                         # can't take log of zero
