@@ -709,7 +709,7 @@ class ModelSetup(object):
         vheight = []
         vcanopy = []
         overhang = []
-        canopy_depth = []
+        cdepth = []
         elevation = []
 
         print_console("Translating landcover Data")
@@ -745,10 +745,8 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][3])
                                                      for x in col],
                                                     average))
-                    canopy_depth_col = []
-                    for x in col:
-                        canopy_depth_col.append(float(LCcodes[x][4]))
-                    canopy_depth.append(self.multiplier(canopy_depth_col, average))
+                    cdepth.append(self.multiplier([float(LCcodes[x][4]) for x in col],
+                                                  average))
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
                         IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
@@ -771,7 +769,7 @@ class ModelSetup(object):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_k[tran][s] = k[n][i]
-                        node.lc_canopy_depth[tran][s] = canopy_depth[n][i]
+                        node.lc_canopy_depth[tran][s] = cdepth[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
@@ -812,10 +810,9 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][2])
                                                      for x in col],
                                                     average))
-                    canopy_depth_col = []
-                    for x in col:
-                        canopy_depth_col.append(float(LCcodes[x][3]))
-                    canopy_depth.append(self.multiplier(canopy_depth_col, average))
+                    cdepth.append(self.multiplier([float(LCcodes[x][3]) 
+                                                   for x in col],
+                                                  average))
 
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
@@ -841,7 +838,7 @@ class ModelSetup(object):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
-                        node.lc_canopy_depth[tran][s] = canopy_depth[n][i]
+                        node.lc_canopy_depth[tran][s] = cdepth[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
@@ -1036,7 +1033,7 @@ class ModelSetup(object):
         vheight = []
         vcanopy = []
         overhang = []
-        canopy_depth = []
+        cdepth = []
         elevation = []
 
         print_console("Translating Land Cover Data")
@@ -1052,31 +1049,18 @@ class ModelSetup(object):
                 laicol = [float(LCdata[row][i + 1 + (shiftcol * 2)]) for row in range(0, len(LCdata))]
                 kcol = [float(LCdata[row][i + 2 + (shiftcol * 3)]) for row in range(0, len(LCdata))]
                 ohcol = [float(LCdata[row][i + 3 + (shiftcol * 4)]) for row in range(0, len(LCdata))]
-                try:
-                    cdcol = [float(LCdata[row][i + 4 + (shiftcol * 5)]) for row in range(0, len(LCdata))]
-                except IndexError:
-                    # Backward compatibility for older landcover data files without  the canopy depth  columns
-                    cdcol = heightcol
+                cdcol = [float(LCdata[row][i + 4 + (shiftcol * 5)]) for row in range(0, len(LCdata))]
 
                 # Make a list from the LC codes from the column, then send 
                 # that to the multiplier with a lambda function that averages 
                 # them appropriately. Note, we're averaging over the values 
                 # (e.g. density) not the actual code, which would be meaningless.
                 try:
-                    cd_valid = []
-                    for row, (h, cd) in enumerate(zip(heightcol, cdcol), start=1):
-                        if cd == 0:
-                            cd = h
-                        elif cd < 0 or cd > h:
-                            raise ValueError(
-                                "Canopy depth for code {0} in {1} must be between 0 and the vegetation height. HEIGHT={2}, CANOPY_DEPTH={3}".format(
-                                    row, IniParams["lcdatafile"], h, cd))
-                        cd_valid.append(cd)
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
                     vcanopy.append(self.multiplier([float(x) for x in laicol], average))
                     k.append(self.multiplier([float(x) for x in kcol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
-                    canopy_depth.append(self.multiplier([float(x) for x in cd_valid], average))
+                    cdepth.append(self.multiplier([float(x) for x in cdcol], average))
 
                 except KeyError as stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
@@ -1097,7 +1081,7 @@ class ModelSetup(object):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_k[tran][s] = k[n][i]
-                        node.lc_canopy_depth[tran][s] = canopy_depth[n][i]
+                        node.lc_canopy_depth[tran][s] = cdepth[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
@@ -1121,11 +1105,7 @@ class ModelSetup(object):
                 elevcol = [float(LCdata[row][i + 1 + shiftcol]) for row in range(0, len(LCdata))]
                 dencol = [float(LCdata[row][i + 1 + (shiftcol * 2)]) for row in range(0, len(LCdata))]
                 ohcol = [float(LCdata[row][i + 2 + (shiftcol * 3)]) for row in range(0, len(LCdata))]
-                try:
-                    cdcol = [float(LCdata[row][i + 3 + (shiftcol * 4)]) for row in range(0, len(LCdata))]
-                except IndexError:
-                    # Backward compatibility for older landcover data files without  the canopy depth  columns
-                    cdcol = heightcol
+                cdcol = [float(LCdata[row][i + 3 + (shiftcol * 4)]) for row in range(0, len(LCdata))]
 
                 # Make a list from the LC codes from the column, then s
                 # end that to the multiplier with a lambda function that
@@ -1133,19 +1113,10 @@ class ModelSetup(object):
                 # the values (e.g. density) not the actual code, which 
                 # would be meaningless.
                 try:
-                    cd_valid = []
-                    for row, (h, cd) in enumerate(zip(heightcol, cdcol), start=1):
-                        if cd == 0:
-                            cd = h
-                        elif cd < 0 or cd > h:
-                            raise ValueError(
-                                "Canopy depth for code {0} in {1} must be between 0 and the vegetation height. HEIGHT={2}, CANOPY_DEPTH={3}".format(
-                                    row, IniParams["lcdatafile"], h, cd))
-                        cd_valid.append(cd)
                     vheight.append(self.multiplier([float(x) for x in heightcol], average))
                     vcanopy.append(self.multiplier([float(x) for x in dencol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
-                    canopy_depth.append(self.multiplier([float(x) for x in cd_valid], average))
+                    cdepth.append(self.multiplier([float(x) for x in cdcol], average))
                     
                 except KeyError as stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
@@ -1168,7 +1139,7 @@ class ModelSetup(object):
                         node.lc_height[tran][s] = vheight[n][i]
                         node.lc_canopy[tran][s] = vcanopy[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
-                        node.lc_canopy_depth[tran][s] = canopy_depth[n][i]
+                        node.lc_canopy_depth[tran][s] = cdepth[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
