@@ -677,7 +677,7 @@ class ModelSetup(object):
             self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
             msg = "Building Stream Nodes"
-            logger.debug('{0} {1} {2}'.format(msg, i + 1, num_nodes))
+            logger.info('{0} {1} {2}'.format(msg, i + 1, num_nodes))
             print_console(msg, True, i + 1, num_nodes)
 
         # Find the mouth node and calculate the actual distance
