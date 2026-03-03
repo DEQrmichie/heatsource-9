@@ -5,6 +5,7 @@ from builtins import str
 from builtins import range
 from builtins import object
 import csv
+import re
 from os import makedirs
 from os.path import exists
 from os.path import isfile
@@ -116,7 +117,7 @@ class Inputs(object):
     def headers_bc(self):
         """Returns a list of column headers for
         the boundary condition file."""
-        return ["DATETIME", "INFLOW", "TEMPERATURE"]
+        return ["DATETIME", "FLOW", "TEMPERATURE"]
 
     def headers_met(self):
         """Returns a list of column headers for
@@ -141,9 +142,9 @@ class Inputs(object):
         if IniParams["lcdatainput"] == "Values":
             if IniParams["canopy_data"] == "LAI":
                 # Use LAI methods
-                prefix = ["HT", "ELE", "LAI", "k", "OH"]
+                prefix = ["HT", "ELE", "LAI", "k", "OH", "CD"]
             else:
-                prefix = ["HT", "ELE", "CAN", "OH"]
+                prefix = ["HT", "ELE", "CAN", "OH", "CD"]
         else:
             prefix = ["LC", "ELE"]
 
@@ -177,9 +178,9 @@ class Inputs(object):
         """
         if IniParams["lcdatainput"] == "Codes":
             if IniParams["canopy_data"] == "LAI":
-                return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG"]
+                return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG", "CANOPY_DEPTH"]
             else:
-                return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG"]
+                return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG", "CANOPY_DEPTH"]
         else:
             return [None]
 
@@ -495,10 +496,30 @@ class Inputs(object):
 
     def import_lccodes(self):
         """Returns the land cover codes data."""
-        return self.read_to_dict(IniParams["inputdir"],
+        data = self.read_to_dict(IniParams["inputdir"],
                                  IniParams["lccodefile"],
                                  colnames=self.headers_lccodes(),
                                  sheetname=sheetnames["lccodefile"])
+        
+        # Do some canopy depth validaton that can't be done easily in validate 
+        nrows = len(data.get("CODE", []))
+        heights = data.get("HEIGHT", [])
+
+        for i in range(nrows):
+            code = data["CODE"][i]
+            h = float(heights[i])
+            cd_raw = data["CANOPY_DEPTH"][i]
+
+            cd = float(cd_raw)
+
+            if cd < 0 or cd > h or (cd == 0 and h > 0):
+                raise ValueError(
+                    "Canopy depth for code {0} in {1} must be > 0 and <= vegetation height when HEIGHT > 0, and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
+                        code, IniParams["lccodefile"], h, cd))
+
+            data["CANOPY_DEPTH"][i] = cd
+
+        return data
 
     def import_lcdata(self, return_list=True, skiprows=1, skipcols=2):
         """Returns the land cover data."""
@@ -506,6 +527,20 @@ class Inputs(object):
                                  IniParams["lcdatafile"],
                                  colnames=self.headers_lcdata(),
                                  sheetname=sheetnames["lcdatafile"])
+        
+        # Do some canopy depth validaton that can't be done easily in validate 
+        if IniParams["lcdatainput"] == "Values":
+            cd_cols = [c for c in self.headers_lcdata()
+                       if isinstance(c, str) and c.startswith("CD_")]
+
+            for cd_col in cd_cols:
+                ht_col = "HT_" + cd_col[3:]
+                for row_i, (h, cd) in enumerate(zip(data[ht_col], data[cd_col]), start=2):
+                    if cd < 0 or cd > h or (cd == 0 and h > 0):
+                        raise ValueError(
+                            "Canopy depth in file {0}, row {1} must be > 0 and <= vegetation height "
+                            "when HEIGHT > 0, and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}"
+                            .format(IniParams["lcdatafile"], row_i, h, cd))
 
         if return_list:
             return self.dict2list(data, self.headers_lcdata(),
@@ -654,8 +689,8 @@ class Inputs(object):
         
         lccodes: Optional list of tuples with the landcover code
         information. List takes the form:
-        [(landcover name, code, ht, canopy, overhang),] or
-        [(landcover name, code, ht, lai, k, overhang),]
+        [(landcover name, code, ht, canopy, overhang, canopy_depth),] or
+        [(landcover name, code, ht, lai, k, overhang, canopy_depth),]
         
         If lccodes=None the lcdata file identified in
         the control file will be read instead to identify the unique codes.
@@ -712,7 +747,8 @@ class Inputs(object):
                     lai = self.lookup_lccode(code, lai_list)
                     k = self.lookup_lccode(code, k_list)
                     oh = self.lookup_lccode(code, oh_list)
-                    lccodes.append([None, code, ht, lai, k, oh])
+                    canopy_depth = ht
+                    lccodes.append([None, code, ht, lai, k, oh, canopy_depth])
 
             else:
                 for code in codes:
@@ -721,7 +757,8 @@ class Inputs(object):
                         ht = float(code)
                     can = self.lookup_lccode(code, can_list)
                     oh = self.lookup_lccode(code, oh_list)
-                    lccodes.append([None, code, ht, can, oh])
+                    canopy_depth = ht
+                    lccodes.append([None, code, ht, can, oh, canopy_depth])
 
                     # lccodes = [[None, code, float(code), lai, k, oh] for code in codes]
                 # else:
@@ -744,31 +781,42 @@ class Inputs(object):
         """
 
         # each value in each column is appended to a list
-        data = defaultdict(list)
+        data = defaultdict(list, {k: [] for k in colnames})
+        expected_cols = len(colnames)
 
         if not exists(join(inputdir, filename.strip())):
             msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
             raise ValueError(msg)
 
-        with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8") as file_object:
-            reader = csv.DictReader(file_object, dialect="excel")
+        with open(file=join(inputdir, filename.strip()), mode="r", encoding="utf-8-sig") as file_object:
+            reader = csv.reader(file_object, dialect="excel")
+            header_row = next(reader, [])
+            rows = [row for row in reader if row]
+            self.validate_headers(filename, colnames, header_row)
 
-            # set the colnames as the dictionary key 
-            reader.fieldnames = colnames
-            # skip the header row
-            next(reader)
-            # read a row as {column1: value1, column2: value2,...}
-            for row in reader:
-                # go over each column name and value
-                for k, v in list(row.items()):
+            for row_number, row in enumerate(rows, start=2):
+                values = list(row[:expected_cols])
+                if len(values) < expected_cols:
+                    values.extend([None] * (expected_cols - len(values)))
 
-                    # if the value is empty '' replace it with a None
-                    if v.strip() in ['', None]:
+                for i, k in enumerate(colnames):
+                    v = values[i]
+                    if isinstance(v, str):
+                        v = v.strip()
+                        if v in ["", "None"]:
+                            v = None
+                    elif v is None:
                         v = None
-                    # append the value into the appropriate 
-                    # list based on column name k
-                    # if there is more than one cl
-                    v_validated = self.validate(v, k, filename)
+
+                    if (IniParams["lcdatainput"] == "Values" and
+                            str(k).startswith("CD_") and
+                            v is None):
+                        msg = ("The value for column {0} in row {1} of file {2} is missing. "
+                               "When control file key lcdatainput='Values', all CD_T*_S* values are required."
+                               ).format(k, row_number, filename.strip())
+                        raise ValueError(msg)
+
+                    v_validated = self.validate_values(v, k, filename)
                     data[k].append(v_validated)
 
         return data
@@ -778,8 +826,6 @@ class Inputs(object):
         Reads an excel file and returns the data
         as a dictionary with the column header as the key.
         """
-        # each value in each column is appended to a list
-        data = defaultdict(list)
 
         if not exists(join(inputdir, filename.strip())):
             msg = "No such file or directory: {0}.".format(join(inputdir, filename.strip()))
@@ -792,13 +838,22 @@ class Inputs(object):
             raise ValueError(msg)
 
         sheet = wb[sheetname]
+        rows = list(sheet.iter_rows(values_only=True))
+        expected_cols = len(colnames)
 
-        for r, row in enumerate(sheet.iter_rows(values_only=True)):
-            if r == 0:
-                # set the colnames as the dictionary key
-                data = defaultdict(list, {k: [] for k in colnames})
-                continue
-            for c, cell in enumerate(row[0:len(colnames)]):
+        # Make an empty dictionary of lists with each colunm name as the key.
+        # Each value in each column will be appended to the list
+        data = defaultdict(list, {k: [] for k in colnames}) 
+
+        header_row = rows[0] if rows else []
+        self.validate_headers(filename, colnames, header_row)
+
+        for row_number, row in enumerate(rows[1:], start=2):
+            values = list(row[:expected_cols])
+            if len(values) < expected_cols:
+                values.extend([None] * (expected_cols - len(values)))
+
+            for c, cell in enumerate(values):
                 if type(cell) is datetime:
                     # Make it a string
                     v = cell.strftime("%Y-%m-%d %H:%M")
@@ -808,7 +863,15 @@ class Inputs(object):
                         # if the value is empty '' replace it with a None
                         v = None
 
-                v_validated = self.validate(v, colnames[c], filename)
+                if (IniParams["lcdatainput"] == "Values" and
+                        str(colnames[c]).startswith("CD_") and
+                        v is None):
+                    msg = ("The value for column {0} in row {1} of file {2} is missing. "
+                           "When the control file lcdatainput='Values', all CD_T*_S* values are required."
+                           ).format(colnames[c], row_number, filename.strip())
+                    raise ValueError(msg)
+
+                v_validated = self.validate_values(v, colnames[c], filename)
                 # append the value into the appropriate
                 # list based on column name
                 data[colnames[c]].append(v_validated)
@@ -889,7 +952,7 @@ class Inputs(object):
 
             for row in sheet.iter_rows(values_only=True):
                 newrow = []
-                for cell in row[0:4]:
+                for cell in row[0:len(row)]:
                     if type(cell) is datetime:
                         # Make it a string
                         v = cell.strftime("%Y-%m-%d")
@@ -1111,7 +1174,54 @@ class Inputs(object):
         kmlist.sort(reverse=True)
         return kmlist
 
-    def validate(self, value, column, file):
+    def validate_headers(self, filename, colnames, header_row):
+        """Validate header count and header names."""
+        ncols_expected = len(colnames)
+        ncols_found = len(header_row) if header_row is not None else 0
+        file_clean = filename.strip()
+
+        if ncols_found < ncols_expected:
+            msg = ("Input file '{0}' has fewer header columns than expected "
+                   "(expected {1}, found {2})."
+                   ).format(file_clean, ncols_expected, ncols_found)
+            raise ValueError(msg)
+        
+        # Preparing for full name checking. Set to False means any columnm header name 
+        # is allowed as long as all the data are in the right order and the numer of cols is correct.
+        check_names = False
+
+        if check_names:
+            # Strips any numbers in the tributary and met column names (e.g. FLOW1 -> FLOW)
+            # Removes whitespace/newlines, replaces with _ and makes all the names UPPER_CASE
+            name_clean = lambda s: re.sub(
+                r"^(CLOUDINESS|WIND_SPEED|RELATIVE_HUMIDITY|AIR_TEMPERATURE|FLOW|TEMPERATURE)\d+$",
+                r"\1",
+                "_".join(str(s).split()).upper(),
+            )
+
+            colnames_expected = [name_clean(h) for h in colnames]
+            colnames_found = [name_clean(h) for h in header_row[:ncols_expected]]
+
+            if colnames_found != colnames_expected:
+                mismatch_i = 0
+                for i, (expected_name, found_name) in enumerate(zip(colnames_expected, colnames_found)):
+                    if expected_name != found_name:
+                        mismatch_i = i
+                        break
+
+                msg = ("Input file '{0}' header mismatch at column {1}. "
+                    "Expected {2!r}, found {3!r}."
+                    ).format(file_clean, mismatch_i + 1, colnames[mismatch_i], header_row[mismatch_i])
+                raise ValueError(msg)
+
+        if ncols_found > ncols_expected:
+            msg = ("Warning: Input file '{0}' has extra columns beyond the expected number "
+                   "(expected {1}, found {2}). Extra columns are ignored."
+                   ).format(file_clean, ncols_expected, ncols_found)
+            logger.warning(msg)
+            print_console(msg)
+
+    def validate_values(self, value, column, file):
         """
         Checks the data type and range.
         If value is blank (None), returns 0.0 for float, 0 for integer,
@@ -1125,7 +1235,7 @@ class Inputs(object):
             if "LC" in column:
                 # str
                 k = "LC"
-            elif any(s in column for s in ["HT", "ELE", "LAI", "k", "CAN", "OH"]):
+            elif any(s in column for s in ["HT", "ELE", "LAI", "k", "CAN", "OH", "CD"]):
                 # float
                 k = "ELE"
         else:

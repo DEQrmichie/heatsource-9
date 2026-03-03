@@ -31,7 +31,7 @@ class StreamNode(object):
         __slots = ["latitude", "longitude", "elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_in", "T_tribs", # Temperature attrs
-                "lc_height", "lc_canopy", "lc_oh","lc_lai", "lc_k", # Land cover params
+                "lc_height", "lc_canopy", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
                 "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
@@ -116,6 +116,7 @@ class StreamNode(object):
         self.lc_height_rel = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_canopy = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_oh = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
+        self.lc_canopy_depth = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.lc_k = [[[0.0]for zone in range(IniParams["transsample_count"])] for tran in range(radial_count + 1)]
         self.UTC_offset = IniParams["offset"]
     def get_node_data(self):
@@ -157,12 +158,12 @@ class StreamNode(object):
         self.CalcDischarge = self.calculate_discharge
         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
                        self.ViewToSky, self.phi, self.lc_canopy,
-                       self.lc_height, self.lc_height_rel, self.lc_k, self.SedDepth,
+                       self.lc_height, self.lc_height_rel, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.SedDepth,
                        self.dx, self.dt, self.SedThermCond,
                        self.SedThermDiff, self.Q_in, self.T_in,
                        has_prev, IniParams["transsample_distance"],
                        IniParams["transsample_count"],
-                       IniParams["canopy_data"], IniParams["emergent"],
+                       IniParams["canopy_data"], IniParams["lcsampmethod"], IniParams["emergent"],
                        IniParams["wind_a"], IniParams["wind_b"],
                        IniParams["calcevap"], IniParams["penman"],
                        IniParams["calcalluvium"],
