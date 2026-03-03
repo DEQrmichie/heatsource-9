@@ -451,7 +451,6 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         # from heat source model 7 and 8
                         PL = 10
                     else:
-                        #--------- Welles and Cohen 1996 (Canopy Depth), Chen et al 1998 (Vegetation Height)
                         PL = lc_canopy_depth[tran][s]
                     
                     try:
@@ -529,7 +528,6 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 F_Diffuse[4] = F_Diffuse[4] * diffuse_passed
                 fraction_passed = 1.0
             else:
-                #--------- (Welles and Cohen 1996)
                 # PLe is the path length of the sun vector through 
                 # the canopy depth in the emergent sample.
         
