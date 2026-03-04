@@ -1,4 +1,4 @@
-![Wheel Build](https://github.com/DEQrmichie/heatsource-9/actions/workflows/build_wheels.yml/badge.svg?branch=main)
+![Wheel Build](https://github.com/DEQrmichie/heatsource-9/actions/workflows/build_wheels.yml/badge.svg)
 
 Heat Source 9
 -------------
@@ -43,7 +43,7 @@ https://www.python.org/downloads/
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
 # This command installs heat source version 9.0.0b28 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b28"
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b29"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -60,8 +60,8 @@ py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl --user
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
 py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b28/Model.Executables.v9.0.0b28.win32.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b28
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b29/Windows.Executables.v9.0.0b29.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b29
 
 ## 3.0 QUICK STEPS TO GET GOING
 
