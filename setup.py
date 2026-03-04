@@ -22,7 +22,7 @@ else:
                   Extension('heatsource9.Stream.StreamNode', ['src/heatsource9/Stream/StreamNode.c'])]
 
 setup(name='heatsource9',
-      version='9.0.0b28',
+      version='9.0.0b29',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',

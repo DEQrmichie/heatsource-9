@@ -2,7 +2,13 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b28 (beta 28)
+Current Version: heatsource 9.0.0b29 (beta 29)
+
+Model math is stable. Updates coming before official version 9.0.0
+
+ -   Addition of tributary and meteorological setup files (changes to control file keys)
+ -   Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
+ -   Internal code refactor to improve maintainability and organization.
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of 
@@ -49,10 +55,10 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heatsource wheel for windows in the local directory
-py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl --user
+py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl --user
 
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
-py -m pip install heatsource9-9.0.0b28-cp312-cp312-win32.whl
+py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl
  ```
 [2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b28/Model.Executables.v9.0.0b28.win32.zip
 [3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b28
@@ -576,12 +582,12 @@ Model run requirements:
 
 
 - Note `CANOPY_DEPTH` is a new column in heat source 9. It was not present in the landcover codes files 
-for previous vesions of heat source models. If you are updating the model files and lack canopy depth data, 
+for previous versions of heat source models. If you are updating the model files and lack canopy depth data, 
 using the vegetation `HEIGHT` as the canopy depth may be a reasonable approximation. 
 When the control file key heatsource8=True, the solar flux and shading methods revert to heat source 8 
 methods and do not use the values in the `CANOPY_DEPTH` column. However, values in 
 these columns are still required in the current version. See discussion on model updates 
-in the documenation for further details. 
+in the documentation for further details. 
 
 
 ##### LAI
@@ -610,9 +616,9 @@ Model run requirements:
 |       7       | `CANOPY_DEPTH` |  Required  |    Optional    |     Required     |
 
 - Note `CANOPY_DEPTH` is a new column in heat source 9. It was not present in the landcover codes files 
-for previous vesions of heat source models. If you are updating the model files and lack canopy depth data, 
+for previous versions of heat source models. If you are updating the model files and lack canopy depth data, 
 using the vegetation `HEIGHT` as the canopy depth may be a reasonable approximation. See discussion on 
-model updates in the documenation for further details.
+model updates in the documentation for further details.
 
 The land cover codes file can be parameterized from script.
 ```python
@@ -629,7 +635,7 @@ inputs = Inputs(model_dir, control_file)
 # imports the control file into input object
 inputs.import_control_file()
 
-# Parameterize the lccodes input. Uses canopy closure data.
+# Parameterize the lccodes input. Uses canopy cover data.
 lccodes = [('Active River Channel',100,0,0,0,0),
            ('Barren - Clearcut',127,0,0,0,0),
            ('Brush',128,1,0.4,0,1),
