@@ -4,7 +4,7 @@ Heat Source 9
 -------------
 Current Version: heatsource 9.0.0b29 (beta 29)
 
-Model math is stable. Updates coming before official version 9.0.0
+Model math is stable. Just a few more updates coming before official version 9.0.0
 
  -   Addition of tributary and meteorological setup files (changes to control file keys)
  -   Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
@@ -42,7 +42,7 @@ https://www.python.org/downloads/
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b28 directly from the GitHub repository.
+# This command installs heat source version 9.0.0b29 directly from the GitHub repository.
 pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b29"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
