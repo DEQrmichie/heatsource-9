@@ -1,4 +1,3 @@
-# heatsource9/__version__.py
 
 """Heat Source version using a PEP 440 compatible scheme."""
 
@@ -43,5 +42,4 @@ micro = 0
 prerel = 'b'
 prerelversion = '29'
 version_info = (major, minor, micro, prerel, prerelversion)
-version_string = "%s.%s.%s%s%s" % version_info
-__version__ = version_string
+__version__ =  "%s.%s.%s%s%s" % version_info
