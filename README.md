@@ -65,7 +65,7 @@ py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl
 
 ## 3.0 QUICK STEPS TO GET GOING
 
-1. Place the control file (HeatSource_Control.xlsx) and the model run
+1. Place the control file (HeatSource_Control.[xlsx|csv]) and the model run
    scripts in the same directory. You can generate a template control 
    file by executing *hs_setup_control_file* or by using command line.
    ```shell
@@ -73,7 +73,7 @@ py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl
    hs setup -cf
    ```
 2. Open the control file and parameterize it with your model information. 
-   The control file must be named HeatSource_Control.xlsx 
+   The control file must be named HeatSource_Control.[xlsx|csv] 
     
 3. Use *hs9_setup_model_inputs* to build template input files or by using command line. The input files will
    be saved to the input file directory that is specified in the control file.
@@ -202,17 +202,28 @@ General Information
 4. Use the specified unit and data formats identified in the control file and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
 5. An input parameter value that is optional may be left blank although all values with float data type will be assigned as zero. Only excpetion is that canopy depth cannot be zero unless landcover height is also zero.
 
+To run a temperature model from a python script:
+```python
+from heatsource9 import run
+
+control_file = "HeatSource_Control.xlsx"
+model_dir = r"C://path/to/model_directory/"
+
+run.temperature(model_dir, control_file)
+```
+
 To write blank input files from a python script:
 ```python
 # requires a parameterized control file 
-from heatsource9 import BigRedButton
+from heatsource9 import setup
 
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-BigRedButton.setup_mi(model_dir, control_file,
-                      use_timestamp=True, overwrite=False)
+setup.write_mi(model_dir=model_dir, control_file=control_file,
+               use_timestamp=True, overwrite=False)
 ```
+`write_mi` determines whether input templates are CSV or XLSX from the control file extension.
 To write blank input files from command line:
 ```shell
 hs setup -mi
@@ -224,18 +235,18 @@ File name: HeatSource_Control.[xlsx|csv]
 xlsx sheet name: `Control Settings`
 
 The control file is where most of the model operation and initial parameterization is set. 
-Do not change the key names in the control file. Only change the VALUE column (column 4). The Heat Source control file 
+Do not change the key names in the control file. Only change the VALUE column (column 4). The heat source control file 
 must be named `HeatSource_Control.[xlsx|csv]`.
 
 To write a blank template control file from a python script:
 ```python
-from heatsource9 import BigRedButton
+from heatsource9 import setup
 
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-BigRedButton.setup_cf(model_dir, control_file,
-                      use_timestamp=False, overwrite=False)
+setup.write_cf(model_dir=model_dir, control_file=control_file,
+               use_timestamp=False, overwrite=False, csv_mode=False)
 ```
 To write a blank template control file from command line:
 ```Batchfile
@@ -243,57 +254,59 @@ cd path\to\model_directory
 hs setup -cf
 ```
 
-The control file can also be parameterized in python directly using `**kwargs`. Any control file key arguments passed will
-be written into the output control file.
+The control file can also be parameterized in python directly using `**kwargs`.
+Any control file key arguments passed will be written into the output control file.
+Unknown keys raise an error.
 ```python
-from heatsource9 import BigRedButton
+from heatsource9 import setup
 from os.path import join
 
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
 # Parameterize the control file and write to CSV
-BigRedButton.setup_cf(model_dir, control_file, use_timestamp=True, overwrite=False,
-                      usertxt="This model is an example model",
-                      name="example model",
-                      inputdir=join(model_dir, "inputs", ""),
-                      outputdir=join(model_dir, "outputs", ""),
-                      length=1.8,
-                      outputkm="all",
-                      datastart="2003-05-06",
-                      modelstart="2003-07-01",
-                      modelend="2003-07-14",
-                      dataend="2003-09-21",
-                      flushdays=1,
-                      offset=-7,
-                      dt=1,
-                      dx=30,
-                      longsample=50,
-                      bcfile="bc.csv",
-                      inflowsites=4,
-                      inflowinfiles="inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv",
-                      inflowkm="1.65, 1.5, 1.3, 0.85",
-                      accretionfile="accretion.csv",
-                      metsites=4,
-                      metfiles="met1.csv, met2.csv, met3.csv, met4.csv",
-                      metkm="1.75, 1.45, 1.10, 0.9",
-                      calcevap="False",
-                      evapmethod="Mass Transfer",
-                      wind_a=1.51E-09,
-                      wind_b=1.6E-09,
-                      calcalluvium="True",
-                      alluviumtemp=12.0,
-                      morphfile="morphology.csv",
-                      lcdatafile="lcdata.csv",
-                      lccodefile="lccodes.csv",
-                      trans_count=8,
-                      transsample_count=4,
-                      transsample_distance=8,
-                      emergent="True",
-                      lcdatainput="Codes",
-                      canopy_data="CanopyCover",
-                      lcsampmethod="point",
-                      heatsource8="False")
+setup.setup_cf(model_dir=model_dir, control_file=control_file,
+               use_timestamp=True, overwrite=False,
+               usertxt="This model is an example model",
+               name="example model",
+               inputdir=join(model_dir, "inputs", ""),
+               outputdir=join(model_dir, "outputs", ""),
+               length=1.8,
+               outputkm="all",
+               datastart="2003-05-06",
+               modelstart="2003-07-01",
+               modelend="2003-07-14",
+               dataend="2003-09-21",
+               flushdays=1,
+               offset=-7,
+               dt=1,
+               dx=30,
+               longsample=50,
+               bcfile="bc.csv",
+               inflowsites=4,
+               inflowinfiles="inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv",
+               inflowkm="1.65, 1.5, 1.3, 0.85",
+               accretionfile="accretion.csv",
+               metsites=4,
+               metfiles="met1.csv, met2.csv, met3.csv, met4.csv",
+               metkm="1.75, 1.45, 1.10, 0.9",
+               calcevap="False",
+               evapmethod="Mass Transfer",
+               wind_a=1.51E-09,
+               wind_b=1.6E-09,
+               calcalluvium="True",
+               alluviumtemp=12.0,
+               morphfile="morphology.csv",
+               lcdatafile="lcdata.csv",
+               lccodefile="lccodes.csv",
+               trans_count=8,
+               transsample_count=4,
+               transsample_distance=8,
+               emergent="True",
+               lcdatainput="Codes",
+               canopy_data="CanopyCover",
+               lcsampmethod="point",
+               heatsource8="False")
 ```
 
 Below are all the input parameters that must be included in the control file.
@@ -346,7 +359,7 @@ File name: UserDefinedFileName.[xlsx|csv]
 
 xlsx sheet name: `Accretion Flow`
 
-The temperature and flow rates of accretion are defined in this file. 
+The temperature and flow rates of accretion are defined in this file.
 
 Accretion flows are inflows that enter the stream over more than one 
 stream data node, and typically are subsurface seeps that occur over 
@@ -383,7 +396,7 @@ UserDefinedFileName.[xlsx|csv]
 
 xlsx sheet name: `Boundary Conditions`
 
-The stream flow and temperature conditions at the upstream model boundary 
+The stream flow and temperature conditions at the upstream model boundary
 are defined in this file. The boundary conditions are defined at an 
 hourly timestep.
 
@@ -622,7 +635,7 @@ model updates in the documentation for further details.
 
 The land cover codes file can be parameterized from script.
 ```python
-from heatsource9.ModelSetup.Inputs import Inputs
+from heatsource9.setup.input_setup import InputSetup
 from heatsource9.Dieties.IniParamsDiety import IniParams
 from heatsource9.Dieties.IniParamsDiety import dtype
 
@@ -630,7 +643,7 @@ control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
 # create an input object
-inputs = Inputs(model_dir, control_file)
+inputs = InputSetup(model_dir, control_file)
 
 # imports the control file into input object
 inputs.import_control_file()
