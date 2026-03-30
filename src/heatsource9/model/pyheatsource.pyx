@@ -102,16 +102,16 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
     Zenith = toDegrees*(acos(Dummy))
     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
     if abs(Dummy) >= 0.000999:
-        Azimuth = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
-                    sin(toRadians*Declination)) / Dummy)
+        SolarAzimuthRatio = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
+                              sin(toRadians*Declination)) / Dummy)
         
-        if abs(Azimuth) > 1.0:
-            if Azimuth < 0:
-                Azimuth = -1.0
+        if abs(SolarAzimuthRatio) > 1.0:
+            if SolarAzimuthRatio < 0:
+                SolarAzimuthRatio = -1.0
             else:
-                Azimuth = 1.0
+                SolarAzimuthRatio = 1.0
 
-        Azimuth = 180 - toDegrees*(acos(Azimuth))
+        Azimuth = 180 - toDegrees*(acos(SolarAzimuthRatio))
         if HourAngle > 0:
             Azimuth *= -1.0
     else:
