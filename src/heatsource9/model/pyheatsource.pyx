@@ -197,11 +197,11 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
             D_est -= Fy / dFy
 
             if (D_est < 0) or (D_est > 5000) or (count > 10000):
-                # Damn, missed it. There may be a local minimum confusing
-                # us, so we choose another depth at random and try again.
-                D_est = randint(1,100)
-                Converge = 0
-                count = 0
+                raise RuntimeError(
+                    "Stream geometry solver failed to converge: "
+                    f"Q_est={Q_est}, D_est={D_est}, count={count}, "
+                    f"W_b={W_b}, z={z}, n={n}, S={S}, dx={dx}, dt={dt}"
+                )
             Converge = abs(Fy/dFy)
             count += 1
     # Use the calculated wetted depth to calculate new 
@@ -258,15 +258,15 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
     return C1, C2, C3
 
 def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
-              inputs, Q_bc):
+              net_inflow, Q_bc):
     cdef double Q1, Q2, Q_new
     cdef double C[3]
 
     if Q_bc >= 0:
         Q_new = Q_bc
     else:
-        Q1 = Q_up + inputs
-        Q2 = Q_up_prev + inputs
+        Q1 = Q_up + net_inflow
+        Q2 = Q_up_prev + net_inflow
 
         #msg="Q2={0}, U={1}, W_w={2}, S={3}, dx={4}, dt={5}".format(Q2, U, W_w, S, dx, dt)
         #logger.info(msg)
