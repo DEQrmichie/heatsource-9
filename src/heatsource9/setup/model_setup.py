@@ -679,12 +679,12 @@ class ModelSetup(object):
         flow = ["INFLOW", "TEMPERATURE", "OUTFLOW"]
 
         # Operator methods to combine km values (named as model variables)
-        # sums = ["hyp_percent", "Q_in", "Q_with"]
+        # sums = ["hyp_percent", "Q_accr", "Q_with"]
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
         #         "W_b", "z", "n",
         #        "SedThermCond", "SedThermDiff", "SedDepth",
-        #        "phi", "Q_cont", "d_cont", "T_in"]
+        #        "phi", "Q_cont", "d_cont", "T_accr"]
 
         # Operator methods to combine row values (named as input column names)
         # sums = ["HYPORHEIC_PERCENT", "INFLOW", "OUTFLOW"]
@@ -701,11 +701,11 @@ class ModelSetup(object):
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_with"]
+            sums = ["hyp_percent", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
                     "SedThermCond", "SedThermDiff", "SedDepth", "phi",
-                    "Q_cont", "d_cont", "T_in"]
+                    "Q_cont", "d_cont", "T_accr"]
 
         elif self.run_type == "solar":
             lcdata = self.inputs.import_lcdata(return_list=False)
@@ -717,7 +717,7 @@ class ModelSetup(object):
         elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_with"]
+            sums = ["hyp_percent", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["elevation", "S", "W_b", "z", "n",
                     "Q_cont", "d_cont"]

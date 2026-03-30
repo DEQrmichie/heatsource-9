@@ -29,7 +29,7 @@ class StreamNode(object):
     def __init__(self, **kwargs):
         __slots = ["latitude", "longitude", "elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
-                "T_sed", "T_in", "T_tribs", # Temperature attrs
+                "T_sed", "T_accr", "T_tribs", # Temperature attrs
                 "lc_height", "lc_canopy", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
                 "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
@@ -64,7 +64,7 @@ class StreamNode(object):
                 "Q_cont", # Control discharge
                 "V", # Total volume, based on current flow
                 "Q_tribs", # Inputs from tribs.
-                "Q_in", # Inputs from "accretion" in cubic meters per second
+                "Q_accr", # Inputs from "accretion" in cubic meters per second
                 "Q_with", # Withdrawals from the stream, in cubic meters per second
                 "Q_hyp", # Hyporheic flow
                 "km", # River kilometer, from mouth
@@ -165,7 +165,7 @@ class StreamNode(object):
                        self.ViewToSky, self.phi, self.lc_canopy,
                        self.lc_height, self.lc_height_rel, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.SedDepth,
                        self.dx, self.dt, self.SedThermCond,
-                       self.SedThermDiff, self.Q_in, self.T_in,
+                       self.SedThermDiff, self.Q_accr, self.T_accr,
                        has_prev, rp.get("transsample_distance", 0.0),
                        rp.get("transsample_count", 0),
                        rp.get("canopy_data", "LAI"), rp.get("lcsampmethod", "point"), rp.get("emergent", False),
@@ -190,7 +190,7 @@ class StreamNode(object):
     def calc_discharge_opt(self, time):
         """A Version of calculate_discharge() that does not require
         checking for boundary conditions"""
-        Q_net = self.Q_in + sum(self.Q_tribs[time]) - self.Q_with - self.E
+        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.E
         self.Q_mass += Q_net
         up = self.prev_km
 
@@ -253,13 +253,13 @@ class StreamNode(object):
         that Q_bc is a TimeList instance holding boundary conditions
         for the given node, and that this is only True if this node has
         no upstream channel. Two is that the values for Q_tribs is a
-        TimeList instance or None, that Q_in and Q_with are values in
+        TimeList instance or None, that Q_accr and Q_with are values in
         cubic meters per second of inputs and withdrawals or None. The
         argument t is for a Python datetime object and can (should) be
         None if we are not at a spatial boundary. dt is the timestep in
         minutes, which cannot be None.
         """
-        Q_net = self.Q_in + sum(self.Q_tribs[time]) - self.Q_with - self.E
+        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.E
         # Check if we are a spatial or temporal boundary node
         if self.prev_km:
             # There's an upstream channel, but no previous timestep.
@@ -472,7 +472,7 @@ class StreamNode(object):
                                             True, self.S1,
                                             self.prev_km.T,
                                             self.T, self.next_km.T,
-                                            self.Q_in, self.T_in,
+                                            self.Q_accr, self.T_accr,
                                             self.next_km.Mix_T_Delta)
 
     def calc_dispersion(self):
@@ -500,8 +500,8 @@ class StreamNode(object):
         # Hyporheic flows if available
         Q_hyp = self.Q_hyp or 0.0
         # And accretion flows
-        Q_accr = self.Q_in or 0.0
-        T_accr = self.T_in or 0.0
+        Q_accr = self.Q_accr or 0.0
+        T_accr = self.T_accr or 0.0
         #Calculate temperature change from mass transfer from point inflows
         T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
         #Calculate temperature change from mass transfer from hyporheic zone
