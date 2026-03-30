@@ -166,10 +166,10 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
 
 def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     cdef double Converge = 10
-    cdef double dy = 0.01
+    cdef double Delta_Dw = 0.01
     cdef int count = 0
     cdef double power = 2/3
-    cdef double Fy, thed, Fyy, dFy
+    cdef double F_Dw, thed, Fyy, Fp_Dw
     
     # ASSUMPTION: Make bottom width 1 cm to prevent undefined numbers 
     # in the math.
@@ -181,20 +181,20 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
         # to the depth and solves it again. It should iterate for a 
         # solution to depth within about 5-6 solutions.
         while Converge > 1e-7:
-            Fy = ((D_est * (W_b + z * D_est)) *
+            F_Dw = ((D_est * (W_b + z * D_est)) *
                   pow(((D_est * (W_b + z * D_est)) /
                        (W_b + 2 * D_est * sqrt(1+ pow(z,2)))),power) -
                   ((n * Q_est) / sqrt(S)))
             
-            thed = D_est + dy
+            thed = D_est + Delta_Dw
             Fyy = ((thed * (W_b + z * thed)) *
                    pow((thed * (W_b + z * thed)) /
                        (W_b + 2 * thed * sqrt(1+ pow(z,2))),power) -
                    (n * Q_est) / sqrt(S))
             
-            dFy = (Fyy - Fy) / dy
-            if dFy <= 0: dFy = 0.99
-            D_est -= Fy / dFy
+            Fp_Dw = (Fyy - F_Dw) / Delta_Dw
+            if Fp_Dw <= 0: Fp_Dw = 0.99
+            D_est -= F_Dw / Fp_Dw
 
             if (D_est < 0) or (D_est > 5000) or (count > 10000):
                 raise RuntimeError(
@@ -202,7 +202,7 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
                     f"Q_est={Q_est}, D_est={D_est}, count={count}, "
                     f"W_b={W_b}, z={z}, n={n}, S={S}, dx={dx}, dt={dt}"
                 )
-            Converge = abs(Fy/dFy)
+            Converge = abs(F_Dw/Fp_Dw)
             count += 1
     # Use the calculated wetted depth to calculate new 
     # channel characteristics
@@ -249,10 +249,10 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
         raise Exception(msg)
 
     # These calculations are from Chow's "Applied Hydrology"
-    cdef double D = K * (1 - X) + 0.5 * dt
-    cdef double C1 = (0.5*dt - K * X) / D
-    cdef double C2 = (0.5*dt + K * X) / D
-    cdef double C3 = (K * (1 - X) - 0.5*dt) / D
+    cdef double D1 = K * (1 - X) + 0.5 * dt
+    cdef double C1 = (0.5*dt - K * X) / D1
+    cdef double C2 = (0.5*dt + K * X) / D1
+    cdef double C3 = (K * (1 - X) - 0.5*dt) / D1
     # TODO: reformulate this using an updated model, 
     # such as Moramarco, et.al., 2006
     return C1, C2, C3
