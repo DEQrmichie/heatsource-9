@@ -47,8 +47,8 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
         GeoMeanLongSun -= 360
     GeoMeanAnomalySun = 357.52911 + JC * (35999.05029 - 0.0001537 * JC)
 
-    Dummy1 = toRadians*GeoMeanAnomalySun
-    Dummy2 = sin(Dummy1)
+    GeoMeanAnomalySunRad = toRadians*GeoMeanAnomalySun
+    Dummy2 = sin(GeoMeanAnomalySunRad)
     Dummy3 = sin(Dummy2 * 2)
     Dummy4 = sin(Dummy3 * 3)
     
@@ -616,62 +616,62 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     # Transmissivity of Water for Direct Beam Solar Radiation 
     # (Austin and Halikas 1976)
-    Trans_Stream = 0.415 - (0.194 * log10(Water_Path * 100))
-    if Trans_Stream > 1:
-        Trans_Stream = 1
+    Tr_direct = 0.415 - (0.194 * log10(Water_Path * 100))
+    if Tr_direct > 1:
+        Tr_direct = 1
     
     # Direct Solar Radiation attenuated on way down
-    Dummy1 = F_Direct[5] * (1 - Trans_Stream)
+    A1 = F_Direct[5] * (1 - Tr_direct)
     
     # Direct Solar Radiation Hitting Stream bed
-    Dummy2 = F_Direct[5] - Dummy1
+    A2 = F_Direct[5] - A1
     
     # Stream Bed Reflection Coef. for Direct Solar
     # (Beschta and Weathered 1984 adopted from Sellers 1965)
-    Bed_Reflect = exp(0.0214 * (Zenith * pi / 180) - 1.941)
+    R_bed_dir = exp(0.0214 * (Zenith * pi / 180) - 1.941)
     BedRock = 1 - phi
     
     # Direct Solar Radiation Absorbed in Bed
-    Dummy3 = Dummy2 * (1 - Bed_Reflect)                
+    A3 = A2 * (1 - R_bed_dir)                
     
     # Direct Solar Radiation Immediately Returned to Water Column as Heat
-    Dummy4 = 0.53 * BedRock * Dummy3                   
+    A4 = 0.53 * BedRock * A3                   
     
     # Direct Solar Radiation Reflected off Bed
-    Dummy5 = Dummy2 * Bed_Reflect                      
+    A5 = A2 * R_bed_dir                      
     
     # Direct Solar Radiation attenuated on way up
-    Dummy6 = Dummy5 * (1 - Trans_Stream)               
+    A6 = A5 * (1 - Tr_direct)               
     
-    F_Direct[6] = Dummy1 + Dummy4 + Dummy6
-    F_Direct[7] = Dummy3 - Dummy4
-    Trans_Stream = 0.415 - (0.194 * log10(100 * d_w))
-    if Trans_Stream > 1:
-        Trans_Stream = 1
+    F_Direct[6] = A1 + A4 + A6
+    F_Direct[7] = A3 - A4
+    Tr_diffuse = 0.415 - (0.194 * log10(100 * d_w))
+    if Tr_diffuse > 1:
+        Tr_diffuse = 1
     
     # Diffuse Solar Radiation attenuated on way down
-    Dummy1 = F_Diffuse[5] * (1 - Trans_Stream)
+    B1 = F_Diffuse[5] * (1 - Tr_diffuse)
     
     # Diffuse Solar Radiation Hitting Stream bed
-    Dummy2 = F_Diffuse[5] - Dummy1                  
+    B2 = F_Diffuse[5] - B1                  
     
     # Reflection Coef. for Diffuse Solar
     # TODO: The following ALWAYS becomes exp(-1.941)
-    Bed_Reflect = exp(0.0214 * (0) - 1.941)
+    R_bed_diff = exp(0.0214 * (0) - 1.941)
     
     # Diffuse Solar Radiation Absorbed in Bed
-    Dummy3 = Dummy2 * (1 - Bed_Reflect)
+    B3 = B2 * (1 - R_bed_diff)
     
     # Diffuse Solar Radiation Immediately Returned to Water Column as Heat
-    Dummy4 = 0.53 * BedRock * Dummy3
+    B4 = 0.53 * BedRock * B3
     
     # Diffuse Solar Radiation Reflected off Bed
-    Dummy5 = Dummy2 * Bed_Reflect
+    B5 = B2 * R_bed_diff
     
     # Diffuse Solar Radiation attenuated on way up
-    Dummy6 = Dummy5 * (1 - Trans_Stream)
-    F_Diffuse[6] = Dummy1 + Dummy4 + Dummy6
-    F_Diffuse[7] = Dummy3 - Dummy4
+    B6 = B5 * (1 - Tr_diffuse)
+    F_Diffuse[6] = B1 + B4 + B6
+    F_Diffuse[7] = B3 - B4
     
     #=========================================================
     # Flux_Solar(x) and Flux_Diffuse = Solar flux at various positions
