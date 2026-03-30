@@ -65,7 +65,7 @@ class StreamNode(object):
                 "V", # Total volume, based on current flow
                 "Q_tribs", # Inputs from tribs.
                 "Q_in", # Inputs from "accretion" in cubic meters per second
-                "Q_out", # Withdrawals from the stream, in cubic meters per second
+                "Q_with", # Withdrawals from the stream, in cubic meters per second
                 "Q_hyp", # Hyporheic flow
                 "km", # River kilometer, from mouth
                 "nodeID",  # Node ID
@@ -174,11 +174,11 @@ class StreamNode(object):
                        rp.get("calcalluvium", False),
                        rp.get("alluviumtemp", 0.0))
 
-    def _raise_discharge_error(self, exc, time, net_inflow, up_q=None, q_bc=None):
+    def _raise_discharge_error(self, exc, time, Q_net, up_q=None, q_bc=None):
         msg = (
             "Discharge calculation failed at "
             f"km={self.km}, model time={pretty_time(time)}, "
-            f"Q={self.Q}, net_inflow={net_inflow}, "
+            f"Q={self.Q}, Q_net={Q_net}, "
             f"W_b={self.W_b}, S={self.S}, dx={self.dx}, dt={self.dt}"
         )
         if up_q is not None:
@@ -190,8 +190,8 @@ class StreamNode(object):
     def calc_discharge_opt(self, time):
         """A Version of calculate_discharge() that does not require
         checking for boundary conditions"""
-        net_inflow = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
-        self.Q_mass += net_inflow
+        Q_net = self.Q_in + sum(self.Q_tribs[time]) - self.Q_with - self.E
+        self.Q_mass += Q_net
         up = self.prev_km
 
         try:
@@ -200,9 +200,9 @@ class StreamNode(object):
                 py_HS.calc_flows(self.U, self.W_w, self.W_b, self.S,
                               self.dx, self.dt, self.z, self.n,
                               self.d_cont, self.Q, up.Q, up.Q_prev,
-                              net_inflow, -1)
+                              Q_net, -1)
         except RuntimeError as exc:
-            self._raise_discharge_error(exc, time, net_inflow, up_q=up.Q)
+            self._raise_discharge_error(exc, time, Q_net, up_q=up.Q)
         
         self.Q_prev = self.Q
         self.Q = Q
@@ -253,13 +253,13 @@ class StreamNode(object):
         that Q_bc is a TimeList instance holding boundary conditions
         for the given node, and that this is only True if this node has
         no upstream channel. Two is that the values for Q_tribs is a
-        TimeList instance or None, that Q_in and Q_out are values in
+        TimeList instance or None, that Q_in and Q_with are values in
         cubic meters per second of inputs and withdrawals or None. The
         argument t is for a Python datetime object and can (should) be
         None if we are not at a spatial boundary. dt is the timestep in
         minutes, which cannot be None.
         """
-        net_inflow = self.Q_in + sum(self.Q_tribs[time]) - self.Q_out - self.E
+        Q_net = self.Q_in + sum(self.Q_tribs[time]) - self.Q_with - self.E
         # Check if we are a spatial or temporal boundary node
         if self.prev_km:
             # There's an upstream channel, but no previous timestep.
@@ -268,14 +268,14 @@ class StreamNode(object):
             
             # Add upstream node's discharge at THIS 
             # timestep- prev_km.Q would be next timestep.
-            Q = self.prev_km.Q_prev + net_inflow
+            Q = self.prev_km.Q_prev + Q_net
 
             try:
                 Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                     py_HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx,
-                                   self.dt, self.z, self.n, self.d_cont, 0.0, 0.0, 0.0, net_inflow, Q)
+                                   self.dt, self.z, self.n, self.d_cont, 0.0, 0.0, 0.0, Q_net, Q)
             except RuntimeError as exc:
-                self._raise_discharge_error(exc, time, net_inflow, up_q=self.prev_km.Q_prev)
+                self._raise_discharge_error(exc, time, Q_net, up_q=self.prev_km.Q_prev)
 
             # If we hit this once, we remap so we can avoid the 
             # if statements in the future.
@@ -292,9 +292,9 @@ class StreamNode(object):
             try:
                 Q, (self.d_w, self.A, self.P_w, self.R_h, self.W_w, self.U, self.Disp) = \
                     py_HS.calc_flows(0.0, 0.0, self.W_b, self.S, self.dx, self.dt, self.z, self.n,
-                                   self.d_cont, 0.0, 0.0, 0.0, net_inflow, Q_bc)
+                                   self.d_cont, 0.0, 0.0, 0.0, Q_net, Q_bc)
             except RuntimeError as exc:
-                self._raise_discharge_error(exc, time, net_inflow, q_bc=Q_bc)
+                self._raise_discharge_error(exc, time, Q_net, q_bc=Q_bc)
 
             self.CalcDischarge = self.calc_discharge_boundary_node
 

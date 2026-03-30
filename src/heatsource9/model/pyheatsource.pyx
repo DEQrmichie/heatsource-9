@@ -258,15 +258,15 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
     return C1, C2, C3
 
 def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
-              net_inflow, Q_bc):
+              Q_net, Q_bc):
     cdef double Q1, Q2, Q_new
     cdef double C[3]
 
     if Q_bc >= 0:
         Q_new = Q_bc
     else:
-        Q1 = Q_up + net_inflow
-        Q2 = Q_up_prev + net_inflow
+        Q1 = Q_up + Q_net
+        Q2 = Q_up_prev + Q_net
 
         #msg="Q2={0}, U={1}, W_w={2}, S={3}, dx={4}, dt={5}".format(Q2, U, W_w, S, dx, dt)
         #logger.info(msg)

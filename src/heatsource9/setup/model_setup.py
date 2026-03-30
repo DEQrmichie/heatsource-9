@@ -679,7 +679,7 @@ class ModelSetup(object):
         flow = ["INFLOW", "TEMPERATURE", "OUTFLOW"]
 
         # Operator methods to combine km values (named as model variables)
-        # sums = ["hyp_percent", "Q_in", "Q_out"]
+        # sums = ["hyp_percent", "Q_in", "Q_with"]
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
         #         "W_b", "z", "n",
@@ -701,7 +701,7 @@ class ModelSetup(object):
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_out"]
+            sums = ["hyp_percent", "Q_in", "Q_with"]
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
                     "SedThermCond", "SedThermDiff", "SedDepth", "phi",
@@ -717,7 +717,7 @@ class ModelSetup(object):
         elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_out"]
+            sums = ["hyp_percent", "Q_in", "Q_with"]
             mins = ["km"]
             aves = ["elevation", "S", "W_b", "z", "n",
                     "Q_cont", "d_cont"]
