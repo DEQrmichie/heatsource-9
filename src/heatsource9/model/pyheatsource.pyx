@@ -847,8 +847,8 @@ def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
 
-    cdef double Q_in = 0.0
-    cdef double T_in = 0.0
+    cdef double Q_trib = 0.0
+    cdef double T_trib = 0.0
     cdef double T_up = T0
     cdef double numerator = 0.0
     cdef double T_mix
@@ -857,25 +857,25 @@ def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         Qitem = Q_tup[i]
         Titem = T_tup[i]
         if Qitem > 0:
-            Q_in += Qitem
+            Q_trib += Qitem
             numerator += Qitem*Titem
-    if numerator and (Q_in > 0):
-        T_in = numerator/Q_in
+    if numerator and (Q_trib > 0):
+        T_trib = numerator/Q_trib
     # This is basically mix_it_up from the VB code
-    T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
+    T_mix = ((Q_trib * T_trib) + (T_up * Q_up)) / (Q_up + Q_trib)
     
     # Calculate temperature change from mass transfer from hyporheic zone
-    T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_in))) /
-             (Q_hyp + Q_up + Q_in))
+    T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_trib))) /
+             (Q_hyp + Q_up + Q_trib))
     
     # Calculate temperature change from accretion inflows
     # Q_hyp is commented out because we are not currently sure if 
     # it should be added to the flow. This is because adding it will 
     # cause overestimation of the discharge if Q_hyp is not subtracted
-    # from the total discharge (Q_in) somewhere else, which it is not. 
+    # from the total discharge (Q_trib) somewhere else, which it is not. 
     # We should check this eventually.
-    T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_in + Q_hyp))) /
-             (Q_accr + Q_up + Q_in + Q_hyp))
+    T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_trib + Q_hyp))) /
+             (Q_accr + Q_up + Q_trib + Q_hyp))
     
     T_mix -= T_up
     
