@@ -307,7 +307,7 @@ class StreamNode(object):
             msg ="The channel is going dry at {0}, model time: {1}.".format(self, pretty_time(time))
             logger.warning(msg)
 
-    def calc_heat_opt(self, time, hour, min, sec, JD,
+    def calc_heat_opt(self, time, hour, min, sec, doy,
                      JC, solar_only=False):
         """Inlined version of CalcHeat optimized for non-boundary nodes
         (removes a bunch of if/else statements)"""
@@ -350,7 +350,7 @@ class StreamNode(object):
                                    tran,
                                    self.Disp, 
                                    hour,
-                                   JD,
+                                   doy,
                                    Daytime,
                                    Altitude,
                                    Zenith,
@@ -379,7 +379,7 @@ class StreamNode(object):
             self.Solar_Blocked[tran][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
 
-    def calc_heat_boundary_node(self, time, hour, min, sec, JD,
+    def calc_heat_boundary_node(self, time, hour, min, sec, doy,
                               JC, solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
@@ -423,7 +423,7 @@ class StreamNode(object):
                                        tran,
                                        self.Disp,
                                        hour,
-                                       JD,
+                                       doy,
                                        Daytime,
                                        Altitude,
                                        Zenith,

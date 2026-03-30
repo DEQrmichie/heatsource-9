@@ -65,19 +65,19 @@ def time_parts(epoch_seconds):
     """
     Return time values calculated from UNIX epoch seconds.
 
-    (hour, minute, second, JD, JC)
+    (hour, minute, second, doy, JC)
 
     Where:
-      - JD: julian day (tm_yday from gmtime)
+      - doy: Day of Year
       - JC: julian century
     """
     model_time = gmtime(float(epoch_seconds))
     hour = int(model_time.tm_hour)
     minute = int(model_time.tm_min)
     second = int(model_time.tm_sec)
-    jd = int(model_time.tm_yday)
+    doy = int(model_time.tm_yday)
     jc = julian_century(float(epoch_seconds))
-    return hour, minute, second, jd, jc
+    return hour, minute, second, doy, jc
 
 
 def julian_century(epoch_seconds):

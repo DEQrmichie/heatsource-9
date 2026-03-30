@@ -16,7 +16,7 @@ class ModelRoutine:
         hour,
         minute,
         second,
-        jd,
+        doy,
         jc,
     ):
         """
@@ -31,14 +31,14 @@ class ModelRoutine:
             for node in nodes:
                 node.CalcDischarge(t)
             for node in nodes:
-                node.CalcHeat(t, hour, minute, second, jd, jc)
+                node.CalcHeat(t, hour, minute, second, doy, jc)
             for node in nodes:
                 node.maccormick2(t)
             return
 
         if self.run_type == "solar":
             for node in nodes:
-                node.CalcHeat(t, hour, minute, second, jd, jc, True)
+                node.CalcHeat(t, hour, minute, second, doy, jc, True)
             return
 
         if self.run_type == "hydraulics":

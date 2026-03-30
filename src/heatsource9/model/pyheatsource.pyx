@@ -279,7 +279,7 @@ def calc_flows(U, W_w, W_b, S, dx, dt, z, n, D_est, Q, Q_up, Q_up_prev,
     Geom = get_stream_geometry(Q_new, W_b, z, n, S, D_est, dx, dt)
     return Q_new, Geom
 
-def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
+def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, phi, lcsampmethod, emergent, lc_canopy, lc_height, lc_height_rel, lc_k, lc_oh, lc_canopy_depth,
                  ShaderList, tran, heatsource8):
@@ -293,13 +293,9 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # searches of local, class and global namespaces
     #======================================================
     # 0 - Edge of atmosphere
-    # TODO: Original VB code's JulianDay calculation:
-    # JulianDay = -DateDiff("d", theTime, DateSerial(year(theTime), 1, 1))
-    # This calculation for Rad_Vec should be checked, with 
-    # respect to the DST hour/24 part.
     
     # Radius Vector (Wunderlich 1972)
-    Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - JD + hour / 24))
+    Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
     
     # Solar Constant (Dingman 2002)
     Solar_Constant = 1367 # W/m2
@@ -317,7 +313,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
         exp(-0.0001184 * elevation)
     
     # Atmospheric Transmissivity (Ibqal 1983)
-    Trans_Air = 0.0685 * cos((2 * pi / 365) * (JD + 10)) + 0.8
+    Trans_Air = 0.0685 * cos((2 * pi / 365) * (doy + 10)) + 0.8
     
     # Direct Beam Solar Radiation above Topographic Features
     # (Wunderlich 1972, Martin and McCutcheon 1999)
@@ -335,7 +331,7 @@ def get_solar_flux(hour, JD, Altitude, Zenith, cloud, d_w, W_b, elevation,
     Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
         (5.14 * (Clearness_Index ** 2)) + \
         (2.98 * (Clearness_Index ** 3)) - \
-        (sin(2 * pi * (JD - 40) / 365)) * \
+        (sin(2 * pi * (doy - 40) / 365)) * \
         (0.009 - 0.078 * Clearness_Index)
     F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
     
@@ -903,7 +899,7 @@ def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
 
 def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
-                   tran, Disp, hour, JD, daytime, Altitude, Zenith,
+                   tran, Disp, hour, doy, daytime, Altitude, Zenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     
@@ -925,7 +921,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     if daytime:
         
         (solar, diffuse,
-        direct, veg_block) = get_solar_flux(hour, JD, Altitude, Zenith,
+        direct, veg_block) = get_solar_flux(hour, doy, Altitude, Zenith,
                                         cloud, d_w, W_b, elevation,
                                         TopoFactor, ViewToSky,
                                         transsample_distance,
