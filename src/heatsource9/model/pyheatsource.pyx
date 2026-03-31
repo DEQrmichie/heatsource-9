@@ -346,7 +346,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
-    PLz =[0]*transsample_count
+    PL_lc =[0]*transsample_count
     
     if Altitude <= theta_topo:
         # Topographic shade is occurring
@@ -382,7 +382,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     cos_altitude = cos(radians(Altitude))
                     if abs(cos_altitude) < 1e-6:
                         cos_altitude = 1e-6
-                    PLz = transsample_distance / cos_altitude
+                    PL_lc = transsample_distance / cos_altitude
                 else:
                     adjust = 0.5 if lcsampmethod == "zone" else 0.0
                     x_near = transsample_distance * (s + 1 - adjust)
@@ -401,12 +401,12 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
 
                     H_top = lc_height_rel[tran][s]
                     if BeersData == "LAI":
-                        H_base = H_top - lc_canopy_depth[tran][s]
+                        Hn_lc_base = H_top - lc_canopy_depth[tran][s]
                     else:
                         H_canopy_depth = lc_canopy_depth[tran][s]
-                        H_base = H_top - H_canopy_depth
+                        Hn_lc_base = H_top - H_canopy_depth
 
-                    x_base = H_base / tan_altitude
+                    x_base = Hn_lc_base / tan_altitude
                     x_top = H_top / tan_altitude
 
                     if Altitude <= theta_path[s]:
@@ -414,27 +414,27 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         x_enter = max(x_near, x_base)
                         x_exit = min(x_far, x_top)
                         if x_exit <= x_enter:
-                            PLz = 0.0
+                            PL_lc = 0.0
                         else:
-                            PLz = (x_exit - x_enter) / cos_altitude
+                            PL_lc = (x_exit - x_enter) / cos_altitude
                     else:
                         # Top entry
                         x_enter = max(x_near, x_base)
                         x_exit = min(max(x_top, x_near), x_far)
                         if x_exit <= x_enter:
-                            PLz = 0.0
+                            PL_lc = 0.0
                         else:
-                            PLz = (x_exit - x_enter) / cos_altitude
-                if PLz < 0:
-                    PLz = 0.0
+                            PL_lc = (x_exit - x_enter) / cos_altitude
+                if PL_lc < 0:
+                    PL_lc = 0.0
                 
                 # shading is occurring from this sample
                 if BeersData == "LAI":
                     
                     # use LAI and k to calculate the riparian extinction value
                     try:
-                        RipExtinction = lc_canopy[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
-                        fraction_passed = exp(-1 * RipExtinction * PLz)
+                        K_rip = lc_canopy[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
+                        fraction_passed = exp(-1 * K_rip * PL_lc)
                     except:
                         # can't divide by height zero
                         fraction_passed = 0
@@ -450,15 +450,15 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         PL = lc_canopy_depth[tran][s]
                     
                     try:
-                        RipExtinction = -log(1- lc_canopy[tran][s]) / PL
-                        fraction_passed = exp(-1* RipExtinction * PLz)
+                        K_rip = -log(1- lc_canopy[tran][s]) / PL
+                        fraction_passed = exp(-1 * K_rip * PL_lc)
                     except:
                         if (lc_canopy[tran][s] >= 1 or PL <= 0):
                             # can't take log or divide by zero
                             fraction_passed = 0
                         else:
                             # some other error
-                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} theta_full_sun={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, theta_full_sun[s])
+                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} Altitude={6} theta_full_sun={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PL_lc,PL, Altitude, theta_full_sun[s])
                             logger.exception(msg)
                             raise Exception(msg)
                         
@@ -524,7 +524,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 fraction_passed = 1.0
             else:
                 #--------- (Norman and Welles 1983)
-                # PLe is the path length of the sun vector through 
+                # PL_emerg is the path length of the sun vector through 
                 # the vegetation in the emergent sample
         
                 # The emergent zone can't be wider than half the 
@@ -537,7 +537,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     emergent_distance = W_b * 0.5
 
                 H_top = lc_height_rel[0][0]
-                H_base = H_top - lc_canopy_depth[0][0]
+                Hn_lc_base = H_top - lc_canopy_depth[0][0]
 
                 altitude_rad = radians(Altitude)
                 cos_altitude = cos(altitude_rad)
@@ -549,7 +549,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
 
                 x_near = 0.0
                 x_far = emergent_distance
-                x_base = H_base / tan_altitude
+                x_base = Hn_lc_base / tan_altitude
                 x_top = H_top / tan_altitude
 
                 if Altitude <= degrees(atan(H_top / emergent_distance)):
@@ -559,21 +559,21 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     x_enter = max(x_near, x_base)
                     x_exit = min(max(x_top, x_near), x_far)
                 if x_exit <= x_enter:
-                    PLe = 0.0
+                    PL_emerg = 0.0
                 else:
-                    PLe = (x_exit - x_enter) / cos_altitude
+                    PL_emerg = (x_exit - x_enter) / cos_altitude
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
-                RipExtinction = lc_canopy[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
-                fraction_passed = exp(-1 * RipExtinction * PLe)
+                K_rip = lc_canopy[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
+                fraction_passed = exp(-1 * K_rip * PL_emerg)
                 
             else:
                 try:
                     # Use canopy cover to calculate 
                     # the riparian extinction value
-                    RipExtinction = -log(1- lc_canopy[0][0]) / lc_canopy_depth[0][0]
-                    fraction_passed = exp(-1* RipExtinction * PLe)
+                    K_rip = -log(1- lc_canopy[0][0]) / lc_canopy_depth[0][0]
+                    fraction_passed = exp(-1 * K_rip * PL_emerg)
                     
                 except:
                     if lc_canopy[0][0] >= 1:
@@ -581,7 +581,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         fraction_passed = 0
                     else:
                         # some other error
-                        msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PLe={1} ".format(lc_canopy[0][0],PLe)
+                        msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1} ".format(lc_canopy[0][0],PL_emerg)
                         logger.exception(msg)
                         raise Exception(msg)
                 
