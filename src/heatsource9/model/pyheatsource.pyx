@@ -56,7 +56,8 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
                                (0.004817 + 0.000014 * JC)) + Dummy3 *
                      (0.019993 - 0.000101 * JC) + Dummy4 * 0.000289)
     
-    SunApparentLong = ((GeoMeanLongSun + SunEqofCenter) -
+    SunTrueLong = GeoMeanLongSun + SunEqofCenter
+    SunApparentLong = (SunTrueLong -
                        0.00569 - 0.00478 *
                        sin(toRadians*((125.04 - 1934.136 * JC))))
 
