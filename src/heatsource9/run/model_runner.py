@@ -1,12 +1,3 @@
-"""
-Model Run coordi
-
-This mcoordinates:
-  - ModelSetup (setup)
-  - Clock (domain)
-  - ModelRoutine (model)
-  - OutputWriter (io)
-"""
 
 import logging
 from pathlib import Path
