@@ -740,14 +740,14 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     # Atmospheric variables
     
     # mbar (Chapra p. 567)
-    cdef double Sat_Vapor = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
-    cdef double Air_Vapor = humidity * Sat_Vapor
+    cdef double Es = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
+    cdef double Ea = humidity * Es
     
     # Stefan-Boltzmann constant (W/m2 K4)    
     cdef double Sigma = 5.67e-8
     
     # Dingman p 282
-    cdef double Emissivity = (1.72 * (((Air_Vapor * 0.1) /
+    cdef double Emissivity = (1.72 * (((Ea * 0.1) /
                            (273.2 + T_air)) ** (1 / 7)) *
                   (1 + 0.22 * cloud ** 2))
     #======================================================
@@ -767,8 +767,8 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double P_atm = 1013 - 0.1055 * elevation #mbar
     
     # mbar (Chapra p. 567)
-    Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
-    Air_Vapor = humidity * Sat_Vapor
+    cdef double Es_w = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
+    cdef double Ea_w = humidity * Es_w
     #===================================================
     # Calculate the frictional reduction in wind velocity
     cdef int zm
@@ -816,26 +816,26 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
         
         if NetRadiation < 0:
             NetRadiation = 0 #J/m2/s
-        E_aero = f_U2m * (Sat_Vapor - Air_Vapor)  #m/s
+        E_aero = f_U2m * (Es_w - Ea_w)  #m/s
         E_rate = (((NetRadiation * Delta_sat / (P * L_evap)) + E_aero * Gamma) /
                   (Delta_sat + Gamma))
         
         F_Evap = -E_rate * L_evap * P #W/m2
         # Calculate Convection FLUX
-        if (Sat_Vapor - Air_Vapor) != 0:
-            BR = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)
+        if (Es_w - Ea_w) != 0:
+            BR = Gamma * (T_prev - T_air) / (Es_w - Ea_w)
         else:
             BR = 1        
     else:
         #===================================================
         # Calculate Evaporation FLUX
-        E_rate = f_U2m * (Sat_Vapor - Air_Vapor)  #m/s
+        E_rate = f_U2m * (Es_w - Ea_w)  #m/s
         P = 998.2 # kg/m3
         F_Evap = -E_rate * L_evap * P #W/m2
         # Calculate Convection FLUX
-        if (Sat_Vapor - Air_Vapor) != 0:
+        if (Es_w - Ea_w) != 0:
             BR = (0.61 * (P_atm / 1000) * (T_prev - T_air) /
-                  (Sat_Vapor - Air_Vapor))
+                  (Es_w - Ea_w))
         else:
             BR = 1
             
