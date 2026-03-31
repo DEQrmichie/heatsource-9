@@ -475,37 +475,3 @@ class StreamNode(object):
                                             self.Q_accr, self.T_accr,
                                             self.next_km.Mix_T_Delta)
 
-    def calc_dispersion(self):
-        cdef double dx = self.dx
-        cdef double dt = self.dt
-        cdef double Shear_Velocity
-        cdef double Disp
-        if not self.S:
-            Shear_Velocity = self.U
-        else:
-            Shear_Velocity = sqrt(9.8 * self.d_w * self.S)
-        Disp = 0.011 * (self.U ** 2) * (self.W_w ** 2) / (self.d_w * Shear_Velocity)
-        if Disp * dt / (dx ** 2) > 0.5:
-            Disp = (0.45 * (dx ** 2)) / dt
-        Disp = 0.1
-        return Disp
-
-    def mix_it_up(self, time, Q_up, T_up):
-        Q_in = 0.0
-        T_in = 0.0
-        for i in range(len(self.Q_tribs[time])):
-            Q_in += self.Q_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0.0
-            T_in += self.T_tribs[time][i] if self.Q_tribs[time][i] > 0 else 0.0
-
-        # Hyporheic flows if available
-        Q_hyp = self.Q_hyp or 0.0
-        # And accretion flows
-        Q_accr = self.Q_accr or 0.0
-        T_accr = self.T_accr or 0.0
-        #Calculate temperature change from mass transfer from point inflows
-        T_mix = ((Q_in * T_in) + (T_up * Q_up)) / (Q_up + Q_in)
-        #Calculate temperature change from mass transfer from hyporheic zone
-        T_mix = ((self.T_sed * Q_hyp) + (T_mix * (Q_up + Q_in))) / (Q_hyp + Q_up + Q_in)
-        #Calculate temperature change from accretion inflows
-        T_mix = ((Q_accr * T_accr) + (T_mix * (Q_up + Q_in + Q_hyp))) / (Q_accr + Q_up + Q_in + Q_hyp)
-        return T_mix - T_up
