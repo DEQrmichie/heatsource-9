@@ -44,7 +44,7 @@ class StreamNode(object):
                 "F_Solar", # List of important solar fluxes
                 "F_Direct", 
                 "F_Diffuse",
-                "SedThermCond", "SedThermDiff", "SedDepth", # Sediment conduction values
+                "Ksed", "Alpha_sed", "Dsed", # Sediment conduction values
                 "hyp_percent", # Percent hyporheic exchange                
                 "S",        # Slope
                 "n",        # Manning's n
@@ -163,9 +163,9 @@ class StreamNode(object):
         rp = self.run_params
         self.C_args = (self.W_b, self.elevation, self.TopoFactor,
                        self.ViewToSky, self.phi, self.lc_canopy,
-                       self.lc_height, self.lc_height_rel, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.SedDepth,
-                       self.dx, self.dt, self.SedThermCond,
-                       self.SedThermDiff, self.Q_accr, self.T_accr,
+                       self.lc_height, self.lc_height_rel, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.Dsed,
+                       self.dx, self.dt, self.Ksed,
+                       self.Alpha_sed, self.Q_accr, self.T_accr,
                        has_prev, rp.get("transsample_distance", 0.0),
                        rp.get("transsample_count", 0),
                        rp.get("canopy_data", "LAI"), rp.get("lcsampmethod", "point"), rp.get("emergent", False),

@@ -696,16 +696,16 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
 def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
-                    lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
-                    SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
+                    lc_height, ViewToSky, Dsed, dx, dt, Ksed,
+                    Alpha_sed, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
                     Q_hyp, F_Solar5, F_Solar7):
 
-    # SedThermCond units of W/(m *C)
-    # SedThermDiff units of cm^2/sec
+    # Ksed units of W/(m *C)
+    # Alpha_sed units of cm^2/sec
 
-    cdef double SedRhoCp = SedThermCond / (SedThermDiff / 10000)
-    # NOTE: SedRhoCp is the product of sediment density and heat capacity
+    cdef double RhoCp_sed = Ksed / (Alpha_sed / 10000)
+    # NOTE: RhoCp_sed is the product of sediment density and heat capacity
     # since thermal conductivity is defined as 
     # density * heat capacity * diffusivity,
     # therefore (density * heat capacity) = (conductivity / diffusivity)
@@ -717,20 +717,20 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
 
     # Conduction flux (positive is heat into stream)
     # units of (W/m2)
-    cdef double F_Cond = SedThermCond * (T_sed - T_prev) / (SedDepth / 2) 
+    cdef double F_Cond = Ksed * (T_sed - T_prev) / (Dsed / 2) 
     
     # Calculate the conduction flux between deeper alluvium 
     # & substrate conditionally
-    cdef double Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
+    cdef double F_Cond_alluv = Ksed * (T_sed - T_alluv) / (Dsed / 2) if calcalluv else 0.0
 
     # Hyporheic flux (negative is heat into sediment)
     cdef double F_hyp = Q_hyp * Rhow * Cpw * (T_sed - T_prev) / (W_w * dx)
 
-    cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
-    cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
-    cdef double T_sed_new = T_sed + DT_Sed
-    if T_sed_new > 50 or T_sed_new < 0:
-        msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_new)
+    cdef double F_sed_net = F_Solar7 - F_Cond - F_Cond_alluv - F_hyp
+    cdef double Delta_T_sed = F_sed_net * dt / (Dsed * RhoCp_sed)
+    cdef double T_sed_next = T_sed + Delta_T_sed
+    if T_sed_next > 50 or T_sed_next < 0:
+        msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_next)
         logger.error(msg)
         raise Exception() # TODO RM
 
@@ -841,7 +841,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
             
     cdef double F_Conv = F_Evap * BR
     cdef double Q_evap = E_rate * W_w * dx if calcevap else 0
-    return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, Q_evap
+    return F_Cond, T_sed_next, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, Q_evap
 
 def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
@@ -906,7 +906,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
     cloud, Uzm, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
-        lc_height_rel, lc_k, lc_oh, lc_canopy_depth, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
+        lc_height_rel, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, T_alluv = C_args
@@ -945,8 +945,8 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
     ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation,
-                    phi, lc_height, ViewToSky, SedDepth, dx,
-                    dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
+                    phi, lc_height, ViewToSky, Dsed, dx,
+                    dt, Ksed, Alpha_sed, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],
                     solar[7])

@@ -683,7 +683,7 @@ class ModelSetup(object):
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
         #         "W_b", "z", "n",
-        #        "SedThermCond", "SedThermDiff", "SedDepth",
+        #        "Ksed", "Alpha_sed", "Dsed",
         #        "phi", "Q_cont", "d_cont", "T_accr"]
 
         # Operator methods to combine row values (named as input column names)
@@ -704,7 +704,7 @@ class ModelSetup(object):
             sums = ["hyp_percent", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
-                    "SedThermCond", "SedThermDiff", "SedDepth", "phi",
+                    "Ksed", "Alpha_sed", "Dsed", "phi",
                     "Q_cont", "d_cont", "T_accr"]
 
         elif self.run_type == "solar":
@@ -1472,7 +1472,7 @@ class ModelSetup(object):
         # values are not zero or blank because they'll raise ZeroDivisionError
         if self.run_type == "solar":
             for attr in ["d_w", "A", "P_w", "W_w", "U", "Disp", "Q_prev", "Q",
-                         "SedThermDiff", "SedDepth", "SedThermCond"]:
+                         "Alpha_sed", "Dsed", "Ksed"]:
                 if (getattr(node, attr) is None) or (getattr(node, attr) == 0):
                     setattr(node, attr, 0.01)
         if getattr(node, "F_DailySum", None) is None:
