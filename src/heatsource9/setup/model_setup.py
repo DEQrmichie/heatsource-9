@@ -999,7 +999,7 @@ class ModelSetup(object):
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each 
             # with one of three topographies
-            elevation_list = []
+            theta_topo_list = []
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
@@ -1008,11 +1008,11 @@ class ModelSetup(object):
             for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
-                    elevation_list.append(topo_e[h])
+                    theta_topo_list.append(topo_e[h])
                 elif dir_angle < 225:
-                    elevation_list.append(topo_s[h])
+                    theta_topo_list.append(topo_s[h])
                 else:
-                    elevation_list.append(topo_w[h])
+                    theta_topo_list.append(topo_w[h])
 
             # Sun comes down and can be full-on, blocked by veg, or 
             # blocked by topography. Earlier implementations calculated 
@@ -1126,7 +1126,7 @@ class ModelSetup(object):
                         vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
                 theta_full_sun_max = max(theta_full_sun)
                 theta_bank_max = max(theta_bank)
-                node.ShaderList += (theta_full_sun_max, elevation_list[i], theta_bank_max, theta_full_sun, theta_path),
+                node.ShaderList += (theta_full_sun_max, theta_topo_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def build_zones_w_values(self):
@@ -1288,12 +1288,12 @@ class ModelSetup(object):
 
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
-            # Now we set the topographic elevations in each direction
+            # Now we set the topographic shade angles in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each with one 
             # of three topographies
-            elevation_list = []
+            theta_topo_list = []
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
@@ -1301,11 +1301,11 @@ class ModelSetup(object):
             for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
-                    elevation_list.append(topo_e[h])
+                    theta_topo_list.append(topo_e[h])
                 elif dir_angle < 225:
-                    elevation_list.append(topo_s[h])
+                    theta_topo_list.append(topo_s[h])
                 else:
-                    elevation_list.append(topo_w[h])
+                    theta_topo_list.append(topo_w[h])
             # Sun comes down and can be full-on, blocked by veg, or blocked by topography. Earlier implementations
             # calculated each case on the fly. Here we chose a somewhat more elegant solution and calculate necessary
             # angles. Basically, there is a minimum angle for which full sun is calculated (top of trees), and the
@@ -1414,7 +1414,7 @@ class ModelSetup(object):
                         vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
                 theta_full_sun_max = max(theta_full_sun)
                 theta_bank_max = max(theta_bank)
-                node.ShaderList += (theta_full_sun_max, elevation_list[i], theta_bank_max, theta_full_sun, theta_path),
+                node.ShaderList += (theta_full_sun_max, theta_topo_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def get_lc_codes(self):
