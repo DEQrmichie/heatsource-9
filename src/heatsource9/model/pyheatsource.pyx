@@ -61,9 +61,9 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
                        sin(toRadians*((125.04 - 1934.136 * JC))))
 
     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)
-    Declination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
+    SolarDeclination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
 
-    SunRadVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
+    SolarRadiusVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
                     (1 + Eccentricity * cos(toRadians*
                                             (GeoMeanAnomalySun +
                                              SunEqofCenter))))
@@ -86,13 +86,13 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
 
     while SolarTime > 1440.0:
         SolarTime -= 1440.0
-    HourAngle = SolarTime / 4.0 - 180.0
-    if HourAngle < -180.0:
-        HourAngle += 360.0
+    SolarHourAngle = SolarTime / 4.0 - 180.0
+    if SolarHourAngle < -180.0:
+        SolarHourAngle += 360.0
 
-    Dummy = (sin(toRadians*lat) * sin(toRadians*Declination) +
-             cos(toRadians*lat) * cos(toRadians*Declination) *
-             cos(toRadians*HourAngle))
+    Dummy = (sin(toRadians*lat) * sin(toRadians*SolarDeclination) +
+             cos(toRadians*lat) * cos(toRadians*SolarDeclination) *
+             cos(toRadians*SolarHourAngle))
     
     if Dummy > 1.0:
         Dummy = 1.0
@@ -103,7 +103,7 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
     Dummy = cos(toRadians*lat) * sin(toRadians*Zenith)
     if abs(Dummy) >= 0.000999:
         SolarAzimuthRatio = ((sin(toRadians*lat) * cos(toRadians*Zenith) -
-                              sin(toRadians*Declination)) / Dummy)
+                              sin(toRadians*SolarDeclination)) / Dummy)
         
         if abs(SolarAzimuthRatio) > 1.0:
             if SolarAzimuthRatio < 0:
@@ -111,33 +111,33 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
             else:
                 SolarAzimuthRatio = 1.0
 
-        Azimuth = 180 - toDegrees*(acos(SolarAzimuthRatio))
-        if HourAngle > 0:
-            Azimuth *= -1.0
+        SolarAzimuth = 180 - toDegrees*(acos(SolarAzimuthRatio))
+        if SolarHourAngle > 0:
+            SolarAzimuth *= -1.0
     else:
         if lat > 0:
-            Azimuth = 180.0
+            SolarAzimuth = 180.0
         else:
-            Azimuth = 0.0
-    if Azimuth < 0:
-        Azimuth += 360.0
+            SolarAzimuth = 0.0
+    if SolarAzimuth < 0:
+        SolarAzimuth += 360.0
 
-    AtmElevation = 90 - Zenith
-    if AtmElevation > 85:
+    theta_atm = 90 - Zenith
+    if theta_atm > 85:
         RefractionCorrection = 0
     else:
-        Dummy = tan(toRadians*(AtmElevation))
-        if AtmElevation > 5:
+        Dummy = tan(toRadians*(theta_atm))
+        if theta_atm > 5:
             
             RefractionCorrection = (58.1 / Dummy - 0.07 /
                                     pow(Dummy,3) + 0.000086 /
                                     pow(Dummy,5))
-        elif AtmElevation > -0.575:
+        elif theta_atm > -0.575:
             
-            RefractionCorrection = (1735 + AtmElevation *
-                                    (-518.2 + AtmElevation *
-                                     (103.4 + AtmElevation *
-                                      (-12.79 + AtmElevation * 0.711))))
+            RefractionCorrection = (1735 + theta_atm *
+                                    (-518.2 + theta_atm *
+                                     (103.4 + theta_atm *
+                                      (-12.79 + theta_atm * 0.711))))
         else:
             RefractionCorrection = -20.774 / Dummy
         RefractionCorrection = RefractionCorrection / 3600
@@ -150,16 +150,16 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
     
     # Determine which landcover transect direction corresponds to the sun azimuth
     if heatsource8:  # same as 8 directions but no north
-        tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),Azimuth)-1
-        Azimuth_mod = Azimuth
+        tran = bisect((0.0,67.5,112.5,157.5,202.5,247.5,292.5),SolarAzimuth)-1
+        Azimuth_mod = SolarAzimuth
     else:        
         Angle_Incr = 360.0 / radial_count
         DirNumbers = list(range(1, radial_count+1))
         AngleStart = [x*Angle_Incr-Angle_Incr/2 for x in DirNumbers]
-        if Azimuth < AngleStart[0]:
-            Azimuth_mod = Azimuth + 360
+        if SolarAzimuth < AngleStart[0]:
+            Azimuth_mod = SolarAzimuth + 360
         else:
-            Azimuth_mod = Azimuth
+            Azimuth_mod = SolarAzimuth
         tran = bisect(AngleStart,Azimuth_mod)-1
 
     return Altitude, Zenith, Daytime, tran, Azimuth_mod
@@ -298,10 +298,10 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     Rad_Vec = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
     
     # Solar Constant (Dingman 2002)
-    Solar_Constant = 1367 # W/m2
+    SolarConstant = 1367 # W/m2
     
     # Global Direct Solar Radiation Flux at the Edge of the Atmosphere (Wunderlich 1972)
-    F_Direct[0] = ((Solar_Constant / (Rad_Vec ** 2)) *
+    F_Direct[0] = ((SolarConstant / (Rad_Vec ** 2)) *
                    sin(radians(Altitude)))
     
     F_Diffuse[0] = 0
@@ -309,34 +309,34 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # 1 - Above Topography
     
     # Optical Air Mass Thickness (Ibqal 1983)
-    Air_Mass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
+    AirMass = (35 / sqrt(1224 * sin(radians(Altitude)) + 1)) * \
         exp(-0.0001184 * elevation)
     
     # Atmospheric Transmissivity (Ibqal 1983)
-    Trans_Air = 0.0685 * cos((2 * pi / 365) * (doy + 10)) + 0.8
+    Tr_atm = 0.0685 * cos((2 * pi / 365) * (doy + 10)) + 0.8
     
     # Direct Beam Solar Radiation above Topographic Features
     # (Wunderlich 1972, Martin and McCutcheon 1999)
-    F_Direct[1] = F_Direct[0] * (Trans_Air ** Air_Mass) * (1 - 0.65 *
+    F_Direct[1] = F_Direct[0] * (Tr_atm ** AirMass) * (1 - 0.65 *
                                                            cloud ** 2)
     # Clearness Index (Chen 1994)
     if F_Direct[0] == 0:
-        Clearness_Index = 1
+        ClearnessIndex = 1
     else:
-        Clearness_Index = F_Direct[1] / F_Direct[0]
+        ClearnessIndex = F_Direct[1] / F_Direct[0]
 
     Dummy = F_Direct[1]
     
     # Diffuse Fraction (Chen 1994)
-    Diffuse_Fraction = (0.938 + 1.071 * Clearness_Index) - \
-        (5.14 * (Clearness_Index ** 2)) + \
-        (2.98 * (Clearness_Index ** 3)) - \
+    DiffuseFraction = (0.938 + 1.071 * ClearnessIndex) - \
+        (5.14 * (ClearnessIndex ** 2)) + \
+        (2.98 * (ClearnessIndex ** 3)) - \
         (sin(2 * pi * (doy - 40) / 365)) * \
-        (0.009 - 0.078 * Clearness_Index)
-    F_Direct[1] = Dummy * (1 - Diffuse_Fraction)
+        (0.009 - 0.078 * ClearnessIndex)
+    F_Direct[1] = Dummy * (1 - DiffuseFraction)
     
     # Diffuse above Topographic Features (Chen 1994)
-    F_Diffuse[1] = Dummy * (Diffuse_Fraction) * (1 - 0.65 * cloud ** 2)
+    F_Diffuse[1] = Dummy * (DiffuseFraction) * (1 - 0.65 * cloud ** 2)
 
     #======================================================
     # 2 - Below Topography
