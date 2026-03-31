@@ -1030,13 +1030,13 @@ class ModelSetup(object):
             for i in range(radial_count):
 
                 # The minimum sun angle needed for full sun
-                t_full = ()
+                theta_full_sun = ()
 
                 # The angle with longest path length in each veg zone
-                t_path = ()
+                theta_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                t_none = ()
+                theta_bank = ()
 
                 # Numerator for the weighted Veg density calculation
                 w_vdens_num = 0.0
@@ -1084,15 +1084,15 @@ class ModelSetup(object):
                         lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     # It gets added to a tuple of full sun values
-                    t_full += degrees(atan(VH / lc_distance1)),
+                    theta_full_sun += degrees(atan(VH / lc_distance1)),
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    t_path += degrees(atan(VH / lc_distance2)),
+                    theta_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic 
                     # shade for this transect direction.
                     # likewise, a tuple of values
-                    t_none += degrees(atan(SH / lc_distance1)),
+                    theta_bank += degrees(atan(SH / lc_distance1)),
 
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
@@ -1110,7 +1110,7 @@ class ModelSetup(object):
                     w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(t_full) > 0:
+                        if max(theta_full_sun) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # vdens_mod = (Amount of Veg shade * Veg dens) +
@@ -1120,11 +1120,13 @@ class ModelSetup(object):
                                 vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
                                 vdens_ave_veg = 0
-                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
+                            vdens_mod = ((max(theta_full_sun) - max(theta_bank)) * vdens_ave_veg + max(theta_bank)) / max(theta_full_sun)
                         else:
                             vdens_mod = 1.0
-                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+                        vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
+                theta_full_sun_max = max(theta_full_sun)
+                theta_bank_max = max(theta_bank)
+                node.ShaderList += (theta_full_sun_max, elevation_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def build_zones_w_values(self):
@@ -1314,13 +1316,13 @@ class ModelSetup(object):
 
             for i in range(radial_count):  # Iterate through each transect direction
                 # The minimum sun angle needed for full sun
-                t_full = ()
+                theta_full_sun = ()
 
                 # The angle with longest path length in each veg zone
-                t_path = ()
+                theta_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                t_none = ()
+                theta_bank = ()
 
                 # Numerator for the weighted Veg density calculation
                 w_vdens_num = 0.0
@@ -1370,14 +1372,14 @@ class ModelSetup(object):
                     if lc_distance1 <= 0:
                         lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
-                    t_full += degrees(atan(VH / lc_distance1)),  # It gets added to a tuple of full sun values
+                    theta_full_sun += degrees(atan(VH / lc_distance1)),  # It gets added to a tuple of full sun values
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    t_path += degrees(atan(VH / lc_distance2)),
+                    theta_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic shade for this
                     # transect direction
-                    t_none += degrees(atan(SH / lc_distance1)),  # likewise, a tuple of values
+                    theta_bank += degrees(atan(SH / lc_distance1)),  # likewise, a tuple of values
 
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
@@ -1396,7 +1398,7 @@ class ModelSetup(object):
                     w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(t_full) > 0:
+                        if max(theta_full_sun) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # vdens_mod = (Amount of Veg shade * Veg dens) +
@@ -1406,11 +1408,13 @@ class ModelSetup(object):
                                 vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
                                 vdens_ave_veg = 0
-                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
+                            vdens_mod = ((max(theta_full_sun) - max(theta_bank)) * vdens_ave_veg + max(theta_bank)) / max(theta_full_sun)
                         else:
                             vdens_mod = 1.0
-                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+                        vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
+                theta_full_sun_max = max(theta_full_sun)
+                theta_bank_max = max(theta_bank)
+                node.ShaderList += (theta_full_sun_max, elevation_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def get_lc_codes(self):

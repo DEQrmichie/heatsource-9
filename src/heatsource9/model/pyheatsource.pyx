@@ -284,7 +284,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  BeersData, phi, lcsampmethod, emergent, lc_canopy, lc_height, lc_height_rel, lc_k, lc_oh, lc_canopy_depth,
                  ShaderList, tran, heatsource8):
     """ """
-    FullSunAngle, TopoShadeAngle, BankShadeAngle, VegetationAngle1, VegetationAngle2 = ShaderList
+    theta_full_sun_max, TopoShadeAngle, theta_bank_max, theta_full_sun, theta_path = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
     F_Solar = [0]*8
@@ -353,7 +353,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
         F_Direct[2] = 0
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
         F_Direct[3] = 0
-    elif Altitude >= FullSunAngle:
+    elif Altitude >= theta_full_sun_max:
         # Full sun
         F_Direct[2] = F_Direct[1]
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
@@ -372,7 +372,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
         s = transsample_count - 1
         
         while s >= 0:
-            if Altitude >= VegetationAngle1[s]:
+            if Altitude >= theta_full_sun[s]:
                 # no shading
                 fraction_passed = 1
             else:
@@ -409,7 +409,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     x_base = H_base / tan_altitude
                     x_top = H_top / tan_altitude
 
-                    if Altitude <= VegetationAngle2[s]:
+                    if Altitude <= theta_path[s]:
                         # Side entry path length
                         x_enter = max(x_near, x_base)
                         x_exit = min(x_far, x_top)
@@ -458,7 +458,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                             fraction_passed = 0
                         else:
                             # some other error
-                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} VegetationAngle1={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, VegetationAngle1[s])
+                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PLz={4} PL={5} Altitude={6} theta_full_sun={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PLz,PL, Altitude, theta_full_sun[s])
                             logger.exception(msg)
                             raise Exception(msg)
                         
@@ -475,7 +475,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
     # What a Solar Pathfinder measures
     
-    if Altitude > TopoShadeAngle and Altitude <= BankShadeAngle:
+    if Altitude > TopoShadeAngle and Altitude <= theta_bank_max:
         # Bank shade is occurring
         F_Direct[4] = 0
         F_Diffuse[4] = F_Diffuse[3]
