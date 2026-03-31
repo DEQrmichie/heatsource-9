@@ -284,7 +284,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                  BeersData, phi, lcsampmethod, emergent, lc_canopy, lc_height, lc_height_rel, lc_k, lc_oh, lc_canopy_depth,
                  ShaderList, tran, heatsource8):
     """ """
-    theta_full_sun_max, TopoShadeAngle, theta_bank_max, theta_full_sun, theta_path = ShaderList
+    theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
     F_Direct = [0]*8
     F_Diffuse = [0]*8
     F_Solar = [0]*8
@@ -348,7 +348,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     Solar_blocked_byVeg = [0]*transsample_count
     PLz =[0]*transsample_count
     
-    if Altitude <= TopoShadeAngle:
+    if Altitude <= theta_topo:
         # Topographic shade is occurring
         F_Direct[2] = 0
         F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
@@ -475,7 +475,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
     # What a Solar Pathfinder measures
     
-    if Altitude > TopoShadeAngle and Altitude <= theta_bank_max:
+    if Altitude > theta_topo and Altitude <= theta_bank_max:
         # Bank shade is occurring
         F_Direct[4] = 0
         F_Diffuse[4] = F_Diffuse[3]
@@ -594,15 +594,15 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     # Stream Surface Reflectivity (Sellers 1965)
     if Zenith > 80:
-        Stream_Reflect = 0.0515 * (Zenith) - 3.636
+        Rstrm = 0.0515 * (Zenith) - 3.636
     else:
-        Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
-    if abs(Stream_Reflect) > 1:
-        Stream_Reflect = 0.0515 * (Zenith * pi / 180) - 3.636
-    if abs(Stream_Reflect) > 1:
-        Stream_Reflect = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
+        Rstrm = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
+    if abs(Rstrm) > 1:
+        Rstrm = 0.0515 * (Zenith * pi / 180) - 3.636
+    if abs(Rstrm) > 1:
+        Rstrm = 0.091 * (1 / cos(Zenith * pi / 180)) - 0.0386
     F_Diffuse[5] = F_Diffuse[4] * 0.91
-    F_Direct[5] = F_Direct[4] * (1 - Stream_Reflect)
+    F_Direct[5] = F_Direct[4] * (1 - Rstrm)
     
     #=========================================================
     # 6 - Received by Water Column
