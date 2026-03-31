@@ -231,7 +231,7 @@ class _Output(object):
             data["Heat_Conv"][timestamp] = [x.F_Convection for x in nodes]
             data["Heat_Evap"][timestamp] = [x.F_Evaporation for x in nodes]
             data["Heat_Long"][timestamp] = [x.F_Longwave for x in nodes]
-            data["Rate_Evap"][timestamp] = [(x.E / x.dx / x.W_w * 3600 * 1000) for x in nodes]
+            data["Rate_Evap"][timestamp] = [(x.Q_evap / x.dx / x.W_w * 3600 * 1000) for x in nodes]
             data["Temp_H2O"][timestamp] = [x.T for x in nodes]
             data["Temp_Sed"][timestamp] = [x.T_sed for x in nodes]
             data["Hyd_Disp"][timestamp] = [x.Disp for x in nodes]

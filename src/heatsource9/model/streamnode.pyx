@@ -71,7 +71,7 @@ class StreamNode(object):
                 "nodeID",  # Node ID
                 "streamID",  # Stream ID
                 "Q_bc", # Boundary conditions, in a TimeList class, for discharge.
-                "E", # Evaporation flow loss in cubic meters per second
+                "Q_evap", # Evaporation flow loss in cubic meters per second
                 "dt", # This is the timestep (for kinematic wave movement, etc.)
                 "phi", # Porosity of the bed
                 "Log",  # Global logging class
@@ -190,7 +190,7 @@ class StreamNode(object):
     def calc_discharge_opt(self, time):
         """A Version of calculate_discharge() that does not require
         checking for boundary conditions"""
-        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.E
+        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.Q_evap
         self.Q_mass += Q_net
         up = self.prev_km
 
@@ -259,7 +259,7 @@ class StreamNode(object):
         None if we are not at a spatial boundary. dt is the timestep in
         minutes, which cannot be None.
         """
-        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.E
+        Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.Q_evap
         # Check if we are a spatial or temporal boundary node
         if self.prev_km:
             # There's an upstream channel, but no previous timestep.
@@ -368,7 +368,7 @@ class StreamNode(object):
          self.F_LW_Veg,
          self.F_Evaporation,
          self.F_Convection,
-         self.E) = ground
+         self.Q_evap) = ground
         
         (self.T, self.S1, self.Mix_T_Delta) = Mac
         
@@ -441,7 +441,7 @@ class StreamNode(object):
          self.F_LW_Veg,
          self.F_Evaporation,
          self.F_Convection,
-         self.E) = ground
+         self.Q_evap) = ground
         
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]

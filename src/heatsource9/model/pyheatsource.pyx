@@ -695,7 +695,7 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
     
     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
-def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
+def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, SedDepth, dx, dt, SedThermCond,
                     SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
@@ -712,8 +712,8 @@ def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
     # units of (J / m3 / *C)
 
     # Water Variable
-    cdef int rhow = 1000  #density of water kg / m3
-    cdef int H2O_HeatCapacity = 4187 #J/(kg *C)
+    cdef int Rhow = 1000  #density of water kg / m3
+    cdef int Cpw = 4187 #J/(kg *C)
 
     # Conduction flux (positive is heat into stream)
     # units of (W/m2)
@@ -724,7 +724,7 @@ def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
     cdef double Flux_Conduction_Alluvium = SedThermCond * (T_sed - T_alluv) / (SedDepth / 2) if calcalluv else 0.0
 
     # Hyporheic flux (negative is heat into sediment)
-    cdef double F_hyp = Q_hyp * rhow * H2O_HeatCapacity * (T_sed - T_prev) / (W_w * dx)
+    cdef double F_hyp = Q_hyp * Rhow * Cpw * (T_sed - T_prev) / (W_w * dx)
 
     cdef double NetFlux_Sed = F_Solar7 - F_Cond - Flux_Conduction_Alluvium - F_hyp
     cdef double DT_Sed = NetFlux_Sed * dt / (SedDepth * SedRhoCp)
@@ -764,84 +764,84 @@ def get_ground_fluxes(cloud, wind, humidity, T_air, elevation, phi,
     # Calculate Evaporation FLUX
     #===================================================
     # Atmospheric Variables
-    cdef double Pressure = 1013 - 0.1055 * elevation #mbar
+    cdef double P_atm = 1013 - 0.1055 * elevation #mbar
     
     # mbar (Chapra p. 567)
     Sat_Vapor = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
     Air_Vapor = humidity * Sat_Vapor
     #===================================================
     # Calculate the frictional reduction in wind velocity
-    cdef int Zm
-    cdef double Zd, Zo, Friction_Velocity, ratio
+    cdef int zm
+    cdef double zd, z0, FrictionVelocity, ratio
     if emergent and lc_height[0][0] > 0:
         
-        Zm = 2
+        zm = 2
         
-        # zm > Zd + Zo
-        Zd = 0.7 * lc_height[0][0]
-        Zo = 0.1 * lc_height[0][0]
-        ratio = (Zm - Zd) / Zo
+        # zm > zd + z0
+        zd = 0.7 * lc_height[0][0]
+        z0 = 0.1 * lc_height[0][0]
+        ratio = (zm - zd) / z0
 
         # Vertical wind profile based friction velocity
         # (guard against invalid log argument)
         if ratio > 1.0:
-            Friction_Velocity = wind * 0.4 / log(ratio)
+            FrictionVelocity = Uzm * 0.4 / log(ratio)
         else:
-            Friction_Velocity = wind
+            FrictionVelocity = Uzm
     else:
-        Zo = 0.00023 #Brustsaert (1982) p. 277 Dingman
-        Zd = 0 #Brustsaert (1982) p. 277 Dingman
-        Zm = 2
-        Friction_Velocity = wind
+        z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
+        zd = 0 #Brustsaert (1982) p. 277 Dingman
+        zm = 2
+        FrictionVelocity = Uzm
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
-    cdef double Wind_Function = float(wind_a) + float(wind_b) * Friction_Velocity 
-    # Wind_Function = 0.000000001505 + 0.0000000016 * Friction_Velocity #m/mbar/s
+    cdef double f_U2m = float(wind_a) + float(wind_b) * FrictionVelocity 
+    # f_U2m = 0.000000001505 + 0.0000000016 * FrictionVelocity #m/mbar/s
 
     #===================================================
     # Latent Heat of Vaporization
-    cdef double LHV = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
+    cdef double L_evap = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
     #===================================================
     # Use Jobson Wind Function
-    cdef double P, Gamma, Delta, NetRadiation, Ea, Evap_Rate, F_Evap, Bowen
+    cdef double P, Gamma, Delta_sat, NetRadiation, E_aero, E_rate, F_Evap, BR
     if penman:
         #Calculate Evaporation FLUX
         P = 998.2 # kg/m3
-        Gamma = 1003.5 * Pressure / (LHV * 0.62198) #mb/*C  Cuenca p 141
-        Delta = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
-                 6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
+        Gamma = 1003.5 * P_atm / (L_evap * 0.62198) #mb/*C  Cuenca p 141
+        Delta_sat = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
+                     6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
         
         NetRadiation = F_Solar5 + F_Longwave  #J/m2/s
         
         if NetRadiation < 0:
             NetRadiation = 0 #J/m2/s
-        Ea = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
-        Evap_Rate = (((NetRadiation * Delta / (P * LHV)) + Ea * Gamma) /
-                     (Delta + Gamma))
+        E_aero = f_U2m * (Sat_Vapor - Air_Vapor)  #m/s
+        E_rate = (((NetRadiation * Delta_sat / (P * L_evap)) + E_aero * Gamma) /
+                  (Delta_sat + Gamma))
         
-        F_Evap = -Evap_Rate * LHV * P #W/m2
+        F_Evap = -E_rate * L_evap * P #W/m2
         # Calculate Convection FLUX
         if (Sat_Vapor - Air_Vapor) != 0:
-            Bowen = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)
+            BR = Gamma * (T_prev - T_air) / (Sat_Vapor - Air_Vapor)
         else:
-            Bowen = 1        
+            BR = 1        
     else:
         #===================================================
         # Calculate Evaporation FLUX
-        Evap_Rate = Wind_Function * (Sat_Vapor - Air_Vapor)  #m/s
+        E_rate = f_U2m * (Sat_Vapor - Air_Vapor)  #m/s
         P = 998.2 # kg/m3
-        F_Evap = -Evap_Rate * LHV * P #W/m2
+        F_Evap = -E_rate * L_evap * P #W/m2
         # Calculate Convection FLUX
         if (Sat_Vapor - Air_Vapor) != 0:
-            Bowen = (0.61 * (Pressure / 1000) * (T_prev - T_air) /
-                     (Sat_Vapor - Air_Vapor))
+            BR = (0.61 * (P_atm / 1000) * (T_prev - T_air) /
+                  (Sat_Vapor - Air_Vapor))
         else:
-            Bowen = 1
+            BR = 1
             
-    cdef double F_Conv = F_Evap * Bowen
-    cdef double E = Evap_Rate * W_w * dx if calcevap else 0
-    return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, E
+    cdef double F_Conv = F_Evap * BR
+    cdef double Q_evap = E_rate * W_w * dx if calcevap else 0
+    return F_Cond, T_sed_new, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, Q_evap
 
 def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
@@ -903,7 +903,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     
-    cloud, wind, humidity, T_air = metData
+    cloud, Uzm, humidity, T_air = metData
 
     W_b, elevation, TopoFactor, ViewToSky, phi, lc_canopy, lc_height, \
         lc_height_rel, lc_k, lc_oh, lc_canopy_depth, SedDepth, dx, dt, SedThermCond, SedThermDiff, Q_accr, \
@@ -944,7 +944,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # regular node
         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
-    ground = get_ground_fluxes(cloud, wind, humidity, T_air, elevation,
+    ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation,
                     phi, lc_height, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,

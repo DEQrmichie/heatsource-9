@@ -1484,4 +1484,4 @@ class ModelSetup(object):
             }
             node.Solar_Blocked["diffuse"] = 0
         node.Q_hyp = 0.0  # Assume zero hyporheic flow unless otherwise calculated
-        node.E = 0  # Same for evaporation
+        node.Q_evap = 0  # Same for evaporation
