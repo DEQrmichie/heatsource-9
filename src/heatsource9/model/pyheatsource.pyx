@@ -385,10 +385,10 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                     PL_lc = transsample_distance / cos_altitude
                 else:
                     adjust = 0.5 if lcsampmethod == "zone" else 0.0
-                    x_near = transsample_distance * (s + 1 - adjust)
-                    x_far = transsample_distance * (s + 2 - adjust)
+                    Xn_lc_near = transsample_distance * (s + 1 - adjust)
+                    Xn_lc_far = transsample_distance * (s + 2 - adjust)
                     if s == 0:
-                        x_near -= lc_oh[tran][s]
+                        Xn_lc_near -= lc_oh[tran][s]
 
                     altitude_rad = radians(Altitude)
                     cos_altitude = cos(altitude_rad)
@@ -406,25 +406,25 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         H_canopy_depth = lc_canopy_depth[tran][s]
                         Hn_lc_base = H_top - H_canopy_depth
 
-                    x_base = Hn_lc_base / tan_altitude
-                    x_top = H_top / tan_altitude
+                    Xn_lc_base = Hn_lc_base / tan_altitude
+                    Xn_lc_top = H_top / tan_altitude
 
                     if Altitude <= theta_path[s]:
                         # Side entry path length
-                        x_enter = max(x_near, x_base)
-                        x_exit = min(x_far, x_top)
-                        if x_exit <= x_enter:
+                        Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
+                        Xn_lc_exit = min(Xn_lc_far, Xn_lc_top)
+                        if Xn_lc_exit <= Xn_lc_enter:
                             PL_lc = 0.0
                         else:
-                            PL_lc = (x_exit - x_enter) / cos_altitude
+                            PL_lc = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
                     else:
                         # Top entry
-                        x_enter = max(x_near, x_base)
-                        x_exit = min(max(x_top, x_near), x_far)
-                        if x_exit <= x_enter:
+                        Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
+                        Xn_lc_exit = min(max(Xn_lc_top, Xn_lc_near), Xn_lc_far)
+                        if Xn_lc_exit <= Xn_lc_enter:
                             PL_lc = 0.0
                         else:
-                            PL_lc = (x_exit - x_enter) / cos_altitude
+                            PL_lc = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
                 if PL_lc < 0:
                     PL_lc = 0.0
                 
@@ -547,21 +547,21 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                 if abs(tan_altitude) < 1e-6:
                     tan_altitude = 1e-6
 
-                x_near = 0.0
-                x_far = emergent_distance
-                x_base = Hn_lc_base / tan_altitude
-                x_top = H_top / tan_altitude
+                Xn_lc_near = 0.0
+                Xn_lc_far = emergent_distance
+                Xn_lc_base = Hn_lc_base / tan_altitude
+                Xn_lc_top = H_top / tan_altitude
 
                 if Altitude <= degrees(atan(H_top / emergent_distance)):
-                    x_enter = max(x_near, x_base)
-                    x_exit = min(x_far, x_top)
+                    Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
+                    Xn_lc_exit = min(Xn_lc_far, Xn_lc_top)
                 else:
-                    x_enter = max(x_near, x_base)
-                    x_exit = min(max(x_top, x_near), x_far)
-                if x_exit <= x_enter:
+                    Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
+                    Xn_lc_exit = min(max(Xn_lc_top, Xn_lc_near), Xn_lc_far)
+                if Xn_lc_exit <= Xn_lc_enter:
                     PL_emerg = 0.0
                 else:
-                    PL_emerg = (x_exit - x_enter) / cos_altitude
+                    PL_emerg = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
