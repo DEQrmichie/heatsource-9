@@ -13,7 +13,7 @@ Global options:
 
   -h / --help              : show help
   -md / --model-dir        : path to the model directory
-  -v / --version           : print heat source version
+  -v / --version           : print Heat Source version
 
 Run types:
 
@@ -71,7 +71,7 @@ def _parse_args(argv):
         "-v",
         "--version",
         action="store_true",
-        help="Print version and exit.",
+        help="Print installed Heat Source version.",
     )
 
     subparsers = parser.add_subparsers(dest="command")
