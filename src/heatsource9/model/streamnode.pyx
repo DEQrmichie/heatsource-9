@@ -210,11 +210,6 @@ class StreamNode(object):
         # Hyporheic discharge
         self.Q_hyp = Q * self.hyp_percent 
 
-        if Q < 0.003:
-            # Channel is going dry
-            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, pretty_time(time))
-            logger.warning(msg)
-
     def calc_discharge_boundary_node(self, time):
         Q_bc = self.Q_bc[time]
         self.Q_mass += Q_bc
@@ -235,11 +230,6 @@ class StreamNode(object):
         self.Q_prev = self.Q
         self.Q = Q
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
-        if Q < 0.003: 
-            #Channel is going dry
-            msg = "The channel is going dry at km {0}, model time: {1}.".format(self.km, pretty_time(time))
-            logger.warning(msg)
-
     def calculate_discharge(self, time):
         """Return the discharge for the current timestep
 
@@ -302,10 +292,6 @@ class StreamNode(object):
         self.Q_prev = self.Q  or Q
         self.Q = Q
         self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
-
-        if Q < 0.003: #Channel is going dry
-            msg ="The channel is going dry at {0}, model time: {1}.".format(self, pretty_time(time))
-            logger.warning(msg)
 
     def calc_heat_opt(self, time, hour, min, sec, doy,
                      JC, solar_only=False):
