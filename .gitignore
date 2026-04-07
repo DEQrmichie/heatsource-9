@@ -1,25 +1,34 @@
+# Python cache and temp files
+__pycache__/
+**/.pytest_cache
+*.tmp
+*.temp
+
+# Dist/Build artifacts
 dist/**
 build/**
-Roadmap.md
-**example_model**
-parking_lot.py
-Inputs_xlsx.py
-dependencies/**
-solar_trig_math/**
-tests/**
-*.uml
-*profile.png
-*.docx
-*.log
+*.egg
+*.egg-info
+*.whl
+.Python
+*.c
 *.exe
 *.pyc
 *.spec
-**/*.so
-.Python
-**/.pytest_cache
-.python-version
+
+# Docs
+Roadmap.md
+solar_trig_math/**
+*profile.png
+*.docx
+
+# Other
+**example_model**
+parking_lot.py
+dependencies/**
+tests/**
+*.log
+*.uml
 *.zip
-*.egg
-*.egg-info
 *.ico
 .idea/**

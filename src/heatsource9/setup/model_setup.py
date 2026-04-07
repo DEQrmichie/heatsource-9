@@ -1,88 +1,90 @@
-# Heat Source, Copyright (C) 2000-2019, 
-# Oregon Department of Environmental Quality
-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Heat Source Methods
-from ..Dieties.IniParamsDiety import IniParams
-from ..Dieties.IniParamsDiety import head2var
-from .Inputs import Inputs
-from ..Stream.StreamNode import StreamNode
-from ..Utils.Dictionaries import Interpolator
-from ..Utils.Printer import Printer as print_console
-
-# Builtin methods
-from builtins import next
-from builtins import zip
-from builtins import range
-from builtins import object
-from itertools import chain, repeat, count
-from math import ceil, log, degrees, atan, exp
-from bisect import bisect
-from time import ctime
 import logging
+from bisect import bisect
+from calendar import timegm
+from itertools import chain, repeat, count
+from math import ceil, degrees, atan, exp
+from pathlib import Path
+from time import strptime
+
+from heatsource9.io.console import print_console
+from heatsource9.io.control_file import import_control_file
+
+from heatsource9.setup.input_setup import InputSetup
+from heatsource9.setup.constants import control_keys, dtype, head2var, sheetnames
+from heatsource9.__version__ import __version__
+from heatsource9.domain.clock import Clock, pretty_time
+from heatsource9.model.interpolator import Interpolator
+from heatsource9.domain.simulation import Simulation
+from heatsource9.model.streamnode import StreamNode
 
 logger = logging.getLogger(__name__)
 
+
 class ModelSetup(object):
     """
-    ModelSetup contains methods to build a model and
-    StreamNode instances from the input data.
+    ModelSetup contains methods to build a model and StreamNode instances from
+    the input data.
     """
 
-    def __init__(self, model_dir, control_file, run_type=0):
+    def __init__(self, control_file_path, run_type):
+        """Initialize model setup for the selected run type.
+        """
+        # run type value
         self.run_type = run_type
+
+        self.params = {"run_type": self.run_type, "version": __version__}
+
         self.reach = {}
         self.ID2km = {}
 
         msg = "Starting Model Initialization"
-        logger.info(msg)
         print_console(msg)
 
-        # create an input object to manage the data
-        self.inputs = Inputs(model_dir, control_file)
+        self.inputs = InputSetup(control_file_path)
 
-        # read control file and parameterize IniParams
-        self.inputs.import_control_file()
-
-        # Make empty Dictionaries for the boundary conditions
-
+        # Boundary condition interpolators
         self.Q_bc = Interpolator()
         self.T_bc = Interpolator()
 
         # List of kilometers with met data nodes assigned.
         self.metDataSites = []
 
-        # Some convenience variables
-        self.dx = IniParams["dx"]
+        # Convenience variables
+        self.dx = None
+        self.multiple = None
 
-        # We have this many samples per distance step
-        self.multiple = int(self.dx / IniParams["longsample"])
+        # Time lists (set during build)
+        self.flowtimelist = ()
+        self.continuoustimelist = ()
+        self.flushtimelist = ()
 
-        # Setup for a model run
-        # Get the list of model periods times
+    def build(self):
+        """Build the model reach and return a Simulation(clock, nodes)."""
+
+        # Load raw control file rows/params
+        control = import_control_file(
+            control_path=Path(self.inputs.model_dir) / self.inputs.control_file,
+            dtype=dtype,
+            control_sheet=sheetnames["controlfile"],
+        )
+        self._parameterize_control_file(control["control_params"])
+
+        self.inputs.params = self.params
+
+        self.dx = self.params["dx"]
+        self.multiple = int(self.dx / self.params["longsample"])
+
+        # Setup time lists
         self.flowtimelist = self.get_timelist_unix()
         self.continuoustimelist = self.get_timelist_unix()
         self.flushtimelist = self.get_timelist_flush_period()
 
-        # Start through the steps of building a reach 
-        # full of StreamNodes
-        if IniParams["run_type"] == 0:
+        # Start through the steps of building a reach full of StreamNodes
+        if self.params["run_type"] == "temperature":
             # Temperature
             self.get_boundary_conditions()
             self.build_nodes()
-            if IniParams["lcdatainput"] == "Values":
+            if self.params["lcdatainput"] == "Values":
                 self.build_zones_w_values()
             else:
                 self.build_zones_w_codes()
@@ -91,11 +93,11 @@ class ModelSetup(object):
             self.set_atmospheric_data()
             self.orient_nodes()
 
-        elif IniParams["run_type"] == 1:
+        elif self.params["run_type"] == "solar":
             # Solar
             self.get_boundary_conditions()
             self.build_nodes()
-            if IniParams["lcdatainput"] == "Values":
+            if self.params["lcdatainput"] == "Values":
                 self.build_zones_w_values()
             else:
                 self.build_zones_w_codes()
@@ -103,7 +105,7 @@ class ModelSetup(object):
             self.set_atmospheric_data()
             self.orient_nodes()
 
-        elif IniParams["run_type"] == 2:
+        elif self.params["run_type"] == "hydraulics":
             # Hydraulics
             self.get_boundary_conditions()
             self.build_nodes()
@@ -111,52 +113,174 @@ class ModelSetup(object):
             self.orient_nodes()
 
         # setup output km
-        if not IniParams["outputkm"] == "all":
-            IniParams["outputkm"] = self.get_locations("outputkm")
+        if not self.params["outputkm"] == "all":
+            self.params["outputkm"] = self.get_locations("outputkm")
 
         msg = "Model Initialization Complete"
-        logger.info(msg)
         print_console(msg)
 
-    def orient_nodes(self):
-        # Now we manually set each nodes next and previous 
-        # kilometer values by stepping through the reach
-        l = sorted(list(self.reach.keys()), reverse=True)
-        # The headwater node
-        head = self.reach[max(l)]
-        # Set the previous and next kilometer of each node.
-        slope_problems = []
-        for i in range(len(l)):
-            key = l[i] # The current node's key
-            # Then, set pointers to the next and previous nodes
-            if i == 0:
-                pass
-            # At first node, there's no previous
+        clock = Clock(
+            start_time=self.params["flushtimestart"],
+            end_time=self.params["modelend"],
+            timestep_seconds=int(self.params["dt"]),
+        )
+
+        kms = sorted(list(self.reach.keys()), reverse=True)
+        if not kms:
+            raise ValueError("Model must contain at least one node")
+        nodes = tuple(self.reach[km] for km in kms)
+
+        return Simulation(clock=clock, nodes=nodes)
+
+    def _parameterize_control_file(self, control_params):
+        
+        control_params = dict(control_params)
+
+        # set up a list to check if a missing value in the control file is ok
+        if self.params["run_type"] == "temperature":
+            # For temperature runs None is ok for these inputs
+            none_ok = ["usertxt", "name"]
+
+        elif self.params["run_type"] == "solar":
+            # For solar runs None is ok for these inputs
+            none_ok = ["usertxt", "name", "flushdays", "bcfile",
+                       "inflowsites", "inflowinfiles", "inflowkm",
+                       "accretionfile",
+                       "calcevap", "evapmethod",
+                       "wind_a", "wind_b", "calcalluvium", "alluviumtemp"]
+
+        elif self.params["run_type"] == "hydraulics":
+            # For hydraulic runs None is ok for these inputs
+            none_ok = ["usertxt", "name", "lcdatafile", "lccodefile",
+                       "metsites", "metfiles", "metkm",
+                       "trans_count", "transsample_count",
+                       "transsample_distance", "emergent",
+                       "lcdatainput", "canopy_data", "lcsampmethod",
+                       "point"]
+        else:
+            # setup call
+            none_ok = list(control_keys)
+
+        keys = list(control_keys)
+        keys.sort(reverse=True)
+
+        for key in keys:
+            value = control_params.get(key, None)
+
+            if value in [None, ""]:
+                if key in none_ok:
+                    self.params[key] = None
+
+                elif (key == "lccodefile" and self.params.get("lcdatainput") == "Values"):
+                    self.params[key] = None
+
+                elif (key in ["inflowinfiles", "inflowkm"] and self.params.get("inflowsites") == 0):
+                    self.params[key] = None
+
+                elif (key == "alluviumtemp" and self.params.get("calcalluvium") is False):
+                    self.params[key] = None
+
+                else:
+                    raise TypeError(f"Value in control file for key {key} is missing")
+
             else:
-                self.reach[key].prev_km = self.reach[l[i - 1]]
+                # Control values are already typed in import_control_file().
+                self.params[key] = value
 
-            try:
-                self.reach[key].next_km = self.reach[l[i + 1]]
-            except IndexError:
-                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                # For last node (mouth) we set the downstream node equal
-                # to self, this is because we want to access the node's
-                # temp if there's no downstream, and this saves us an
-                # if statement.
-                self.reach[key].next_km = self.reach[key]
-            # Set a headwater node
-            self.reach[key].head = head
-            self.reach[key].initialize()
-            # check for a zero slope. We store all of them before 
-            # checking so we can print a lengthy error that no-one 
-            # will ever read.
-            if self.reach[key].S <= 0.0:
-                slope_problems.append(key)
+        # Make dates into seconds since UTC epoch
+        self.params["datastart"] = timegm(strptime(self.params["datastart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
+        self.params["dataend"] = timegm(strptime(self.params["dataend"], "%Y-%m-%d")) + 86400
 
-        if self.run_type != 1:  # zeros are alright in shade calculations
-            if len(slope_problems):
-                raise Exception("The following reaches have zero slope. Kilometers: %s" % ",".join(
-                    ['%0.3f' % i for i in slope_problems]))
+        if self.params["modelstart"] is None:
+            self.params["modelstart"] = self.params["datastart"]
+        else:
+            self.params["modelstart"] = timegm(strptime(self.params["modelstart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
+
+        if self.params["modelend"] is None:
+            self.params["modelend"] = self.params["dataend"]
+        else:
+            self.params["modelend"] = timegm(strptime(self.params["modelend"], "%Y-%m-%d")) + 86400
+
+        if self.params["run_type"] == "solar" and self.params["flushdays"] is None:
+            self.params["flushdays"] = 0
+
+        self.params["flushtimestart"] = self.params["modelstart"] - self.params["flushdays"] * 86400
+
+        # If the number of transverse samples per direction is NOT reported, assume 4
+        if not self.params["transsample_count"]:
+            self.params["transsample_count"] = 4.0
+
+        # Format for heat source 8 methods same as 8 directions but no north
+        if self.params["heatsource8"]:
+            self.params["trans_count"] = 7
+
+        # Set the total number landcover sample count (0 = emergent)
+        self.params["sample_count"] = int(self.params["transsample_count"] * self.params["trans_count"])
+
+        # Set up evaporation method
+        if self.params["evapmethod"] == "Penman":
+            self.params["penman"] = True
+        else:
+            self.params["penman"] = False
+            
+        # convert dt from minutes to seconds
+        self.params["dt"] = self.params["dt"] * 60
+
+        # make sure timestep divides into 60 minutes
+        if 3600 % self.params["dt"] != 0:
+            raise ValueError(
+                "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(self.params["dt"] / 60)
+            )
+
+        # dx must be a multiple of longsample and >= longsample
+        if (self.params["dx"] % self.params["longsample"] or self.params["dx"] < self.params["longsample"]):
+            raise ValueError("Distance step (dx) must be a multiple of the longitudinal stream sample distance")
+
+        # Defaults if missing
+        if not self.params.get("inputdir"):
+            self.params["inputdir"] = self.inputs.model_dir
+        if not self.params.get("outputdir"):
+            raise ValueError("The control file must define 'outputdir'.")
+
+    def orient_nodes(self):
+            # Now we manually set each nodes next and previous 
+            # kilometer values by stepping through the reach
+            l = sorted(list(self.reach.keys()), reverse=True)
+            # The headwater node
+            head = self.reach[max(l)]
+            # Set the previous and next kilometer of each node.
+            slope_problems = []
+            for i in range(len(l)):
+                key = l[i] # The current node's key
+                # Then, set pointers to the next and previous nodes
+                if i == 0:
+                    pass
+                # At first node, there's no previous
+                else:
+                    self.reach[key].prev_km = self.reach[l[i - 1]]
+
+                try:
+                    self.reach[key].next_km = self.reach[l[i + 1]]
+                except IndexError:
+                    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    # For last node (mouth) we set the downstream node equal
+                    # to self, this is because we want to access the node's
+                    # temp if there's no downstream, and this saves us an
+                    # if statement.
+                    self.reach[key].next_km = self.reach[key]
+                # Set a headwater node
+                self.reach[key].head = head
+                self.reach[key].initialize()
+                # check for a zero slope. We store all of them before 
+                # checking so we can print a lengthy error that no-one 
+                # will ever read.
+                if self.reach[key].S <= 0.0:
+                    slope_problems.append(key)
+
+            if self.run_type != "solar":  # zeros are alright in shade calculations
+                if len(slope_problems):
+                    raise Exception("The following reaches have zero slope. Kilometers: %s" % ",".join(
+                        ['%0.3f' % i for i in slope_problems]))
 
     def set_atmospheric_data(self):
         """For each node without met data, use closest (up or downstream) node's data"""
@@ -199,7 +323,6 @@ class ModelSetup(object):
                 self.reach[km].metData = datasite.metData
             msg = "Assigning Node"
             current = next(c)+1
-            logger.info('{0} {1} {2}'.format(msg, True, current, len(l)))
             print_console(msg, True, current, len(l))
 
     def get_boundary_conditions(self):
@@ -210,7 +333,7 @@ class ModelSetup(object):
 
         # the data block is a tuple of tuples, each corresponding 
         # to a timestamp.
-        if self.run_type == 1:
+        if self.run_type == "solar":
             # Solar doesn't need a boundary condition
             data = [[0, 0] for i in timelist]
         else:
@@ -230,8 +353,8 @@ class ModelSetup(object):
 
             # Get the flow boundary condition
             if flow == 0 or not flow:
-                if self.run_type != 1:
-                    raise Exception("Missing flow boundary condition for day %s " % ctime(time))
+                if self.run_type != "solar":
+                    raise Exception("Missing flow boundary condition at model date/time %s." % pretty_time(time))
                 else:
                     flow = 0
             self.Q_bc[time] = flow
@@ -240,7 +363,6 @@ class ModelSetup(object):
             self.T_bc[time] = t_val
             msg = "Reading boundary conditions"
             current = next(c)+1
-            logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Next we expand or revise the dictionary to account for the 
@@ -248,24 +370,24 @@ class ModelSetup(object):
         # Flush flow: model start value over entire flush period
         for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
-            self.Q_bc[time] = self.Q_bc[IniParams["modelstart"]]
+            self.Q_bc[time] = self.Q_bc[self.params["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
-        first_day_time = IniParams["modelstart"]
-        second_day = IniParams["modelstart"] + 86400
+        first_day_time = self.params["modelstart"]
+        second_day = self.params["modelstart"] + 86400
         for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             self.T_bc[time] = self.T_bc[first_day_time]
             first_day_time += 3600
             if first_day_time >= second_day:
-                first_day_time = IniParams["modelstart"]
+                first_day_time = self.params["modelstart"]
 
-        self.Q_bc = self.Q_bc.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-        self.T_bc = self.T_bc.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+        self.Q_bc = self.Q_bc.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
+        self.T_bc = self.T_bc.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
 
     def get_locations(self, ini):
         """Build a list of kilometers corresponding to the ini parameter
         that is passed.
-        
+    
         ini can equal: "inflowkm", "metkm", or "outputkm"
         corresponding to tributary inflow sites, met data sites,
         or the model output kilometers"""
@@ -276,9 +398,9 @@ class ModelSetup(object):
 
         if (ini == "metkm" or
                 ini == "outputkm" or
-                IniParams["inflowsites"] > 0):
+                self.params["inflowsites"] > 0):
             # get a list of sites by km
-            kms = IniParams[ini].split(",")
+            kms = self.params[ini].split(",")
 
             # remove spaces and make float
             kms = tuple([float(line.strip()) for line in kms])
@@ -287,9 +409,6 @@ class ModelSetup(object):
 
         for site in range(0,len(kms)):
             km = kms[site]
-            if km is None or not isinstance(km, float):
-                # This is a bad dataset if there's no kilometer
-                raise Exception("Must have a stream kilometer (e.g. 15.3) for each node in %s page!" % ini)
             key = bisect(l, km) - 1
             t += l[key],  # Index by kilometer
         return t
@@ -305,9 +424,9 @@ class ModelSetup(object):
         # input value. Therefore we enforce a precision only up to the 
         # ten thousandths decimal place to make sure the number of nodes
         # is correct.        
-        num_nodes = int(ceil(round(IniParams["length"] * 1000 / (IniParams["longsample"]), 4))) + 1
+        num_nodes = int(ceil(round(self.params["length"] * 1000 / (self.params["longsample"]), 4))) + 1
         kmlist = []
-        kmlist = [(node * IniParams["longsample"]) / 1000 for node in range(0, num_nodes)]
+        kmlist = [(node * self.params["longsample"]) / 1000 for node in range(0, num_nodes)]
         kmlist.sort(reverse=True)
         return kmlist
 
@@ -317,7 +436,7 @@ class ModelSetup(object):
         the control file"""
         timelist = []
         # hourly timestep
-        timelist = list(range(IniParams["datastart"], IniParams["dataend"] + 60, 3600))
+        timelist = list(range(self.params["datastart"], self.params["dataend"] + 60, 3600))
         return tuple(timelist)
 
     def get_timelist_flush_period(self):
@@ -325,8 +444,8 @@ class ModelSetup(object):
         # This assumes that data is hourly, not tested with
         # variable input timesteps
         flushtimelist = []
-        flushtime = IniParams["flushtimestart"]
-        while flushtime < IniParams["modelstart"]:
+        flushtime = self.params["flushtimestart"]
+        while flushtime < self.params["modelstart"]:
             flushtimelist += flushtime,
             flushtime += 3600
         return tuple(flushtimelist)
@@ -339,7 +458,7 @@ class ModelSetup(object):
         # that to grab the data block
         timelist = self.flowtimelist
         data = []
-        if IniParams["inflowsites"] > 0:
+        if self.params["inflowsites"] > 0:
             data = self.inputs.import_inflow()
 
         # The data is being put into this format
@@ -362,7 +481,7 @@ class ModelSetup(object):
         # Quick list of nodes with flow data
         nodelist = []
 
-        if IniParams["inflowsites"] > 0:
+        if self.params["inflowsites"] > 0:
             for time in timelist:
                 line = data.pop(0)
                 # Error checking?! Naw!!
@@ -385,8 +504,7 @@ class ModelSetup(object):
                     node.T_tribs[time] += temp,
                     msg = "Reading inflow data"
                     current = next(tm) + 1
-                    logger.info('{0} {1} {2}'.format(msg, current, length * IniParams["inflowsites"]))
-                    print_console(msg, True, current, length * IniParams["inflowsites"])
+                    print_console(msg, True, current, length * self.params["inflowsites"])
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
@@ -394,27 +512,27 @@ class ModelSetup(object):
         for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
-                node.Q_tribs[time] = node.Q_tribs[IniParams["modelstart"]]
+                node.Q_tribs[time] = node.Q_tribs[self.params["modelstart"]]
         # Flush temperature: first 24 hours repeated over flush period
-        first_day_time = IniParams["modelstart"]
-        second_day = IniParams["modelstart"] + 86400
+        first_day_time = self.params["modelstart"]
+        second_day = self.params["modelstart"] + 86400
         for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for node in nodelist:
                 node.T_tribs[time] = node.T_tribs[first_day_time]
             first_day_time += 3600
             if first_day_time >= second_day:
-                first_day_time = IniParams["modelstart"]
+                first_day_time = self.params["modelstart"]
 
         # Now we strip out the unnecessary values from the dictionaries. 
         # This is placed here at the end so we can dispose of it 
         # easily if necessary
         for node in nodelist:
-            node.Q_tribs = node.Q_tribs.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
-            node.T_tribs = node.T_tribs.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            node.Q_tribs = node.Q_tribs.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
+            node.T_tribs = node.T_tribs.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
 
     def get_met_data(self):
-        """Get data from the input met data csv file"""
+        """Get data from the input met data file"""
         # This is remarkably similar to GetInflowData. We get a block 
         # of data, then set the dictionary of the node
         print_console("Reading meteorological data")
@@ -436,7 +554,7 @@ class ModelSetup(object):
             c = count()
             for cloud, wind, humidity, T_air in line:
                 i = next(c)
-                
+            
                 # Index by kilometer
                 node = self.reach[kms[i]]
                 # Append this node to a list of all nodes which 
@@ -447,12 +565,11 @@ class ModelSetup(object):
 
             msg = "Reading meteorological data"
             current = next(tm) + 1
-            logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
-        first_day_time = IniParams["modelstart"]
-        second_day = IniParams["modelstart"] + 86400
+        first_day_time = self.params["modelstart"]
+        second_day = self.params["modelstart"] + 86400
         for i in range(len(self.flushtimelist)):
             time = self.flushtimelist[i]
             for km in self.metDataSites:
@@ -460,7 +577,7 @@ class ModelSetup(object):
                 node.metData[time] = node.metData[first_day_time]
             first_day_time += 3600
             if first_day_time >= second_day:
-                first_day_time = IniParams["modelstart"]
+                first_day_time = self.params["modelstart"]
 
         # Now we strip out the met data outside the model period 
         # from the dictionaries. This is placed here
@@ -470,10 +587,9 @@ class ModelSetup(object):
         length = len(self.metDataSites)
         for km in self.metDataSites:
             node = self.reach[km]
-            node.metData = node.metData.view(IniParams["flushtimestart"], IniParams["modelend"], aft=1)
+            node.metData = node.metData.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
             msg = "Subsetting met data"
             current = next(tm)+1
-            logger.info('{0} {1} {2}'.format(msg, current, length))
             print_console(msg, True, current, length)
 
     def zipper(self, iterable, mul=2):
@@ -481,7 +597,7 @@ class ModelSetup(object):
 
         Zipper returns a list of lists where the internal lists are
         groups of <mul> consecutive elements from the input list.
-        
+    
         For example:
         >>> lst = [0,1,2,3,4,5,6,7,8,9]
         >>> zipper(lst)
@@ -540,7 +656,7 @@ class ModelSetup(object):
         # not lazy, but I'm not paid as a programmer, and so I have
         # "better" things to do than optimize our code.) First we strip 
         # off the None values.
-        
+    
         strip_none = lambda y: [i for i in [x for x in y if x is not None]]
         return [predicate(strip_none(x)) for x in self.zipper(iterable, self.multiple)]
 
@@ -563,12 +679,12 @@ class ModelSetup(object):
         flow = ["INFLOW", "TEMPERATURE", "OUTFLOW"]
 
         # Operator methods to combine km values (named as model variables)
-        # sums = ["hyp_percent", "Q_in", "Q_out"]
+        # sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
         #         "W_b", "z", "n",
-        #        "SedThermCond", "SedThermDiff", "SedDepth",
-        #        "phi", "Q_cont", "d_cont", "T_in"]
+        #        "Ksed", "Alpha_sed", "Dsed",
+        #        "phi", "Q_cont", "d_cont", "T_accr"]
 
         # Operator methods to combine row values (named as input column names)
         # sums = ["HYPORHEIC_PERCENT", "INFLOW", "OUTFLOW"]
@@ -581,27 +697,27 @@ class ModelSetup(object):
         data = {}
 
         # Read data into a dictionary
-        if self.run_type == 0:
+        if self.run_type == "temperature":
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_out"]
+            sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
-                    "SedThermCond", "SedThermDiff", "SedDepth", "phi",
-                    "Q_cont", "d_cont", "T_in"]
+                    "Ksed", "Alpha_sed", "Dsed", "phi",
+                    "Q_cont", "d_cont", "T_accr"]
 
-        elif self.run_type == 1:
+        elif self.run_type == "solar":
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
             sums = []
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation"]
 
-        elif self.run_type == 2:
+        elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_in", "Q_out"]
+            sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["elevation", "S", "W_b", "z", "n",
                     "Q_cont", "d_cont"]
@@ -620,11 +736,11 @@ class ModelSetup(object):
         for k in morph:
             data[head2var[k]] = [i for i in morphdata[k]]
 
-        if self.run_type in [0, 1]:
+        if self.run_type in ["temperature", "solar"]:
             for k in lc:
                 data[head2var[k]] = [i for i in lcdata[k]]
 
-        if self.run_type in [0, 2]:
+        if self.run_type in ["temperature", "hydraulics"]:
             for k in flow:
                 data[head2var[k]] = [i for i in accdata[k]]
 
@@ -648,7 +764,7 @@ class ModelSetup(object):
         data = self.get_columnar_data()
 
         # Build a boundary node
-        node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
+        node = StreamNode(run_type=self.run_type, Q_mb=Q_mb, run_params=self.params)
         # Then set the attributes for everything in the dictionary
         for k, v in list(data.items()):
             setattr(node, k, v[0])
@@ -656,7 +772,7 @@ class ModelSetup(object):
         node.Q_bc = self.Q_bc
         node.T_bc = self.T_bc
         self.initialize_node(node)
-        node.dx = IniParams["longsample"]
+        node.dx = self.params["longsample"]
         self.reach[node.km] = node
         self.ID2km[node.nodeID] = node.km
 
@@ -666,10 +782,10 @@ class ModelSetup(object):
         # of the sample distance. We might end up ending at stream 
         # kilometer 0.5, for instance, in that case
 
-        vars = (IniParams["length"] * 1000) / IniParams["longsample"]
+        vars = (self.params["length"] * 1000) / self.params["longsample"]
         num_nodes = int(ceil(round((vars) / self.multiple, 4)))
         for i in range(0, num_nodes):
-            node = StreamNode(run_type=self.run_type, Q_mb=Q_mb)
+            node = StreamNode(run_type=self.run_type, Q_mb=Q_mb, run_params=self.params)
             for k, v in list(data.items()):
                 # Add one to ignore boundary node
                 setattr(node, k, v[i + 1])
@@ -677,7 +793,6 @@ class ModelSetup(object):
             self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
             msg = "Building Stream Nodes"
-            logger.info('{0} {1} {2}'.format(msg, i + 1, num_nodes))
             print_console(msg, True, i + 1, num_nodes)
 
         # Find the mouth node and calculate the actual distance
@@ -685,7 +800,7 @@ class ModelSetup(object):
 
         # number of extra variables if we're not perfectly divisible
         mouth_dx = (vars) % self.multiple or 1.0
-        mouth.dx = IniParams["longsample"] * mouth_dx
+        mouth.dx = self.params["longsample"] * mouth_dx
 
     def build_zones_w_codes(self):
         """Build zones when the landcover data files contains
@@ -698,11 +813,11 @@ class ModelSetup(object):
         LCdata = self.inputs.import_lcdata(return_list=True)
 
         average = lambda x: sum(x) / len(x)
-        transsample_count = IniParams["transsample_count"]
-        radial_count = IniParams["trans_count"]
-        
+        transsample_count = self.params["transsample_count"]
+        radial_count = self.params["trans_count"]
+    
         keys = list(self.reach.keys())
-        
+    
         # Downstream sorted list of stream kilometers
         keys.sort(reverse=True)
 
@@ -713,7 +828,7 @@ class ModelSetup(object):
         elevation = []
 
         print_console("Translating landcover Data")
-        if IniParams["canopy_data"] == "LAI":
+        if self.params["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
 
@@ -721,7 +836,7 @@ class ModelSetup(object):
 
             # For each column of LULC data
             for i in range(6, radial_count * transsample_count + 7):
-                
+            
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
                 elev = [float(LCdata[row][i + radial_count * transsample_count]) for row in range(0, len(LCdata))]
@@ -745,11 +860,12 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][3])
                                                      for x in col],
                                                     average))
-                    cdepth.append(self.multiplier([float(LCcodes[x][4]) for x in col],
+                    cdepth.append(self.multiplier([float(LCcodes[x][4])
+                                                   for x in col],
                                                   average))
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
-                        IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
+                        self.params["lcdatafile"], self.params["lccodefile"], stderr.message))
                 if i > 6:
                     # There isn't a stream center elevation 
                     # (that is in the morphology file), so we don't want 
@@ -758,7 +874,6 @@ class ModelSetup(object):
 
                     elevation.append(self.multiplier(elev, average))
                 msg = "Translating Land Cover Data"
-                logger.info('{0} {1} {2}'.format(msg, i, radial_count * transsample_count + 7))
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
             for i in range(len(keys)):
@@ -810,13 +925,13 @@ class ModelSetup(object):
                     overhang.append(self.multiplier([float(LCcodes[x][2])
                                                      for x in col],
                                                     average))
-                    cdepth.append(self.multiplier([float(LCcodes[x][3]) 
+                    cdepth.append(self.multiplier([float(LCcodes[x][3])
                                                    for x in col],
                                                   average))
 
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
-                        IniParams["lcdatafile"], IniParams["lccodefile"], stderr.message))
+                        self.params["lcdatafile"], self.params["lccodefile"], stderr.message))
                 if i > 6:
 
                     # There isn't a stream center elevation
@@ -827,7 +942,6 @@ class ModelSetup(object):
                     elevation.append(self.multiplier(elev, average))
 
                 msg = "Translating Land Cover Data"
-                logger.info('{0} {1} {2}'.format(msg, i, radial_count * transsample_count + 7))
                 print_console(msg, True, i, radial_count * transsample_count + 7)
 
             for i in range(len(keys)):
@@ -876,7 +990,6 @@ class ModelSetup(object):
 
         for h in range(len(keys)):
             msg = "Building land cover zones"
-            logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
@@ -886,7 +999,7 @@ class ModelSetup(object):
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each 
             # with one of three topographies
-            elevation_list = []
+            theta_topo_list = []
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
@@ -895,11 +1008,11 @@ class ModelSetup(object):
             for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
-                    elevation_list.append(topo_e[h])
+                    theta_topo_list.append(topo_e[h])
                 elif dir_angle < 225:
-                    elevation_list.append(topo_s[h])
+                    theta_topo_list.append(topo_s[h])
                 else:
-                    elevation_list.append(topo_w[h])
+                    theta_topo_list.append(topo_w[h])
 
             # Sun comes down and can be full-on, blocked by veg, or 
             # blocked by topography. Earlier implementations calculated 
@@ -917,13 +1030,13 @@ class ModelSetup(object):
             for i in range(radial_count):
 
                 # The minimum sun angle needed for full sun
-                t_full = ()
+                theta_full_sun = ()
 
                 # The angle with longest path length in each veg zone
-                t_path = ()
+                theta_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                t_none = ()
+                theta_bank = ()
 
                 # Numerator for the weighted Veg density calculation
                 w_vdens_num = 0.0
@@ -956,13 +1069,13 @@ class ModelSetup(object):
                     # zone which represents the vegetation between two 
                     # sample points
 
-                    if IniParams["lcsampmethod"] == "zone":
+                    if self.params["lcsampmethod"] == "zone":
                         adjust = 0.5
                     else:
                         adjust = 0.0
 
-                    lc_distance1 = IniParams["transsample_distance"] * (s + 1 - adjust)
-                    lc_distance2 = IniParams["transsample_distance"] * (s + 2 - adjust)
+                    lc_distance1 = self.params["transsample_distance"] * (s + 1 - adjust)
+                    lc_distance2 = self.params["transsample_distance"] * (s + 2 - adjust)
 
                     # We shift closer to the stream by the amount of overhang
                     if not s:
@@ -971,19 +1084,19 @@ class ModelSetup(object):
                         lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
                     # It gets added to a tuple of full sun values
-                    t_full += degrees(atan(VH / lc_distance1)),
+                    theta_full_sun += degrees(atan(VH / lc_distance1)),
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    t_path += degrees(atan(VH / lc_distance2)),
+                    theta_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic 
                     # shade for this transect direction.
                     # likewise, a tuple of values
-                    t_none += degrees(atan(SH / lc_distance1)),
+                    theta_bank += degrees(atan(SH / lc_distance1)),
 
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
-                    if IniParams["canopy_data"] == "LAI":
+                    if self.params["canopy_data"] == "LAI":
                         # use LAI data
                         Vk = k[i * transsample_count + s + 1][h]
 
@@ -997,7 +1110,7 @@ class ModelSetup(object):
                     w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(t_full) > 0:
+                        if max(theta_full_sun) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # vdens_mod = (Amount of Veg shade * Veg dens) +
@@ -1007,11 +1120,13 @@ class ModelSetup(object):
                                 vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
                                 vdens_ave_veg = 0
-                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
+                            vdens_mod = ((max(theta_full_sun) - max(theta_bank)) * vdens_ave_veg + max(theta_bank)) / max(theta_full_sun)
                         else:
                             vdens_mod = 1.0
-                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+                        vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
+                theta_full_sun_max = max(theta_full_sun)
+                theta_bank_max = max(theta_bank)
+                node.ShaderList += (theta_full_sun_max, theta_topo_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def build_zones_w_values(self):
@@ -1022,8 +1137,8 @@ class ModelSetup(object):
         LCdata = self.inputs.import_lcdata(return_list=True)
 
         average = lambda x: sum(x) / len(x)
-        transsample_count = IniParams["transsample_count"]
-        radial_count = IniParams["trans_count"]
+        transsample_count = self.params["transsample_count"]
+        radial_count = self.params["trans_count"]
 
         shiftcol = radial_count * transsample_count  # Shift to get to each data type column
 
@@ -1037,7 +1152,7 @@ class ModelSetup(object):
         elevation = []
 
         print_console("Translating Land Cover Data")
-        if IniParams["canopy_data"] == "LAI":
+        if self.params["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
 
@@ -1070,7 +1185,6 @@ class ModelSetup(object):
                     # elevation value which s actually the last LULC col.
                     elevation.append(self.multiplier(elevcol, average))
                 msg = "Reading vegetation heights"
-                logger.debug('{0} {1} {2}'.format(msg, i + 1, shiftcol + 7))
                 print_console(msg, True, i + 1, shiftcol + 7)
 
             for i in range(len(keys)):
@@ -1117,7 +1231,7 @@ class ModelSetup(object):
                     vcanopy.append(self.multiplier([float(x) for x in dencol], average))
                     overhang.append(self.multiplier([float(x) for x in ohcol], average))
                     cdepth.append(self.multiplier([float(x) for x in cdcol], average))
-                    
+                
                 except KeyError as stderr:
                     raise Exception("Vegetation height/density error" % stderr.message)
                 if i > 6:
@@ -1128,7 +1242,6 @@ class ModelSetup(object):
                     elevation.append(self.multiplier(elevcol, average))
 
                 msg = "Reading vegetation heights"
-                logger.debug('{0} {1} {2}'.format(msg, i + 1, shiftcol + 7))
                 print_console(msg, True, i + 1, shiftcol + 7)
 
             for i in range(len(keys)):
@@ -1171,17 +1284,16 @@ class ModelSetup(object):
 
         for h in range(len(keys)):
             msg = "Building VegZones"
-            logger.info('{0} {1} {2}'.format(msg, h + 1, len(keys)))
             print_console(msg, True, h + 1, len(keys))
 
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
-            # Now we set the topographic elevations in each direction
+            # Now we set the topographic shade angles in each direction
             # Topography factor Above Stream Surface
             node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             # This is basically a list of directions, each with one 
             # of three topographies
-            elevation_list = []
+            theta_topo_list = []
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
             angle_mid = [x * angle_incr for x in dir_numbers]
@@ -1189,11 +1301,11 @@ class ModelSetup(object):
             for i in range(radial_count):
                 dir_angle = angle_mid[i]
                 if dir_angle < 135:
-                    elevation_list.append(topo_e[h])
+                    theta_topo_list.append(topo_e[h])
                 elif dir_angle < 225:
-                    elevation_list.append(topo_s[h])
+                    theta_topo_list.append(topo_s[h])
                 else:
-                    elevation_list.append(topo_w[h])
+                    theta_topo_list.append(topo_w[h])
             # Sun comes down and can be full-on, blocked by veg, or blocked by topography. Earlier implementations
             # calculated each case on the fly. Here we chose a somewhat more elegant solution and calculate necessary
             # angles. Basically, there is a minimum angle for which full sun is calculated (top of trees), and the
@@ -1204,13 +1316,13 @@ class ModelSetup(object):
 
             for i in range(radial_count):  # Iterate through each transect direction
                 # The minimum sun angle needed for full sun
-                t_full = ()
+                theta_full_sun = ()
 
                 # The angle with longest path length in each veg zone
-                t_path = ()
+                theta_path = ()
 
                 # Highest angle necessary for full shade in each veg zone
-                t_none = ()
+                theta_bank = ()
 
                 # Numerator for the weighted Veg density calculation
                 w_vdens_num = 0.0
@@ -1245,13 +1357,13 @@ class ModelSetup(object):
                     # a tree at a specific location rather than within a 
                     # zone which represents the vegetation between two 
                     # sample points
-                    if IniParams["lcsampmethod"] == "zone":
+                    if self.params["lcsampmethod"] == "zone":
                         adjust = 0.5
                     else:
                         adjust = 0.0
-                    lc_distance1 = IniParams["transsample_distance"] * (
+                    lc_distance1 = self.params["transsample_distance"] * (
                             s + 1 - adjust)  # This is "+ 1" because s starts at 0
-                    lc_distance2 = IniParams["transsample_distance"] * (
+                    lc_distance2 = self.params["transsample_distance"] * (
                             s + 2 - adjust)  # This is "+ 2" because we want to get to the farthest end of the zone
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
@@ -1260,18 +1372,18 @@ class ModelSetup(object):
                     if lc_distance1 <= 0:
                         lc_distance1 = 0.00001
                     # Calculate the minimum sun angle needed for full sun
-                    t_full += degrees(atan(VH / lc_distance1)),  # It gets added to a tuple of full sun values
+                    theta_full_sun += degrees(atan(VH / lc_distance1)),  # It gets added to a tuple of full sun values
 
                     # Calculate angle with longest path length. This is used in the solar flux calcs
-                    t_path += degrees(atan(VH / lc_distance2)),
+                    theta_path += degrees(atan(VH / lc_distance2)),
 
                     # Now get the maximum of bank shade and topographic shade for this
                     # transect direction
-                    t_none += degrees(atan(SH / lc_distance1)),  # likewise, a tuple of values
+                    theta_bank += degrees(atan(SH / lc_distance1)),  # likewise, a tuple of values
 
                     # Calculate View To Sky
                     veg_angle = degrees(atan(VH / lc_distance1)) - degrees(atan(SH / lc_distance1))
-                    if IniParams["canopy_data"] == "LAI":
+                    if self.params["canopy_data"] == "LAI":
                         # use LAI data
 
                         Vk = k[i * transsample_count + s + 1][h]
@@ -1286,7 +1398,7 @@ class ModelSetup(object):
                     w_vdens_dem += veg_angle
 
                     if s == transsample_count - 1:
-                        if max(t_full) > 0:
+                        if max(theta_full_sun) > 0:
                             # if bank and/or veg shade is occurring:
                             # Find weighted average the density:
                             # vdens_mod = (Amount of Veg shade * Veg dens) +
@@ -1296,11 +1408,13 @@ class ModelSetup(object):
                                 vdens_ave_veg = w_vdens_num / w_vdens_dem
                             else:
                                 vdens_ave_veg = 0
-                            vdens_mod = ((max(t_full) - max(t_none)) * vdens_ave_veg + max(t_none)) / max(t_full)
+                            vdens_mod = ((max(theta_full_sun) - max(theta_bank)) * vdens_ave_veg + max(theta_bank)) / max(theta_full_sun)
                         else:
                             vdens_mod = 1.0
-                        vts_total += max(t_full) * vdens_mod  # Add angle at end of each zone calculation
-                node.ShaderList += (max(t_full), elevation_list[i], max(t_none), t_full, t_path),
+                        vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
+                theta_full_sun_max = max(theta_full_sun)
+                theta_bank_max = max(theta_bank)
+                node.ShaderList += (theta_full_sun_max, theta_topo_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
 
     def get_lc_codes(self):
@@ -1308,7 +1422,7 @@ class ModelSetup(object):
         as a dictionary of dictionaries"""
 
         data = self.inputs.import_lccodes()
-        if IniParams["canopy_data"] == "LAI":  # using LAI data
+        if self.params["canopy_data"] == "LAI":  # using LAI data
 
             # make a list of lists with values: [(height[0], lai[0], k[0], over[0], canopy_depth[0]), (height[1],...),...]
             vals = [tuple([float(j) for j in i]) for i in zip(data["HEIGHT"], data["LAI"], data["k"], data["OVERHANG"], data["CANOPY_DEPTH"])]
@@ -1343,29 +1457,32 @@ class ModelSetup(object):
         ##############################################################
         # Now that we have a stream node, we set the node's dx value, because
         # we have most nodes that are long-sample-distance times multiple,
-        node.dx = IniParams["dx"]  # Nodes distance step.
-        node.dt = IniParams["dt"]  # Set the node's timestep... this may have to be adjusted to comply with stability
+        node.dx = self.params["dx"]  # Nodes distance step.
+        node.dt = self.params["dt"]  # Set the node's timestep... this may have to be adjusted to comply with stability
         # Find the earliest temperature boundary condition
         mindate = min(self.T_bc.keys())
-        if self.run_type == 2:  # Running hydraulics only
-            node.T, node.T_prev, node.T_sed = 0.0, 0.0, 0.0
+        if self.run_type == "hydraulics":  # Running hydraulics only
+            node.T, node.T_prev, node.T_sed, node.T_hyp = 0.0, 0.0, 0.0, 0.0
         else:
-            if self.T_bc[mindate] is None:
-                # Shade-a-lator doesn't need a boundary condition
-                if self.run_type == 1:
-                    self.T_bc[mindate] = 0.0
-                else:
-                    raise Exception("Boundary temperature conditions cannot be blank")
             node.T = self.T_bc[mindate]
             node.T_prev = self.T_bc[mindate]
             node.T_sed = self.T_bc[mindate]
-        # we're in shadealator if the runtype is 1. Since much of the heat
+            node.T_hyp = self.T_bc[mindate]
+        # we're in shadealator if the run type is "solar". Since much of the heat
         # math is coupled to the shade math, we have to make sure the hydraulic
         # values are not zero or blank because they'll raise ZeroDivisionError
-        if self.run_type == 1:
+        if self.run_type == "solar":
             for attr in ["d_w", "A", "P_w", "W_w", "U", "Disp", "Q_prev", "Q",
-                         "SedThermDiff", "SedDepth", "SedThermCond"]:
+                         "Alpha_sed", "Dsed", "Ksed"]:
                 if (getattr(node, attr) is None) or (getattr(node, attr) == 0):
                     setattr(node, attr, 0.01)
+        if getattr(node, "F_DailySum", None) is None:
+            node.F_DailySum = [0] * 5
+        if getattr(node, "Solar_Blocked", None) is None:
+            node.Solar_Blocked = {
+                i: [0] * int(self.params["transsample_count"])
+                for i in range(int(self.params["trans_count"]))
+            }
+            node.Solar_Blocked["diffuse"] = 0
         node.Q_hyp = 0.0  # Assume zero hyporheic flow unless otherwise calculated
-        node.E = 0  # Same for evaporation
+        node.Q_evap = 0  # Same for evaporation
