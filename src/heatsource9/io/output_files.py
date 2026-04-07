@@ -5,6 +5,7 @@ from copy import deepcopy
 from os.path import join
 from time import ctime
 import csv
+from math import nan
 
 from heatsource9.__version__ import __version__
 
@@ -109,6 +110,7 @@ class _Output(object):
             desc["Rate_Evap"] = "Evaporation Rate (mm/hour)"
             desc["Temp_H2O"] = "Stream Temperature (Celsius)"
             desc["Temp_Sed"] = "Sediment Temperature (Celsius)"
+            desc["Temp_Hyp"] = "Hyporheic Return Water Temperature (Celsius)"
             desc["Hyd_Disp"] = "Hydraulic Dispersion (square meters/second)"
 
         # Empty dictionary to hold the data.
@@ -234,6 +236,7 @@ class _Output(object):
             data["Rate_Evap"][timestamp] = [(x.Q_evap / x.dx / x.W_w * 3600 * 1000) for x in nodes]
             data["Temp_H2O"][timestamp] = [x.T for x in nodes]
             data["Temp_Sed"][timestamp] = [x.T_sed for x in nodes]
+            data["Temp_Hyp"][timestamp] = [x.T_hyp if x.Q_hyp > 0 else nan for x in nodes]
             data["Hyd_Disp"][timestamp] = [x.Disp for x in nodes]
 
         # Run the daily output on the last hour of the day

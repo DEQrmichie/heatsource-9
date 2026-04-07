@@ -29,7 +29,7 @@ class StreamNode(object):
     def __init__(self, **kwargs):
         __slots = ["latitude", "longitude", "elevation", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
-                "T_sed", "T_accr", "T_tribs", # Temperature attrs
+                "T_sed", "T_hyp", "T_accr", "T_tribs", # Temperature attrs
                 "lc_height", "lc_canopy", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
                 "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
@@ -45,7 +45,7 @@ class StreamNode(object):
                 "F_Direct", 
                 "F_Diffuse",
                 "Ksed", "Alpha_sed", "Dsed", # Sediment conduction values
-                "hyp_percent", # Percent hyporheic exchange                
+                "Q_hyp_frac", # Fraction hyporheic exchange                
                 "S",        # Slope
                 "n",        # Manning's n
                 "z", # z factor: Ration of run to rise of the side of a trapezoidal channel
@@ -208,7 +208,7 @@ class StreamNode(object):
         self.Q = Q
         
         # Hyporheic discharge
-        self.Q_hyp = Q * self.hyp_percent 
+        self.Q_hyp = Q * self.Q_hyp_frac 
 
     def calc_discharge_boundary_node(self, time):
         Q_bc = self.Q_bc[time]
@@ -229,7 +229,7 @@ class StreamNode(object):
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
         self.Q_prev = self.Q
         self.Q = Q
-        self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
+        self.Q_hyp = Q * self.Q_hyp_frac # Hyporheic discharge
     def calculate_discharge(self, time):
         """Return the discharge for the current timestep
 
@@ -291,7 +291,7 @@ class StreamNode(object):
         # Now we've got a value for Q(t,x), so the current Q becomes Q_prev.
         self.Q_prev = self.Q  or Q
         self.Q = Q
-        self.Q_hyp = Q * self.hyp_percent # Hyporheic discharge
+        self.Q_hyp = Q * self.Q_hyp_frac # Hyporheic discharge
 
     def calc_heat_opt(self, time, hour, min, sec, doy,
                      JC, solar_only=False):
@@ -355,6 +355,7 @@ class StreamNode(object):
          self.F_Evaporation,
          self.F_Convection,
          self.Q_evap) = ground
+        self.T_hyp = self.T_sed
         
         (self.T, self.S1, self.Mix_T_Delta) = Mac
         
@@ -428,6 +429,7 @@ class StreamNode(object):
          self.F_Evaporation,
          self.F_Convection,
          self.Q_evap) = ground
+        self.T_hyp = self.T_sed
         
         self.F_DailySum[1] += self.F_Solar[1]
         self.F_DailySum[4] += self.F_Solar[4]
@@ -449,7 +451,7 @@ class StreamNode(object):
         #Throw away S and mix because we won't need them.
 
         self.T, S, mix = py_HS.calc_maccormick(self.dt, self.dx, self.U,
-                                            self.T_sed, self.T_prev,
+                                            self.T_hyp, self.T_prev,
                                             self.Q_hyp,
                                             self.Q_tribs[time],
                                             self.T_tribs[time],

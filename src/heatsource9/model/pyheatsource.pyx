@@ -844,7 +844,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double Q_evap = E_rate * W_w * dx if calcevap else 0
     return F_Cond, T_sed_next, F_Longwave, F_LW_Atm, F_LW_Stream, F_LW_Veg, F_Evap, F_Conv, Q_evap
 
-def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
+def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
 
@@ -866,17 +866,12 @@ def calc_maccormick(dt, dx, U, T_sed, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     T_mix = ((Q_trib * T_trib) + (T_up * Q_up)) / (Q_up + Q_trib)
     
     # Calculate temperature change from mass transfer from hyporheic zone
-    T_mix = (((T_sed * Q_hyp) + (T_mix * (Q_up + Q_trib))) /
-             (Q_hyp + Q_up + Q_trib))
+    T_mix = (((T_hyp * Q_hyp) + (T_mix * ((Q_up + Q_trib) - Q_hyp))) /
+             (Q_up + Q_trib))
     
     # Calculate temperature change from accretion inflows
-    # Q_hyp is commented out because we are not currently sure if 
-    # it should be added to the flow. This is because adding it will 
-    # cause overestimation of the discharge if Q_hyp is not subtracted
-    # from the total discharge (Q_trib) somewhere else, which it is not. 
-    # We should check this eventually.
-    T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_trib + Q_hyp))) /
-             (Q_accr + Q_up + Q_trib + Q_hyp))
+    T_mix = (((Q_accr * T_accr) + (T_mix * (Q_up + Q_trib))) /
+             (Q_accr + Q_up + Q_trib))
     
     T_mix -= T_up
     
@@ -951,6 +946,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],
                     solar[7])
+    T_hyp = ground[1]
 
     F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
     
@@ -961,7 +957,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         # Boundary node
         return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
 
-    Mac = calc_maccormick(dt, dx, U, ground[1], T_prev, Q_hyp, Q_tribs,
+    Mac = calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
                          T_up_prev, T_prev, T_dn_prev, Q_accr, T_accr,
                          MixTDelta_dn_prev)

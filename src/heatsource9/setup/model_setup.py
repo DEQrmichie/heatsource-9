@@ -679,7 +679,7 @@ class ModelSetup(object):
         flow = ["INFLOW", "TEMPERATURE", "OUTFLOW"]
 
         # Operator methods to combine km values (named as model variables)
-        # sums = ["hyp_percent", "Q_accr", "Q_with"]
+        # sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
         #         "W_b", "z", "n",
@@ -701,7 +701,7 @@ class ModelSetup(object):
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_accr", "Q_with"]
+            sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
                     "Ksed", "Alpha_sed", "Dsed", "phi",
@@ -717,7 +717,7 @@ class ModelSetup(object):
         elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
-            sums = ["hyp_percent", "Q_accr", "Q_with"]
+            sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["elevation", "S", "W_b", "z", "n",
                     "Q_cont", "d_cont"]
@@ -1462,11 +1462,12 @@ class ModelSetup(object):
         # Find the earliest temperature boundary condition
         mindate = min(self.T_bc.keys())
         if self.run_type == "hydraulics":  # Running hydraulics only
-            node.T, node.T_prev, node.T_sed = 0.0, 0.0, 0.0
+            node.T, node.T_prev, node.T_sed, node.T_hyp = 0.0, 0.0, 0.0, 0.0
         else:
             node.T = self.T_bc[mindate]
             node.T_prev = self.T_bc[mindate]
             node.T_sed = self.T_bc[mindate]
+            node.T_hyp = self.T_bc[mindate]
         # we're in shadealator if the run type is "solar". Since much of the heat
         # math is coupled to the shade math, we have to make sure the hydraulic
         # values are not zero or blank because they'll raise ZeroDivisionError
