@@ -1,67 +1,32 @@
 #!/usr/bin/python3
 
-"""This script imports the heatsource module and executes the
-hydraulic model routines. It is used by pyinstaller to build the
-standalone executable. This script can also be used
-directly. It must be located in the same directory as
-HeatSource_control.[xlsx|csv]. Run by opening a windows command
-prompt and type:
+"""Run the Heat Source hydraulics model from the local model directory.
 
-cd path/to/this/script/
-py -m hs9_run_hydraulics
+This script is used by PyInstaller to build a Windows executable and can
+also be run directly with Python. It determines the model directory from:
+1) the executable location when running as an executable, or
+2) this script's location when running as a normal Python script.
 
-Or create a .bat file that contains the heat source command:
-hs run -hy
-
-Command line:
-> hs run -hy
-
-usage: hs <command> [options]
-
-optional arguments:
-  -h, --help         show this help message and exit
-  -t, --temperature  Runs a temperature model.
-  -s, --solar        Runs solar routines only.
-  -hy, --hydraulics  Runs hydraulics only.
-
+It then finds that `HeatSource_Control.[xlsx|csv]` is in that directory and
+runs the hydraulics model.
 """
-
-from heatsource9 import BigRedButton
 import sys
-from os.path import abspath
-from os.path import dirname
-from os.path import join
-from os.path import realpath
-from os.path import split
-from os.path import splitext
-from glob import glob
+from pathlib import Path
 
-if getattr(sys, 'frozen', False):
-    # path to the directory where the exe is being executed from
-    application_path = dirname(sys.executable)
-else:
-    # path to the directory where the script is being executed from
-    application_path = abspath(join(dirname(realpath(__file__)), '.'))
+import heatsource9.run as hs_run
 
-model_dir = join(application_path, '')
-full_path = glob(join(model_dir, "HeatSource_Control.*"))
 
-# checks to make sure HeatSource_Control.xlsx or HeatSource_Control.csv exists
-if len(full_path) == 0:
-    raise Exception("HeatSource_Control file not found. \
-        Move the executable or place the control file in \
-        this directory: {0}.".format(model_dir))
+def main():
+    # Use executable folder for PyInstaller builds, otherwise script folder.
+    if getattr(sys, "frozen", False):
+        model_dir = Path(sys.executable).resolve().parent
+    else:
+        model_dir = Path(__file__).resolve().parent
 
-if len(full_path) > 1:
-    raise Exception("There is more than one file named 'HeatSource_Control.' \
-        in this directory: {0}. \
-        Only one file can exist.".format(model_dir))
+    # Run Heat Source Hydraulics.
+    hs_run.hydraulics(model_dir)
+    return 0
 
-control_file = split(full_path[0])[1]
-control_ext = splitext(control_file)[1]
 
-if control_ext not in [".xlsx", ".csv"]:
-    raise Exception("{0} must be an Excel '.xlsx' or '.csv' file.".format(control_file))
-
-# Run Heat Source Hydraulics only, run_type = 2
-BigRedButton.run_hydraulics(model_dir, control_file)
+if __name__ == "__main__":
+    raise SystemExit(main())

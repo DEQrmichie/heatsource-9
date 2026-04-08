@@ -1,49 +1,37 @@
 #!/usr/bin/python3
 
-"""This script writes a xlsx control file with empty values.
-The control file is written to the same directory as this script.
-It is used by pyinstaller to build the
-standalone executable. This script can also be used
-directly. Run by opening a windows command prompt and type:
+"""Run Heat Source control file setup from the local model directory.
 
-cd path/to/this/script/
-py -m hs9_setup_model_inputs
+This script is used by PyInstaller to build a Windows executable and can
+also be run directly with Python. It determines the model directory from:
+1) the executable location when running as an executable, or
+2) this script's location when running as a normal Python script.
 
-Or create a .bat file that contains the heat source command:
-hs setup -cf
-
-Command line:
-> hs setup -cf
-
-usage: hs <command> [options]
-
-optional arguments:
-  -h, --help           show this help message and exit
-  -cf, --control-file  Writes a blank control file.
-  -mi, --model-inputs  Write blank input files. Control file must already be
-                       parameterized.
-  -t, --timestamp      Use -t to add a timestamp to the file name.
-  -o, --overwrite      Use -o to overwrite any existing file.
-  -csv, --csv-mode     Use -csv to write a csv (Unicode UTF-8) formatted control file instead of .xlsx. Default is .xlsx.
-  
+It then writes a blank `HeatSource_Control.xlsx` file in that directory.
 """
-
-from heatsource9 import BigRedButton
 import sys
-from os.path import abspath
-from os.path import dirname
-from os.path import join
-from os.path import realpath
+from pathlib import Path
 
-if getattr(sys, 'frozen', False):
-    # path to the directory where the exe is being executed from
-    application_path = dirname(sys.executable)
-else:
-    # path to the directory where the script is being executed from
-    application_path = abspath(join(dirname(realpath(__file__)), '.'))
+from heatsource9.setup import write_cf
 
-model_dir = join(application_path, '')
-control_file = 'HeatSource_Control.xlsx'
 
-BigRedButton.setup_cf(model_dir, control_file,
-                      use_timestamp=False, overwrite=False)
+def main():
+    # Use executable folder for PyInstaller builds, otherwise script folder.
+    if getattr(sys, "frozen", False):
+        model_dir = Path(sys.executable).resolve().parent
+    else:
+        model_dir = Path(__file__).resolve().parent
+
+    # Write a blank control file in XLSX format.
+    write_cf(
+        model_dir=model_dir,
+        control_file="HeatSource_Control.xlsx",
+        use_timestamp=False,
+        overwrite=False,
+        csv_mode=False,
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
