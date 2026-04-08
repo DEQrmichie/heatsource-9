@@ -144,7 +144,7 @@ class ModelSetup(object):
         elif self.params["run_type"] == "solar":
             # For solar runs None is ok for these inputs
             none_ok = ["usertxt", "name", "flushdays", "bcfile",
-                       "inflowsites", "inflowinfiles", "inflowkm",
+                       "tribsites", "tribfiles", "tribkm",
                        "accretionfile",
                        "calcevap", "evapmethod",
                        "wind_a", "wind_b", "calcalluvium", "alluviumtemp"]
@@ -174,7 +174,7 @@ class ModelSetup(object):
                 elif (key == "lccodefile" and self.params.get("lcdatainput") == "Values"):
                     self.params[key] = None
 
-                elif (key in ["inflowinfiles", "inflowkm"] and self.params.get("inflowsites") == 0):
+                elif (key in ["tribfiles", "tribkm"] and self.params.get("tribsites") == 0):
                     self.params[key] = None
 
                 elif (key == "alluviumtemp" and self.params.get("calcalluvium") is False):
@@ -388,7 +388,7 @@ class ModelSetup(object):
         """Build a list of kilometers corresponding to the ini parameter
         that is passed.
     
-        ini can equal: "inflowkm", "metkm", or "outputkm"
+        ini can equal: "tribkm", "metkm", or "outputkm"
         corresponding to tributary inflow sites, met data sites,
         or the model output kilometers"""
 
@@ -398,7 +398,7 @@ class ModelSetup(object):
 
         if (ini == "metkm" or
                 ini == "outputkm" or
-                self.params["inflowsites"] > 0):
+                self.params["tribsites"] > 0):
             # get a list of sites by km
             kms = self.params[ini].split(",")
 
@@ -458,7 +458,7 @@ class ModelSetup(object):
         # that to grab the data block
         timelist = self.flowtimelist
         data = []
-        if self.params["inflowsites"] > 0:
+        if self.params["tribsites"] > 0:
             data = self.inputs.import_inflow()
 
         # The data is being put into this format
@@ -472,7 +472,7 @@ class ModelSetup(object):
 
         # Get a tuple of kilometers to use as keys to the 
         # location of each tributary 
-        kms = self.get_locations("inflowkm")
+        kms = self.get_locations("tribkm")
 
         length = len(timelist)
         # Which datapoint time are we recording
@@ -481,7 +481,7 @@ class ModelSetup(object):
         # Quick list of nodes with flow data
         nodelist = []
 
-        if self.params["inflowsites"] > 0:
+        if self.params["tribsites"] > 0:
             for time in timelist:
                 line = data.pop(0)
                 # Error checking?! Naw!!
@@ -504,7 +504,7 @@ class ModelSetup(object):
                     node.T_tribs[time] += temp,
                     msg = "Reading inflow data"
                     current = next(tm) + 1
-                    print_console(msg, True, current, length * self.params["inflowsites"])
+                    print_console(msg, True, current, length * self.params["tribsites"])
 
         # Next we expand or revise the dictionary to account for the 
         # flush period

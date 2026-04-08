@@ -116,17 +116,17 @@ def _met_tables(params, timelist, use_timestamp):
 
 def _inflow_tables(params, timelist, use_timestamp):
     tables = []
-    inflow_sites = params.get("inflowsites") or 0
+    inflow_sites = params.get("tribsites") or 0
     if inflow_sites <= 0:
         return tables
-    inflow_files_value = params.get("inflowinfiles")
+    inflow_files_value = params.get("tribfiles")
     inflow_files = [p.strip() for p in str(inflow_files_value or "").split(",") if p.strip()]
     headers = headers_inflow(params)
     rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
     for filename in inflow_files:
         if use_timestamp:
             filename = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + filename
-        table = (filename, headers, rows, sheetnames["inflowinfiles"])
+        table = (filename, headers, rows, sheetnames["tribfiles"])
         tables.append(table)
     return tables
 

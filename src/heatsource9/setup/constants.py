@@ -28,9 +28,9 @@ dtype = {
     "dx": int,
     "longsample": int,
     "bcfile": str,
-    "inflowsites": int,
-    "inflowinfiles": str,
-    "inflowkm": str,
+    "tribsites": int,
+    "tribfiles": str,
+    "tribkm": str,
     "accretionfile": str,
     "metsites": int,
     "metfiles": str,
@@ -185,9 +185,9 @@ control_keys = (
     "dx",
     "longsample",
     "bcfile",
-    "inflowsites",
-    "inflowinfiles",
-    "inflowkm",
+    "tribsites",
+    "tribfiles",
+    "tribkm",
     "accretionfile",
     "metsites",
     "metfiles",
@@ -210,6 +210,15 @@ control_keys = (
     "lcsampmethod",
     "heatsource8",
 )
+
+legacy_cf_format_keys = {
+    "inflowinfiles": "tribfiles",
+    "inflowkm": "tribkm",
+}
+
+renamed_cf_keys = {
+    "inflowsites": "tribsites",
+}
 
 # head2var is a dictionary crosswalking input headers to model 
 # variable names. This is more of a temporary fix because the model 
@@ -247,5 +256,5 @@ sheetnames = {
     "lcdatafile": "Land Cover Data",
     "lccodefile": "Land Cover Codes",
     "metfiles": "Meteorological Data",
-    "inflowinfiles": "Tributary Data",
+    "tribfiles": "Tributary Data",
 }

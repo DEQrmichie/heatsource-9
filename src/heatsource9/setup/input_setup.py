@@ -246,16 +246,16 @@ class InputSetup(object):
         return data
 
     def import_inflow(self, return_list=True, skiprows=1, skipcols=1):
-        if self.params["inflowsites"] <= 0:
+        if self.params["tribsites"] <= 0:
             return []
         headers = headers_inflow(self.params)
-        filenames = [f.strip() for f in self.params["inflowinfiles"].split(",") if f.strip()]
+        filenames = [f.strip() for f in self.params["tribfiles"].split(",") if f.strip()]
         data = []
         for i, filename in enumerate(filenames):
             site_data = read_to_dict(
                 path=Path(self.params["inputdir"]) / filename,
                 colnames=headers,
-                sheetname=sheetnames["inflowinfiles"],
+                sheetname=sheetnames["tribfiles"],
                 value_check=self._validate,
             )
             site_rows = self.dict2list(site_data, headers, skiprows, skipcols)
