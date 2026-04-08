@@ -10,6 +10,7 @@ from heatsource9.io.console import print_console
 from heatsource9.io.control_file import import_control_file
 
 from heatsource9.setup.input_setup import InputSetup
+from heatsource9.setup.site_setup import get_site_files
 from heatsource9.setup.constants import control_keys, dtype, head2var, sheetnames
 from heatsource9.__version__ import __version__
 from heatsource9.domain.clock import Clock, pretty_time
@@ -48,6 +49,8 @@ class ModelSetup(object):
 
         # List of kilometers with met data nodes assigned.
         self.metDataSites = []
+        self.met_site_rows = []
+        self.trib_site_rows = []
 
         # Convenience variables
         self.dx = None
@@ -67,7 +70,17 @@ class ModelSetup(object):
             dtype=dtype,
             control_sheet=sheetnames["controlfile"],
         )
-        self._parameterize_control_file(control["control_params"])
+        site_data = get_site_files(
+            Path(self.inputs.model_dir) / self.inputs.control_file,
+            control["control_params"],
+            self.run_type,
+        )
+        merged_params = dict(control["control_params"])
+        merged_params.update(site_data["met_params"])
+        merged_params.update(site_data["trib_params"])
+        self.met_site_rows = site_data["met_rows"]
+        self.trib_site_rows = site_data["trib_rows"]
+        self._parameterize_control_file(merged_params)
 
         self.inputs.params = self.params
 
@@ -145,6 +158,7 @@ class ModelSetup(object):
             # For solar runs None is ok for these inputs
             none_ok = ["usertxt", "name", "flushdays", "bcfile",
                        "tribsites", "tribfiles", "tribkm",
+                       "metheights",
                        "accretionfile",
                        "calcevap", "evapmethod",
                        "wind_a", "wind_b", "calcalluvium", "alluviumtemp"]
@@ -153,6 +167,7 @@ class ModelSetup(object):
             # For hydraulic runs None is ok for these inputs
             none_ok = ["usertxt", "name", "lcdatafile", "lccodefile",
                        "metsites", "metfiles", "metkm",
+                       "metheights",
                        "trans_count", "transsample_count",
                        "transsample_distance", "emergent",
                        "lcdatainput", "canopy_data", "lcsampmethod",
@@ -175,6 +190,9 @@ class ModelSetup(object):
                     self.params[key] = None
 
                 elif (key in ["tribfiles", "tribkm"] and self.params.get("tribsites") == 0):
+                    self.params[key] = None
+
+                elif (key == "metheights" and not self.met_site_rows):
                     self.params[key] = None
 
                 elif (key == "alluviumtemp" and self.params.get("calcalluvium") is False):
