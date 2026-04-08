@@ -15,13 +15,15 @@ set "DIST_DIR=%CD%\dist\_dev"
 :: Set the build directory.
 set "BUILD_DIR=%CD%\build\pyinstaller"
 
-:: Set the folder where the pyinstaller
+:: Set the output name for the main executable
+set "EXE_NAME=hs"
 
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_hydraulics.py --hidden-import=heatsource9.Stream.PyHeatsource
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_solar.py --hidden-import=heatsource9.Stream.PyHeatsource
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_temperature.py --hidden-import=heatsource9.Stream.PyHeatsource
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_control_file.py --hidden-import=heatsource9.Stream.PyHeatsource
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_model_inputs.py --hidden-import=heatsource9.Stream.PyHeatsource
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs.py --hidden-import=heatsource9.model.pyheatsource --name "%EXE_NAME%"
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_hydraulics.py --hidden-import=heatsource9.model.pyheatsource
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_solar.py --hidden-import=heatsource9.model.pyheatsource
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_temperature.py --hidden-import=heatsource9.model.pyheatsource
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_control_file.py
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_model_inputs.py
 
 echo .
 echo .
