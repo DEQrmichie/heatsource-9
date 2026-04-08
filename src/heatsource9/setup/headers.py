@@ -8,6 +8,14 @@ def headers_bc():
     return ["DATETIME", "FLOW", "TEMPERATURE"]
 
 
+def headers_met_sites():
+    return ["COLID", "MET_NAME", "STREAM_KM", "FILE_NAME", "MET_HEIGHT"]
+
+
+def headers_trib_sites():
+    return ["COLID", "TRIB_NAME", "STREAM_KM", "FILE_NAME"]
+
+
 def headers_met(params):
     metsites = params.get("metsites") or 0
     metfiles = [p.strip() for p in str(params.get("metfiles") or "met.csv").split(",") if p.strip()]
@@ -24,8 +32,8 @@ def headers_met(params):
 
 
 def headers_inflow(params):
-    inflow_sites = params.get("inflowsites") or 0
-    inflow_files_value = params.get("inflowinfiles")
+    inflow_sites = params.get("tribsites") or 0
+    inflow_files_value = params.get("tribfiles")
     inflow_files = [p.strip() for p in str(inflow_files_value or "").split(",") if p.strip()]
     if inflow_sites <= 0:
         return [None]

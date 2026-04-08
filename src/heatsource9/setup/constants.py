@@ -125,6 +125,11 @@ dtype = {
     "SED_HYPORHEIC_THICKNESS": float,
     "HYPORHEIC_PERCENT": float,
     "POROSITY": float,
+    "COLID": int,
+    "MET_NAME": str,
+    "TRIB_NAME": str,
+    "FILE_NAME": str,
+    "MET_HEIGHT": float,
 }
 
 # drange is a dictionary holding min and max values for each input. 
@@ -166,6 +171,7 @@ drange = {
     "SED_HYPORHEIC_THICKNESS": (0, 20),
     "HYPORHEIC_PERCENT": (0, 1),
     "POROSITY": (0, 1),
+    "MET_HEIGHT": (0, 200),
 }
 
 control_keys = (
@@ -255,6 +261,8 @@ sheetnames = {
     "morphfile": "Morphology Data",
     "lcdatafile": "Land Cover Data",
     "lccodefile": "Land Cover Codes",
+    "metsitesfile": "Meteorological Sites",
+    "tribsitesfile": "Tributary Sites",
     "metfiles": "Meteorological Data",
     "tribfiles": "Tributary Data",
 }
