@@ -30,5 +30,4 @@ tests/**
 *.log
 *.uml
 *.zip
-*.ico
 .idea/**
