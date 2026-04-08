@@ -2,23 +2,20 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b29 (beta 29)
+Current Version: heatsource 9.0.0b30 (beta 30)
 
 Model math is stable. Just a few more updates coming before official version 9.0.0
 
- -   Addition of tributary and meteorological setup files (changes to control file keys)
+ -   Addition of tributary and meteorological site setup files and updates to control file keys, all backward compatible
+ -   Update/clarify the wind function approach for evaporation so it explicitly relies on the met site height.
  -   Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
- -   Internal code refactor to improve maintainability and organization.
 
 ## 1.0 ABOUT 
-Heat Source is a computer model used by the Oregon Department of 
-Environmental Quality to simulate stream thermodynamics and hydraulic 
-routing. It was originally developed by Matt Boyd in 1996 as a [Master's 
-Thesis][1] at Oregon State University in the Departments of Bioresource 
-Engineering and Civil Engineering. Since then, it has grown and changed 
-significantly. Oregon DEQ currently maintains the Heat Source methodology
-and computer programming. Appropriate model use and application are 
-the sole responsibility of the user. 
+Heat Source is a computer model used by the Oregon Department of  Environmental Quality to simulate stream 
+thermodynamics and hydraulic routing. It was originally developed by Matt Boyd in 1996 as a [Master's Thesis][1] 
+at Oregon State University in the Departments of Bioresource Engineering and Civil Engineering. Since then, 
+it has grown and changed significantly. Oregon DEQ currently maintains the Heat Source methodology and computer 
+programming. Appropriate model use and application are the sole responsibility of the user. 
 
 Heat Source 7-8 and user manual: 
 http://www.oregon.gov/deq/wq/tmdls/Pages/TMDLs-Tools.aspx
@@ -35,15 +32,16 @@ There are two options for installing and running Heat Source 9:
 
 1. Download the [windows executables][2]. Place the executables in the directory with your model files. Double-click 
 the executable to run the model. That's it. Python installation is not required. These executables were 
-developed on Windows 10. They have not been tested on other versions of Windows.
+developed on Windows 10. They have not been tested on other versions of Windows. Optionally add hs.exe to the
+user PATH and run the model from the command line.
 
 2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, or 3.14.
-https://www.python.org/downloads/
+https://www.python.org/downloads/. This may be better option for Mac or Linux users.
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b29 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b29"
+# This command installs heat source version 9.0.0b30 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b30"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -55,23 +53,24 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heatsource wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl --user
+py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl --user
 
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.0b29-cp312-cp312-win_amd64.whl
+py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b29/Windows.Executables.v9.0.0b29.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b29
+[2]: https://github.com/rmichie/heatsource-9/releases/download/v9.0.0b30/heatsource9.0.0b30_Windows_Executables.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b30
 
 ## 3.0 QUICK STEPS TO GET GOING
 
-1. Place the control file (HeatSource_Control.[xlsx|csv]) and the model run
-   scripts in the same directory. You can generate a template control 
-   file by executing *hs_setup_control_file* or by using command line.
+1. Generate a template control file by executing *hs_setup_control_file* or by using command line.
    ```shell
    cd path\to\model_directory
    hs setup -cf
    ```
+   Make sure the control file (HeatSource_Control.[xlsx|csv]) and the model run
+   executables are in the same directory.
+
 2. Open the control file and parameterize it with your model information. 
    The control file must be named HeatSource_Control.[xlsx|csv] 
     
@@ -107,9 +106,12 @@ The model will read and write input files using the same format as the control f
 as a CSV, the input files must also be CSV. If the control file is an Excel file (.xlsx), the input files must also be
 saved as Excel files. Model output files are always written as CSV (UTF-8 Unicode) files.
 
-## 5.0 Using Command Line 
+## 5.0 Model run modes 
 
-Heat Source can be set up and run directly from the command line. Using command line requires the Python package be installed.
+### 5.1 Command Line
+
+Heat Source can be set up and run directly from the command line. Using command line requires the Python package 
+be installed or having hs.exe on PATH.
 
 Usage: 
 ``` shell
@@ -135,11 +137,6 @@ Run types:
 -hy / --hydraulics       : run hydraulics only
 ```
 
-Run options:
-``` shell
-(none)
-```
-
 Setup types:
 ``` shell
 -cf / --control-file     : write a blank control file template
@@ -160,7 +157,46 @@ hs setup -mi -o
 hs run -t
 ```
 
-## 6.0 MODEL FILES
+### 5.2 Using Python
+
+Heat Source can be set up and run directly using python scripts. The Python package must
+be installed.
+
+To write a blank XLSX control file from a python script:
+```python
+from heatsource9 import setup
+
+control_file = "HeatSource_Control.xlsx"
+model_dir = r"C://path/to/model_directory/"
+
+setup.setup_cf(model_dir, control_file)
+```
+
+To write blank XLSX input files from a python script:
+```python
+# requires a parameterized control file 
+from heatsource9 import setup
+
+control_file = 'HeatSource_Control.xlsx'
+model_dir = r'C://path/to/model_directory/'
+
+setup.write_mi(model_dir=model_dir, control_file=control_file,
+               use_timestamp=True, overwrite=False)
+```
+The file format for the input templates are CSV or XLSX from the control file extension.
+
+
+To run a temperature model from a python script:
+```python
+from heatsource9 import run
+
+control_file = "HeatSource_Control.xlsx"
+model_dir = r"C://path/to/model_directory/"
+
+run.temperature(model_dir, control_file)
+```
+
+## 6.0 MODEL INPUT FILES
 The following table summarizes what input files are needed to run each type of model. More specific details about the 
 format and content of each input file is included in the sections below.
 
@@ -191,43 +227,21 @@ Model run requirements:
 Key to model input information:
 
  -   Required: Input value required.
- -   Optional: File or input value optional (no file or values can be left blank). Note control file value for `inflowsites` must be 0 if there are no files.
+ -   Optional: File or input value optional (no file or values can be left blank). Note control file value for 
+`inflowsites` must be 0 if there are no files.
  
  <sup>1 Cloudiness required, other met fields can be blank.</sup>
 
 General Information
-1. The control file and input files are set up as Excel (.xlsx) files by default. They can also be CSV (UTF-8) comma delimited files.
-2. The Heat Source control file must be named `HeatSource_Control.[xlsx|csv]`. The other input files can be named whatever you want (file names are specified in the control file).
+1. The control file and input files are set up as Excel (.xlsx) files by default. They can also be CSV (UTF-8) comma 
+delimited files.
+2. The Heat Source control file must be named `HeatSource_Control.[xlsx|csv]`. The other input files can be named 
+whatever you want (file names are specified in the control file).
 3. The column header names can be changed but the data needs to be in the correct column number.
-4. Use the specified unit and data formats identified in the control file and input files. Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
-5. An input parameter value that is optional may be left blank although all values with float data type will be assigned as zero. Only excpetion is that canopy depth cannot be zero unless landcover height is also zero.
-
-To run a temperature model from a python script:
-```python
-from heatsource9 import run
-
-control_file = "HeatSource_Control.xlsx"
-model_dir = r"C://path/to/model_directory/"
-
-run.temperature(model_dir, control_file)
-```
-
-To write blank input files from a python script:
-```python
-# requires a parameterized control file 
-from heatsource9 import setup
-
-control_file = 'HeatSource_Control.xlsx'
-model_dir = r'C://path/to/model_directory/'
-
-setup.write_mi(model_dir=model_dir, control_file=control_file,
-               use_timestamp=True, overwrite=False)
-```
-`write_mi` determines whether input templates are CSV or XLSX from the control file extension.
-To write blank input files from command line:
-```shell
-hs setup -mi
-```
+4. Use the specified unit and data formats identified in the control file and input files. 
+Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
+5. An input parameter value that is optional may be left blank although all values with float data type will be 
+assigned as zero. Only exception is that canopy depth cannot be zero unless landcover height is also zero.
 
 ### 6.1 CONTROL FILE  
 File name: HeatSource_Control.[xlsx|csv]
@@ -264,7 +278,7 @@ from os.path import join
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-# Parameterize the control file and write to CSV
+# Parameterize the control file and write to XLSX
 setup.setup_cf(model_dir=model_dir, control_file=control_file,
                use_timestamp=True, overwrite=False,
                usertxt="This model is an example model",
@@ -516,7 +530,8 @@ Model run requirements:
 
 Note - multiple excel/csv files may be created for each tributary input with the 
 format above or all data can be saved in the same file as shown in the example below. 
-This is controlled in the control file with `inflowinfiles` by using multiple files names separated by a comma, or a single file name.
+This is controlled in the control file with `inflowinfiles` by using multiple files names separated by a 
+comma, or a single file name.
 
 Field details:
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE |
@@ -538,19 +553,19 @@ Model run requirements:
 
 Control file setup with multiple excel files for each tributary input.
 
-| LINE | PARAMETER                                         | KEY           | VALUE                                             |
-|-----:|:--------------------------------------------------|:--------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites                            | inflowsites   | 2                                                 |
-|   19 | Tributary Inflow Input File Name                  | inflowinfiles | "trib1_quarter_branch.xlsx, trib2_dry_creek.xlsx" |
-|   20 | Tributary Inflow Model kilometers                 | inflowkm      | "4.05, 3.35"                                      |
+| LINE | PARAMETER                         | KEY           | VALUE                                             |
+|-----:|:----------------------------------|:--------------|:--------------------------------------------------|
+|   18 | Tributary Inflow Sites            | inflowsites   | 2                                                 |
+|   19 | Tributary Inflow Input File Name  | inflowinfiles | "trib1_quarter_branch.xlsx, trib2_dry_creek.xlsx" |
+|   20 | Tributary Inflow Model kilometers | inflowkm      | "4.05, 3.35"                                      |
 
 Control file setup with single excel file for all tributary inputs.
 
-| LINE | PARAMETER                                         | KEY           | VALUE                                             |
-|-----:|:--------------------------------------------------|:--------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites                            | inflowsites   | 2                                                 |
-|   19 | Tributary Inflow Input File Name                  | inflowinfiles | tribs.xlsx                                        |
-|   20 | Tributary Inflow Model kilometers                 | inflowkm      | "4.05, 3.35"                                      |
+| LINE | PARAMETER                         | KEY           | VALUE                                             |
+|-----:|:----------------------------------|:--------------|:--------------------------------------------------|
+|   18 | Tributary Inflow Sites            | inflowsites   | 2                                                 |
+|   19 | Tributary Inflow Input File Name  | inflowinfiles | tribs.xlsx                                        |
+|   20 | Tributary Inflow Model kilometers | inflowkm      | "4.05, 3.35"                                      |
 
 ### 6.6 LAND COVER CODES FILE  
 File name: UserDefinedFileName.[xlsx|csv]
@@ -633,33 +648,6 @@ for previous versions of heat source models. If you are updating the model files
 using the vegetation `HEIGHT` as the canopy depth may be a reasonable approximation. See discussion on 
 model updates in the documentation for further details.
 
-The land cover codes file can be parameterized from script.
-```python
-from heatsource9.setup.input_setup import InputSetup
-from heatsource9.Dieties.IniParamsDiety import IniParams
-from heatsource9.Dieties.IniParamsDiety import dtype
-
-control_file = 'HeatSource_Control.xlsx'
-model_dir = r'C://path/to/model_directory/'
-
-# create an input object
-inputs = InputSetup(model_dir, control_file)
-
-# imports the control file into input object
-inputs.import_control_file()
-
-# Parameterize the lccodes input. Uses canopy cover data.
-lccodes = [('Active River Channel',100,0,0,0,0),
-           ('Barren - Clearcut',127,0,0,0,0),
-           ('Brush',128,1,0.4,0,1),
-           ('Dominate Coniferous',133,32,0.7,1.5,20),
-           ('Dominate Broadleaf (Riparian)',149,32,0.5,2,20),
-           ('Dominate Broadleaf (Upland)',150,32,0.5,2,20),
-           ('Road Unpaved',255,0,0,0,0)]
-
-inputs.parameterize_lccodes(lccodes, overwrite=True)
-```
-
 ### 6.7 LAND COVER DATA  
 File name: UserDefinedFileName.[xlsx|csv]
 
@@ -701,8 +689,8 @@ If using values, the land cover attribute information for each transect sample i
 The land cover data input type is identified in the control file.
 
 The number of columns is dependent on the number of transects and samples specified in the control file. The '#'
-in the column name will be a number and refers to the specific transect (T) number or sample (S) number. For example LC_T2_S4 refers to the 
-land cover sample on transect 2, sample number 4.
+in the column name will be a number and refers to the specific transect (T) number or sample (S) number. 
+For example LC_T2_S4 refers to the land cover sample on transect 2, sample number 4.
 
 ##### Codes
 When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
@@ -806,7 +794,99 @@ Model run requirements:
 |      12       | `HYPORHEIC_PERCENT` |  Optional  |    Required    |     Required     |
 |      13       | `POROSITY` |  Optional  |    Required    |     Required     |
 
-## 7.0 LICENSE
+## 7.0 MODEL OUTPUT FILES
+Model outputs are written as CSV files. The first six rows of every output file 
+provide the following details:
+
+- `File Created`: Date/time the output file was created.
+- `Heat Source Version`: The heat source version number
+- `Simulation Name`: User entered text from the `name` field in the control file.
+- `User Text`:  User entered text from the `usertxt` field in the control file.
+- `Output file description`
+- `blank space
+
+The headers for each output file are in the seventh row. For most files, the first header column is
+`Datetime`. The output datetimes are formatted as numeric Excel serial date and time values (or the OLE Automation date). 
+Specifically, the datetime values are days since December 30, 1899 at 00:00:00. Starting in the second column, all 
+the headers are the output stream km. 
+
+Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
+```CSV
+File Created:,Tue Mar  3 14:18:18 2026
+Heat Source Version:,9.0.0b30
+Simulation Name:,Example River - HS9_example_model_xslx
+User Text:,This is an example model using xlsx files.
+Output:,Stream Temperature (Celsius)
+""
+Datetime,10.100,10.050,10.000,9.950,...
+37078.0000000,20.1000,19.9912,19.9103,19.8013,...
+37078.0416667,19.6000,19.5326,19.4866,19.4099,...
+37078.0833333,19.1000,19.0583,19.0309,18.9761,...
+
+```
+The table below provides a summary of all the model outputs.
+
+Output Files:
+| OUTPUT NAME  | DESCRIPTION                                       | UNITS                  |
+|:-------------|:--------------------------------------------------|:-----------------------|
+| `Heat_SR1`   | Solar Radiation Flux above Topographic Features   | watts/square meter     |
+| `Heat_SR2`   | Solar Radiation Flux below Topographic Features   | watts/square meter     |
+| `Heat_SR3`   | Solar Radiation Flux below Land Cover             | watts/square meter     |
+| `Heat_SR3b`  | Solar Radiation Flux blocked by Land Cover Sample | watts/square meter     |
+| `Heat_SR4`   | Solar Radiation Flux below Bank Shade & Emergent  | watts/square meter     |
+| `Heat_SR5`   | Solar Radiation Flux Entering Stream              | watts/square meter     |
+| `Heat_SR6`   | Solar Radiation Flux Received by Stream           | watts/square meter     |
+| `Heat_SR7`   | Solar Radiation Flux Received by Substrate        | watts/square meter     |
+| `Heat_Cond`  | Streambed Conduction Flux                         | watts/square meter     |
+| `Heat_Long`  | Longwave Flux                                     | watts/square meter     |
+| `Heat_Conv`  | Convection Flux                                   | watts/square meter     |
+| `Heat_Evap`  | Evaporation Flux                                  | watts/square meter     |
+| `Rate_Evap`  | Evaporation Rate                                  | mm/hour                |
+| `Hyd_Disp`   | Hydraulic Dispersion                              | mm/hour                |
+| `Hyd_DA`     | Average Depth                                     | meters                 |
+| `Hyd_DM`     | Max Depth                                         | meters                 |
+| `Hyd_Flow`   | Flow Rate                                         | meters                 |
+| `Hyd_Hyp`    | Hyporheic Exchange                                | cubic meters/second    |
+| `Hyd_Vel`    | Flow Velocity                                     | meters/second          |
+| `Hyd_WT`     | Top Width                                         | square meters/second   |
+| `Temp_H2O`   | Stream Temperature                                | Celsius                |
+| `Temp_Sed`   | Sediment Temperature                              | Celsius                |
+| `Temp_Hyp`   | Hyporheic Return Water Temperature                | Celsius                |
+| `Shade`      | Effective Shade                                   | decimal fraction (0-1) |
+| `VTS`        | View to Sky                                       | decimal fraction (0-1) |
+
+The table below summarizes the outputs written by model run type. 
+YES means the output file is written for the model run type.
+
+| OUTPUT NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------|:----------:|:--------------:|:----------------:|
+| `Heat_SR1`   |    YES     |       NO       |       YES        |
+| `Heat_SR2`   |    YES     |       NO       |       YES        |
+| `Heat_SR3`   |    YES     |       NO       |       YES        |
+| `Heat_SR3b`  |    YES     |       NO       |       YES        |
+| `Heat_SR4`   |    YES     |       NO       |       YES        |
+| `Heat_SR5`   |    YES     |       NO       |       YES        |
+| `Heat_SR6`   |     NO     |       NO       |       YES        |
+| `Heat_SR7`   |     NO     |       NO       |       YES        |
+| `Heat_Cond`  |     NO     |       NO       |       YES        |
+| `Heat_Long`  |     NO     |       NO       |       YES        |
+| `Heat_Conv`  |     NO     |       NO       |       YES        |
+| `Heat_Evap`  |     NO     |       NO       |       YES        |
+| `Rate_Evap`  |     NO     |       NO       |       YES        |
+| `Hyd_Disp`   |     NO     |       NO       |       YES        |
+| `Hyd_DA`     |     NO     |       YES      |       YES        |
+| `Hyd_DM`     |     NO     |       YES      |       YES        |
+| `Hyd_Flow`   |     NO     |       YES      |       YES        |
+| `Hyd_Hyp`    |     NO     |       YES      |       YES        |
+| `Hyd_Vel`    |     NO     |       YES      |       YES        |
+| `Hyd_WT`     |     NO     |       YES      |       YES        |
+| `Temp_H2O`   |     NO     |       NO       |       YES        |
+| `Temp_Sed`   |     NO     |       NO       |       YES        |
+| `Temp_Hyp`   |     NO     |       NO       |       YES        |
+| `Shade`      |    YES     |       NO       |       YES        |
+| `VTS`        |    YES     |       NO       |       YES        |
+
+## 8.0 LICENSE
 GNU General Public License v3 (GPLv3)
 
 This program is free software: you can redistribute it and/or modify
