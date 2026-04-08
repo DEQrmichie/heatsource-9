@@ -35,6 +35,7 @@ dtype = {
     "metsites": int,
     "metfiles": str,
     "metkm": str,
+    "metheights": str,
     "calcevap": bool,
     "evapmethod": str,
     "wind_a": float,
@@ -198,6 +199,7 @@ control_keys = (
     "metsites",
     "metfiles",
     "metkm",
+    "metheights",
     "calcevap",
     "evapmethod",
     "wind_a",
@@ -218,6 +220,8 @@ control_keys = (
 )
 
 legacy_cf_format_keys = {
+    "metfiles": "metfiles",
+    "metkm": "metkm",
     "inflowinfiles": "tribfiles",
     "inflowkm": "tribkm",
 }
