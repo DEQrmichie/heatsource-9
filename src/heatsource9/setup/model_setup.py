@@ -339,6 +339,7 @@ class ModelSetup(object):
                 if km - down < up - km:
                     datasite = self.reach[down]
                 self.reach[km].metData = datasite.metData
+                self.reach[km].metheight = datasite.metheight
             msg = "Assigning Node"
             current = next(c)+1
             print_console(msg, True, current, len(l))
@@ -564,22 +565,29 @@ class ModelSetup(object):
         # Get a tuple of kilometers to use as keys to the location of 
         # each met node
         kms = self.get_locations("metkm")
+        if self.met_site_rows:
+            metheights = [row["metheight"] for row in self.met_site_rows]
+        elif self.params.get("metheights"):
+            metheights = [float(x.strip()) for x in self.params["metheights"].split(",")]
+        else:
+            metheights = [2.0 for i in kms]
 
         tm = count()  # Which datapoint time are we recording
         length = len(timelist)
         for time in timelist:
             line = data.pop(0)
             c = count()
-            for cloud, wind, humidity, T_air in line:
+            for cloud, Uzm, humidity, T_air in line:
                 i = next(c)
             
                 # Index by kilometer
                 node = self.reach[kms[i]]
+                node.metheight = metheights[i]
                 # Append this node to a list of all nodes which 
                 # have met data
                 if node.km not in self.metDataSites:
                     self.metDataSites.append(node.km)
-                node.metData[time] = cloud, wind, humidity, T_air
+                node.metData[time] = cloud, Uzm, humidity, T_air
 
             msg = "Reading meteorological data"
             current = next(tm) + 1

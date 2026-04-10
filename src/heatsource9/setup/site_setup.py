@@ -74,38 +74,29 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
             }
         )
 
-    if any(file_name in (None, "") for file_name in file_names):
-        met_params["metfiles"] = None
-        met_params["metkm"] = None
-        met_params["metheights"] = None
-        result = (met_rows, met_params)
-        return result
-    _validate_site_file_names(met_path.name, file_names)
-    if any(stream_km in (None, "") for stream_km in metkm_values):
-        met_params["metfiles"] = None
-        met_params["metkm"] = None
-        met_params["metheights"] = None
-        result = (met_rows, met_params)
-        return result
-    if any(met_height in (None, "") for met_height in metheight_values):
-        met_params["metfiles"] = None
-        met_params["metkm"] = None
-        met_params["metheights"] = None
-        result = (met_rows, met_params)
-        return result
+    missing_file_names = any(file_name in (None, "") for file_name in file_names)
+    missing_stream_km = any(stream_km in (None, "") for stream_km in metkm_values)
+    missing_metheight = any(met_height in (None, "") for met_height in metheight_values)
 
-    metfiles = []
-    metkm = []
-    metheights = []
-    for row in met_rows:
-        if row["file_name"] not in metfiles:
-            metfiles.append(row["file_name"])
-        metkm.append(str(row["stream_km"]))
-        metheights.append(str(row["metheight"]))
+    if missing_file_names:
+        met_params["metfiles"] = None
+    else:
+        _validate_site_file_names(met_path.name, file_names)
+        metfiles = []
+        for row in met_rows:
+            if row["file_name"] not in metfiles:
+                metfiles.append(row["file_name"])
+        met_params["metfiles"] = ", ".join(metfiles)
 
-    met_params["metfiles"] = ", ".join(metfiles)
-    met_params["metkm"] = ", ".join(metkm)
-    met_params["metheights"] = ", ".join(metheights)
+    if missing_stream_km:
+        met_params["metkm"] = None
+    else:
+        met_params["metkm"] = ", ".join([str(row["stream_km"]) for row in met_rows])
+
+    if missing_metheight:
+        met_params["metheights"] = None
+    else:
+        met_params["metheights"] = ", ".join([str(row["metheight"]) for row in met_rows])
 
     result = (met_rows, met_params)
     return result
@@ -164,27 +155,23 @@ def _get_trib_sites(model_path, control_params, control_path, run_type, ext):
             }
         )
 
-    if any(file_name in (None, "") for file_name in file_names):
-        trib_params["tribfiles"] = None
-        trib_params["tribkm"] = None
-        result = (trib_rows, trib_params)
-        return result
-    _validate_site_file_names(trib_path.name, file_names)
-    if any(stream_km in (None, "") for stream_km in tribkm_values):
-        trib_params["tribfiles"] = None
-        trib_params["tribkm"] = None
-        result = (trib_rows, trib_params)
-        return result
+    missing_file_names = any(file_name in (None, "") for file_name in file_names)
+    missing_stream_km = any(stream_km in (None, "") for stream_km in tribkm_values)
 
-    tribfiles = []
-    tribkm = []
-    for row in trib_rows:
-        if row["file_name"] not in tribfiles:
-            tribfiles.append(row["file_name"])
-        tribkm.append(str(row["stream_km"]))
+    if missing_file_names:
+        trib_params["tribfiles"] = None
+    else:
+        _validate_site_file_names(trib_path.name, file_names)
+        tribfiles = []
+        for row in trib_rows:
+            if row["file_name"] not in tribfiles:
+                tribfiles.append(row["file_name"])
+        trib_params["tribfiles"] = ", ".join(tribfiles)
 
-    trib_params["tribfiles"] = ", ".join(tribfiles)
-    trib_params["tribkm"] = ", ".join(tribkm)
+    if missing_stream_km:
+        trib_params["tribkm"] = None
+    else:
+        trib_params["tribkm"] = ", ".join([str(row["stream_km"]) for row in trib_rows])
 
     result = (trib_rows, trib_params)
     return result
