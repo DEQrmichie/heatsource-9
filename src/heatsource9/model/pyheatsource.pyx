@@ -700,7 +700,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, Dsed, dx, dt, Ksed,
                     Alpha_sed, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
-                    Q_hyp, F_Solar5, F_Solar7):
+                    Q_hyp, F_Solar5, F_Solar7, metheight):
 
     # Ksed units of W/(m *C)
     # Alpha_sed units of cm^2/sec
@@ -772,16 +772,17 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double Ea_w = humidity * Es_w
     #===================================================
     # Calculate the frictional reduction in wind velocity
-    cdef int zm
-    cdef double zd, z0, FrictionVelocity, ratio
+    cdef double U2m, z2, z0, zd, H, FrictionVelocity
+    z2 = 2.0
     if emergent and lc_height[0][0] > 0:
-        
-        zm = 2
-        
-        # zm > zd + z0
-        zd = 0.7 * lc_height[0][0]
-        z0 = 0.1 * lc_height[0][0]
-        ratio = (zm - zd) / z0
+        H = lc_height[0][0]
+        zd = 0.7 * H
+        z0 = 0.1 * H
+
+        if z2 <= zd + z0:
+            ratio = 0.0
+        else:
+            ratio = (z2 - zd) / z0
 
         # Vertical wind profile based friction velocity
         # (guard against invalid log argument)
@@ -789,16 +790,17 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
             FrictionVelocity = Uzm * 0.4 / log(ratio)
         else:
             FrictionVelocity = Uzm
+        U2m = FrictionVelocity
     else:
         z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
-        zd = 0 #Brustsaert (1982) p. 277 Dingman
-        zm = 2
-        FrictionVelocity = Uzm
+        if metheight <= z2:
+            U2m = Uzm
+        else:
+            U2m = Uzm * log(z2 / z0) / log(metheight / z0)
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
-    cdef double f_U2m = float(wind_a) + float(wind_b) * FrictionVelocity 
-    # f_U2m = 0.000000001505 + 0.0000000016 * FrictionVelocity #m/mbar/s
+    cdef double f_U2m = float(wind_a) + float(wind_b) * U2m
 
     #===================================================
     # Latent Heat of Vaporization
@@ -905,7 +907,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         lc_height_rel, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
-        calcalluv, T_alluv = C_args
+        calcalluv, metheight, T_alluv = C_args
 
     solar = [0]*8
     diffuse = [0]*8
@@ -945,7 +947,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                     dt, Ksed, Alpha_sed, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],
-                    solar[7])
+                    solar[7], metheight)
     T_hyp = ground[1]
 
     F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
