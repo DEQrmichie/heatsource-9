@@ -177,10 +177,11 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     W_b = 0.01 if W_b == 0 else W_b
     
     if D_est == 0:
-        # This is a secant iterative solution method. It uses the
-        # equation for discharge at equality then adds a slight change
-        # to the depth and solves it again. It should iterate for a 
-        # solution to depth within about 5-6 solutions.
+        # Newton Raphson style iterative solution using a finite
+        # difference derivative estimate to solve depth from Manning's equation.
+        # The discharge residual is evaluated at the current depth and
+        # again at a small depth increment to estimate the local slope. It usually
+        # solves within about 5 or 6 tries.
         while Converge > 1e-7:
             F_Dw = ((D_est * (W_b + z * D_est)) *
                   pow(((D_est * (W_b + z * D_est)) /
@@ -828,6 +829,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
         if (Es_w - Ea_w) != 0:
             BR = Gamma * (T_prev - T_air) / (Es_w - Ea_w)
         else:
+            # Vapor pressure equilibrium. Bowen ratio is undefined, use BR = 1. Evaporation and convection are zero.
             BR = 1        
     else:
         #===================================================
@@ -840,6 +842,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
             BR = (0.61 * (P_atm / 1000) * (T_prev - T_air) /
                   (Es_w - Ea_w))
         else:
+            # Vapor pressure equilibrium. Bowen ratio is undefined, use BR = 1. Evaporation and convection are zero.
             BR = 1
             
     cdef double F_Conv = F_Evap * BR
