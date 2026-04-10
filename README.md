@@ -67,23 +67,22 @@ py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl
    cd path\to\model_directory
    hs setup -cf
    ```
-   Make sure the control file (`HeatSource_Control.[xlsx|csv]`) and the model run
+   Make sure the control file (HeatSource_Control.[xlsx|csv]) and the model run
    executables are in the same directory.
 
 2. Open the control file and parameterize it with your model information. 
-   The control file must be named `HeatSource_Control.[xlsx|csv]`. Make sure to set the number of meteorological sites with `metsites`
+   The control file must be named HeatSource_Control.[xlsx|csv]. Make sure to set the number of meteorological sites with `metsites`
    and the number of tributary inflow sites with `tribsites`.
     
 3. Use *hs9_setup_model_inputs* to build template input files or by using command line. The input files will
    be saved to the input file directory that is specified in the control file. This step also creates the meteorological sites file
-   (`HeatSource_Met_Sites`) and tributary sites file
-   (`HeatSource_Tributary_Sites`) in the model directory when they do not already exist.
+   (HeatSource_Met_Sites) and tributary sites file
+   (HeatSource_Tributary_Sites) in the model directory when they do not already exist.
    ```shell
    cd path\to\model_directory
    hs setup -mi
    ```   
-4. Open `HeatSource_Met_Sites.[xlsx|csv]` and
-   `HeatSource_Tributary_Sites.[xlsx|csv]` and enter the site settings
+4. Open HeatSource_Met_Sites.[xlsx|csv] and HeatSource_Tributary_Sites.[xlsx|csv] and enter the site settings
    for each meteorological site and tributary site. 
 
 5. Add model input data to the required template input files.
@@ -246,22 +245,26 @@ Key to model input information:
 
 General Information
 1. The control file and input files are set up as Excel (`.xlsx`) files by default. They can also be CSV (UTF-8) comma delimited files.
-2. The Heat Source control file must be named `HeatSource_Control.[xlsx|csv]`. The meteorological sites file must be named `HeatSource_Met_Sites.[xlsx|csv]`. The tributary sites file must be named `HeatSource_Tributary_Sites.[xlsx|csv]`. The other input files can use any name.
+2. The Heat Source control file must be named HeatSource_Control.[xlsx|csv]. The meteorological sites file must be 
+   named HeatSource_Met_Sites.[xlsx|csv]. The tributary sites file must be named HeatSource_Tributary_Sites.[xlsx|csv]. 
+   The other input files can use any name.
 3. The column header names can be changed but the data needs to be in the correct column number.
-4. Use the specified units and data formats identified in the control file and input files. Example `yyyy-mm-dd hh:mm` is `2001-07-01 16:00`.
-5. An input parameter value that is optional may be left blank although all values with float data type will be assigned as zero. The only exception is that canopy depth cannot be zero unless land cover height is also zero.
+4. Use the specified units and data formats identified in the control file and input files.
+   Example `yyyy-mm-dd hh:mm` is `2001-07-01 16:00`.
+5. An input parameter value that is optional may be left blank although all values with float data type will 
+   be assigned as zero. The only exception is that canopy depth cannot be zero unless land cover height is also zero.
 
 ### 6.1 CONTROL FILE  
-File name: HeatSource_Control.[xlsx|csv]
+File name: `HeatSource_Control.[xlsx|csv]`
 
 xlsx sheet name: `Control Settings`
 
 The control file is where most of the model operation and initial parameterization is set. 
 Do not change the key names in the control file. Only change the VALUE column (column 4). The heat source control file 
-must be named `HeatSource_Control.[xlsx|csv]`.
+must be named HeatSource_Control.[xlsx|csv].
 
-The control file also defines the number of meteorological and tributary sites used in `HeatSource_Met_Sites.[xlsx|csv]` 
-and `HeatSource_Tributary_Sites.[xlsx|csv]`. The `metsites` and `tribsites` values must be set before creating these 
+The control file also defines the number of meteorological and tributary sites used in HeatSource_Met_Sites.[xlsx|csv] 
+and HeatSource_Tributary_Sites.[xlsx|csv]. The `metsites` and `tribsites` values must be set before creating these 
 files with the setup executable or by using the command `hs setup -mi`.
 
 To write a blank template control file from a python script:
@@ -373,7 +376,7 @@ Below are all the input parameters that must be included in the control file.
 |   37 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
 
 ### 6.2 MET SITE FILE
-File name: HeatSource_Met_Sites.[xlsx|csv]
+File name: `HeatSource_Met_Sites.[xlsx|csv]`
 
 xlsx sheet name: `Meteorological Sites`
 
@@ -421,7 +424,7 @@ while `COLID = 2` will be stored in the second group.
 - `FILE_NAME` identifies the meteorological input file used for that site.
 
 ### 6.3 METEOROLOGICAL DATA INPUT FILE/S
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Meteorological Data`
 (formally called Continuous data in Heat Source 8)
@@ -470,7 +473,7 @@ Field details:
 |       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |
 
 ### 6.4 TRIBUTARY SITE FILE
-File name: HeatSource_Tributary_Sites.[xlsx|csv]
+File name: `HeatSource_Tributary_Sites.[xlsx|csv]`
 
 xlsx sheet name: `Tributary Sites`
 
@@ -517,7 +520,7 @@ while `COLID = 2` will be stored in the second group.
 - `FILE_NAME` identifies the tributary input file used for that site.
 
 ### 6.5 TRIBUTARY DATA INPUT FILE/S
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Tributary Data`
 
@@ -562,7 +565,7 @@ Field details:
 |       5       | `TEMPERATURE2` | Tributary 2 temperature | degrees Celsius     |   float   |
 
 ### 6.6 ACCRETION INPUT FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Accretion Flow`
 
@@ -599,7 +602,7 @@ Model run requirements:
 
 
 ### 6.7 BOUNDARY CONDITION FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Boundary Conditions`
 
@@ -623,7 +626,7 @@ Model run requirements:
 
 
 ### 6.8 LAND COVER CODES FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Land Cover Codes`
 
@@ -704,7 +707,7 @@ using the vegetation `HEIGHT` as the canopy depth may be a reasonable approximat
 model updates in the documentation for further details.
 
 ### 6.9 LAND COVER DATA  
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Land Cover Data` (formally called TTools in Heat Source 8) 
 
@@ -809,7 +812,7 @@ Model run requirements:
 
 
 ### 6.10 MORPHOLOGY DATA FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Morphology Data`
 
