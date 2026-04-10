@@ -773,31 +773,16 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double Ea_w = humidity * Es_w
     #===================================================
     # Calculate the frictional reduction in wind velocity
-    cdef double U2m, z2, z0, zd, H, FrictionVelocity
+    # The log profile is applied to both open water and emergent models.
+    # Long term emergent needs an improved process based approach. Under this, any wind sheltering from
+    # emergent vegetation is not accounted for and needs to be reflected in the wind speed input into the model.
+    cdef double U2m, z2, z0
     z2 = 2.0
-    if emergent and lc_height[0][0] > 0:
-        H = lc_height[0][0]
-        zd = 0.7 * H
-        z0 = 0.1 * H
-
-        if z2 <= zd + z0:
-            ratio = 0.0
-        else:
-            ratio = (z2 - zd) / z0
-
-        # Vertical wind profile based friction velocity
-        # (guard against invalid log argument)
-        if ratio > 1.0:
-            FrictionVelocity = Uzm * 0.4 / log(ratio)
-        else:
-            FrictionVelocity = Uzm
-        U2m = FrictionVelocity
+    z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
+    if metheight <= z2:
+        U2m = Uzm
     else:
-        z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
-        if metheight <= z2:
-            U2m = Uzm
-        else:
-            U2m = Uzm * log(z2 / z0) / log(metheight / z0)
+        U2m = Uzm * log(z2 / z0) / log(metheight / z0)
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
