@@ -75,10 +75,10 @@ class ModelRunner:
         # Initialize daily solar accumulators before first step.
         self._reset_daily_solar_accumulators(simulation, 0, 0, 0, force=True)
         for step_number, epoch_seconds in enumerate(simulation.clock):
-            hour, minute, second, jd, jc = time_parts(epoch_seconds)
+            hour, minute, second, doy, jc = time_parts(epoch_seconds)
             self._reset_daily_solar_accumulators(simulation, hour, minute, second)
             logger.debug("Step %d, %s", step_number, epoch_seconds)
-            self._step(simulation, epoch_seconds, hour, minute, second, jd, jc)
+            self._step(simulation, epoch_seconds, hour, minute, second, doy, jc)
 
             # Add the current discharge (cms) at the mouth to the outflow total.
             outflow_total += self._mouth_flow(simulation)
@@ -94,9 +94,9 @@ class ModelRunner:
         # Report water balance as total inflow / total outflow (cms).
         print_console(f"Water Balance (cms): {inflow_total:0.4f}/{outflow_total:0.4f}")
 
-    def _step(self, simulation, time, hour, minute, second, jd, jc):
+    def _step(self, simulation, time, hour, minute, second, doy, jc):
         try:
-            self.model_routine.advance_timestep(simulation.nodes, time, hour, minute, second, jd, jc)
+            self.model_routine.advance_timestep(simulation.nodes, time, hour, minute, second, doy, jc)
             if minute == 0 and second == 0:
                 self.output.write_step(simulation, time, hour, minute, second)
         except Exception:
