@@ -772,7 +772,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double Es_w = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
     cdef double Ea_w = humidity * Es_w
     #===================================================
-    # Calculate the frictional reduction in wind velocity
+    # Normalize measured wind speed to 2 m above the water surface using a logarithmic profile.
     # The log profile is applied to both open water and emergent models.
     # Long term emergent needs an improved process based approach. Under this, any wind sheltering from
     # emergent vegetation is not accounted for and needs to be reflected in the wind speed input into the model.
