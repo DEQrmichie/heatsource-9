@@ -6,9 +6,8 @@ Current Version: heatsource 9.0.0b30 (beta 30)
 
 Model math is stable. Just a few more updates coming before official version 9.0.0
 
- -   Addition of tributary and meteorological site setup files and updates to control file keys, all backward compatible
- -   Update/clarify the wind function approach for evaporation so it explicitly relies on the met site height.
- -   Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
+ - Add outputdt to the control file to configure the output timestep.
+ - Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of  Environmental Quality to simulate stream 
@@ -72,28 +71,37 @@ py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl
    executables are in the same directory.
 
 2. Open the control file and parameterize it with your model information. 
-   The control file must be named HeatSource_Control.[xlsx|csv] 
+   The control file must be named HeatSource_Control.[xlsx|csv]. Make sure to set the number of meteorological sites with `metsites`
+   and the number of tributary inflow sites with `tribsites`.
     
 3. Use *hs9_setup_model_inputs* to build template input files or by using command line. The input files will
-   be saved to the input file directory that is specified in the control file.
+   be saved to the input file directory that is specified in the control file. This step also creates the meteorological sites file
+   (HeatSource_Met_Sites) and tributary sites file
+   (HeatSource_Tributary_Sites) in the model directory when they do not already exist.
    ```shell
    cd path\to\model_directory
    hs setup -mi
    ```   
-4. Add the input data to the template files.
+4. Open HeatSource_Met_Sites.[xlsx|csv] and HeatSource_Tributary_Sites.[xlsx|csv] and enter the site settings
+   for each meteorological site and tributary site. 
 
-5. Run the model by executing one of the following model python scripts/executables:
-   * hs9_run_hydraulics
-   * hs9_run_solar 
-   * hs9_run_temperature
+5. Add model input data to the required template input files.
+
+6. Run the model by executing one of the following model executables or
+   python scripts:
+   * `hs9_run_hydraulics`
+   * `hs9_run_solar`
+   * `hs9_run_temperature`
    
-   Or use command line to run the model:
+   Or use the command line:
    ```shell
    cd path\to\model_directory
+   hs run -hy
+   hs run -s
    hs run -t
    ```
    
-6. Outputs are saved in the output directory (specified in the control file).
+7. Outputs are saved in the output directory (specified in the control file).
 
 ## 4.0 CSV MODE
 By default, the template control file and input files are written as Excel files (.xlsx). Some users may want to
@@ -204,10 +212,12 @@ Field details:
 | INPUT FILE | FILE NAME | xlsx SHEET NAME |
 |:---|:---|:---|
 | CONTROL FILE | HeatSource_Control | Control Settings |
+| MET SITE FILE | HeatSource_Met_Sites | Meteorological Sites |
+| TRIBUTARY SITE FILE | HeatSource_Tributary_Sites | Tributary Sites |
 | ACCRETION | User Defined | Accretion Flow |
 | BOUNDARY CONDITION | User Defined | Boundary Conditions |
-| METEOROLOGICAL | User Defined | Meteorological Data |
-| TRIBUTARY | User Defined | Tributary Data |
+| METEOROLOGICAL DATA | User Defined | Meteorological Data |
+| TRIBUTARY DATA | User Defined | Tributary Data |
 | LAND COVER CODES | User Defined | Land Cover Codes |
 | LAND COVER DATA | User Defined | Land Cover Data |
 | MORPHOLOGY DATA | User Defined | Morphology Data |
@@ -216,10 +226,12 @@ Model run requirements:
 | INPUT FILE | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
 |:---|:---|:---|:---|
 | CONTROL FILE | Required | Required | Required |
+| MET SITE FILE | Required | Optional | Required |
+| TRIBUTARY SITE FILE | Optional | Required | Required |
 | ACCRETION | Optional | Required | Required |
 | BOUNDARY CONDITION | Optional | Required | Required |
-| METEOROLOGICAL | Required<sup>1</sup> | Required | Required |
-| TRIBUTARY | Optional | Required | Required |
+| METEOROLOGICAL DATA | Required<sup>1</sup> | Optional | Required |
+| TRIBUTARY DATA | Optional | Required | Required |
 | LAND COVER CODES | Required | Optional | Required |
 | LAND COVER DATA | Required | Optional | Required |
 | MORPHOLOGY DATA | Required | Optional | Required |
@@ -227,30 +239,33 @@ Model run requirements:
 Key to model input information:
 
  -   Required: Input value required.
- -   Optional: File or input value optional (no file or values can be left blank). Note control file value for 
-`inflowsites` must be 0 if there are no files.
+ -   Optional: File or input value optional. Note control file value for `tribsites` must be 0 if there are no files.
  
  <sup>1 Cloudiness required, other met fields can be blank.</sup>
 
 General Information
-1. The control file and input files are set up as Excel (.xlsx) files by default. They can also be CSV (UTF-8) comma 
-delimited files.
-2. The Heat Source control file must be named `HeatSource_Control.[xlsx|csv]`. The other input files can be named 
-whatever you want (file names are specified in the control file).
+1. The control file and input files are set up as Excel (`.xlsx`) files by default. They can also be CSV (UTF-8) comma delimited files.
+2. The Heat Source control file must be named HeatSource_Control.[xlsx|csv]. The meteorological sites file must be 
+   named HeatSource_Met_Sites.[xlsx|csv]. The tributary sites file must be named HeatSource_Tributary_Sites.[xlsx|csv]. 
+   The other input files can use any name.
 3. The column header names can be changed but the data needs to be in the correct column number.
-4. Use the specified unit and data formats identified in the control file and input files. 
-Example yyyy-mm-dd hh:mm is 2001-07-01 16:00
-5. An input parameter value that is optional may be left blank although all values with float data type will be 
-assigned as zero. Only exception is that canopy depth cannot be zero unless landcover height is also zero.
+4. Use the specified units and data formats identified in the control file and input files.
+   Example `yyyy-mm-dd hh:mm` is `2001-07-01 16:00`.
+5. An input parameter value that is optional may be left blank although all values with float data type will 
+   be assigned as zero. The only exception is that canopy depth cannot be zero unless land cover height is also zero.
 
 ### 6.1 CONTROL FILE  
-File name: HeatSource_Control.[xlsx|csv]
+File name: `HeatSource_Control.[xlsx|csv]`
 
 xlsx sheet name: `Control Settings`
 
 The control file is where most of the model operation and initial parameterization is set. 
 Do not change the key names in the control file. Only change the VALUE column (column 4). The heat source control file 
-must be named `HeatSource_Control.[xlsx|csv]`.
+must be named HeatSource_Control.[xlsx|csv].
+
+The control file also defines the number of meteorological and tributary sites used in HeatSource_Met_Sites.[xlsx|csv] 
+and HeatSource_Tributary_Sites.[xlsx|csv]. The `metsites` and `tribsites` values must be set before creating these 
+files with the setup executable or by using the command `hs setup -mi`.
 
 To write a blank template control file from a python script:
 ```python
@@ -297,13 +312,9 @@ setup.setup_cf(model_dir=model_dir, control_file=control_file,
                dx=30,
                longsample=50,
                bcfile="bc.csv",
-               inflowsites=4,
-               inflowinfiles="inflow1.csv, inflow2.csv, inflow3.csv, inflow4.csv",
-               inflowkm="1.65, 1.5, 1.3, 0.85",
+               tribsites=4,
                accretionfile="accretion.csv",
                metsites=4,
-               metfiles="met1.csv, met2.csv, met3.csv, met4.csv",
-               metkm="1.75, 1.45, 1.10, 0.9",
                calcevap="False",
                evapmethod="Mass Transfer",
                wind_a=1.51E-09,
@@ -343,33 +354,218 @@ Below are all the input parameters that must be included in the control file.
 |   15 | Model Distance Step (meters)                      | dx                   |       |
 |   16 | Longitudinal Stream Sample Distance (meters)      | longsample           |       |
 |   17 | Boundary Condition Input File Name                | bcfile               |       |
-|   18 | Tributary Inflow Sites                            | inflowsites          |       |
-|   19 | Tributary Inflow Input File Name                  | inflowinfiles        |       |
-|   20 | Tributary Inflow Model kilometers                 | inflowkm             |       |
-|   21 | Accretion Input File Name                         | accretionfile        |       |
-|   22 | Meteorological Data Sites                         | metsites             |       |
-|   23 | Meteorological Data Input File Name               | metfiles             |       |
-|   24 | Meteorological Data Model kilometers              | metkm                |       |
-|   25 | Include Evaporation Losses From Flow (True/False) | calcevap             |       |
-|   26 | Evaporation Method (Mass Transfer/Penman)         | evapmethod           |       |
-|   27 | Wind Function Coefficient a                       | wind_a               |       |
-|   28 | Wind Function Coefficient b                       | wind_b               |       |
-|   29 | Include Deep Alluvium Temperature (True/False)    | calcalluvium         |       |
-|   30 | Deep Alluvium Temperature (Celsius)               | alluviumtemp         |       |
-|   31 | Morphology Input Data File Name                   | morphfile            |       |
-|   32 | Land Cover Input Data File Name                   | lcdatafile           |       |
-|   33 | Land Cover Codes Input File Name                  | lccodefile           |       |
-|   34 | Number Of Transects Per Node                      | trans_count          |       |
-|   35 | Number Of Samples Per Transect                    | transsample_count    |       |
-|   36 | Distance Between Transect Samples (meters)        | transsample_distance |       |
-|   37 | Account For Emergent Veg Shading (True/False)     | emergent             |       |
-|   38 | Land Cover Data Input Type (Codes/Values)         | lcdatainput          |       |
-|   39 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
-|   40 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
-|   41 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
+|   18 | Tributary Inflow Sites                            | tribsites            |       |
+|   19 | Accretion Input File Name                         | accretionfile        |       |
+|   20 | Meteorological Data Sites                         | metsites             |       |
+|   21 | Include Evaporation Losses From Flow (True/False) | calcevap             |       |
+|   22 | Evaporation Method (Mass Transfer/Penman)         | evapmethod           |       |
+|   23 | Wind Function Coefficient a                       | wind_a               |       |
+|   24 | Wind Function Coefficient b                       | wind_b               |       |
+|   25 | Include Deep Alluvium Temperature (True/False)    | calcalluvium         |       |
+|   26 | Deep Alluvium Temperature (Celsius)               | alluviumtemp         |       |
+|   27 | Morphology Input Data File Name                   | morphfile            |       |
+|   28 | Land Cover Input Data File Name                   | lcdatafile           |       |
+|   29 | Land Cover Codes Input File Name                  | lccodefile           |       |
+|   30 | Number Of Transects Per Node                      | trans_count          |       |
+|   31 | Number Of Samples Per Transect                    | transsample_count    |       |
+|   32 | Distance Between Transect Samples (meters)        | transsample_distance |       |
+|   33 | Account For Emergent Veg Shading (True/False)     | emergent             |       |
+|   34 | Land Cover Data Input Type (Codes/Values)         | lcdatainput          |       |
+|   35 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
+|   36 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
+|   37 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
 
-### 6.2 ACCRETION INPUT FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+### 6.2 MET SITE FILE
+File name: `HeatSource_Met_Sites.[xlsx|csv]`
+
+xlsx sheet name: `Meteorological Sites`
+
+The met sites file defines the meteorological input locations used by the model. Each row represents one 
+meteorological site and links that site to a meteorological input file, a stream kilometer, and a wind
+measurement height.
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME  | DESCRIPTION                               | UNITS      | DATA TYPE |
+|:-------------:|:-------------|:------------------------------------------|:-----------|:----------|
+|       1       | `COLID`      | Internal column ordering ID for each site | N/A        | integer   |
+|       2       | `MET_NAME`   | Meteorological site name or details       | N/A        | string    |
+|       3       | `STREAM_KM`  | Stream kilometer for the met site         | kilometers | float     |
+|       4       | `FILE_NAME`  | Meteorological input data file name       | N/A        | string    |
+|       5       | `MET_HEIGHT` | Wind measurement height above ground      | meters     | float     |
+
+Model run requirements:
+| COLUMN NUMBER | COLUMN NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:-------------|:----------:|:--------------:|:----------------:|
+|       1       | `COLID`      |  Required  |    Optional    |     Required     |
+|       2       | `MET_NAME`   |  Optional  |    Optional    |     Optional     |
+|       3       | `STREAM_KM`  |  Required  |    Optional    |     Required     |
+|       4       | `FILE_NAME`  |  Required  |    Optional    |     Required     |
+|       5       | `MET_HEIGHT` |  Optional  |    Optional    |     Required     |
+
+Example of met sites file setup with multiple excel files for each meteorological input.
+
+| COLID | MET_NAME   | STREAM_KM | FILE_NAME      | MET_HEIGHT |
+|:-----:|:-----------|----------:|:---------------|-----------:|
+|   1   | Upper Site |      5.45 | met_site1.xlsx |        2.0 |
+|   2   | Lower Site |      0.30 | met_site2.xlsx |        2.0 |
+
+Example of met sites file setup with single excel file for all meteorological inputs.
+
+| COLID | MET_NAME   | STREAM_KM | FILE_NAME | MET_HEIGHT |
+|:-----:|:-----------|----------:|:----------|-----------:|
+|   1   | Upper Site |      5.45 | met.xlsx  |        2.0 |
+|   2   | Lower Site |      0.30 | met.xlsx  |        2.0 |
+
+Notes:
+- `COLID` is used to define the column ordering for data from each meteorological site when a single input file is used. 
+For example, data for `COLID = 1` will be stored in the first group of meteorological data columns in the input file, 
+while `COLID = 2` will be stored in the second group.
+- Each row defines one meteorological site.
+- `FILE_NAME` identifies the meteorological input file used for that site.
+
+### 6.3 METEOROLOGICAL DATA INPUT FILE/S
+File name: `UserDefinedFileName.[xlsx|csv]`
+
+xlsx sheet name: `Meteorological Data`
+(formally called Continuous data in Heat Source 8)
+
+The meteorological data input file contains the hourly meteorological data used by the model. 
+Only solar and temperature model runs require meteorological data. Solar runs only require cloudiness.
+
+Model run requirements:
+| COLUMN NUMBER | COLUMN NAME          | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:---------------------|:----------:|:--------------:|:----------------:|
+|       1       | `DATETIME`           |  Required  |    Optional    |     Required     |
+|       2       | `CLOUDINESS1`        |  Required  |    Optional    |     Required     |
+|       3       | `WIND_SPEED1`        |  Optional  |    Optional    |     Required     |
+|       4       | `RELATIVE_HUMIDITY1` |  Optional  |    Optional    |     Required     |
+|       5       | `AIR_TEMPERATURE1`   |  Optional  |    Optional    |     Required     |
+
+The number of meteorological input sites is defined in the control file using `metsites`. The input meteorological 
+file names  and number of files is defined in `HeatSource_Met_Sites` with the `FILE_NAME` column. There can be 
+one site per file, or all sites can be included in a single input file. The examples below show the different setup.
+
+The example below shows the columns needed if one file is used for each meteorological input.
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME          | DESCRIPTION       | UNITS                  | DATA TYPE |
+|:-------------:|:---------------------|:------------------|:-----------------------|:----------|
+|       1       | `DATETIME`           | The date/time     | yyyy-mm-dd hh:mm       | string    |
+|       2       | `CLOUDINESS1`        | Cloudiness        | decimal fraction (0-1) | float     |
+|       3       | `WIND_SPEED1`        | Wind speed        | meters/second          | float     |
+|       4       | `RELATIVE_HUMIDITY1` | Relative humidity | decimal fraction (0-1) | float     |
+|       5       | `AIR_TEMPERATURE1`   | Air temperature   | degrees Celsius        | float     |
+
+The example below shows the columns needed if one input data file is used for all meteorological 
+sites (two sites in this case).
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME          | DESCRIPTION                 | UNITS                  | DATA TYPE |
+|:-------------:|:---------------------|:----------------------------|:-----------------------|:----------|
+|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   |
+|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   |
+|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   |
+|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   |
+|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        |   float   |
+|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) |   float   |
+|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          |   float   |
+|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   |
+|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |
+
+### 6.4 TRIBUTARY SITE FILE
+File name: `HeatSource_Tributary_Sites.[xlsx|csv]`
+
+xlsx sheet name: `Tributary Sites`
+
+The tributary sites file defines the tributary input locations used by the model. The number of 
+tributary input sites is defined in the control file using `tribsites`. A tributary input can be used to
+configure a point source discharge, or any other inflow. A tributary site can also have a negative flow and be used 
+to represent a timeseries of water withdrawals. Each row in the site file represents one tributary site and links 
+that site to a tributary input file and a stream kilometer.
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS      | DATA TYPE |
+|:-------------:|:------------|:------------------------------------------|:-----------|:----------|
+|       1       | `COLID`     | Internal column ordering ID for each site | N/A        | integer   |
+|       2       | `TRIB_NAME` | Tributary site name or details            | N/A        | string    |
+|       3       | `STREAM_KM` | Stream kilometer for the tributary site   | kilometers | float     |
+|       4       | `FILE_NAME` | Tributary input data file name            | N/A        | string    |
+
+Model run requirements:
+| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:------------|:----------:|:--------------:|:----------------:|
+|       1       | `COLID`     |  Optional  |    Required    |     Required     |
+|       2       | `TRIB_NAME` |  Optional  |    Optional    |     Optional     |
+|       3       | `STREAM_KM` |  Optional  |    Required    |     Required     |
+|       4       | `FILE_NAME` |  Optional  |    Required    |     Required     |
+
+Example of tributary sites file setup with multiple excel files for each tributary input.
+
+| COLID | TRIB_NAME      | STREAM_KM | FILE_NAME  |
+|:-----:|:---------------|----------:|:-----------|
+|   1   | Quarter Branch |      4.05 | trib1.xlsx |
+|   2   | Dry Creek      |      3.35 | trib2.xlsx |
+
+Example of tributary sites file setup with single excel file for all tributary inputs.
+
+| COLID | TRIB_NAME      | STREAM_KM | FILE_NAME  |
+|:-----:|:---------------|----------:|:-----------|
+|   1   | Quarter Branch |      4.05 | tribs.xlsx |
+|   2   | Dry Creek      |      3.35 | tribs.xlsx |
+
+Notes:
+- `COLID` is used to define the column ordering for data from each tributary site when a single input file is used. 
+For example, data for `COLID = 1` will be stored in the first group of tributary data columns in the input file, 
+while `COLID = 2` will be stored in the second group.
+- `FILE_NAME` identifies the tributary input file used for that site.
+
+### 6.5 TRIBUTARY DATA INPUT FILE/S
+File name: `UserDefinedFileName.[xlsx|csv]`
+
+xlsx sheet name: `Tributary Data`
+
+The tributary input files define the inflow and outflow rates and temperatures at different points along the 
+model stream. Inflows refer to localized, non accretion type flows such as tributaries, springs, returns, and 
+point sources. Outflows can be various types of water withdrawals. Outflows are input with a negative flow rate. 
+Temperatures for outflows are not used by the model. The flow and temperature are defined at an hourly timestep.
+
+If `tribsites` > 0 in the control file, hydraulic and temperature model runs require the tributary data be setup.
+
+Model run requirements if `tribsites` > 0:
+| COLUMN NUMBER | COLUMN NAME    | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:---------------|:----------:|:--------------:|:----------------:|
+|       1       | `DATETIME`     |  Optional  |    Required    |     Required     |
+|       2       | `FLOW1`        |  Optional  |    Required    |     Required     |
+|       3       | `TEMPERATURE1` |  Optional  |    Required    |     Required     |
+
+The number of tributary input sites is defined in the control file using `tribsites`. The input tributary file names 
+and number of files is defined in `HeatSource_Tributary_Sites` with the `FILE_NAME` column. There can be 
+one site per file, or all sites can be included in a single input file. The examples below show the different setup.
+
+The example below shows the columns needed if one file is used for each meteorological input.
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION           | UNITS               | DATA TYPE |
+|:-------------:|:---------------|:----------------------|:--------------------|:----------|
+|       1       | `DATETIME`     | The date/time         | yyyy-mm-dd hh:mm    | string    |
+|       2       | `FLOW1`        | Tributary flow        | cubic meters/second | float     |
+|       3       | `TEMPERATURE1` | Tributary temperature | degrees Celsius     | float     |
+
+
+The example below shows the columns needed if one input data file is used for all tributary 
+sites (two sites in this case).
+
+Field details:
+| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE |
+|:-------------:|:---------------|:------------------------|:--------------------|:----------|
+|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   |
+|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   |
+|       3       | `TEMPERATURE1` | Tributary 1 temperature | degrees Celsius     |   float   |
+|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   |
+|       5       | `TEMPERATURE2` | Tributary 2 temperature | degrees Celsius     |   float   |
+
+### 6.6 ACCRETION INPUT FILE  
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Accretion Flow`
 
@@ -405,8 +601,8 @@ Model run requirements:
 |       6       | `OUTFLOW` |  Optional  |    Required    |     Required     |
 
 
-### 6.3 BOUNDARY CONDITION FILE  
-UserDefinedFileName.[xlsx|csv]
+### 6.7 BOUNDARY CONDITION FILE  
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Boundary Conditions`
 
@@ -429,146 +625,8 @@ Model run requirements:
 |       3       | `TEMPERATURE` |  Optional  |    Required    |     Required     |
 
 
-### 6.4 METEOROLOGICAL INPUT FILE/S
-File name: UserDefinedFileName.[xlsx|csv]
-
-xlsx sheet name: `Meteorological Data`
-(formally called Continuous data in heat source 8)
-
-Field details:
-| COLUMN NUMBER | COLUMN NAME          | DESCRIPTION       | UNITS                  | DATA TYPE |
-|:-------------:|:---------------------|:------------------|:-----------------------|:----------|
-|       1       | `DATETIME`           | The date/time     | yyyy-mm-dd hh:mm       |  string   |
-|       2       | `CLOUDINESS1`        | Cloudiness        | decimal fraction (0-1) |   float   |
-|       3       | `WIND_SPEED1`        | Wind Speed        | meters/second          |   float   |
-|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity | decimal fraction (0-1) |   float   |
-|       5       | `AIR_TEMPERATURE1`   | Air Temperature   | degrees Celsius        |   float   |
-
-Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME` |  Required  |    Optional    |     Required     |
-|       2       | `CLOUDINESS1` |  Required  |    Optional    |     Required     |
-|       3       | `WIND_SPEED1` |  Optional  |    Optional    |     Required     |
-|       4       | `RELATIVE_HUMIDITY1` |  Optional  |    Optional    |     Required     |
-|       5       | `AIR_TEMPERATURE1` |  Optional  |    Optional    |     Required     |
-
-Note - multiple xlsx/csv files may be used for each set of meteorological inputs with the format above or all data can 
-be saved in the same file as shown in the example below. This is controlled in the control file with `metfiles` by 
-using multiple files names separated by a comma, or a single file name.
-
-Field details:
-| COLUMN NUMBER | COLUMN NAME          | DESCRIPTION                 | UNITS                  | DATA TYPE |
-|:-------------:|:---------------------|:----------------------------|:-----------------------|:----------|
-|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   |
-|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   |
-|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   |
-|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   |
-|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        |   float   |
-|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) |   float   |
-|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          |   float   |
-|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   |
-|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |
-
-Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME` |  Required  |    Optional    |     Required     |
-|       2       | `CLOUDINESS1` |  Required  |    Optional    |     Required     |
-|       3       | `WIND_SPEED1` |  Optional  |    Optional    |     Required     |
-|       4       | `RELATIVE_HUMIDITY1` |  Optional  |    Optional    |     Required     |
-|       5       | `AIR_TEMPERATURE1` |  Optional  |    Optional    |     Required     |
-|       6       | `CLOUDINESS2` |  Required  |    Optional    |     Required     |
-|       7       | `WIND_SPEED2` |  Optional  |    Optional    |     Required     |
-|       8       | `RELATIVE_HUMIDITY2` |  Optional  |    Optional    |     Required     |
-|       9       | `AIR_TEMPERATURE2` |  Optional  |    Optional    |     Required     |
-
-Control file setup with multiple excel files for each meteorological input.
-
-| LINE | PARAMETER                                         | KEY                  | VALUE                           |
-|-----:|:--------------------------------------------------|:---------------------|:--------------------------------|
-|   22 | Meteorological Data Sites                         | metsites             | 2                               |
-|   23 | Meteorological Data Input File Name               | metfiles             | "met_site1.xlsx, met_site2.xlsx"|
-|   24 | Meteorological Data Model kilometers              | metkm                | "5.45, 0.30"                    |
-
-Control file setup with single excel file for all meteorological inputs.
-
-| LINE | PARAMETER                                          | KEY                  | VALUE                           |
-|-----:|:---------------------------------------------------|:---------------------|:--------------------------------|
-|   18 | Meteorological Data Sites                          | metsites             | 2                               |
-|   19 | Meteorological Data Input File Name                | metfiles             | met.xlsx                        |
-|   20 | Meteorological Data Model kilometers               | metkm                | "5.45, 0.30"                    |
-
-### 6.5 TRIBUTARY INPUT FILE/S  
-File name: UserDefinedFileName.[xlsx|csv]
-
-xlsx sheet name: `Tributary Data`
-
-The tributary input files define the inflow/outflow rates and temperatures
-at different points along the model stream. Inflows refer to localized 
-(non-accretion) type flows such as tributaries, springs, returns, point 
-sources, etc. Outflows can be various types of water withdrawals. Outflows 
-are input with a negative flow rate. Temperatures for outflows are not 
-used by the model.
-
-The number and stream km of the inflow/outflows is defined in the control file.
-The flow and temperature are defined at an hourly timestep.  
-
-Field details:
-| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION           | UNITS               | DATA TYPE |
-|:-------------:|:---------------|:----------------------|:--------------------|:----------|
-|       1       | `DATETIME`     | The date/time         | yyyy-mm-dd hh:mm    |  string   |
-|       2       | `FLOW1`        | Tributary flow        | cubic meters/second |   float   |
-|       3       | `TEMPERATURE1` | Tributary Temperature | degrees Celsius     |   float   |
-
-Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME` |  Optional  |    Required    |     Required     |
-|       2       | `FLOW1` |  Optional  |    Required    |     Required     |
-|       3       | `TEMPERATURE1` |  Optional  |    Required    |     Required     |
-
-Note - multiple excel/csv files may be created for each tributary input with the 
-format above or all data can be saved in the same file as shown in the example below. 
-This is controlled in the control file with `inflowinfiles` by using multiple files names separated by a 
-comma, or a single file name.
-
-Field details:
-| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE |
-|:-------------:|:---------------|:------------------------|:--------------------|:----------|
-|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   |
-|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   |
-|       3       | `TEMPERATURE1` | Tributary 1 Temperature | degrees Celsius     |   float   |
-|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   |
-|       5       | `TEMPERATURE2` | Tributary 2 Temperature | degrees Celsius     |   float   |
-
-Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME` |  Optional  |    Required    |     Required     |
-|       2       | `FLOW1` |  Optional  |    Required    |     Required     |
-|       3       | `TEMPERATURE1` |  Optional  |    Required    |     Required     |
-|       4       | `FLOW2` |  Optional  |    Required    |     Required     |
-|       5       | `TEMPERATURE2` |  Optional  |    Required    |     Required     |
-
-Control file setup with multiple excel files for each tributary input.
-
-| LINE | PARAMETER                         | KEY           | VALUE                                             |
-|-----:|:----------------------------------|:--------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites            | inflowsites   | 2                                                 |
-|   19 | Tributary Inflow Input File Name  | inflowinfiles | "trib1_quarter_branch.xlsx, trib2_dry_creek.xlsx" |
-|   20 | Tributary Inflow Model kilometers | inflowkm      | "4.05, 3.35"                                      |
-
-Control file setup with single excel file for all tributary inputs.
-
-| LINE | PARAMETER                         | KEY           | VALUE                                             |
-|-----:|:----------------------------------|:--------------|:--------------------------------------------------|
-|   18 | Tributary Inflow Sites            | inflowsites   | 2                                                 |
-|   19 | Tributary Inflow Input File Name  | inflowinfiles | tribs.xlsx                                        |
-|   20 | Tributary Inflow Model kilometers | inflowkm      | "4.05, 3.35"                                      |
-
-### 6.6 LAND COVER CODES FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+### 6.8 LAND COVER CODES FILE  
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Land Cover Codes`
 
@@ -580,7 +638,7 @@ There cannot be skipped rows
 (i.e. rows without information in between rows with information) 
 because the model routines see a blank row as the end of the data sequence.
 
-#### 6.6.1 Canopy Type
+#### 6.8.1 Canopy Type
 
 Land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
@@ -648,8 +706,8 @@ for previous versions of heat source models. If you are updating the model files
 using the vegetation `HEIGHT` as the canopy depth may be a reasonable approximation. See discussion on 
 model updates in the documentation for further details.
 
-### 6.7 LAND COVER DATA  
-File name: UserDefinedFileName.[xlsx|csv]
+### 6.9 LAND COVER DATA  
+File name: `UserDefinedFileName.[xlsx|csv]`
 
 xlsx sheet name: `Land Cover Data` (formally called TTools in Heat Source 8) 
 
@@ -753,8 +811,9 @@ Model run requirements:
 |   multiple    | `CD_T#_S#` |  Required  |    Optional    |     Required     |
 
 
-### 6.8 MORPHOLOGY DATA FILE  
-File name: UserDefinedFileName.[xlsx|csv]
+### 6.10 MORPHOLOGY DATA FILE  
+File name: `UserDefinedFileName.[xlsx|csv]`
+
 xlsx sheet name: `Morphology Data`
 
 This file defines channel morphology and substrate information.

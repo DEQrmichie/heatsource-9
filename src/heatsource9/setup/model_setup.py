@@ -10,6 +10,7 @@ from heatsource9.io.console import print_console
 from heatsource9.io.control_file import import_control_file
 
 from heatsource9.setup.input_setup import InputSetup
+from heatsource9.setup.site_setup import get_site_files
 from heatsource9.setup.constants import control_keys, dtype, head2var, sheetnames
 from heatsource9.__version__ import __version__
 from heatsource9.domain.clock import Clock, pretty_time
@@ -48,6 +49,8 @@ class ModelSetup(object):
 
         # List of kilometers with met data nodes assigned.
         self.metDataSites = []
+        self.met_site_rows = []
+        self.trib_site_rows = []
 
         # Convenience variables
         self.dx = None
@@ -67,7 +70,17 @@ class ModelSetup(object):
             dtype=dtype,
             control_sheet=sheetnames["controlfile"],
         )
-        self._parameterize_control_file(control["control_params"])
+        site_data = get_site_files(
+            Path(self.inputs.model_dir) / self.inputs.control_file,
+            control["control_params"],
+            self.run_type,
+        )
+        merged_params = dict(control["control_params"])
+        merged_params.update(site_data["met_params"])
+        merged_params.update(site_data["trib_params"])
+        self.met_site_rows = site_data["met_rows"]
+        self.trib_site_rows = site_data["trib_rows"]
+        self._parameterize_control_file(merged_params)
 
         self.inputs.params = self.params
 
@@ -144,7 +157,8 @@ class ModelSetup(object):
         elif self.params["run_type"] == "solar":
             # For solar runs None is ok for these inputs
             none_ok = ["usertxt", "name", "flushdays", "bcfile",
-                       "inflowsites", "inflowinfiles", "inflowkm",
+                       "tribsites", "tribfiles", "tribkm",
+                       "metheights",
                        "accretionfile",
                        "calcevap", "evapmethod",
                        "wind_a", "wind_b", "calcalluvium", "alluviumtemp"]
@@ -153,6 +167,7 @@ class ModelSetup(object):
             # For hydraulic runs None is ok for these inputs
             none_ok = ["usertxt", "name", "lcdatafile", "lccodefile",
                        "metsites", "metfiles", "metkm",
+                       "metheights",
                        "trans_count", "transsample_count",
                        "transsample_distance", "emergent",
                        "lcdatainput", "canopy_data", "lcsampmethod",
@@ -174,7 +189,10 @@ class ModelSetup(object):
                 elif (key == "lccodefile" and self.params.get("lcdatainput") == "Values"):
                     self.params[key] = None
 
-                elif (key in ["inflowinfiles", "inflowkm"] and self.params.get("inflowsites") == 0):
+                elif (key in ["tribfiles", "tribkm"] and self.params.get("tribsites") == 0):
+                    self.params[key] = None
+
+                elif (key == "metheights" and not self.met_site_rows):
                     self.params[key] = None
 
                 elif (key == "alluviumtemp" and self.params.get("calcalluvium") is False):
@@ -321,6 +339,7 @@ class ModelSetup(object):
                 if km - down < up - km:
                     datasite = self.reach[down]
                 self.reach[km].metData = datasite.metData
+                self.reach[km].metheight = datasite.metheight
             msg = "Assigning Node"
             current = next(c)+1
             print_console(msg, True, current, len(l))
@@ -388,7 +407,7 @@ class ModelSetup(object):
         """Build a list of kilometers corresponding to the ini parameter
         that is passed.
     
-        ini can equal: "inflowkm", "metkm", or "outputkm"
+        ini can equal: "tribkm", "metkm", or "outputkm"
         corresponding to tributary inflow sites, met data sites,
         or the model output kilometers"""
 
@@ -398,7 +417,7 @@ class ModelSetup(object):
 
         if (ini == "metkm" or
                 ini == "outputkm" or
-                self.params["inflowsites"] > 0):
+                self.params["tribsites"] > 0):
             # get a list of sites by km
             kms = self.params[ini].split(",")
 
@@ -458,7 +477,7 @@ class ModelSetup(object):
         # that to grab the data block
         timelist = self.flowtimelist
         data = []
-        if self.params["inflowsites"] > 0:
+        if self.params["tribsites"] > 0:
             data = self.inputs.import_inflow()
 
         # The data is being put into this format
@@ -472,7 +491,7 @@ class ModelSetup(object):
 
         # Get a tuple of kilometers to use as keys to the 
         # location of each tributary 
-        kms = self.get_locations("inflowkm")
+        kms = self.get_locations("tribkm")
 
         length = len(timelist)
         # Which datapoint time are we recording
@@ -481,7 +500,7 @@ class ModelSetup(object):
         # Quick list of nodes with flow data
         nodelist = []
 
-        if self.params["inflowsites"] > 0:
+        if self.params["tribsites"] > 0:
             for time in timelist:
                 line = data.pop(0)
                 # Error checking?! Naw!!
@@ -504,7 +523,7 @@ class ModelSetup(object):
                     node.T_tribs[time] += temp,
                     msg = "Reading inflow data"
                     current = next(tm) + 1
-                    print_console(msg, True, current, length * self.params["inflowsites"])
+                    print_console(msg, True, current, length * self.params["tribsites"])
 
         # Next we expand or revise the dictionary to account for the 
         # flush period
@@ -546,22 +565,29 @@ class ModelSetup(object):
         # Get a tuple of kilometers to use as keys to the location of 
         # each met node
         kms = self.get_locations("metkm")
+        if self.met_site_rows:
+            metheights = [row["metheight"] for row in self.met_site_rows]
+        elif self.params.get("metheights"):
+            metheights = [float(x.strip()) for x in self.params["metheights"].split(",")]
+        else:
+            metheights = [2.0 for i in kms]
 
         tm = count()  # Which datapoint time are we recording
         length = len(timelist)
         for time in timelist:
             line = data.pop(0)
             c = count()
-            for cloud, wind, humidity, T_air in line:
+            for cloud, Uzm, humidity, T_air in line:
                 i = next(c)
             
                 # Index by kilometer
                 node = self.reach[kms[i]]
+                node.metheight = metheights[i]
                 # Append this node to a list of all nodes which 
                 # have met data
                 if node.km not in self.metDataSites:
                     self.metDataSites.append(node.km)
-                node.metData[time] = cloud, wind, humidity, T_air
+                node.metData[time] = cloud, Uzm, humidity, T_air
 
             msg = "Reading meteorological data"
             current = next(tm) + 1

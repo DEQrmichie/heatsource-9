@@ -33,6 +33,7 @@ class StreamNode(object):
                 "lc_height", "lc_canopy", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
                 "lc_height_rel", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
+                "metheight", # Meteorological measurement height
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
                 "Delta_T", # Current temperature calculated from only local fluxes
                 "Mix_T_Delta", #Change in temperature due to tribs, gw, points sources, accretion
@@ -99,6 +100,7 @@ class StreamNode(object):
         self.Q_mass = 0
         dt = self.run_params.get("dt", 1)
         self.metData = Interpolator(dt=dt)
+        self.metheight = 2.0
         self.T_tribs = Interpolator(dt=dt)
         self.Q_tribs = Interpolator(dt=dt)
         # Create an internal dictionary that we can pass to the C module,
@@ -171,7 +173,7 @@ class StreamNode(object):
                        rp.get("canopy_data", "LAI"), rp.get("lcsampmethod", "point"), rp.get("emergent", False),
                        rp.get("wind_a", 0.0), rp.get("wind_b", 0.0),
                        rp.get("calcevap", False), rp.get("penman", False),
-                       rp.get("calcalluvium", False),
+                       rp.get("calcalluvium", False), self.metheight,
                        rp.get("alluviumtemp", 0.0))
 
     def _raise_discharge_error(self, exc, time, Q_net, up_q=None, q_bc=None):

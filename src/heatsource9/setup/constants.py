@@ -28,13 +28,14 @@ dtype = {
     "dx": int,
     "longsample": int,
     "bcfile": str,
-    "inflowsites": int,
-    "inflowinfiles": str,
-    "inflowkm": str,
+    "tribsites": int,
+    "tribfiles": str,
+    "tribkm": str,
     "accretionfile": str,
     "metsites": int,
     "metfiles": str,
     "metkm": str,
+    "metheights": str,
     "calcevap": bool,
     "evapmethod": str,
     "wind_a": float,
@@ -125,6 +126,11 @@ dtype = {
     "SED_HYPORHEIC_THICKNESS": float,
     "HYPORHEIC_PERCENT": float,
     "POROSITY": float,
+    "COLID": int,
+    "MET_NAME": str,
+    "TRIB_NAME": str,
+    "FILE_NAME": str,
+    "MET_HEIGHT": float,
 }
 
 # drange is a dictionary holding min and max values for each input. 
@@ -166,6 +172,7 @@ drange = {
     "SED_HYPORHEIC_THICKNESS": (0, 20),
     "HYPORHEIC_PERCENT": (0, 1),
     "POROSITY": (0, 1),
+    "MET_HEIGHT": (0, 200),
 }
 
 control_keys = (
@@ -185,13 +192,14 @@ control_keys = (
     "dx",
     "longsample",
     "bcfile",
-    "inflowsites",
-    "inflowinfiles",
-    "inflowkm",
+    "tribsites",
+    "tribfiles",
+    "tribkm",
     "accretionfile",
     "metsites",
     "metfiles",
     "metkm",
+    "metheights",
     "calcevap",
     "evapmethod",
     "wind_a",
@@ -210,6 +218,17 @@ control_keys = (
     "lcsampmethod",
     "heatsource8",
 )
+
+legacy_cf_format_keys = {
+    "metfiles": "metfiles",
+    "metkm": "metkm",
+    "inflowinfiles": "tribfiles",
+    "inflowkm": "tribkm",
+}
+
+renamed_cf_keys = {
+    "inflowsites": "tribsites",
+}
 
 # head2var is a dictionary crosswalking input headers to model 
 # variable names. This is more of a temporary fix because the model 
@@ -246,6 +265,8 @@ sheetnames = {
     "morphfile": "Morphology Data",
     "lcdatafile": "Land Cover Data",
     "lccodefile": "Land Cover Codes",
+    "metsitesfile": "Meteorological Sites",
+    "tribsitesfile": "Tributary Sites",
     "metfiles": "Meteorological Data",
-    "inflowinfiles": "Tributary Data",
+    "tribfiles": "Tributary Data",
 }

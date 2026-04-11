@@ -177,10 +177,11 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
     W_b = 0.01 if W_b == 0 else W_b
     
     if D_est == 0:
-        # This is a secant iterative solution method. It uses the
-        # equation for discharge at equality then adds a slight change
-        # to the depth and solves it again. It should iterate for a 
-        # solution to depth within about 5-6 solutions.
+        # Newton Raphson style iterative solution using a finite
+        # difference derivative estimate to solve depth from Manning's equation.
+        # The discharge residual is evaluated at the current depth and
+        # again at a small depth increment to estimate the local slope. It usually
+        # solves within about 5 or 6 tries.
         while Converge > 1e-7:
             F_Dw = ((D_est * (W_b + z * D_est)) *
                   pow(((D_est * (W_b + z * D_est)) /
@@ -700,7 +701,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
                     lc_height, ViewToSky, Dsed, dx, dt, Ksed,
                     Alpha_sed, calcalluv, T_alluv, P_w, W_w, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
-                    Q_hyp, F_Solar5, F_Solar7):
+                    Q_hyp, F_Solar5, F_Solar7, metheight):
 
     # Ksed units of W/(m *C)
     # Alpha_sed units of cm^2/sec
@@ -771,34 +772,21 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     cdef double Es_w = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
     cdef double Ea_w = humidity * Es_w
     #===================================================
-    # Calculate the frictional reduction in wind velocity
-    cdef int zm
-    cdef double zd, z0, FrictionVelocity, ratio
-    if emergent and lc_height[0][0] > 0:
-        
-        zm = 2
-        
-        # zm > zd + z0
-        zd = 0.7 * lc_height[0][0]
-        z0 = 0.1 * lc_height[0][0]
-        ratio = (zm - zd) / z0
-
-        # Vertical wind profile based friction velocity
-        # (guard against invalid log argument)
-        if ratio > 1.0:
-            FrictionVelocity = Uzm * 0.4 / log(ratio)
-        else:
-            FrictionVelocity = Uzm
+    # Normalize measured wind speed to 2 m above the water surface using a logarithmic profile.
+    # The log profile is applied to both open water and emergent models.
+    # Long term emergent needs an improved process based approach. Under this, any wind sheltering from
+    # emergent vegetation is not accounted for and needs to be reflected in the wind speed input into the model.
+    cdef double U2m, z2, z0
+    z2 = 2.0
+    z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
+    if metheight <= z2:
+        U2m = Uzm
     else:
-        z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
-        zd = 0 #Brustsaert (1982) p. 277 Dingman
-        zm = 2
-        FrictionVelocity = Uzm
+        U2m = Uzm * log(z2 / z0) / log(metheight / z0)
     #===================================================
     # Wind Function f(w)
     #m/mbar/s
-    cdef double f_U2m = float(wind_a) + float(wind_b) * FrictionVelocity 
-    # f_U2m = 0.000000001505 + 0.0000000016 * FrictionVelocity #m/mbar/s
+    cdef double f_U2m = float(wind_a) + float(wind_b) * U2m
 
     #===================================================
     # Latent Heat of Vaporization
@@ -826,6 +814,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
         if (Es_w - Ea_w) != 0:
             BR = Gamma * (T_prev - T_air) / (Es_w - Ea_w)
         else:
+            # Vapor pressure equilibrium. Bowen ratio is undefined, use BR = 1. Evaporation and convection are zero.
             BR = 1        
     else:
         #===================================================
@@ -838,6 +827,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
             BR = (0.61 * (P_atm / 1000) * (T_prev - T_air) /
                   (Es_w - Ea_w))
         else:
+            # Vapor pressure equilibrium. Bowen ratio is undefined, use BR = 1. Evaporation and convection are zero.
             BR = 1
             
     cdef double F_Conv = F_Evap * BR
@@ -905,7 +895,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
         lc_height_rel, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
-        calcalluv, T_alluv = C_args
+        calcalluv, metheight, T_alluv = C_args
 
     solar = [0]*8
     diffuse = [0]*8
@@ -945,7 +935,7 @@ def calc_heat_fluxes(metData, C_args, d_w, area, P_w, W_w, U, Q_tribs,
                     dt, Ksed, Alpha_sed, calcalluv, T_alluv,
                     P_w, W_w, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],
-                    solar[7])
+                    solar[7], metheight)
     T_hyp = ground[1]
 
     F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]

@@ -1,5 +1,9 @@
+import logging
 from pathlib import Path
 from datetime import datetime
+
+
+logger = logging.getLogger(__name__)
 
 
 def validate_control_file(control_file_path):
@@ -56,6 +60,22 @@ def cf_path(model_dir, control_file = None):
     return Path(validate_control_file(control_path))
 
 
+def _rename_control_key(key):
+    from heatsource9.setup.constants import legacy_cf_format_keys, renamed_cf_keys
+
+    if key in renamed_cf_keys:
+        new_key = renamed_cf_keys[key]
+        msg = 'Control key "{0}" is deprecated, use "{1}".'.format(key, new_key)
+        logger.warning(msg)
+        return new_key
+    if key in legacy_cf_format_keys:
+        new_key = legacy_cf_format_keys[key]
+        msg = 'Control key "{0}" is deprecated, use the sites file format instead.'.format(key)
+        logger.warning(msg)
+        return new_key
+    return key
+
+
 def _to_value_type(key, value, dtype):
     """
     Just a helper to make sure the control file values are 
@@ -103,7 +123,8 @@ def import_control_file(control_path, *, dtype, control_sheet):
         if not line or len(line) < 4:
             continue
 
-        key = str(line[2]).strip()
+        raw_key = str(line[2]).strip()
+        key = _rename_control_key(raw_key)
         raw_val = line[3]
         if raw_val is None:
             val = ""
@@ -128,6 +149,8 @@ def import_control_file(control_path, *, dtype, control_sheet):
         )
 
         if key:
+            if raw_key != key and key in params:
+                continue
             params[key] = _to_value_type(key, val, dtype)
 
     return {
