@@ -14,9 +14,11 @@ build/**
 *.c
 *.exe
 *.pyc
+*.pyd
 *.spec
 
 # Docs
+doc/**
 Roadmap.md
 solar_trig_math/**
 *profile.png
@@ -31,3 +33,5 @@ tests/**
 *.uml
 *.zip
 .idea/**
+.vscode/**
+*.Rproj
