@@ -116,3 +116,11 @@ def julian_century(epoch_seconds):
 def pretty_time(epoch_seconds):
     """Return model epoch seconds as a human readable UTC date/time string."""
     return datetime.fromtimestamp(float(epoch_seconds), tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def excel_time(epoch_seconds):
+    """
+    Return model epoch seconds as an Excel compatible datetime value string.
+    Datetimes are days since December 30, 1899 at 00:00:00.
+    """
+    return "%0.7f" % float(float(epoch_seconds) / 86400 + 25569)

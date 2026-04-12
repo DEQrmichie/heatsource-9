@@ -8,35 +8,36 @@ import csv
 from math import nan
 
 from heatsource9.__version__ import __version__
+from heatsource9.domain.clock import excel_time
 
 
 class OutputWriter:
     """Class to manage output writing during a model run."""
 
-    def __init__(self):
-        """Initialize an empty output."""
-        self._output= None
+    def __init__(self, reach = None, start_time = None, stop_time = None, run_type = None, params = None):
+        """Initialize an empty output or bind immediately if configuration is provided."""
+        self._queued_dt_timesteps = 0
+        self._write_threshold = None
+        self.params = None
+        self.nodes = []
+        self.start_time = None
+        self.stop_time = None
+        self.run_type = None
+        self.data = {}
+        self.empty_vars = {}
+        self.files = {}
 
-    def bind(self, reach, params, run_type):
-        """Stores the reach, model parameters, and run type needed for output files"""
-        start_time = params["modelstart"]
-        stop_time = params["modelend"]
-        self._output = _Output(reach=reach, start_time=start_time, stop_time=stop_time, run_type=run_type, params=params)
+        if reach is not None:
+            self.bind(
+                reach = reach,
+                params = params,
+                run_type = run_type,
+                start_time = start_time,
+                stop_time = stop_time,
+            )
 
-    def write_step(self, simulation, time, hour, minute, second):
-        """Write output values for one model timestep."""
-        self._output(time=float(time), hour=int(hour), minute=int(minute), second=int(second))
-
-    def close(self):
-        if self._output is not None:
-            self._output.close()
-            self._output = None
-
-
-class _Output(object):
-    """Class to store output data in memory and write output files."""
-
-    def __init__(self, reach, start_time, stop_time, run_type, params):
+    def bind(self, reach, params, run_type, start_time = None, stop_time = None):
+        """Store model output state and create output files for the bound run."""
         self.params = params
 
         # Store a sorted list of StreamNodes.
@@ -47,8 +48,8 @@ class _Output(object):
             self.nodes = sorted([reach[km] for km in reach if km in self.params["outputkm"]], reverse=True)
 
         # A reference to the model's starting time (i.e. when flushing is over)
-        self.start_time = start_time
-        self.stop_time = stop_time
+        self.start_time = params["modelstart"] if start_time is None else start_time
+        self.stop_time = params["modelend"] if stop_time is None else stop_time
 
         # run_type: "temperature", "solar", or "hydraulics"
         self.run_type = run_type
@@ -80,7 +81,6 @@ class _Output(object):
             desc["Solar_Elevation"] = "Solar Elevation (degrees). Angle up from the horizon to the sun."
 
         if run_type in ("temperature", "solar"):
-            # Solar, Temperature
             desc["Heat_SR1"] = "Solar Radiation Flux above Topographic Features (watts/square meter)"
             desc["Heat_SR2"] = "Solar Radiation Flux below Topographic Features (watts/square meter)"
             desc["Heat_SR3"] = "Solar Radiation Flux below Land Cover (watts/square meter)"
@@ -91,7 +91,6 @@ class _Output(object):
             desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere obscured by land cover."
 
         if run_type in ("temperature", "hydraulics"):
-            # Hydro, Temperature
             desc["Hyd_DA"] = "Average Depth (meters)"
             desc["Hyd_DM"] = "Max Depth (meters)"
             desc["Hyd_Flow"] = "Flow Rate (cms)"
@@ -100,7 +99,6 @@ class _Output(object):
             desc["Hyd_WT"] = "Top Width (meters)"
 
         if run_type == "temperature":
-            # Temperature
             desc["Heat_SR6"] = "Solar Radiation Flux Received by Stream (watts/square meter)"
             desc["Heat_SR7"] = "Solar Radiation Flux Received by Substrate (watts/square meter)"
             desc["Heat_Cond"] = "Streambed Conduction Flux (watts/square meter)"
@@ -122,41 +120,12 @@ class _Output(object):
         self.empty_vars = deepcopy(self.data)
 
         # Empty dictionary to store file objects
+        self._queued_dt_timesteps = 0
         self.files = {}
 
         # Build file objects and write headers
         for key in list(desc.keys()):
-            header = [["File Created:"] + [ctime()]]
-            header += [["Heat Source Version:"] + [self.params.get("version") or __version__]]
-            header += [["Simulation Name:"] + [self.params.get("name", "")]]
-            header += [["User Text:"] + [self.params.get("usertxt", "")]]
-            header += [["Output:"] + [desc[key]]]
-            header += [[""]]
-            header += [["Datetime"]]
-
-            if key in ["Heat_SR3b"]:
-                header[6] += ["STREAM_KM"]
-
-                if self.params["heatsource8"]:
-                    # Same as 8 directions but no north
-                    dir = ["NE", "E", "SE", "S", "SW", "W", "NW"]
-                    zone = list(range(1, int(self.params["transsample_count"]) + 1))
-                else:
-                    dir = ["T" + str(x) for x in range(1, self.params["trans_count"] + 1)]
-                    zone = list(range(1, int(self.params["transsample_count"]) + 1))
-
-                if self.params["lcdatainput"] == "Values":
-                    type_ = "HT"
-                else:
-                    type_ = "LC"
-
-                for d in range(0, len(dir)):
-                    for z in range(0, len(zone)):
-                        header[6] += [type_ + "_" + dir[d] + "_S" + str(zone[z])]
-
-                header[6] += ["Diffuse_Blocked"]
-            else:
-                header[6] += [("%0.3f" % x.km) for x in self.nodes]
+            header = self._headers_outputs(key, desc[key])
 
             output_path = join(self.params["outputdir"], key + ".csv")
             try:
@@ -168,27 +137,90 @@ class _Output(object):
             csv.writer(self.files[key]).writerows(header)
             self.files[key].flush()
 
-    def __call__(self, time, hour, minute=0, second=0):
-        """
-        Store output data for one model time step.
+        self._write_threshold = self.write_threshold()
 
-        Skips writing before model start, stores relevant output variables for the run type,
-        writes daily output at hour 23, and closes output files at model end.
+    def _headers_outputs(self, output_key, output_description):
+        """Build csv header rows for one output file."""
+        header = [["File Created:"] + [ctime()]]
+        header += [["Heat Source Version:"] + [self.params.get("version") or __version__]]
+        header += [["Simulation Name:"] + [self.params.get("name", "")]]
+        header += [["User Text:"] + [self.params.get("usertxt", "")]]
+        header += [["Output:"] + [output_description]]
+        header += [[""]]
+        header += [["Datetime"]]
+
+        if output_key in ["Heat_SR3b"]:
+            header[6] += ["STREAM_KM"]
+
+            if self.params["heatsource8"]:
+                # Same as 8 directions but no north
+                dir = ["NE", "E", "SE", "S", "SW", "W", "NW"]
+                zone = list(range(1, int(self.params["transsample_count"]) + 1))
+            else:
+                dir = ["T" + str(x) for x in range(1, self.params["trans_count"] + 1)]
+                zone = list(range(1, int(self.params["transsample_count"]) + 1))
+
+            if self.params["lcdatainput"] == "Values":
+                type_ = "HT"
+            else:
+                type_ = "LC"
+
+            for d in range(0, len(dir)):
+                for z in range(0, len(zone)):
+                    header[6] += [type_ + "_" + dir[d] + "_S" + str(zone[z])]
+
+            header[6] += ["Diffuse_Blocked"]
+        else:
+            header[6] += [("%0.3f" % x.km) for x in self.nodes]
+
+        return header
+
+    def write_threshold(self):
         """
-        # Ignore writing if we're still spinning up.
-        if time < self.start_time:
-            return
+        Return the number of queued non daily output timesteps allowed before
+        queued outputs are written to csv.
+
+        This threshold is used to limit problem causing memory growth when outputdt is low
+        or the model has a lot of nodes to write to output. Either can cause a lot of data in
+        the queue. The threshold is calculated from a target queued value
+        count of 30,000,000, divided by the estimated number of non daily
+        output values stored for one output timestep, which is:
+
+            values per queued timestep = (node count) * (count of non daily output files to write)
+
+        Smaller outputdt values cause output timesteps to be queued more often,
+        so the threshold is reached sooner.
+
+        The result is the maximum number of output timesteps that can be queued
+        before write_to_csv() is called automatically.
+
+        Non daily outputs are Shade, VTS, and Heat_SR3b. Those are not included in the count
+        because their size is fixed and the write schedule is at the end of each day.
+
+        """
+        target_values = 30000000
+        nondaily_outputs = [
+            name for name in self.data
+            if name not in ("Shade", "VTS", "Heat_SR3b")
+        ]
+        values_per_timestep = len(self.nodes) * len(nondaily_outputs)
+
+        if values_per_timestep <= 0:
+            return 10
+
+        return max(10, target_values // values_per_timestep)
+
+    def queue_dt_outputs(self, time):
+        """Queue non daily outputs for one model timestep."""
 
         # Create an Excel friendly time string
-        timestamp = ("%0.7f" % float(time / 86400 + 25569))
-
-        # Localize variables to save a bit of time
+        timestamp = excel_time(time)
         nodes = self.nodes
         data = self.data
 
         write_extra_solar_outputs = False
 
-        if (self.run_type in ("temperature", "solar") and write_extra_solar_outputs ):
+        if (self.run_type in ("temperature", "solar") and write_extra_solar_outputs):
             # These are solar related parameters that the model calculates
             # but are not written to output right now. 
             # Writing these increases run times and they were mostly for testing.
@@ -208,7 +240,6 @@ class _Output(object):
             data["Heat_DR4"][timestamp] = [x.F_Direct[4] for x in nodes]
             data["Heat_DR5"][timestamp] = [x.F_Direct[5] for x in nodes]
 
-        # Run only with solar
         if self.run_type in ("temperature", "solar"):
             data["Heat_SR1"][timestamp] = [x.F_Solar[1] for x in nodes]
             data["Heat_SR2"][timestamp] = [x.F_Solar[2] for x in nodes]
@@ -216,8 +247,7 @@ class _Output(object):
             data["Heat_SR4"][timestamp] = [x.F_Solar[4] for x in nodes]
             data["Heat_SR5"][timestamp] = [x.F_Solar[5] for x in nodes]
 
-        # Run only with hydro
-        if self.run_type != "solar":
+        if self.run_type in ("temperature", "hydraulics"):
             data["Hyd_DA"][timestamp] = [(x.A / x.W_w) for x in nodes]
             data["Hyd_DM"][timestamp] = [x.d_w for x in nodes]
             data["Hyd_Flow"][timestamp] = [x.Q for x in nodes]
@@ -225,7 +255,6 @@ class _Output(object):
             data["Hyd_Vel"][timestamp] = [x.U for x in nodes]
             data["Hyd_WT"][timestamp] = [x.W_w for x in nodes]
 
-        # Run only with both solar and hydro
         if self.run_type == "temperature":
             data["Heat_SR6"][timestamp] = [x.F_Solar[6] for x in nodes]
             data["Heat_SR7"][timestamp] = [x.F_Solar[7] for x in nodes]
@@ -239,32 +268,28 @@ class _Output(object):
             data["Temp_Hyp"][timestamp] = [x.T_hyp if x.Q_hyp > 0 else nan for x in nodes]
             data["Hyd_Disp"][timestamp] = [x.Disp for x in nodes]
 
-        # Run the daily output on the last hour of the day
-        if hour == 23:
-            self.write_to_csv(self.run_type in ("temperature", "solar"), timestamp)
+        self._queued_dt_timesteps += 1
+        if self._queued_dt_timesteps >= self._write_threshold:
+            self.write_to_csv()
 
-        if time >= self.stop_time:
-            self.close()
+    def queue_daily_outputs(self, time):
+        """
+        Queue daily output rows using the timestamp of the last included timestep.
+        Daily outputs are Shade, VTS, and Heat_SR3b. These are not called for hydraulics.
+        """
 
-    def daily(self, timestamp):
-        """Compile and store daily output values from hourly model data."""
+        timestamp = excel_time(time)
         nodes = self.nodes
         self.data["Shade"][timestamp] = [((x.F_DailySum[1] - x.F_DailySum[4]) / x.F_DailySum[1]) for x in nodes]
         self.data["VTS"][timestamp] = [x.ViewToSky for x in nodes]
         self.data["Heat_SR3b"][timestamp] = []
-        # If there's no hour, we're at the beginning of a day, so we
-        # write the values to a file.
 
-    def write_to_csv(self, daily, timestamp):
+    def write_to_csv(self):
         """
         Write model output data to csv files.
         Model output data is written for each configured output file, then the memory
         is reset for the next write cycle.
         """
-        if daily:
-            # for Shade, VTS, and Heat_SR3b, Not called for hydraulics
-            self.daily(timestamp)
-
         data = self.data
 
         for name, openfile in list(self.files.items()):
@@ -298,6 +323,7 @@ class _Output(object):
             self.files[name].flush()
 
         del data
+        self._queued_dt_timesteps = 0
         self.data = deepcopy(self.empty_vars)
 
     def close(self):

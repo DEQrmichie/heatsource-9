@@ -1,7 +1,7 @@
 
 import logging
 from pathlib import Path
-from time import perf_counter
+from time import perf_counter, gmtime
 
 from heatsource9.setup.model_setup import ModelSetup
 from heatsource9.model.model_routine import ModelRoutine
@@ -97,14 +97,41 @@ class ModelRunner:
     def _step(self, simulation, time, hour, minute, second, doy, jc):
         try:
             self.model_routine.advance_timestep(simulation.nodes, time, hour, minute, second, doy, jc)
-            if minute == 0 and second == 0:
-                self.output.write_step(simulation, time, hour, minute, second)
+            if self._outputdt_due(time):
+                self.output.queue_dt_outputs(time)
+            if self._day_complete(time):
+                if self.model_setup.run_type in ("temperature", "solar"):
+                    self.output.queue_daily_outputs(time)
+                self.output.write_to_csv()
+            if self._run_complete(time):
+                self.output.write_to_csv()
+                self.output.close()
         except Exception:
             logger.exception(
                 "Model step failed at model date/time=%s.",
                 pretty_time(time),
             )
             raise
+
+    def _outputdt_due(self, time):
+        """Return True when the current timestep should be added to the non daily output write queue."""
+        params = self.model_setup.params
+        if time < params["modelstart"] or time >= params["modelend"]:
+            return False
+        return (int(time) - int(params["modelstart"])) % int(params["outputdt"]) == 0
+
+    def _day_complete(self, time):
+        """Return True when time is the final modeled timestep of the current day."""
+        params = self.model_setup.params
+        if time < params["modelstart"] or time >= params["modelend"]:
+            return False
+        current = gmtime(float(time))
+        nxt = gmtime(float(time + params["dt"]))
+        return (current.tm_year, current.tm_yday) != (nxt.tm_year, nxt.tm_yday)
+
+    def _run_complete(self, time):
+        """Return True when the current timestep is at or past modelend time."""
+        return time >= float(self.model_setup.params["modelend"])
 
     def _reset_daily_solar_accumulators(
         self,

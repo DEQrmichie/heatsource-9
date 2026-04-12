@@ -183,7 +183,12 @@ class ModelSetup(object):
             value = control_params.get(key, None)
 
             if value in [None, ""]:
-                if key in none_ok:
+                if key == "outputdt":
+                    self.params[key] = 60.0
+                    msg = "Control file key 'outputdt' is missing. Defaulting to 60 minutes."
+                    logger.warning(msg)
+
+                elif key in none_ok:
                     self.params[key] = None
 
                 elif (key == "lccodefile" and self.params.get("lcdatainput") == "Values"):
@@ -241,14 +246,31 @@ class ModelSetup(object):
         else:
             self.params["penman"] = False
             
-        # convert dt from minutes to seconds
-        self.params["dt"] = self.params["dt"] * 60
+        # convert dt values from minutes to seconds
+        self.params["dt"] = int(round(self.params["dt"] * 60))
+        self.params["outputdt"] = int(round(self.params["outputdt"] * 60))
 
         # make sure timestep divides into 60 minutes
         if 3600 % self.params["dt"] != 0:
             raise ValueError(
                 "I'm sorry, your timestep ({0}) must evenly divide into 60 minutes.".format(self.params["dt"] / 60)
             )
+        if self.params["outputdt"] < self.params["dt"]:
+            msg = (
+                "Output timestep (outputdt={0}) must be greater than or equal to model timestep (dt={1}).".format(
+                    self.params["outputdt"] / 60,
+                    self.params["dt"] / 60,
+                )
+            )
+            raise ValueError(msg)
+        if self.params["outputdt"] % self.params["dt"] != 0:
+            msg = (
+                "Output timestep (outputdt={0}) must be an exact multiple of model timestep (dt={1}).".format(
+                    self.params["outputdt"] / 60,
+                    self.params["dt"] / 60,
+                )
+            )
+            raise ValueError(msg)
 
         # dx must be a multiple of longsample and >= longsample
         if (self.params["dx"] % self.params["longsample"] or self.params["dx"] < self.params["longsample"]):
