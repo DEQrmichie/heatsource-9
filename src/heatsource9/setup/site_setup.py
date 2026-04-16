@@ -28,7 +28,7 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
         result = (met_rows, met_params)
         return result
 
-    met_path = model_path / ("HeatSource_Met_Sites" + ext)
+    met_path = model_path / control_params["metsitesfile"]
     if not met_path.exists():
         result = (met_rows, met_params)
         return result
@@ -111,7 +111,7 @@ def _get_trib_sites(model_path, control_params, control_path, run_type, ext):
         result = (trib_rows, trib_params)
         return result
 
-    trib_path = model_path / ("HeatSource_Tributary_Sites" + ext)
+    trib_path = model_path / control_params["tribsitesfile"]
     if not trib_path.exists():
         result = (trib_rows, trib_params)
         return result

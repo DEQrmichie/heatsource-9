@@ -32,6 +32,7 @@ Setup types:
 Setup options:
 
   -csv / --csv-mode         : with -cf, write a CSV control file instead of XLSX
+  -set / --set KEY=VALUE    : with -cf, set one control file key, repeat as needed
   -t / --timestamp          : add a timestamp to the template file name
   -o / --overwrite          : overwrite existing files (default is to keep existing files)
 
@@ -48,13 +49,29 @@ from os.path import abspath
 
 import heatsource9.run as hs_run
 from heatsource9.setup import (
-    write_cf,
+    setup_cf,
     write_mi,
 )
 
 
 def _get_model_dir(args):
     return abspath(getattr(args, "model_dir", None) or ".")
+
+
+def _parse_set_values(values):
+    params = {}
+    for item in values or []:
+        if "=" not in item:
+            msg = "Setup values must use KEY=VALUE form."
+            raise ValueError(msg)
+        key, value = item.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if key == "":
+            msg = "Setup values must use KEY=VALUE form."
+            raise ValueError(msg)
+        params[key] = value
+    return params
 
 
 def _parse_args(argv):
@@ -113,6 +130,15 @@ def _parse_args(argv):
         help="Write CSV templates instead of XLSX for control file setup.",
     )
     setup_parser.add_argument(
+        "-set",
+        "--set",
+        dest="set_values",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="Set a control file key and value. Repeat for multiple values.",
+    )
+    setup_parser.add_argument(
         "-t",
         "--timestamp",
         action="store_true",
@@ -144,11 +170,13 @@ def main(argv = None):
     if args.command == "setup":
         model_dir = _get_model_dir(args)
         if args.control_file:
-            write_cf(
+            control_file = "HeatSource_Control.csv" if args.csv_mode else "HeatSource_Control.xlsx"
+            setup_cf(
                 model_dir=model_dir,
+                control_file=control_file,
                 use_timestamp=bool(args.timestamp),
                 overwrite=bool(args.overwrite),
-                csv_mode=bool(args.csv_mode),
+                **_parse_set_values(args.set_values),
             )
         if args.model_inputs:
             write_mi(

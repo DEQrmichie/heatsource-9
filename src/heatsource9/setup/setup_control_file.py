@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from heatsource9.io.control_file import cf_path, import_control_file
+from heatsource9.io.control_file import import_control_file
 from heatsource9.io.input_files import write_input
 from heatsource9.setup.constants import dtype, sheetnames
 
@@ -65,14 +65,16 @@ def write_cf(
     csv_mode = False,
 ):
     model_path = Path(model_dir)
-    if control_file:
-        filename = control_file
-    else:
-        filename = "HeatSource_Control.csv" if csv_mode else "HeatSource_Control.xlsx"
+    if control_file and Path(control_file).is_absolute():
+        msg = "control_file must be a file name, not a full path."
+        raise ValueError(msg)
+    filename = control_file or (
+        "HeatSource_Control.csv" if csv_mode else "HeatSource_Control.xlsx"
+    )
     if use_timestamp:
-        target_name = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + filename
+        target_name = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + Path(filename).name
     else:
-        target_name = filename
+        target_name = Path(filename).name
     target = model_path / target_name
 
     if target.exists() and not overwrite:
@@ -129,15 +131,44 @@ def setup_cf(
     **control_values,
 ):
     model_path = Path(model_dir).expanduser().resolve()
-    control_path = cf_path(model_path, control_file)
-    csv_mode = control_path.suffix.lower() == ".csv"
+
+    control_path = Path(control_file).expanduser()
+    if not control_path.is_absolute():
+        control_path = model_path / control_path
+    control_path = control_path.resolve()
+
+    ext = control_path.suffix.lower()
+    if ext not in [".xlsx", ".csv"]:
+        msg = "{0} must be an Excel '.xlsx' or '.csv' file.".format(control_path.name)
+        raise ValueError(msg)
+
+    csv_mode = ext == ".csv"
+
+    if not control_values:
+        return write_cf(
+            model_dir=control_path.parent,
+            control_file=control_path.name,
+            use_timestamp=use_timestamp,
+            overwrite=overwrite,
+            csv_mode=csv_mode,
+        )
 
     if not control_path.exists():
         write_cf(
-            model_dir=model_path,
-            control_file=control_file,
+            model_dir=control_path.parent,
+            control_file=control_path.name,
             use_timestamp=False,
-            overwrite=overwrite,
+            overwrite=False,
+            csv_mode=csv_mode,
+        )
+    elif not overwrite:
+        return control_path
+    else:
+        write_cf(
+            model_dir=control_path.parent,
+            control_file=control_path.name,
+            use_timestamp=False,
+            overwrite=True,
             csv_mode=csv_mode,
         )
 
@@ -155,10 +186,10 @@ def setup_cf(
             base_rows[key][3] = row["value"]
 
     for key, value in control_values.items():
-        if strict and key not in valid_control_keys:
-            raise KeyError(f"Unknown control key: {key}")
         if strict and key not in dtype:
             raise KeyError(f"Unknown dtype for control key: {key}")
+        if strict and key not in valid_control_keys and key not in dtype:
+            raise KeyError(f"Unknown control key: {key}")
         if key in valid_control_keys:
             base_rows[key][3] = _format_control_value(key, value)
 

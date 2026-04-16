@@ -153,6 +153,14 @@ def import_control_file(control_path, *, dtype, control_sheet):
                 continue
             params[key] = _to_value_type(key, val, dtype)
 
+    ext = control_path.suffix.lower()
+    if ext == ".csv":
+        params["metsitesfile"] = params.get("metsitesfile") or "HeatSource_Met_Sites.csv"
+        params["tribsitesfile"] = params.get("tribsitesfile") or "HeatSource_Tributary_Sites.csv"
+    else:
+        params["metsitesfile"] = params.get("metsitesfile") or "HeatSource_Met_Sites.xlsx"
+        params["tribsitesfile"] = params.get("tribsitesfile") or "HeatSource_Tributary_Sites.xlsx"
+
     return {
         "model_dir": str(control_path.parent),
         "control_file": control_path.name,

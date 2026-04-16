@@ -12,7 +12,7 @@ It then writes a blank `HeatSource_Control.xlsx` file in that directory.
 import sys
 from pathlib import Path
 
-from heatsource9.setup import write_cf
+from heatsource9.setup import setup_cf
 
 
 def main():
@@ -23,12 +23,11 @@ def main():
         model_dir = Path(__file__).resolve().parent
 
     # Write a blank control file in XLSX format.
-    write_cf(
+    setup_cf(
         model_dir=model_dir,
         control_file="HeatSource_Control.xlsx",
         use_timestamp=False,
         overwrite=False,
-        csv_mode=False,
     )
     return 0
 

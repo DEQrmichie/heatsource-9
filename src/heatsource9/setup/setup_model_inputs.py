@@ -138,7 +138,7 @@ def _get_met_site_params(model_path, params, control_path, ext, csv_mode):
         return result
 
     headers = headers_met_sites()
-    met_path = model_path / ("HeatSource_Met_Sites" + ext)
+    met_path = model_path / params["metsitesfile"]
     if not met_path.exists():
         rows = []
         metfiles_list = []
@@ -218,7 +218,7 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
         return result
 
     headers = headers_trib_sites()
-    trib_path = model_path / ("HeatSource_Tributary_Sites" + ext)
+    trib_path = model_path / params["tribsitesfile"]
     if not trib_path.exists():
         rows = []
         tribfiles = []
