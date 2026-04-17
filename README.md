@@ -2,7 +2,7 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b30 (beta 30)
+Current Version: heatsource 9.0.0b31 (beta 31)
 
 Model math is stable. Just a few more updates coming before official version 9.0.0
 
@@ -30,17 +30,17 @@ Contact: Ryan Michie, ryan.michie @ deq.oregon.gov
 There are two options for installing and running Heat Source 9:
 
 1. Download the [windows executables][2]. Place the executables in the directory with your model files. Double-click 
-the executable to run the model. That's it. Python installation is not required. These executables were 
-developed on Windows 10. They have not been tested on other versions of Windows. Optionally add hs.exe to the
-user PATH and run the model from the command line.
+the executable to run the model. That's it. Python installation is not required. Optionally add hs.exe to the
+user PATH and run the model from the command line (see section 5.1). These executables were developed on Windows 10. 
+They have not been tested on other versions of Windows. 
 
 2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, or 3.14.
 https://www.python.org/downloads/. This may be better option for Mac or Linux users.
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b30 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b30"
+# This command installs heat source version 9.0.0b31 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b31"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -52,13 +52,13 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heatsource wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl --user
+py -m pip3 install heatsource9-9.0.0b31-cp312-cp312-win_amd64.whl --user
 
 # Installs the Python 3.12 heatsource wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.0b30-cp312-cp312-win_amd64.whl
+py -m pip3 install heatsource9-9.0.0b31-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0b30/HS9_Windows_Executables_v9.0.0b30.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b30
+[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0b31/HS9_Windows_Executables_v9.0.0b31.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b31
 
 ## 3.0 QUICK STEPS TO GET GOING
 
@@ -114,9 +114,26 @@ The model will read and write input files using the same format as the control f
 as a CSV, the input files must also be CSV. If the control file is an Excel file (.xlsx), the input files must also be
 saved as Excel files. Model output files are always written as CSV (UTF-8 Unicode) files.
 
-## 5.0 Model run modes 
+## 5.0 MODEL RUN OPTIONS
 
-### 5.1 Command Line
+There are multiple workflows available for setting up and running a model.
+
+### 5.1 Windows Executables
+
+[Windows executables][2] have been compiled from the source code and can be used to run the model on Windows machines. 
+Place the executables in the model directory with your model files. Double-click the executable to setup or run 
+the model.
+
+Setup the model executing using one of the following:
+   * `hs9_setup_control_file.exe` writes a blank template control file.
+   * `hs9_setup_model_inputs.exe` writes blank template input files from a parameterized control file.
+
+Run the model by executing one of the following:
+   * `hs9_run_hydraulics.exe` runs a hydraulics only model.
+   * `hs9_run_solar.exe` runs a solar and shade only model.
+   * `hs9_run_temperature.exe` runs a temperature model, which include both hydraulics and solar.
+
+### 5.2 Command Line
 
 Heat Source can be set up and run directly from the command line. Using command line requires the Python package 
 be installed or having hs.exe on PATH.
@@ -154,6 +171,7 @@ Setup types:
 Setup options:
 ``` shell
 -csv / --csv-mode        : with -cf, write a CSV control file instead of XLSX
+-set / --set KEY=VALUE   : with -cf, set one control file key, repeat as needed
 -t / --timestamp         : add a timestamp to the file name
 -o / --overwrite         : overwrite existing files (default is to keep existing files)
 ```
@@ -161,24 +179,40 @@ Setup options:
 Usage examples:
 ``` shell
 hs setup -cf -md /path/to/model_dir
+hs setup -cf -set name="Example Model" -set length=7.5
 hs setup -mi -o
 hs run -t
 ```
 
-### 5.2 Using Python
+### 5.3 Using Python
 
-Heat Source can be set up and run directly using python scripts. The Python package must
+Heat Source can be set up and run directly using python scripts. The heatsource9 Python package must
 be installed.
 
 To write a blank XLSX control file from a python script:
 ```python
 from heatsource9 import setup
 
-control_file = "HeatSource_Control.xlsx"
 model_dir = r"C://path/to/model_directory/"
 
-setup.setup_cf(model_dir, control_file)
+setup.setup_cf(model_dir)
 ```
+
+To parameterize a control file from a python script:
+```python
+from heatsource9 import setup
+
+model_dir = r"C://path/to/model_directory/"
+
+setup.setup_cf(
+    model_dir,
+    name="Example Model",
+    length=7.5,
+    dt=1,
+)
+```
+
+If the control file already exists and `overwrite=False`, `setup_cf(...)` leaves it unchanged. Use `overwrite=True` to rewrite the control file from a blank template and then apply keyword values.
 
 To write blank XLSX input files from a python script:
 ```python
@@ -274,8 +308,8 @@ from heatsource9 import setup
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-setup.write_cf(model_dir=model_dir, control_file=control_file,
-               use_timestamp=False, overwrite=False, csv_mode=False)
+setup.setup_cf(model_dir=model_dir, control_file=control_file,
+               use_timestamp=False, overwrite=False)
 ```
 To write a blank template control file from command line:
 ```Batchfile
@@ -284,7 +318,7 @@ hs setup -cf
 ```
 
 The control file can also be parameterized in python directly using `**kwargs`.
-Any control file key arguments passed will be written into the output control file.
+Any control file key arguments passed will be written into the output control file when the control file is first created, or when `overwrite=True`.
 Unknown keys raise an error.
 ```python
 from heatsource9 import setup
@@ -310,6 +344,7 @@ setup.setup_cf(model_dir=model_dir, control_file=control_file,
                offset=-7,
                dt=1,
                dx=30,
+               outputdt=60,
                longsample=50,
                bcfile="bc.csv",
                tribsites=4,
@@ -334,6 +369,11 @@ setup.setup_cf(model_dir=model_dir, control_file=control_file,
                heatsource8="False")
 ```
 
+To parameterize a control file from command line:
+```shell
+hs setup -cf -set name="My Model" -set length=10.5 -set dt=15
+```
+
 Below are all the input parameters that must be included in the control file.
 
 | LINE | PARAMETER                                         | KEY                  | VALUE |
@@ -352,30 +392,31 @@ Below are all the input parameters that must be included in the control file.
 |   13 | Time Offset From UTC (hours)                      | offset               |       |
 |   14 | Model Time Step (minutes)                         | dt                   |       |
 |   15 | Model Distance Step (meters)                      | dx                   |       |
-|   16 | Longitudinal Stream Sample Distance (meters)      | longsample           |       |
-|   17 | Boundary Condition Input File Name                | bcfile               |       |
-|   18 | Tributary Inflow Sites                            | tribsites            |       |
-|   19 | Accretion Input File Name                         | accretionfile        |       |
-|   20 | Meteorological Data Sites                         | metsites             |       |
-|   21 | Include Evaporation Losses From Flow (True/False) | calcevap             |       |
-|   22 | Evaporation Method (Mass Transfer/Penman)         | evapmethod           |       |
-|   23 | Wind Function Coefficient a                       | wind_a               |       |
-|   24 | Wind Function Coefficient b                       | wind_b               |       |
-|   25 | Include Deep Alluvium Temperature (True/False)    | calcalluvium         |       |
-|   26 | Deep Alluvium Temperature (Celsius)               | alluviumtemp         |       |
-|   27 | Morphology Input Data File Name                   | morphfile            |       |
-|   28 | Land Cover Input Data File Name                   | lcdatafile           |       |
-|   29 | Land Cover Codes Input File Name                  | lccodefile           |       |
-|   30 | Number Of Transects Per Node                      | trans_count          |       |
-|   31 | Number Of Samples Per Transect                    | transsample_count    |       |
-|   32 | Distance Between Transect Samples (meters)        | transsample_distance |       |
-|   33 | Account For Emergent Veg Shading (True/False)     | emergent             |       |
-|   34 | Land Cover Data Input Type (Codes/Values)         | lcdatainput          |       |
-|   35 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
-|   36 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
-|   37 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
+|   16 | Output Time Step (minutes)                        | outputdt             |       |
+|   17 | Longitudinal Stream Sample Distance (meters)      | longsample           |       |
+|   18 | Boundary Condition Input File Name                | bcfile               |       |
+|   19 | Tributary Inflow Sites                            | tribsites            |       |
+|   20 | Accretion Input File Name                         | accretionfile        |       |
+|   21 | Meteorological Data Sites                         | metsites             |       |
+|   22 | Include Evaporation Losses From Flow (True/False) | calcevap             |       |
+|   23 | Evaporation Method (Mass Transfer/Penman)         | evapmethod           |       |
+|   24 | Wind Function Coefficient a                       | wind_a               |       |
+|   25 | Wind Function Coefficient b                       | wind_b               |       |
+|   26 | Include Deep Alluvium Temperature (True/False)    | calcalluvium         |       |
+|   27 | Deep Alluvium Temperature (Celsius)               | alluviumtemp         |       |
+|   28 | Morphology Input Data File Name                   | morphfile            |       |
+|   29 | Land Cover Input Data File Name                   | lcdatafile           |       |
+|   30 | Land Cover Codes Input File Name                  | lccodefile           |       |
+|   31 | Number Of Transects Per Node                      | trans_count          |       |
+|   32 | Number Of Samples Per Transect                    | transsample_count    |       |
+|   33 | Distance Between Transect Samples (meters)        | transsample_distance |       |
+|   34 | Account For Emergent Veg Shading (True/False)     | emergent             |       |
+|   35 | Land Cover Data Input Type (Codes/Values)         | lcdatainput          |       |
+|   36 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
+|   37 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
+|   38 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
 
-### 6.2 MET SITE FILE
+### 6.2 METEOROLOGICAL SITE FILE
 File name: `HeatSource_Met_Sites.[xlsx|csv]`
 
 xlsx sheet name: `Meteorological Sites`
@@ -872,7 +913,7 @@ the headers are the output stream km.
 Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
 ```CSV
 File Created:,Tue Mar  3 14:18:18 2026
-Heat Source Version:,9.0.0b30
+Heat Source Version:,9.0.0b31
 Simulation Name:,Example River - HS9_example_model_xslx
 User Text:,This is an example model using xlsx files.
 Output:,Stream Temperature (Celsius)
