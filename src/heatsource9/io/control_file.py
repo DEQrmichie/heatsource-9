@@ -13,13 +13,13 @@ def validate_control_file(control_file_path):
     """
     p = Path(control_file_path).expanduser()
     if not p.exists():
-        raise FileNotFoundError(f"Control file not found: {str(p)}")
+        msg = f"Control file not found: {str(p)}"
+        raise FileNotFoundError(msg)
 
     ext = p.suffix.lower()
     if ext not in [".xlsx", ".csv"]:
-        raise ValueError(
-            "{0} must be an Excel '.xlsx' or '.csv' file.".format(p.name)
-        )
+        msg = "{0} must be an Excel '.xlsx' or '.csv' file.".format(p.name)
+        raise ValueError(msg)
 
     return str(p.resolve())
 
@@ -46,15 +46,17 @@ def cf_path(model_dir, control_file = None):
     else:
         controls = sorted(model_path.glob("HeatSource_Control.*"))
         if len(controls) == 0:
-            raise FileNotFoundError(
+            msg = (
                 "HeatSource_Control file not found. Move the executable or place the control file "
                 "in this directory: {0}.".format(model_path)
             )
+            raise FileNotFoundError(msg)
         if len(controls) > 1:
-            raise FileExistsError(
+            msg = (
                 "There is more than one file named 'HeatSource_Control.' in this directory: {0}. "
                 "Only one file can exist.".format(model_path)
             )
+            raise FileExistsError(msg)
         control_path = controls[0].resolve()
 
     return Path(validate_control_file(control_path))
@@ -95,7 +97,8 @@ def _to_value_type(key, value, dtype):
         title = text.title()
         if title in {"True", "False"}:
             return title == "True"
-        raise TypeError(f"Control file key '{key}' must be True or False.")
+        msg = f"Control file key '{key}' must be True or False."
+        raise TypeError(msg)
     if expected == "date":
         date_text = text.split()[0]
         datetime.strptime(date_text, "%Y-%m-%d")

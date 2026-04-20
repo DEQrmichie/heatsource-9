@@ -1,9 +1,13 @@
 from datetime import datetime
+import logging
 from pathlib import Path
 
 from heatsource9.io.control_file import import_control_file
 from heatsource9.io.input_files import write_input
+from heatsource9.io.logging_config import configure_logging
 from heatsource9.setup.constants import dtype, sheetnames
+
+logger = logging.getLogger(__name__)
 
 
 def control_file_dict():
@@ -131,82 +135,87 @@ def setup_cf(
     **control_values,
 ):
     model_path = Path(model_dir).expanduser().resolve()
+    configure_logging(model_dir=model_path, overwrite=True)
+    try:
+        control_path = Path(control_file).expanduser()
+        if not control_path.is_absolute():
+            control_path = model_path / control_path
+        control_path = control_path.resolve()
 
-    control_path = Path(control_file).expanduser()
-    if not control_path.is_absolute():
-        control_path = model_path / control_path
-    control_path = control_path.resolve()
+        ext = control_path.suffix.lower()
+        if ext not in [".xlsx", ".csv"]:
+            msg = "{0} must be an Excel '.xlsx' or '.csv' file.".format(control_path.name)
+            raise ValueError(msg)
 
-    ext = control_path.suffix.lower()
-    if ext not in [".xlsx", ".csv"]:
-        msg = "{0} must be an Excel '.xlsx' or '.csv' file.".format(control_path.name)
-        raise ValueError(msg)
+        csv_mode = ext == ".csv"
 
-    csv_mode = ext == ".csv"
+        if not control_values:
+            return write_cf(
+                model_dir=control_path.parent,
+                control_file=control_path.name,
+                use_timestamp=use_timestamp,
+                overwrite=overwrite,
+                csv_mode=csv_mode,
+            )
 
-    if not control_values:
-        return write_cf(
-            model_dir=control_path.parent,
-            control_file=control_path.name,
-            use_timestamp=use_timestamp,
-            overwrite=overwrite,
+        if not control_path.exists():
+            write_cf(
+                model_dir=control_path.parent,
+                control_file=control_path.name,
+                use_timestamp=False,
+                overwrite=False,
+                csv_mode=csv_mode,
+            )
+        elif not overwrite:
+            return control_path
+        else:
+            write_cf(
+                model_dir=control_path.parent,
+                control_file=control_path.name,
+                use_timestamp=False,
+                overwrite=True,
+                csv_mode=csv_mode,
+            )
+
+        raw_rows = import_control_file(
+            control_path=control_path,
+            dtype=dtype,
+            control_sheet=sheetnames["controlfile"],
+        )["control_rows"]
+        base_rows = {k: list(v) for k, v in control_file_dict().items()}
+        valid_control_keys = set(base_rows.keys())
+
+        for row in raw_rows:
+            key = str(row["key"]).strip()
+            if key in base_rows:
+                base_rows[key][3] = row["value"]
+
+        for key, value in control_values.items():
+            if strict and key not in dtype:
+                raise KeyError(f"Unknown dtype for control key: {key}")
+            if strict and key not in valid_control_keys and key not in dtype:
+                raise KeyError(f"Unknown control key: {key}")
+            if key in valid_control_keys:
+                base_rows[key][3] = _format_control_value(key, value)
+
+        if use_timestamp:
+            output_name = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + control_path.name
+        else:
+            output_name = control_path.name
+        target = model_path / output_name
+        if target.exists() and target != control_path and not overwrite:
+            return target
+
+        rows = [row for _, row in sorted(base_rows.items(), key=lambda kv: kv[1][0])]
+        write_input(
+            path=target,
+            headers=["LINE", "PARAMETER", "KEY", "VALUE"],
+            rows=rows,
+            sheetname=sheetnames["controlfile"],
             csv_mode=csv_mode,
         )
-
-    if not control_path.exists():
-        write_cf(
-            model_dir=control_path.parent,
-            control_file=control_path.name,
-            use_timestamp=False,
-            overwrite=False,
-            csv_mode=csv_mode,
-        )
-    elif not overwrite:
-        return control_path
-    else:
-        write_cf(
-            model_dir=control_path.parent,
-            control_file=control_path.name,
-            use_timestamp=False,
-            overwrite=True,
-            csv_mode=csv_mode,
-        )
-
-    raw_rows = import_control_file(
-        control_path=control_path,
-        dtype=dtype,
-        control_sheet=sheetnames["controlfile"],
-    )["control_rows"]
-    base_rows = {k: list(v) for k, v in control_file_dict().items()}
-    valid_control_keys = set(base_rows.keys())
-
-    for row in raw_rows:
-        key = str(row["key"]).strip()
-        if key in base_rows:
-            base_rows[key][3] = row["value"]
-
-    for key, value in control_values.items():
-        if strict and key not in dtype:
-            raise KeyError(f"Unknown dtype for control key: {key}")
-        if strict and key not in valid_control_keys and key not in dtype:
-            raise KeyError(f"Unknown control key: {key}")
-        if key in valid_control_keys:
-            base_rows[key][3] = _format_control_value(key, value)
-
-    if use_timestamp:
-        output_name = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + control_path.name
-    else:
-        output_name = control_path.name
-    target = model_path / output_name
-    if target.exists() and target != control_path and not overwrite:
         return target
-
-    rows = [row for _, row in sorted(base_rows.items(), key=lambda kv: kv[1][0])]
-    write_input(
-        path=target,
-        headers=["LINE", "PARAMETER", "KEY", "VALUE"],
-        rows=rows,
-        sheetname=sheetnames["controlfile"],
-        csv_mode=csv_mode,
-    )
-    return target
+    except Exception as exc:
+        msg = str(exc)
+        logger.exception(msg)
+        raise

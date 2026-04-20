@@ -41,18 +41,16 @@ def read_csv_to_dict(path, colnames, value_check = None, header_check = None):
             header_check(path.name, colnames, header_row)
         for row_number, row in enumerate(reader, start=2):
             if not row:
-                logger.warning(
-                    "Warning: Skipping blank row %d in input file '%s'.",
-                    row_number,
-                    path.name,
+                msg = "Warning: Skipping blank row {0} in input file '{1}'.".format(
+                    row_number, path.name
                 )
+                logger.warning(msg)
                 continue
             if all(_clean_value(cell) is None for cell in row):
-                logger.warning(
-                    "Warning: Skipping blank row %d in input file '%s'.",
-                    row_number,
-                    path.name,
+                msg = "Warning: Skipping blank row {0} in input file '{1}'.".format(
+                    row_number, path.name
                 )
+                logger.warning(msg)
                 continue
             if len(row) > expected_cols:
                 extras = row[expected_cols:]
@@ -62,29 +60,22 @@ def read_csv_to_dict(path, colnames, value_check = None, header_check = None):
                 )
                 if first_non_empty_idx is None:
                     if not extra_cols_empty:
-                        logger.warning(
-                            "Warning: Input file '%s' has trailing empty extra columns beyond the expected number "
-                            "(expected %d, found %d). Extra columns are ignored.",
-                            path.name,
-                            expected_cols,
-                            len(row),
-                        )
+                        msg = (
+                            "Warning: Input file '{0}' has trailing empty extra columns beyond the expected "
+                            "number (expected {1}, found {2}). Extra columns are ignored."
+                        ).format(path.name, expected_cols, len(row))
+                        logger.warning(msg)
                         extra_cols_empty = True
                 else:
                     if not extra_cols_non_empty:
                         first_col = expected_cols + first_non_empty_idx + 1
                         first_value = extras[first_non_empty_idx]
-                        logger.warning(
-                            "Warning: Input file '%s' has non-empty extra columns beyond the expected number "
-                            "(expected %d, found %d). Extra columns are ignored. "
-                            "First occurrence in column %d row %d with value %r.",
-                            path.name,
-                            expected_cols,
-                            len(row),
-                            first_col,
-                            row_number,
-                            first_value,
-                        )
+                        msg = (
+                            "Warning: Input file '{0}' has non empty extra columns beyond the expected number "
+                            "(expected {1}, found {2}). Extra columns are ignored. First occurrence in column "
+                            "{3} row {4} with value {5!r}."
+                        ).format(path.name, expected_cols, len(row), first_col, row_number, first_value)
+                        logger.warning(msg)
                         extra_cols_non_empty = True
             values = list(row[: expected_cols])
             if len(values) < len(colnames):
@@ -122,18 +113,16 @@ def read_xlsx_to_dict(
     data = defaultdict(list, {k: [] for k in colnames})
     for row_number, row in enumerate(rows[1:], start=2):
         if row is None:
-            logger.warning(
-                "Warning: Skipping blank row %d in input file '%s'.",
-                row_number,
-                path.name,
+            msg = "Warning: Skipping blank row {0} in input file '{1}'.".format(
+                row_number, path.name
             )
+            logger.warning(msg)
             continue
         if all(_clean_value(cell) is None for cell in row):
-            logger.warning(
-                "Warning: Skipping blank row %d in input file '%s'.",
-                row_number,
-                path.name,
+            msg = "Warning: Skipping blank row {0} in input file '{1}'.".format(
+                row_number, path.name
             )
+            logger.warning(msg)
             continue
         for i, key in enumerate(colnames):
             cell = row[i] if i < len(row) else None
@@ -212,9 +201,8 @@ def write_input(path, headers, rows, sheetname, csv_mode):
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
     except PermissionError as exc:
-        raise PermissionError(
-            f"Cannot create folder '{path.parent}'. Check write permissions."
-        ) from exc
+        msg = f"Cannot create folder '{path.parent}'. Check write permissions."
+        raise PermissionError(msg) from exc
 
     if csv_mode:
         try:
@@ -224,9 +212,8 @@ def write_input(path, headers, rows, sheetname, csv_mode):
                 for row in rows:
                     writer.writerow(["" if v is None else v for v in row])
         except PermissionError as exc:
-            raise PermissionError(
-                f"Cannot write file '{path}'. Check write permissions for this folder."
-            ) from exc
+            msg = f"Cannot write file '{path}'. Check write permissions for this folder."
+            raise PermissionError(msg) from exc
         return
 
     wb = Workbook()
@@ -238,6 +225,5 @@ def write_input(path, headers, rows, sheetname, csv_mode):
     try:
         wb.save(path)
     except PermissionError as exc:
-        raise PermissionError(
-            f"Cannot write file '{path}'. Check write permissions for this folder."
-        ) from exc
+        msg = f"Cannot write file '{path}'. Check write permissions for this folder."
+        raise PermissionError(msg) from exc

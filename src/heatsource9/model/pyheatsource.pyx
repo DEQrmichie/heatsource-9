@@ -199,11 +199,12 @@ def get_stream_geometry(Q_est, W_b, z, n, S, D_est, dx, dt):
             D_est -= F_Dw / Fp_Dw
 
             if (D_est < 0) or (D_est > 5000) or (count > 10000):
-                raise RuntimeError(
+                msg = (
                     "Stream geometry solver failed to converge: "
                     f"Q_est={Q_est}, D_est={D_est}, count={count}, "
                     f"W_b={W_b}, z={z}, n={n}, S={S}, dx={dx}, dt={dt}"
                 )
+                raise RuntimeError(msg)
             Converge = abs(F_Dw/Fp_Dw)
             count += 1
     # Use the calculated wetted depth to calculate new 
@@ -248,7 +249,7 @@ def calc_muskingum(Q_est, U, W_w, S, dx, dt):
         msg = "Unstable timestep. Decrease dt or increase dx. \
         dT must be < {0}, K={1}, X={2}".format(dt_stable, K, X)
         logger.error(msg)
-        raise Exception(msg)
+        raise RuntimeError(msg)
 
     # These calculations are from Chow's "Applied Hydrology"
     cdef double D1 = K * (1 - X) + 0.5 * dt
@@ -460,9 +461,11 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                             fraction_passed = 0
                         else:
                             # some other error
-                            msg="Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} Altitude={6} theta_full_sun={7} ".format(tran,s,lc_height_rel[tran][s],lc_canopy[tran][s],PL_lc,PL, Altitude, theta_full_sun[s])
+                            msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} Altitude={6} theta_full_sun={7}".format(
+                                tran, s, lc_height_rel[tran][s], lc_canopy[tran][s], PL_lc, PL, Altitude, theta_full_sun[s]
+                            )
                             logger.exception(msg)
-                            raise Exception(msg)
+                            raise RuntimeError(msg)
                         
             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
@@ -583,9 +586,11 @@ def get_solar_flux(hour, doy, Altitude, Zenith, cloud, d_w, W_b, elevation,
                         fraction_passed = 0
                     else:
                         # some other error
-                        msg="Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1} ".format(lc_canopy[0][0],PL_emerg)
+                        msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1}".format(
+                            lc_canopy[0][0], PL_emerg
+                        )
                         logger.exception(msg)
-                        raise Exception(msg)
+                        raise RuntimeError(msg)
                 
         if not (heatsource8 and BeersData != "LAI"):
             F_Direct[4] = F_Direct[4] * fraction_passed
@@ -734,7 +739,7 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, elevation, phi,
     if T_sed_next > 50 or T_sed_next < 0:
         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_next)
         logger.error(msg)
-        raise Exception() # TODO RM
+        raise RuntimeError(msg)
 
     #=====================================================
     # Calculate Longwave FLUX

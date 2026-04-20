@@ -20,7 +20,7 @@ class Console:
         self.progress_log = logging.getLogger(PROGRESS_LOGGER_NAME)
         self._is_tty = bool(getattr(sys.stdout, "isatty", lambda: False)())
 
-    def info(self, msg):
+    def status(self, msg):
         self.log.info(str(msg))
 
     def warning(self, msg):
@@ -38,7 +38,7 @@ class Console:
 
         Progress updates are emitted as carriage return lines so each step
         overwrites the prior console line until completion.
-        Progress updates are always written to heatsource.log at every step.
+        Progress updates are always written to hs.log at every step.
         """
         total_i = int(total) if total not in (None, 0, "0") else 1
         cur_i = int(current) if current is not None else 0
@@ -88,4 +88,4 @@ def print_console(msg, progress_bar = False, current = 100, total = 100):
     if progress_bar:
         console.progress(str(msg), current=current, total=total)
     else:
-        console.info(str(msg))
+        console.status(str(msg))

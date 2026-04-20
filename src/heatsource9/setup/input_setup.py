@@ -48,9 +48,8 @@ class InputSetup(object):
             return
         lo, hi = drange[range_key]
         if not (lo <= val <= hi):
-            raise ValueError(
-                f"The {column} value of {val} is out of range [{lo}, {hi}]."
-            )
+            msg = f"The {column} value of {val} is out of range [{lo}, {hi}]."
+            raise ValueError(msg)
 
     # ------------------------------------------------------------------
     # Datetime
@@ -76,17 +75,21 @@ class InputSetup(object):
         text = str(column)
         if value is None:
             if text == "CANOPY_DEPTH":
-                raise ValueError("CANOPY_DEPTH is required in Land Cover Codes input.")
+                msg = "CANOPY_DEPTH is required in Land Cover Codes input."
+                raise ValueError(msg)
             if self.params.get("lcdatainput") == "Values" and text.startswith("CD_"):
-                raise ValueError("When lcdatainput is 'Values', all CD_T*_S* values are required.")
+                msg = "When lcdatainput is 'Values', all CD_T*_S* values are required."
+                raise ValueError(msg)
             return None
         if isinstance(value, str):
             value = value.strip()
             if value == "":
                 if text == "CANOPY_DEPTH":
-                    raise ValueError("CANOPY_DEPTH is required in Land Cover Codes input.")
+                    msg = "CANOPY_DEPTH is required in Land Cover Codes input."
+                    raise ValueError(msg)
                 if self.params.get("lcdatainput") == "Values" and text.startswith("CD_"):
-                    raise ValueError("When lcdatainput is 'Values', all CD_T*_S* values are required.")
+                    msg = "When lcdatainput is 'Values', all CD_T*_S* values are required."
+                    raise ValueError(msg)
                 return None
 
         # Remove digits from the column header, e.g. TEMPERATURE2 -> TEMPERATURE.
@@ -141,11 +144,12 @@ class InputSetup(object):
         file_clean = str(filename).strip()
 
         if ncols_found < ncols_expected:
-            raise ValueError(
+            msg = (
                 "Input file '{0}' has fewer header columns than expected (expected {1}, found {2}).".format(
                     file_clean, ncols_expected, ncols_found
                 )
             )
+            raise ValueError(msg)
 
         check_names = False
         if check_names:
@@ -209,11 +213,13 @@ class InputSetup(object):
             h = float(heights[i])
             cd = float(data["CANOPY_DEPTH"][i])
             if cd < 0 or cd > h or (cd == 0 and h > 0):
-                raise ValueError(
-                    "Canopy depth for code {0} in {1} must be > 0 and <= vegetation height when HEIGHT > 0, and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
+                msg = (
+                    "Canopy depth for code {0} in {1} must be > 0 and <= vegetation height when HEIGHT > 0, "
+                    "and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
                         code, self.params["lccodefile"], h, cd
                     )
                 )
+                raise ValueError(msg)
             data["CANOPY_DEPTH"][i] = cd
         return data
 
@@ -236,11 +242,13 @@ class InputSetup(object):
                     h = float(h)
                     cd = float(cd)
                     if cd < 0 or cd > h or (cd == 0 and h > 0):
-                        raise ValueError(
-                            "Canopy depth in file {0}, row {1} must be > 0 and <= vegetation height when HEIGHT > 0, and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
+                        msg = (
+                            "Canopy depth in file {0}, row {1} must be > 0 and <= vegetation height when HEIGHT > 0, "
+                            "and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
                                 self.params["lcdatafile"], row_i, h, cd
                             )
                         )
+                        raise ValueError(msg)
         if return_list:
             return self.dict2list(data, headers, skiprows, skipcols)
         return data

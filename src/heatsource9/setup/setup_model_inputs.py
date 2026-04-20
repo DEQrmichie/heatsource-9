@@ -7,6 +7,7 @@ from openpyxl.utils import datetime as pyxl_datetime
 
 from heatsource9.io.control_file import cf_path, import_control_file
 from heatsource9.io.input_files import read_to_dict, write_input
+from heatsource9.io.logging_config import configure_logging
 from heatsource9.setup.constants import dtype, sheetnames
 from heatsource9.setup.headers import (
     headers_accretion,
@@ -302,76 +303,85 @@ def _inflow_tables(params, timelist, use_timestamp):
 
 def write_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite = False):
     model_path = Path(model_dir).expanduser().resolve()
-    control_path = cf_path(model_path, control_file)
+    configure_logging(model_dir=model_path, overwrite=True)
+    try:
+        control_path = cf_path(model_path, control_file)
 
-    params = import_control_file(control_path=control_path,
-                                 dtype=dtype,
-                                 control_sheet=sheetnames["controlfile"])["control_params"]
+        params = import_control_file(control_path=control_path,
+                                     dtype=dtype,
+                                     control_sheet=sheetnames["controlfile"])["control_params"]
 
-    inputdir = Path(str(params.get("inputdir") or (model_path / "Inputs"))).expanduser().resolve()
-    outputdir = Path(str(params.get("outputdir") or (model_path / "Output"))).expanduser().resolve()
-    for p in (inputdir, outputdir):
-        try:
-            p.mkdir(parents=True, exist_ok=True)
-        except PermissionError as exc:
-            raise PermissionError(f"Cannot create folder '{p}'. Check write permissions.") from exc
+        inputdir = Path(str(params.get("inputdir") or (model_path / "Inputs"))).expanduser().resolve()
+        outputdir = Path(str(params.get("outputdir") or (model_path / "Output"))).expanduser().resolve()
+        for p in (inputdir, outputdir):
+            try:
+                p.mkdir(parents=True, exist_ok=True)
+            except PermissionError as exc:
+                msg = f"Cannot create folder '{p}'. Check write permissions."
+                raise PermissionError(msg) from exc
 
-    length_km = params.get("length")
-    longsample = params.get("longsample")
-    if length_km is None or longsample is None or length_km <= 0 or longsample <= 0:
-        raise ValueError("Control file must define 'length' and 'longsample' before model input setup")
+        length_km = params.get("length")
+        longsample = params.get("longsample")
+        if length_km is None or longsample is None or length_km <= 0 or longsample <= 0:
+            msg = "Control file must define 'length' and 'longsample' before model input setup"
+            raise ValueError(msg)
 
-    datastart = params.get("datastart")
-    dataend = params.get("dataend")
-    if not datastart or not dataend:
-        raise ValueError("Control file must define 'datastart' and 'dataend' before model input setup")
+        datastart = params.get("datastart")
+        dataend = params.get("dataend")
+        if not datastart or not dataend:
+            msg = "Control file must define 'datastart' and 'dataend' before model input setup"
+            raise ValueError(msg)
 
-    csv_mode = control_path.suffix.lower() == ".csv"
-    timelist = _hourly_range(datastart, dataend, as_excel=not csv_mode)
-    kmlist = _compute_stream_kms(length_km, longsample)
-    ext = ".csv" if csv_mode else ".xlsx"
+        csv_mode = control_path.suffix.lower() == ".csv"
+        timelist = _hourly_range(datastart, dataend, as_excel=not csv_mode)
+        kmlist = _compute_stream_kms(length_km, longsample)
+        ext = ".csv" if csv_mode else ".xlsx"
 
-    written = []
-    met_site_result = _get_met_site_params(model_path, params, control_path, ext, csv_mode)
-    params["metfiles"], params["metkm"], params["metheights"], met_site_file = met_site_result
-    if met_site_file is not None:
-        written.append(met_site_file)
+        written = []
+        met_site_result = _get_met_site_params(model_path, params, control_path, ext, csv_mode)
+        params["metfiles"], params["metkm"], params["metheights"], met_site_file = met_site_result
+        if met_site_file is not None:
+            written.append(met_site_file)
 
-    trib_site_result = _get_trib_site_params(model_path, params, control_path, ext, csv_mode)
-    params["tribfiles"], params["tribkm"], trib_site_file = trib_site_result
-    if trib_site_file is not None:
-        written.append(trib_site_file)
+        trib_site_result = _get_trib_site_params(model_path, params, control_path, ext, csv_mode)
+        params["tribfiles"], params["tribkm"], trib_site_file = trib_site_result
+        if trib_site_file is not None:
+            written.append(trib_site_file)
 
-    accretion_table = _accretion_table(params, kmlist, use_timestamp)
-    bc_table = _bc_table(params, timelist, use_timestamp)
-    morph_table = _morph_table(params, kmlist, use_timestamp)
-    lcdata_table = _lcdata_table(params, kmlist, use_timestamp)
+        accretion_table = _accretion_table(params, kmlist, use_timestamp)
+        bc_table = _bc_table(params, timelist, use_timestamp)
+        morph_table = _morph_table(params, kmlist, use_timestamp)
+        lcdata_table = _lcdata_table(params, kmlist, use_timestamp)
 
-    tables = [
-        accretion_table,
-        bc_table,
-        morph_table,
-        lcdata_table,
-    ]
+        tables = [
+            accretion_table,
+            bc_table,
+            morph_table,
+            lcdata_table,
+        ]
 
-    lccode_table = _lccode_table(params, use_timestamp)
-    if lccode_table is not None:
-        tables.append(lccode_table)
+        lccode_table = _lccode_table(params, use_timestamp)
+        if lccode_table is not None:
+            tables.append(lccode_table)
 
-    met_tables = _met_tables(params, timelist, use_timestamp)
-    for table in met_tables:
-        tables.append(table)
+        met_tables = _met_tables(params, timelist, use_timestamp)
+        for table in met_tables:
+            tables.append(table)
 
-    inflow_tables = _inflow_tables(params, timelist, use_timestamp)
-    for table in inflow_tables:
-        tables.append(table)
+        inflow_tables = _inflow_tables(params, timelist, use_timestamp)
+        for table in inflow_tables:
+            tables.append(table)
 
-    for filename, headers, rows, sheet in tables:
-        path = inputdir / filename
-        if path.exists() and not overwrite:
+        for filename, headers, rows, sheet in tables:
+            path = inputdir / filename
+            if path.exists() and not overwrite:
+                written.append(path)
+                continue
+            write_input(path=path, headers=headers, rows=rows, sheetname=sheet, csv_mode=csv_mode)
             written.append(path)
-            continue
-        write_input(path=path, headers=headers, rows=rows, sheetname=sheet, csv_mode=csv_mode)
-        written.append(path)
 
-    return written
+        return written
+    except Exception:
+        msg = "Error in setting up model inputs"
+        logger.exception(msg)
+        raise

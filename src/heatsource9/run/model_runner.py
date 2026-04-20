@@ -1,6 +1,5 @@
 
 import logging
-from pathlib import Path
 from time import perf_counter, gmtime
 
 from heatsource9.setup.model_setup import ModelSetup
@@ -9,7 +8,6 @@ from heatsource9.io.console import print_console
 from heatsource9.io.control_file import validate_control_file
 from heatsource9.domain.clock import pretty_time, time_parts
 from heatsource9.io.output_files import OutputWriter
-from heatsource9.io.logging_config import configure_logging
 
 logger = logging.getLogger(__name__)
 
@@ -24,13 +22,6 @@ class ModelRunner:
 
     def __init__(self, control_file_path):
         self.control_file_path = validate_control_file(control_file_path)
-        model_dir = Path(self.control_file_path).parent
-        try:
-            configure_logging(model_dir=model_dir, overwrite=True)
-        except PermissionError as exc:
-            raise PermissionError(
-                f"Cannot write log file '{model_dir / 'heatsource.log'}'. Check write permissions for this folder."
-            ) from exc
 
         self.output = OutputWriter()
         self.model_setup = None
@@ -52,47 +43,58 @@ class ModelRunner:
         through each timestep in the simulation clock. At each step it advances
         model calculations, and writes outputs.
         """
-        self.model_setup = ModelSetup(control_file_path=self.control_file_path, run_type=run_type)
-        self.model_routine = ModelRoutine(self.model_setup.run_type)
-        logger.info("Building model")
-        simulation = self.model_setup.build()
+        try:
+            self.model_setup = ModelSetup(control_file_path=self.control_file_path, run_type=run_type)
+            self.model_routine = ModelRoutine(self.model_setup.run_type)
+            msg = "Building model"
+            print_console(msg)
+            msg = f"Heat Source Version: {self.model_setup.params['version']}"
+            print_console(msg)
+            simulation = self.model_setup.build()
 
-        self.output.bind(
-            reach=self.model_setup.reach,
-            params=self.model_setup.params,
-            run_type=self.model_setup.run_type,
-        )
+            self.output.bind(
+                reach=self.model_setup.reach,
+                params=self.model_setup.params,
+                run_type=self.model_setup.run_type,
+            )
 
-        logger.info("Starting model run")
-        start = perf_counter()
-        total_steps = self._calculate_step_count()
+            msg = "Starting model run"
+            print_console(msg)
+            start = perf_counter()
+            total_steps = self._calculate_step_count()
 
-        # Track cumulative downstream outflow (cms) summed by timestep.
-        outflow_total = 0.0
-        if total_steps > 0:
-            print_console("Timesteps", progress_bar=True, current=0, total=total_steps)
-
-        # Initialize daily solar accumulators before first step.
-        self._reset_daily_solar_accumulators(simulation, 0, 0, 0, force=True)
-        for step_number, epoch_seconds in enumerate(simulation.clock):
-            hour, minute, second, doy, jc = time_parts(epoch_seconds)
-            self._reset_daily_solar_accumulators(simulation, hour, minute, second)
-            logger.debug("Step %d, %s", step_number, epoch_seconds)
-            self._step(simulation, epoch_seconds, hour, minute, second, doy, jc)
-
-            # Add the current discharge (cms) at the mouth to the outflow total.
-            outflow_total += self._mouth_flow(simulation)
+            # Track cumulative downstream outflow (cms) summed by timestep.
+            outflow_total = 0.0
             if total_steps > 0:
-                print_console("Timesteps", progress_bar=True, current=step_number + 1, total=total_steps)
+                print_console("Timesteps", progress_bar=True, current=0, total=total_steps)
 
-        elapsed = perf_counter() - start
-        logger.info("Model run complete in %.2f seconds", elapsed)
+            # Initialize daily solar accumulators before first step.
+            self._reset_daily_solar_accumulators(simulation, 0, 0, 0, force=True)
+            for step_number, epoch_seconds in enumerate(simulation.clock):
+                hour, minute, second, doy, jc = time_parts(epoch_seconds)
+                self._reset_daily_solar_accumulators(simulation, hour, minute, second)
+                self._step(simulation, epoch_seconds, hour, minute, second, doy, jc)
 
-        # Sum node inflow (cms) across the simulation.
-        inflow_total = self._total_inflow(simulation)
+                # Add the current discharge (cms) at the mouth to the outflow total.
+                outflow_total += self._mouth_flow(simulation)
+                if total_steps > 0:
+                    print_console("Timesteps", progress_bar=True, current=step_number + 1, total=total_steps)
 
-        # Report water balance as total inflow / total outflow (cms).
-        print_console(f"Water Balance (cms): {inflow_total:0.4f}/{outflow_total:0.4f}")
+            elapsed = perf_counter() - start
+            msg = "Model run complete in %.2f seconds" % elapsed
+            print_console(msg)
+
+            # Sum node inflow (cms) across the simulation.
+            inflow_total = self._total_inflow(simulation)
+            # Report water balance as total inflow / total outflow (cms).
+            msg = f"Water Balance (cms): {inflow_total:0.4f}/{outflow_total:0.4f}"
+            print_console(msg)
+            msg = f"Outputs: {self.model_setup.params['outputdir']}"
+            print_console(msg)
+        except Exception:
+            msg = f"Error in {run_type.title()} run."
+            logger.exception(msg)
+            raise
 
     def _step(self, simulation, time, hour, minute, second, doy, jc):
         try:
@@ -108,7 +110,7 @@ class ModelRunner:
                 self.output.close()
         except Exception:
             logger.exception(
-                "Model step failed at model date/time=%s.",
+                "Model failed at model date/time=%s.",
                 pretty_time(time),
             )
             raise
