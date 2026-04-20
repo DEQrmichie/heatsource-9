@@ -30,8 +30,10 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
 
     met_path = model_path / control_params["metsitesfile"]
     if not met_path.exists():
-        result = (met_rows, met_params)
-        return result
+        msg = (
+            "Meteorological sites file '{0}' not found. Place the file in this directory: {1}."
+        ).format(met_path.name, model_path)
+        raise FileNotFoundError(msg)
 
     setup = InputSetup(control_path)
     headers = headers_met_sites()
@@ -113,8 +115,10 @@ def _get_trib_sites(model_path, control_params, control_path, run_type, ext):
 
     trib_path = model_path / control_params["tribsitesfile"]
     if not trib_path.exists():
-        result = (trib_rows, trib_params)
-        return result
+        msg = (
+            "Tributary sites file '{0}' not found. Place the file in this directory: {1}."
+        ).format(trib_path.name, model_path)
+        raise FileNotFoundError(msg)
 
     setup = InputSetup(control_path)
     headers = headers_trib_sites()

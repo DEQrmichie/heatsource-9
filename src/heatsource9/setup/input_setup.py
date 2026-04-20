@@ -196,10 +196,19 @@ class InputSetup(object):
             rows = [row[skipcols:] for row in rows]
         return [list(row) for row in rows]
 
+    def _check_file_exists(self, path):
+        if not path.exists():
+            msg = (
+                "Model input file '{0}' not found. Place the file in the input directory: {1}."
+            ).format(path.name, path.parent)
+            raise FileNotFoundError(msg)
+
     def import_lccodes(self):
         """Returns the land cover codes data."""
+        path = Path(self.params["inputdir"]) / self.params["lccodefile"]
+        self._check_file_exists(path)
         data = read_to_dict(
-            path=Path(self.params["inputdir"]) / self.params["lccodefile"],
+            path=path,
             colnames=headers_lccodes(self.params),
             sheetname=sheetnames["lccodefile"],
             value_check=self._validate,
@@ -226,8 +235,10 @@ class InputSetup(object):
     def import_lcdata(self, return_list=True, skiprows=1, skipcols=2):
         """Returns the land cover data."""
         headers = headers_lcdata(self.params)
+        path = Path(self.params["inputdir"]) / self.params["lcdatafile"]
+        self._check_file_exists(path)
         data = read_to_dict(
-            path=Path(self.params["inputdir"]) / self.params["lcdatafile"],
+            path=path,
             colnames=headers,
             sheetname=sheetnames["lcdatafile"],
             value_check=self._validate,
@@ -260,8 +271,10 @@ class InputSetup(object):
         filenames = [f.strip() for f in self.params["tribfiles"].split(",") if f.strip()]
         data = []
         for i, filename in enumerate(filenames):
+            path = Path(self.params["inputdir"]) / filename
+            self._check_file_exists(path)
             site_data = read_to_dict(
-                path=Path(self.params["inputdir"]) / filename,
+                path=path,
                 colnames=headers,
                 sheetname=sheetnames["tribfiles"],
                 value_check=self._validate,
@@ -275,8 +288,10 @@ class InputSetup(object):
 
     def import_morph(self, return_list=False):
         morph_headers = headers_morph()
+        path = Path(self.params["inputdir"]) / self.params["morphfile"]
+        self._check_file_exists(path)
         data = read_to_dict(
-            path=Path(self.params["inputdir"]) / self.params["morphfile"],
+            path=path,
             colnames=morph_headers,
             sheetname=sheetnames["morphfile"],
             value_check=self._validate,
@@ -290,8 +305,10 @@ class InputSetup(object):
         filenames = [f.strip() for f in self.params["metfiles"].split(",") if f.strip()]
         data = []
         for i, filename in enumerate(filenames):
+            path = Path(self.params["inputdir"]) / filename
+            self._check_file_exists(path)
             site_data = read_to_dict(
-                path=Path(self.params["inputdir"]) / filename,
+                path=path,
                 colnames=headers,
                 sheetname=sheetnames["metfiles"],
                 value_check=self._validate,
@@ -305,8 +322,10 @@ class InputSetup(object):
 
     def import_bc(self, return_list=True, skiprows=1, skipcols=1):
         headers = headers_bc()
+        path = Path(self.params["inputdir"]) / self.params["bcfile"]
+        self._check_file_exists(path)
         data = read_to_dict(
-            path=Path(self.params["inputdir"]) / self.params["bcfile"],
+            path=path,
             colnames=headers,
             sheetname=sheetnames["bcfile"],
             value_check=self._validate,
@@ -316,8 +335,10 @@ class InputSetup(object):
         return data
 
     def import_accretion(self):
+        path = Path(self.params["inputdir"]) / self.params["accretionfile"]
+        self._check_file_exists(path)
         return read_to_dict(
-            path=Path(self.params["inputdir"]) / self.params["accretionfile"],
+            path=path,
             colnames=headers_accretion(),
             sheetname=sheetnames["accretionfile"],
             value_check=self._validate,
