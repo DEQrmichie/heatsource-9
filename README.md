@@ -6,7 +6,6 @@ Current Version: heatsource 9.0.0b31 (beta 31)
 
 Model math is stable. Just a few more updates coming before official version 9.0.0
 
- - Add outputdt to the control file to configure the output timestep.
  - Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
 
 ## 1.0 ABOUT 
@@ -632,14 +631,14 @@ Field details:
 |       6       | `OUTFLOW`     | Withdrawal flow       | cubic meters/second | float     |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `STREAM_ID` |  Optional  |    Optional    |     Optional     |
-|       2       | `NODE_ID` |  Optional  |    Required    |     Required     |
-|       3       | `STREAM_KM` |  Optional  |    Required    |     Required     |
-|       4       | `INFLOW` |  Optional  |    Required    |     Required     |
+| COLUMN NUMBER | COLUMN NAME   | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:--------------|:----------:|:--------------:|:----------------:|
+|       1       | `STREAM_ID`   |  Optional  |    Optional    |     Optional     |
+|       2       | `NODE_ID`     |  Optional  |    Required    |     Required     |
+|       3       | `STREAM_KM`   |  Optional  |    Required    |     Required     |
+|       4       | `INFLOW`      |  Optional  |    Required    |     Required     |
 |       5       | `TEMPERATURE` |  Optional  |    Required    |     Required     |
-|       6       | `OUTFLOW` |  Optional  |    Required    |     Required     |
+|       6       | `OUTFLOW`     |  Optional  |    Required    |     Required     |
 
 
 ### 6.7 BOUNDARY CONDITION FILE  
@@ -684,12 +683,12 @@ because the model routines see a blank row as the end of the data sequence.
 Land cover canopy information can be input as either canopy cover or 
 effective leaf area index. This option is specified in the control file using the key ```canopy_data```.
 
-##### Canopy Cover
+##### 6.8.1.1 Canopy Cover
 Input file formatting when ```canopy_data = "CanopyCover"``` in the control file.
 
 Field details:
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION       | UNITS                  | DATA TYPE |
-|:-------------:|:------------|:------------------|:-----------------------|:----------|
+| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION       | UNITS                  | DATA TYPE |
+|:-------------:|:---------------|:------------------|:-----------------------|:----------|
 |       1       | `NAME`         | Land cover Name   | N/A                    |  string   |
 |       2       | `CODE`         | Land cover code   | N/A                    |  string   |
 |       3       | `HEIGHT`       | Land cover height | meters                 |   float   |
@@ -698,13 +697,13 @@ Field details:
 |       6       | `CANOPY_DEPTH` | Canopy depth      | meters                 |   float   |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `NAME` |  Optional  |    Optional    |     Optional     |
-|       2       | `CODE` |  Required  |    Optional    |     Required     |
-|       3       | `HEIGHT` |  Required  |    Optional    |     Required     |
-|       4       | `CANOPY` |  Required  |    Optional    |     Required     |
-|       5       | `OVERHANG` |  Required  |    Optional    |     Required     |
+| COLUMN NUMBER | COLUMN NAME    | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:---------------|:----------:|:--------------:|:----------------:|
+|       1       | `NAME`         |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`         |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`       |  Required  |    Optional    |     Required     |
+|       4       | `CANOPY`       |  Required  |    Optional    |     Required     |
+|       5       | `OVERHANG`     |  Required  |    Optional    |     Required     |
 |       6       | `CANOPY_DEPTH` |  Required  |    Optional    |     Required     |
 
 
@@ -717,7 +716,7 @@ these columns are still required in the current version. See discussion on model
 in the documentation for further details. 
 
 
-##### LAI
+##### 6.8.1.2 LAI
 Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
 Field details:
@@ -732,14 +731,14 @@ Field details:
 |       7       | `CANOPY_DEPTH` | Canopy depth              | meters        |   float   |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `NAME` |  Optional  |    Optional    |     Optional     |
-|       2       | `CODE` |  Required  |    Optional    |     Required     |
-|       3       | `HEIGHT` |  Required  |    Optional    |     Required     |
-|       4       | `LAI` |  Required  |    Optional    |     Required     |
-|       5       | `k` |  Required  |    Optional    |     Required     |
-|       6       | `OVERHANG` |  Required  |    Optional    |     Required     |
+| COLUMN NUMBER | COLUMN NAME    | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:---------------|:----------:|:--------------:|:----------------:|
+|       1       | `NAME`         |  Optional  |    Optional    |     Optional     |
+|       2       | `CODE`         |  Required  |    Optional    |     Required     |
+|       3       | `HEIGHT`       |  Required  |    Optional    |     Required     |
+|       4       | `LAI`          |  Required  |    Optional    |     Required     |
+|       5       | `k`            |  Required  |    Optional    |     Required     |
+|       6       | `OVERHANG`     |  Required  |    Optional    |     Required     |
 |       7       | `CANOPY_DEPTH` |  Required  |    Optional    |     Required     |
 
 - Note `CANOPY_DEPTH` is a new column in heat source 9. It was not present in the landcover codes files 
@@ -768,18 +767,18 @@ Field details:
 |       8       | `TOPO_E`    | Topographic shade angle to the east  | degrees         | float     |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `STREAM_ID` |  Optional  |    Optional    |     Optional     |
-|       2       | `NODE_ID` |  Required  |    Optional    |     Required     |
-|       3       | `STREAM_KM` |  Required  |    Optional    |     Required     |
-|       4       | `LONGITUDE` |  Required  |    Optional    |     Required     |
-|       5       | `LATITUDE` |  Required  |    Optional    |     Required     |
-|       6       | `TOPO_W` |  Required  |    Optional    |     Required     |
-|       7       | `TOPO_S` |  Required  |    Optional    |     Required     |
-|       8       | `TOPO_E` |  Required  |    Optional    |     Required     |
+| COLUMN NUMBER | COLUMN NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:-------------|:----------:|:--------------:|:----------------:|
+|       1       | `STREAM_ID`  |  Optional  |    Optional    |     Optional     |
+|       2       | `NODE_ID`    |  Required  |    Optional    |     Required     |
+|       3       | `STREAM_KM`  |  Required  |    Optional    |     Required     |
+|       4       | `LONGITUDE`  |  Required  |    Optional    |     Required     |
+|       5       | `LATITUDE`   |  Required  |    Optional    |     Required     |
+|       6       | `TOPO_W`     |  Required  |    Optional    |     Required     |
+|       7       | `TOPO_S`     |  Required  |    Optional    |     Required     |
+|       8       | `TOPO_E`     |  Required  |    Optional    |     Required     |
 
-#### Land Cover Data Input Type
+#### 6.9.1 Land Cover Data Input Type
 Land cover information can be input into the model in two different ways:
 Using codes or values. If using codes unique land cover attribute information is represented as a unique code.
 The land cover attribute associated to each code is parameterized in the Land Cover Codes file in long format.
@@ -821,13 +820,13 @@ Field details:
 |   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S      | meters                 | float     |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|   multiple    | `HT_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `CAN_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `OH_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `CD_T#_S#` |  Required  |    Optional    |     Required     |
+| COLUMN NUMBER | COLUMN NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:-------------|:----------:|:--------------:|:----------------:|
+|   multiple    | `HT_T#_S#`   |  Required  |    Optional    |     Required     |
+|   multiple    | `ELE_T#_S#`  |  Required  |    Optional    |     Required     |
+|   multiple    | `CAN_T#_S#`  |  Required  |    Optional    |     Required     |
+|   multiple    | `OH_T#_S#`   |  Required  |    Optional    |     Required     |
+|   multiple    | `CD_T#_S#`   |  Required  |    Optional    |     Required     |
 
 When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
 
@@ -878,21 +877,21 @@ Field details:
 |            13 | `POROSITY`                 | Porosity                      | decimal fraction (0-1)       | float     |
 
 Model run requirements:
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `STREAM_ID` |  Optional  |    Optional    |     Optional     |
-|       2       | `NODE_ID` |  Required  |    Required    |     Required     |
-|       3       | `STREAM_KM` |  Required  |    Required    |     Required     |
-|       4       | `ELEVATION` |  Required  |    Required    |     Required     |
-|       5       | `GRADIENT` |  Optional  |    Required    |     Required     |
-|       6       | `BOTTOM_WIDTH` |  Optional  |    Required    |     Required     |
-|       7       | `CHANNEL_ANGLE_Z` |  Optional  |    Required    |     Required     |
-|       8       | `MANNINGS_n` |  Optional  |    Required    |     Required     |
+| COLUMN NUMBER | COLUMN NAME                | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:---------------------------|:----------:|:--------------:|:----------------:|
+|       1       | `STREAM_ID`                |  Optional  |    Optional    |     Optional     |
+|       2       | `NODE_ID`                  |  Required  |    Required    |     Required     |
+|       3       | `STREAM_KM`                |  Required  |    Required    |     Required     |
+|       4       | `ELEVATION`                |  Required  |    Required    |     Required     |
+|       5       | `GRADIENT`                 |  Optional  |    Required    |     Required     |
+|       6       | `BOTTOM_WIDTH`             |  Optional  |    Required    |     Required     |
+|       7       | `CHANNEL_ANGLE_Z`          |  Optional  |    Required    |     Required     |
+|       8       | `MANNINGS_n`               |  Optional  |    Required    |     Required     |
 |       9       | `SED_THERMAL_CONDUCTIVITY` |  Optional  |    Required    |     Required     |
-|      10       | `SED_THERMAL_DIFFUSIVITY` |  Optional  |    Required    |     Required     |
-|      11       | `SED_HYPORHEIC_THICKNESS` |  Optional  |    Required    |     Required     |
-|      12       | `HYPORHEIC_PERCENT` |  Optional  |    Required    |     Required     |
-|      13       | `POROSITY` |  Optional  |    Required    |     Required     |
+|      10       | `SED_THERMAL_DIFFUSIVITY`  |  Optional  |    Required    |     Required     |
+|      11       | `SED_HYPORHEIC_THICKNESS`  |  Optional  |    Required    |     Required     |
+|      12       | `HYPORHEIC_PERCENT`        |  Optional  |    Required    |     Required     |
+|      13       | `POROSITY`                 |  Optional  |    Required    |     Required     |
 
 ## 7.0 MODEL OUTPUT FILES
 Model outputs are written as CSV files. The first six rows of every output file 
@@ -927,64 +926,64 @@ Datetime,10.100,10.050,10.000,9.950,...
 The table below provides a summary of all the model outputs.
 
 Output Files:
-| OUTPUT NAME  | DESCRIPTION                                       | UNITS                  |
-|:-------------|:--------------------------------------------------|:-----------------------|
-| `Heat_SR1`   | Solar Radiation Flux above Topographic Features   | watts/square meter     |
-| `Heat_SR2`   | Solar Radiation Flux below Topographic Features   | watts/square meter     |
-| `Heat_SR3`   | Solar Radiation Flux below Land Cover             | watts/square meter     |
-| `Heat_SR3b`  | Solar Radiation Flux blocked by Land Cover Sample | watts/square meter     |
-| `Heat_SR4`   | Solar Radiation Flux below Bank Shade & Emergent  | watts/square meter     |
-| `Heat_SR5`   | Solar Radiation Flux Entering Stream              | watts/square meter     |
-| `Heat_SR6`   | Solar Radiation Flux Received by Stream           | watts/square meter     |
-| `Heat_SR7`   | Solar Radiation Flux Received by Substrate        | watts/square meter     |
-| `Heat_Cond`  | Streambed Conduction Flux                         | watts/square meter     |
-| `Heat_Long`  | Longwave Flux                                     | watts/square meter     |
-| `Heat_Conv`  | Convection Flux                                   | watts/square meter     |
-| `Heat_Evap`  | Evaporation Flux                                  | watts/square meter     |
-| `Rate_Evap`  | Evaporation Rate                                  | mm/hour                |
-| `Hyd_Disp`   | Hydraulic Dispersion                              | mm/hour                |
-| `Hyd_DA`     | Average Depth                                     | meters                 |
-| `Hyd_DM`     | Max Depth                                         | meters                 |
-| `Hyd_Flow`   | Flow Rate                                         | meters                 |
-| `Hyd_Hyp`    | Hyporheic Exchange                                | cubic meters/second    |
-| `Hyd_Vel`    | Flow Velocity                                     | meters/second          |
-| `Hyd_WT`     | Top Width                                         | square meters/second   |
-| `Temp_H2O`   | Stream Temperature                                | Celsius                |
-| `Temp_Sed`   | Sediment Temperature                              | Celsius                |
-| `Temp_Hyp`   | Hyporheic Return Water Temperature                | Celsius                |
-| `Shade`      | Effective Shade                                   | decimal fraction (0-1) |
-| `VTS`        | View to Sky                                       | decimal fraction (0-1) |
+| OUTPUT NAME     | DESCRIPTION                                       | UNITS                  |
+|:----------------|:--------------------------------------------------|:-----------------------|
+| `Heat_SR1.csv`  | Solar Radiation Flux above Topographic Features   | watts/square meter     |
+| `Heat_SR2.csv`  | Solar Radiation Flux below Topographic Features   | watts/square meter     |
+| `Heat_SR3.csv`  | Solar Radiation Flux below Land Cover             | watts/square meter     |
+| `Heat_SR3b.csv` | Solar Radiation Flux blocked by Land Cover Sample | watts/square meter     |
+| `Heat_SR4.csv`  | Solar Radiation Flux below Bank Shade & Emergent  | watts/square meter     |
+| `Heat_SR5.csv`  | Solar Radiation Flux Entering Stream              | watts/square meter     |
+| `Heat_SR6.csv`  | Solar Radiation Flux Received by Stream           | watts/square meter     |
+| `Heat_SR7.csv`  | Solar Radiation Flux Received by Substrate        | watts/square meter     |
+| `Heat_Cond.csv` | Streambed Conduction Flux                         | watts/square meter     |
+| `Heat_Long.csv` | Longwave Flux                                     | watts/square meter     |
+| `Heat_Conv.csv` | Convection Flux                                   | watts/square meter     |
+| `Heat_Evap.csv` | Evaporation Flux                                  | watts/square meter     |
+| `Rate_Evap.csv` | Evaporation Rate                                  | mm/hour                |
+| `Hyd_Disp.csv`  | Hydraulic Dispersion                              | mm/hour                |
+| `Hyd_DA.csv`    | Average Depth                                     | meters                 |
+| `Hyd_DM.csv`    | Max Depth                                         | meters                 |
+| `Hyd_Flow.csv`  | Flow Rate                                         | meters                 |
+| `Hyd_Hyp.csv`   | Hyporheic Exchange                                | cubic meters/second    |
+| `Hyd_Vel.csv`   | Flow Velocity                                     | meters/second          |
+| `Hyd_WT.csv`    | Top Width                                         | square meters/second   |
+| `Temp_H2O.csv`  | Stream Temperature                                | Celsius                |
+| `Temp_Sed.csv`  | Sediment Temperature                              | Celsius                |
+| `Temp_Hyp.csv`  | Hyporheic Return Water Temperature                | Celsius                |
+| `Shade.csv`     | Effective Shade                                   | decimal fraction (0-1) |
+| `VTS.csv`       | View to Sky                                       | decimal fraction (0-1) |
 
 The table below summarizes the outputs written by model run type. 
-YES means the output file is written for the model run type.
+YES means the output file is written for that model run type.
 
-| OUTPUT NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------|:----------:|:--------------:|:----------------:|
-| `Heat_SR1`   |    YES     |       NO       |       YES        |
-| `Heat_SR2`   |    YES     |       NO       |       YES        |
-| `Heat_SR3`   |    YES     |       NO       |       YES        |
-| `Heat_SR3b`  |    YES     |       NO       |       YES        |
-| `Heat_SR4`   |    YES     |       NO       |       YES        |
-| `Heat_SR5`   |    YES     |       NO       |       YES        |
-| `Heat_SR6`   |     NO     |       NO       |       YES        |
-| `Heat_SR7`   |     NO     |       NO       |       YES        |
-| `Heat_Cond`  |     NO     |       NO       |       YES        |
-| `Heat_Long`  |     NO     |       NO       |       YES        |
-| `Heat_Conv`  |     NO     |       NO       |       YES        |
-| `Heat_Evap`  |     NO     |       NO       |       YES        |
-| `Rate_Evap`  |     NO     |       NO       |       YES        |
-| `Hyd_Disp`   |     NO     |       NO       |       YES        |
-| `Hyd_DA`     |     NO     |       YES      |       YES        |
-| `Hyd_DM`     |     NO     |       YES      |       YES        |
-| `Hyd_Flow`   |     NO     |       YES      |       YES        |
-| `Hyd_Hyp`    |     NO     |       YES      |       YES        |
-| `Hyd_Vel`    |     NO     |       YES      |       YES        |
-| `Hyd_WT`     |     NO     |       YES      |       YES        |
-| `Temp_H2O`   |     NO     |       NO       |       YES        |
-| `Temp_Sed`   |     NO     |       NO       |       YES        |
-| `Temp_Hyp`   |     NO     |       NO       |       YES        |
-| `Shade`      |    YES     |       NO       |       YES        |
-| `VTS`        |    YES     |       NO       |       YES        |
+| OUTPUT NAME      | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-----------------|:----------:|:--------------:|:----------------:|
+| `Heat_SR1.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR2.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR3.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR3b.csv`  |    YES     |       NO       |       YES        |
+| `Heat_SR4.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR5.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR6.csv`   |     NO     |       NO       |       YES        |
+| `Heat_SR7.csv`   |     NO     |       NO       |       YES        |
+| `Heat_Cond.csv`  |     NO     |       NO       |       YES        |
+| `Heat_Long.csv`  |     NO     |       NO       |       YES        |
+| `Heat_Conv.csv`  |     NO     |       NO       |       YES        |
+| `Heat_Evap.csv`  |     NO     |       NO       |       YES        |
+| `Rate_Evap.csv`  |     NO     |       NO       |       YES        |
+| `Hyd_Disp.csv`   |     NO     |       NO       |       YES        |
+| `Hyd_DA.csv`     |     NO     |       YES      |       YES        |
+| `Hyd_DM.csv`     |     NO     |       YES      |       YES        |
+| `Hyd_Flow.csv`   |     NO     |       YES      |       YES        |
+| `Hyd_Hyp.csv`    |     NO     |       YES      |       YES        |
+| `Hyd_Vel.csv`    |     NO     |       YES      |       YES        |
+| `Hyd_WT.csv`     |     NO     |       YES      |       YES        |
+| `Temp_H2O.csv`   |     NO     |       NO       |       YES        |
+| `Temp_Sed.csv`   |     NO     |       NO       |       YES        |
+| `Temp_Hyp.csv`   |     NO     |       NO       |       YES        |
+| `Shade.csv`      |    YES     |       NO       |       YES        |
+| `VTS.csv`        |    YES     |       NO       |       YES        |
 
 ## 8.0 LICENSE
 GNU General Public License v3 (GPLv3)
