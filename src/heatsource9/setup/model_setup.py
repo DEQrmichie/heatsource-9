@@ -361,7 +361,7 @@ class ModelSetup(object):
                 if km - down < up - km:
                     datasite = self.reach[down]
                 self.reach[km].metData = datasite.metData
-                self.reach[km].metheight = datasite.metheight
+                self.reach[km].zm = datasite.zm
             msg = "Assigning Node"
             current = next(c)+1
             print_console(msg, True, current, len(l))
@@ -588,7 +588,7 @@ class ModelSetup(object):
         # each met node
         kms = self.get_locations("metkm")
         if self.met_site_rows:
-            metheights = [row["metheight"] for row in self.met_site_rows]
+            metheights = [row["zm"] for row in self.met_site_rows]
         elif self.params.get("metheights"):
             metheights = [float(x.strip()) for x in self.params["metheights"].split(",")]
         else:
@@ -604,7 +604,7 @@ class ModelSetup(object):
             
                 # Index by kilometer
                 node = self.reach[kms[i]]
-                node.metheight = metheights[i]
+                node.zm = metheights[i]
                 # Append this node to a list of all nodes which 
                 # have met data
                 if node.km not in self.metDataSites:
@@ -730,7 +730,7 @@ class ModelSetup(object):
         # sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
         # mins = ["km"]
         # aves = ["longitude", "latitude", "elevation", "S",
-        #         "W_b", "z", "n",
+        #         "Wb", "Z", "n",
         #        "Ksed", "Alpha_sed", "Dsed",
         #        "phi", "Q_cont", "d_cont", "T_accr"]
 
@@ -751,8 +751,8 @@ class ModelSetup(object):
             accdata = self.inputs.import_accretion()
             sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
-            aves = ["longitude", "latitude", "elevation", "S", "W_b", "z", "n",
-                    "Ksed", "Alpha_sed", "Dsed", "phi",
+            aves = ["longitude", "latitude", "Zs", "S", "Wb", "Z", "n",
+                    "Ksed", "Alpha_sed", "Dsed", "Eta",
                     "Q_cont", "d_cont", "T_accr"]
 
         elif self.run_type == "solar":
@@ -760,14 +760,14 @@ class ModelSetup(object):
             morphdata = self.inputs.import_morph(return_list=False)
             sums = []
             mins = ["km"]
-            aves = ["longitude", "latitude", "elevation"]
+            aves = ["longitude", "latitude", "Zs"]
 
         elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
             accdata = self.inputs.import_accretion()
             sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
-            aves = ["elevation", "S", "W_b", "z", "n",
+            aves = ["Zs", "S", "Wb", "Z", "n",
                     "Q_cont", "d_cont"]
 
         # Add these columns to morph data since they do not 
@@ -944,7 +944,7 @@ class ModelSetup(object):
                             break
                         else:
                             # Vegetation height relative to the node, - 1 because there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.elevation)
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
         else:
             # -------------------------------------------------------------
@@ -1011,7 +1011,7 @@ class ModelSetup(object):
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.elevation)
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         # Average over the topo values
@@ -1108,7 +1108,7 @@ class ModelSetup(object):
                     # Calculate the relative ground elevation. This is 
                     # the vertical distance from the stream surface to 
                     # the land surface
-                    SH = elev - node.elevation
+                    SH = elev - node.Zs
                     # Then calculate the relative vegetation height
                     VH = v_height + SH
 
@@ -1118,12 +1118,12 @@ class ModelSetup(object):
                     # sample points
 
                     if self.params["lcsampmethod"] == "zone":
-                        adjust = 0.5
+                        adj_zone = 0.5
                     else:
-                        adjust = 0.0
+                        adj_zone = 0.0
 
-                    lc_distance1 = self.params["transsample_distance"] * (s + 1 - adjust)
-                    lc_distance2 = self.params["transsample_distance"] * (s + 2 - adjust)
+                    lc_distance1 = self.params["transsample_distance"] * (s + 1 - adj_zone)
+                    lc_distance2 = self.params["transsample_distance"] * (s + 2 - adj_zone)
 
                     # We shift closer to the stream by the amount of overhang
                     if not s:
@@ -1255,7 +1255,7 @@ class ModelSetup(object):
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.elevation)
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         else:
@@ -1311,7 +1311,7 @@ class ModelSetup(object):
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.elevation)
+                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         # Average over the topo values
@@ -1395,7 +1395,7 @@ class ModelSetup(object):
                         # v_overhang = 0
                     # Calculate the relative ground elevation. This is the
                     # vertical distance from the stream surface to the land surface
-                    SH = elev - node.elevation
+                    SH = elev - node.Zs
                     # Then calculate the relative vegetation height
                     VH = v_height + SH
 
@@ -1406,13 +1406,13 @@ class ModelSetup(object):
                     # zone which represents the vegetation between two 
                     # sample points
                     if self.params["lcsampmethod"] == "zone":
-                        adjust = 0.5
+                        adj_zone = 0.5
                     else:
-                        adjust = 0.0
+                        adj_zone = 0.0
                     lc_distance1 = self.params["transsample_distance"] * (
-                            s + 1 - adjust)  # This is "+ 1" because s starts at 0
+                            s + 1 - adj_zone)  # This is "+ 1" because s starts at 0
                     lc_distance2 = self.params["transsample_distance"] * (
-                            s + 2 - adjust)  # This is "+ 2" because we want to get to the farthest end of the zone
+                            s + 2 - adj_zone)  # This is "+ 2" because we want to get to the farthest end of the zone
                     # We shift closer to the stream by the amount of overhang
                     # This is a rather ugly cludge.
                     if not s:
@@ -1520,7 +1520,7 @@ class ModelSetup(object):
         # math is coupled to the shade math, we have to make sure the hydraulic
         # values are not zero or blank because they'll raise ZeroDivisionError
         if self.run_type == "solar":
-            for attr in ["d_w", "A", "P_w", "W_w", "U", "Disp", "Q_prev", "Q",
+            for attr in ["Dw", "A", "Pw", "Ww", "U", "Disp", "Q_prev", "Q",
                          "Alpha_sed", "Dsed", "Ksed"]:
                 if (getattr(node, attr) is None) or (getattr(node, attr) == 0):
                     setattr(node, attr, 0.01)

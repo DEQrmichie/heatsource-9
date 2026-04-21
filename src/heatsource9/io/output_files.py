@@ -180,9 +180,10 @@ class OutputWriter:
         Return the number of queued non daily output timesteps allowed before
         queued outputs are written to csv.
 
-        This threshold is used to limit problem causing memory growth when outputdt is low
-        or the model has a lot of nodes to write to output. Either can cause a lot of data in
-        the queue. The threshold is calculated from a target queued value
+        This threshold is used to limit problem causing memory growth when
+        outputdt is low or the model has a lot of nodes to write to output.
+        Either can cause a lot of data in the queue. The threshold is
+        calculated from a target queued value
         count of 30,000,000, divided by the estimated number of non daily
         output values stored for one output timestep, which is:
 
@@ -194,9 +195,9 @@ class OutputWriter:
         The result is the maximum number of output timesteps that can be queued
         before write_to_csv() is called automatically.
 
-        Non daily outputs are Shade, VTS, and Heat_SR3b. Those are not included in the count
-        because their size is fixed and the write schedule is at the end of each day.
-
+        Daily outputs are Shade, VTS, and Heat_SR3b. Those are not included in
+        the count because their size is fixed and the write schedule is at the
+        end of each day.
         """
         target_values = 30000000
         nondaily_outputs = [
@@ -212,7 +213,6 @@ class OutputWriter:
 
     def queue_dt_outputs(self, time):
         """Queue non daily outputs for one model timestep."""
-
         # Create an Excel friendly time string
         timestamp = excel_time(time)
         nodes = self.nodes
@@ -248,12 +248,12 @@ class OutputWriter:
             data["Heat_SR5"][timestamp] = [x.F_Solar[5] for x in nodes]
 
         if self.run_type in ("temperature", "hydraulics"):
-            data["Hyd_DA"][timestamp] = [(x.A / x.W_w) for x in nodes]
-            data["Hyd_DM"][timestamp] = [x.d_w for x in nodes]
+            data["Hyd_DA"][timestamp] = [(x.A / x.Ww) for x in nodes]
+            data["Hyd_DM"][timestamp] = [x.Dw for x in nodes]
             data["Hyd_Flow"][timestamp] = [x.Q for x in nodes]
             data["Hyd_Hyp"][timestamp] = [x.Q_hyp for x in nodes]
             data["Hyd_Vel"][timestamp] = [x.U for x in nodes]
-            data["Hyd_WT"][timestamp] = [x.W_w for x in nodes]
+            data["Hyd_WT"][timestamp] = [x.Ww for x in nodes]
 
         if self.run_type == "temperature":
             data["Heat_SR6"][timestamp] = [x.F_Solar[6] for x in nodes]
@@ -261,8 +261,8 @@ class OutputWriter:
             data["Heat_Cond"][timestamp] = [x.F_Conduction for x in nodes]
             data["Heat_Conv"][timestamp] = [x.F_Convection for x in nodes]
             data["Heat_Evap"][timestamp] = [x.F_Evaporation for x in nodes]
-            data["Heat_Long"][timestamp] = [x.F_Longwave for x in nodes]
-            data["Rate_Evap"][timestamp] = [(x.Q_evap / x.dx / x.W_w * 3600 * 1000) for x in nodes]
+            data["Heat_Long"][timestamp] = [x.F_LW for x in nodes]
+            data["Rate_Evap"][timestamp] = [(x.Q_evap / x.dx / x.Ww * 3600 * 1000) for x in nodes]
             data["Temp_H2O"][timestamp] = [x.T for x in nodes]
             data["Temp_Sed"][timestamp] = [x.T_sed for x in nodes]
             data["Temp_Hyp"][timestamp] = [x.T_hyp if x.Q_hyp > 0 else nan for x in nodes]

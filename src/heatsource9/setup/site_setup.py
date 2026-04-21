@@ -72,7 +72,7 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
                 "metname": met_name,
                 "file_name": file_name,
                 "stream_km": stream_km,
-                "metheight": met_height,
+                "zm": met_height,
             }
         )
 
@@ -98,7 +98,7 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
     if missing_metheight:
         met_params["metheights"] = None
     else:
-        met_params["metheights"] = ", ".join([str(row["metheight"]) for row in met_rows])
+        met_params["metheights"] = ", ".join([str(row["zm"]) for row in met_rows])
 
     result = (met_rows, met_params)
     return result
