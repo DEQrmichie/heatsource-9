@@ -2,9 +2,9 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b31 (beta 31)
+Current Version: heatsource 9.0.0b32 (beta 32)
 
-Model math is stable. Just a few more updates coming before official version 9.0.0
+Model math is stable. Just a few more updates before official version 9.0.0
 
  - Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
 
@@ -38,8 +38,8 @@ https://www.python.org/downloads/. This may be better option for Mac or Linux us
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b31 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b31"
+# This command installs heat source version 9.0.0b32 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b32"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -50,14 +50,14 @@ After downloading the wheel, install from the command line using pip.
 cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
-# Installs the Python 3.12 heatsource wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.0b31-cp312-cp312-win_amd64.whl --user
+# Installs the Python 3.12 heat source wheel for windows in the local directory
+py -m pip3 install heatsource9-9.0.0b32-cp312-cp312-win_amd64.whl --user
 
-# Installs the Python 3.12 heatsource wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.0b31-cp312-cp312-win_amd64.whl
+# Installs the Python 3.12 heat source wheel for windows in the global directory
+py -m pip3 install heatsource9-9.0.0b32-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0b31/HS9_Windows_Executables_v9.0.0b31.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b31
+[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0b32/HS9_Windows_Executables_v9.0.0b32.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b32
 
 ## 3.0 QUICK STEPS TO GET GOING
 
@@ -912,7 +912,7 @@ the headers are the output stream km.
 Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
 ```CSV
 File Created:,Tue Mar  3 14:18:18 2026
-Heat Source Version:,9.0.0b31
+Heat Source Version:,9.0.0b32
 Simulation Name:,Example River - HS9_example_model_xslx
 User Text:,This is an example model using xlsx files.
 Output:,Stream Temperature (Celsius)
