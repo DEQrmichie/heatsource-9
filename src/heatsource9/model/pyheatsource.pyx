@@ -284,7 +284,7 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
 
 def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, Eta, lcsampmethod, emergent, lc_canopy, lc_height, lc_height_rel, lc_k, lc_oh, lc_canopy_depth,
+                 BeersData, Eta, lcsampmethod, emergent, lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top, lc_k, lc_oh, lc_canopy_depth,
                  ShaderList, tran, heatsource8):
     """ """
     theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
@@ -388,10 +388,10 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                     PL_lc = transsample_distance / cos_altitude
                 else:
                     adj_zone = 0.5 if lcsampmethod == "zone" else 0.0
-                    Xn_lc_near = transsample_distance * (s + 1 - adj_zone)
-                    Xn_lc_far = transsample_distance * (s + 2 - adj_zone)
+                    lc_xn_near = transsample_distance * (s + 1 - adj_zone)
+                    lc_xn_far = transsample_distance * (s + 2 - adj_zone)
                     if s == 0:
-                        Xn_lc_near -= lc_oh[tran][s]
+                        lc_xn_near -= lc_oh[tran][s]
 
                     altitude_rad = radians(SolarAltitude)
                     cos_altitude = cos(altitude_rad)
@@ -402,32 +402,32 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                     if abs(tan_altitude) < 1e-6:
                         tan_altitude = 1e-6
 
-                    H_top = lc_height_rel[tran][s]
+                    lc_height_node_top_value = lc_height_node_top[tran][s]
                     if BeersData == "LAI":
-                        Hn_lc_base = H_top - lc_canopy_depth[tran][s]
+                        lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[tran][s]
                     else:
                         H_canopy_depth = lc_canopy_depth[tran][s]
-                        Hn_lc_base = H_top - H_canopy_depth
+                        lc_height_node_base = lc_height_node_top_value - H_canopy_depth
 
-                    Xn_lc_base = Hn_lc_base / tan_altitude
-                    Xn_lc_top = H_top / tan_altitude
+                    lc_xn_base = lc_height_node_base / tan_altitude
+                    lc_xn_top = lc_height_node_top_value / tan_altitude
 
                     if SolarAltitude <= theta_path[s]:
                         # Side entry path length
-                        Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
-                        Xn_lc_exit = min(Xn_lc_far, Xn_lc_top)
-                        if Xn_lc_exit <= Xn_lc_enter:
+                        lc_xn_enter = max(lc_xn_near, lc_xn_base)
+                        lc_xn_exit = min(lc_xn_far, lc_xn_top)
+                        if lc_xn_exit <= lc_xn_enter:
                             PL_lc = 0.0
                         else:
-                            PL_lc = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
+                            PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
                     else:
                         # Top entry
-                        Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
-                        Xn_lc_exit = min(max(Xn_lc_top, Xn_lc_near), Xn_lc_far)
-                        if Xn_lc_exit <= Xn_lc_enter:
+                        lc_xn_enter = max(lc_xn_near, lc_xn_base)
+                        lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
+                        if lc_xn_exit <= lc_xn_enter:
                             PL_lc = 0.0
                         else:
-                            PL_lc = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
+                            PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
                 if PL_lc < 0:
                     PL_lc = 0.0
                 
@@ -436,7 +436,7 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                     
                     # use LAI and k to calculate the riparian extinction value
                     try:
-                        K_rip = lc_canopy[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
+                        K_rip = lc_lai[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
                         fraction_passed = exp(-1 * K_rip * PL_lc)
                     except:
                         # can't divide by height zero
@@ -453,16 +453,16 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                         PL = lc_canopy_depth[tran][s]
                     
                     try:
-                        K_rip = -log(1- lc_canopy[tran][s]) / PL
+                        K_rip = -log(1- lc_canopy_cover[tran][s]) / PL
                         fraction_passed = exp(-1 * K_rip * PL_lc)
                     except:
-                        if (lc_canopy[tran][s] >= 1 or PL <= 0):
+                        if (lc_canopy_cover[tran][s] >= 1 or PL <= 0):
                             # can't take log or divide by zero
                             fraction_passed = 0
                         else:
                             # some other error
                             msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} SolarAltitude={6} theta_full_sun={7}".format(
-                                tran, s, lc_height_rel[tran][s], lc_canopy[tran][s], PL_lc, PL, SolarAltitude, theta_full_sun[s]
+                                tran, s, lc_height_node_top[tran][s], lc_canopy_cover[tran][s], PL_lc, PL, SolarAltitude, theta_full_sun[s]
                             )
                             logger.exception(msg)
                             raise RuntimeError(msg)
@@ -491,7 +491,11 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
 
     if emergent:
         # Account for emergent vegetation
-        if (lc_height_rel[0][0] <= 0) or (lc_canopy[0][0] == 0):
+        if BeersData == "LAI":
+            no_emergent_veg = (lc_height_node_top[0][0] <= 0) or (lc_lai[0][0] == 0)
+        else:
+            no_emergent_veg = (lc_height_node_top[0][0] <= 0) or (lc_canopy_cover[0][0] == 0)
+        if no_emergent_veg:
             # Set to one if no veg or no canopy
             fraction_passed = 1
     
@@ -500,8 +504,8 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
             
             if heatsource8 and BeersData != "LAI":
                 # HS8 canopy cover
-                H = lc_height_rel[0][0]
-                C = lc_canopy[0][0]
+                H = lc_height_node_top[0][0]
+                C = lc_canopy_cover[0][0]
 
                 if C <= 0 or H <= 0:
                     direct_passed = 1.0
@@ -541,8 +545,8 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 else:
                     emergent_distance = Wb * 0.5
 
-                H_top = lc_height_rel[0][0]
-                Hn_lc_base = H_top - lc_canopy_depth[0][0]
+                lc_height_node_top_value = lc_height_node_top[0][0]
+                lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[0][0]
 
                 altitude_rad = radians(SolarAltitude)
                 cos_altitude = cos(altitude_rad)
@@ -552,42 +556,42 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 if abs(tan_altitude) < 1e-6:
                     tan_altitude = 1e-6
 
-                Xn_lc_near = 0.0
-                Xn_lc_far = emergent_distance
-                Xn_lc_base = Hn_lc_base / tan_altitude
-                Xn_lc_top = H_top / tan_altitude
+                lc_xn_near = 0.0
+                lc_xn_far = emergent_distance
+                lc_xn_base = lc_height_node_base / tan_altitude
+                lc_xn_top = lc_height_node_top_value / tan_altitude
 
-                if SolarAltitude <= degrees(atan(H_top / emergent_distance)):
-                    Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
-                    Xn_lc_exit = min(Xn_lc_far, Xn_lc_top)
+                if SolarAltitude <= degrees(atan(lc_height_node_top_value / emergent_distance)):
+                    lc_xn_enter = max(lc_xn_near, lc_xn_base)
+                    lc_xn_exit = min(lc_xn_far, lc_xn_top)
                 else:
-                    Xn_lc_enter = max(Xn_lc_near, Xn_lc_base)
-                    Xn_lc_exit = min(max(Xn_lc_top, Xn_lc_near), Xn_lc_far)
-                if Xn_lc_exit <= Xn_lc_enter:
+                    lc_xn_enter = max(lc_xn_near, lc_xn_base)
+                    lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
+                if lc_xn_exit <= lc_xn_enter:
                     PL_emerg = 0.0
                 else:
-                    PL_emerg = (Xn_lc_exit - Xn_lc_enter) / cos_altitude
+                    PL_emerg = (lc_xn_exit - lc_xn_enter) / cos_altitude
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
-                K_rip = lc_canopy[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
+                K_rip = lc_lai[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
                 fraction_passed = exp(-1 * K_rip * PL_emerg)
                 
             else:
                 try:
                     # Use canopy cover to calculate 
                     # the riparian extinction value
-                    K_rip = -log(1- lc_canopy[0][0]) / lc_canopy_depth[0][0]
+                    K_rip = -log(1- lc_canopy_cover[0][0]) / lc_canopy_depth[0][0]
                     fraction_passed = exp(-1 * K_rip * PL_emerg)
                     
                 except:
-                    if lc_canopy[0][0] >= 1:
+                    if lc_canopy_cover[0][0] >= 1:
                         # can't take log of zero
                         fraction_passed = 0
                     else:
                         # some other error
                         msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1}".format(
-                            lc_canopy[0][0], PL_emerg
+                            lc_canopy_cover[0][0], PL_emerg
                         )
                         logger.exception(msg)
                         raise RuntimeError(msg)
@@ -703,7 +707,7 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
     return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
 
 def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, Eta,
-                    lc_height, ViewToSky, Dsed, dx, dt, Ksed,
+                    lc_height_top, ViewToSky, Dsed, dx, dt, Ksed,
                     Alpha_sed, calcalluv, T_alluv, Pw, Ww, emergent,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed,
                     Q_hyp, F_Solar5, F_Solar7, zm):
@@ -894,8 +898,8 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
     
     cloud, Uzm, humidity, T_air = metData
 
-    Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy, lc_height, \
-        lc_height_rel, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
+    Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy_cover, lc_lai, lc_height_top, \
+        lc_height_node_top, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, zm, T_alluv = C_args
@@ -916,7 +920,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
                                         transsample_distance,
                                         transsample_count,
                                         BeersData, Eta, lcsampmethod, emergent,
-                                        lc_canopy, lc_height, lc_height_rel,
+                                        lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top,
                                         lc_k, lc_oh, lc_canopy_depth, ShaderList, tran,
                                         heatsource8)
 
@@ -934,7 +938,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
         else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
 
     ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs,
-                    Eta, lc_height, ViewToSky, Dsed, dx,
+                    Eta, lc_height_top, ViewToSky, Dsed, dx,
                     dt, Ksed, Alpha_sed, calcalluv, T_alluv,
                     Pw, Ww, emergent, penman, wind_a, wind_b,
                     calcevap, T_prev, T_sed, Q_hyp, solar[5],

@@ -929,8 +929,9 @@ class ModelSetup(object):
                 n = 0
                 for tran in range(radial_count + 1):
                     for s in range(transsample_count):
-                        node.lc_height[tran][s] = vheight[n][i]
-                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_height_top[tran][s] = vheight[n][i]
+                        node.lc_lai[tran][s] = vcanopy[n][i]
+                        node.lc_canopy_cover[tran][s] = 0.0
                         node.lc_k[tran][s] = k[n][i]
                         node.lc_canopy_depth[tran][s] = cdepth[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
@@ -938,13 +939,13 @@ class ModelSetup(object):
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
                             # Relative vegetation height is same as veg height
-                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            node.lc_height_node_top[tran][s] = vheight[n][i]
                             n = n + 1
                             # go to the next tran 
                             break
                         else:
                             # Vegetation height relative to the node, - 1 because there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
+                            node.lc_height_node_top[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
         else:
             # -------------------------------------------------------------
@@ -997,21 +998,22 @@ class ModelSetup(object):
                 n = 0
                 for tran in range(radial_count + 1):
                     for s in range(transsample_count):
-                        node.lc_height[tran][s] = vheight[n][i]
-                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_height_top[tran][s] = vheight[n][i]
+                        node.lc_canopy_cover[tran][s] = vcanopy[n][i]
+                        node.lc_lai[tran][s] = 0.0
                         node.lc_oh[tran][s] = overhang[n][i]
                         node.lc_canopy_depth[tran][s] = cdepth[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
                             # Relative vegetation height is same as veg height
-                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            node.lc_height_node_top[tran][s] = vheight[n][i]
                             n = n + 1
                             # go to the next tran 
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
+                            node.lc_height_node_top[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         # Average over the topo values
@@ -1240,8 +1242,9 @@ class ModelSetup(object):
                 n = 0
                 for tran in range(radial_count + 1):
                     for s in range(transsample_count):
-                        node.lc_height[tran][s] = vheight[n][i]
-                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_height_top[tran][s] = vheight[n][i]
+                        node.lc_lai[tran][s] = vcanopy[n][i]
+                        node.lc_canopy_cover[tran][s] = 0.0
                         node.lc_k[tran][s] = k[n][i]
                         node.lc_canopy_depth[tran][s] = cdepth[n][i]
                         node.lc_oh[tran][s] = overhang[n][i]
@@ -1249,13 +1252,13 @@ class ModelSetup(object):
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
                             # Relative vegetation height is same as veg height
-                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            node.lc_height_node_top[tran][s] = vheight[n][i]
                             n = n + 1
                             # go to the next tran 
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
+                            node.lc_height_node_top[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         else:
@@ -1297,21 +1300,22 @@ class ModelSetup(object):
                 n = 0
                 for tran in range(radial_count + 1):
                     for s in range(transsample_count):
-                        node.lc_height[tran][s] = vheight[n][i]
-                        node.lc_canopy[tran][s] = vcanopy[n][i]
+                        node.lc_height_top[tran][s] = vheight[n][i]
+                        node.lc_canopy_cover[tran][s] = vcanopy[n][i]
+                        node.lc_lai[tran][s] = 0.0
                         node.lc_oh[tran][s] = overhang[n][i]
                         node.lc_canopy_depth[tran][s] = cdepth[n][i]
 
                         # 0 is emergent, there is only one value at s = 0
                         if tran == 0 and s == 0:
                             # Relative vegetation height is same as veg height
-                            node.lc_height_rel[tran][s] = vheight[n][i]
+                            node.lc_height_node_top[tran][s] = vheight[n][i]
                             n = n + 1
                             # go to the next tran 
                             break
                         else:
                             # Vegetation height relative to the node, - 1 becaue there is no emergent elevation
-                            node.lc_height_rel[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
+                            node.lc_height_node_top[tran][s] = vheight[n][i] + (elevation[n - 1][i] - node.Zs)
                         n = n + 1
 
         # Average over the topo values
@@ -1478,7 +1482,7 @@ class ModelSetup(object):
             data = {}
 
             for i, code in enumerate(codes):
-                # Each code is a tuple in the form of (lc_height, lc_canopy, lc_K, lc_oh, lc_canopy_depth)
+                # Each code is a tuple in the form of (lc_height_top, lc_lai, lc_k, lc_oh, lc_canopy_depth)
                 data[code] = vals[i]
 
         else:
@@ -1488,7 +1492,7 @@ class ModelSetup(object):
             data = {}
 
             for i, code in enumerate(codes):
-                # Each code is a tuple in the form of (lc_height, lc_canopy, lc_oh, lc_canopy_depth)
+                # Each code is a tuple in the form of (lc_height_top, lc_canopy_cover, lc_oh, lc_canopy_depth)
                 data[code] = vals[i]
                 if vals[i][0] is not None and (vals[i][1] < 0 or vals[i][1] > 1):
                     raise ValueError(

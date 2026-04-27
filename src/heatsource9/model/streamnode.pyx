@@ -30,8 +30,8 @@ class StreamNode(object):
         __slots = ["latitude", "longitude", "Zs", # Geographic params
                 "FLIR_Temp", "FLIR_Time", # FLIR data
                 "T_sed", "T_hyp", "T_accr", "T_tribs", # Temperature attrs
-                "lc_height", "lc_canopy", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
-                "lc_height_rel", # landcover height relative to the stream node elevation
+                "lc_height_top", "lc_canopy_cover", "lc_oh", "lc_canopy_depth", "lc_lai", "lc_k", # Land cover params
+                "lc_height_node_top", # landcover height relative to the stream node elevation
                 "metData", # Meteorological data
                 "zm", # Meteorological measurement height
                 "Zone", "T_bc", # Initialization parameters, Zone and boundary conditions
@@ -118,9 +118,10 @@ class StreamNode(object):
         else:
             radial_count = self.run_params.get("trans_count", 0)
         transsample_count = self.run_params.get("transsample_count", 0)
-        self.lc_height = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
-        self.lc_height_rel = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
-        self.lc_canopy = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
+        self.lc_height_top = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
+        self.lc_height_node_top = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
+        self.lc_canopy_cover = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
+        self.lc_lai = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
         self.lc_oh = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
         self.lc_canopy_depth = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
         self.lc_k = [[[0.0]for zone in range(transsample_count)] for tran in range(radial_count + 1)]
@@ -164,8 +165,8 @@ class StreamNode(object):
         self.CalcDischarge = self.calculate_discharge
         rp = self.run_params
         self.C_args = (self.Wb, self.Zs, self.TopoFactor,
-                       self.ViewToSky, self.Eta, self.lc_canopy,
-                       self.lc_height, self.lc_height_rel, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.Dsed,
+                       self.ViewToSky, self.Eta, self.lc_canopy_cover,
+                       self.lc_lai, self.lc_height_top, self.lc_height_node_top, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.Dsed,
                        self.dx, self.dt, self.Ksed,
                        self.Alpha_sed, self.Q_accr, self.T_accr,
                        has_prev, rp.get("transsample_distance", 0.0),
