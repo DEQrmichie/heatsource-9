@@ -8,7 +8,7 @@ from openpyxl.utils import datetime as pyxl_datetime
 from heatsource9.io.control_file import cf_path, import_control_file
 from heatsource9.io.input_files import read_to_dict, write_input
 from heatsource9.io.logging_config import configure_logging
-from heatsource9.setup.constants import dtype, sheetnames
+from heatsource9.setup.constants import KM_PRECISION, dtype, sheetnames
 from heatsource9.setup.headers import (
     headers_accretion,
     headers_bc,
@@ -56,7 +56,10 @@ def _compute_stream_kms(length_km, longsample_m):
     Return a list of stream kilometers sorted from upstream to downstream.
     """
     num_nodes = int(ceil(round(length_km * 1000 / longsample_m, 4))) + 1
-    kms = [(float(node) * longsample_m) / 1000 for node in range(0, num_nodes)]
+    precision_digits = abs(KM_PRECISION.as_tuple().exponent)
+    kms = [
+        round((float(node) * longsample_m) / 1000, precision_digits) for node in range(0, num_nodes)
+    ]
     kms.sort(reverse=True)
     return kms
 

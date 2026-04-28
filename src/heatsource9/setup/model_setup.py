@@ -11,7 +11,8 @@ from heatsource9.io.control_file import import_control_file
 
 from heatsource9.setup.input_setup import InputSetup
 from heatsource9.setup.site_setup import get_site_files
-from heatsource9.setup.constants import control_keys, dtype, head2var, sheetnames
+from heatsource9.setup.constants import KM_PRECISION, control_keys, dtype, head2var, sheetnames
+from heatsource9.setup.setup_validation import align_rows_to_kmlist, validate_required_field
 from heatsource9.__version__ import __version__
 from heatsource9.domain.clock import Clock, pretty_time
 from heatsource9.model.interpolator import Interpolator
@@ -149,66 +150,22 @@ class ModelSetup(object):
         
         control_params = dict(control_params)
 
-        # set up a list to check if a missing value in the control file is ok
-        if self.params["run_type"] == "temperature":
-            # For temperature runs None is ok for these inputs
-            none_ok = ["usertxt", "name"]
-
-        elif self.params["run_type"] == "solar":
-            # For solar runs None is ok for these inputs
-            none_ok = ["usertxt", "name", "flushdays", "bcfile",
-                       "tribsites", "tribfiles", "tribkm",
-                       "metheights",
-                       "accretionfile",
-                       "calcevap", "evapmethod",
-                       "wind_a", "wind_b", "calcalluvium", "alluviumtemp"]
-
-        elif self.params["run_type"] == "hydraulics":
-            # For hydraulic runs None is ok for these inputs
-            none_ok = ["usertxt", "name", "lcdatafile", "lccodefile",
-                       "metsites", "metfiles", "metkm",
-                       "metheights",
-                       "trans_count", "transsample_count",
-                       "transsample_distance", "emergent",
-                       "lcdatainput", "canopy_data", "lcsampmethod",
-                       "point"]
-        else:
-            # setup call
-            none_ok = list(control_keys)
-
+        # Validate control file values with run type requirements and defaults.
         keys = list(control_keys)
         keys.sort(reverse=True)
 
         for key in keys:
             value = control_params.get(key, None)
-
-            if value in [None, ""]:
-                if key == "outputdt":
-                    self.params[key] = 60.0
-                    msg = "Control file key 'outputdt' is missing. Defaulting to 60 minutes."
-                    logger.warning(msg)
-
-                elif key in none_ok:
-                    self.params[key] = None
-
-                elif (key == "lccodefile" and self.params.get("lcdatainput") == "Values"):
-                    self.params[key] = None
-
-                elif (key in ["tribfiles", "tribkm"] and self.params.get("tribsites") == 0):
-                    self.params[key] = None
-
-                elif (key == "metheights" and not self.met_site_rows):
-                    self.params[key] = None
-
-                elif (key == "alluviumtemp" and self.params.get("calcalluvium") is False):
-                    self.params[key] = None
-
-                else:
-                    raise TypeError(f"Value in control file for key {key} is missing")
-
-            else:
-                # Control values are already typed in import_control_file().
-                self.params[key] = value
+            # Control values are typed in import_control_file, then checked for required blanks here.
+            self.params[key] = validate_required_field(
+                run_type=self.params["run_type"],
+                file_key="controlfile",
+                field_name=key,
+                value=value,
+                params=control_params,
+                source="controlfile",
+            )
+            control_params[key] = self.params[key]
 
         # Make dates into seconds since UTC epoch
         self.params["datastart"] = timegm(strptime(self.params["datastart"] + " 00:00:00", "%Y-%m-%d %H:%M:%S"))
@@ -229,16 +186,23 @@ class ModelSetup(object):
 
         self.params["flushtimestart"] = self.params["modelstart"] - self.params["flushdays"] * 86400
 
-        # If the number of transverse samples per direction is NOT reported, assume 4
-        if not self.params["transsample_count"]:
-            self.params["transsample_count"] = 4.0
+        if self.params["run_type"] in ("solar", "temperature"):
+            # If the number of transverse samples per direction is NOT reported, assume 4
+            if not self.params["transsample_count"]:
+                self.params["transsample_count"] = 4.0
 
-        # Format for heat source 8 methods same as 8 directions but no north
-        if self.params["heatsource8"]:
-            self.params["trans_count"] = 7
+            # Format for heat source 8 methods same as 8 directions but no north
+            if self.params["heatsource8"]:
+                self.params["trans_count"] = 7
 
-        # Set the total number landcover sample count (0 = emergent)
-        self.params["sample_count"] = int(self.params["transsample_count"] * self.params["trans_count"])
+            # Set the total number landcover sample count (0 = emergent)
+            self.params["sample_count"] = int(self.params["transsample_count"] * self.params["trans_count"])
+        else:
+            # Hydraulics runs do not use land cover transect sampling values
+            # for model calculations, but StreamNode setup expects integers.
+            self.params["trans_count"] = int(self.params.get("trans_count") or 0)
+            self.params["transsample_count"] = int(self.params.get("transsample_count") or 0)
+            self.params["sample_count"] = 0
 
         # Set up evaporation method
         if self.params["evapmethod"] == "Penman":
@@ -270,6 +234,10 @@ class ModelSetup(object):
                     self.params["dt"] / 60,
                 )
             )
+            raise ValueError(msg)
+
+        if not isinstance(self.params["longsample"], int) or self.params["longsample"] <= 0:
+            msg = "Longitudinal stream sample distance (longsample) must be an integer greater than zero."
             raise ValueError(msg)
 
         # dx must be a multiple of longsample and >= longsample
@@ -314,10 +282,11 @@ class ModelSetup(object):
                 # check for a zero slope. We store all of them before 
                 # checking so we can print a lengthy error that no-one 
                 # will ever read.
-                if self.reach[key].S <= 0.0:
-                    slope_problems.append(key)
+                if self.run_type in ("temperature", "hydraulics"):
+                    if self.reach[key].S is None or self.reach[key].S <= 0.0:
+                        slope_problems.append(key)
 
-            if self.run_type != "solar":  # zeros are alright in shade calculations
+            if self.run_type in ("temperature", "hydraulics"):  # zeros are alright in shade calculations
                 if len(slope_problems):
                     raise Exception("The following reaches have zero slope. Kilometers: %s" % ",".join(
                         ['%0.3f' % i for i in slope_problems]))
@@ -400,8 +369,7 @@ class ModelSetup(object):
                     flow = 0
             self.Q_bc[time] = flow
             # Temperature boundary condition
-            t_val = temp if temp is not None else 0.0
-            self.T_bc[time] = t_val
+            self.T_bc[time] = temp
             msg = "Reading boundary conditions"
             current = next(c)+1
             print_console(msg, True, current, length)
@@ -466,8 +434,10 @@ class ModelSetup(object):
         # ten thousandths decimal place to make sure the number of nodes
         # is correct.        
         num_nodes = int(ceil(round(self.params["length"] * 1000 / (self.params["longsample"]), 4))) + 1
-        kmlist = []
-        kmlist = [(node * self.params["longsample"]) / 1000 for node in range(0, num_nodes)]
+        precision_digits = abs(KM_PRECISION.as_tuple().exponent)
+        kmlist = [
+            round((node * self.params["longsample"]) / 1000, precision_digits) for node in range(0, num_nodes)
+        ]
         kmlist.sort(reverse=True)
         return kmlist
 
@@ -742,14 +712,23 @@ class ModelSetup(object):
         #         "SED_THERMAL_CONDUCTIVITY", "SED_THERMAL_DIFFUSIVITY", "SED_HYPORHEIC_THICKNESS",
         #         "POROSITY", "Q_cont","d_cont", "TEMPERATURE"]
 
+        kmlist = self.get_stream_km_list()
+
         data = {}
 
         # Read data into a dictionary
         if self.run_type == "temperature":
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
-            accdata = self.inputs.import_accretion()
             sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
+            lcdata = align_rows_to_kmlist(
+                file_key = "lcdatafile",
+                data_dict = lcdata,
+                kmlist = kmlist,
+                file_name = self.params["lcdatafile"],
+                longsample = self.params["longsample"],
+            )
+
             mins = ["km"]
             aves = ["longitude", "latitude", "Zs", "S", "Wb", "Z", "n",
                     "Ksed", "Alpha_sed", "Dsed", "Eta",
@@ -758,24 +737,64 @@ class ModelSetup(object):
         elif self.run_type == "solar":
             lcdata = self.inputs.import_lcdata(return_list=False)
             morphdata = self.inputs.import_morph(return_list=False)
+            lcdata = align_rows_to_kmlist(
+                file_key = "lcdatafile",
+                data_dict = lcdata,
+                kmlist = kmlist,
+                file_name = self.params["lcdatafile"],
+                longsample = self.params["longsample"],
+            )
             sums = []
             mins = ["km"]
             aves = ["longitude", "latitude", "Zs"]
 
         elif self.run_type == "hydraulics":
             morphdata = self.inputs.import_morph(return_list=False)
-            accdata = self.inputs.import_accretion()
             sums = ["Q_hyp_frac", "Q_accr", "Q_with"]
             mins = ["km"]
             aves = ["Zs", "S", "Wb", "Z", "n",
                     "Q_cont", "d_cont"]
 
-        # Add these columns to morph data since they do not 
-        # exist in the input file. 
-        # TODO
-        kmlist = self.get_stream_km_list()
+        morphdata = align_rows_to_kmlist(
+            file_key = "morphfile",
+            data_dict = morphdata,
+            kmlist = kmlist,
+            file_name = self.params["morphfile"],
+            longsample = self.params["longsample"],
+        )
+
+        # Add these columns to morph data since they do not exist in the input file.
         morphdata["Q_cont"] = [0.0 for km in kmlist]
         morphdata["d_cont"] = [0.0 for km in kmlist]
+
+        if self.run_type in ["temperature", "hydraulics"]:
+            if self.params.get("accretionfile"):
+                accdata = align_rows_to_kmlist(
+                    file_key = "accretionfile",
+                    data_dict = self.inputs.import_accretion(),
+                    kmlist = kmlist,
+                    file_name = self.params["accretionfile"],
+                    longsample = self.params["longsample"],
+                )
+            else:
+                accdata = {
+                    "INFLOW": [0.0 for km in kmlist],
+                    "TEMPERATURE": [0.0 for km in kmlist],
+                    "OUTFLOW": [0.0 for km in kmlist],
+                }
+
+        node_id_sources = {"morphfile": morphdata["NODE_ID"]}
+        if self.run_type in ("temperature", "solar"):
+            node_id_sources["lcdatafile"] = lcdata["NODE_ID"]
+        if self.run_type in ("temperature", "hydraulics") and self.params.get("accretionfile"):
+            node_id_sources["accretionfile"] = accdata["NODE_ID"]
+
+        for i, km in enumerate(kmlist):
+            node_ids = {name: values[i] for name, values in node_id_sources.items()}
+            if len(set(node_ids.values())) > 1:
+                parts = ["{0} NODE_ID={1}".format(name, node_ids[name]) for name in node_ids]
+                msg = "NODE_ID mismatch for STREAM_KM {0}: {1}.".format(km, ", ".join(parts))
+                raise ValueError(msg)
 
         # Add the values into the data dictionary but
         # we have to switch the key names because they are not 

@@ -4,6 +4,13 @@ acceptable value ranges, and data types. These are mostly used
 during setup.
 """
 
+from decimal import Decimal
+
+# This establishes the model km precision (1 meter) which is enforced through longsample and dx
+# It is also used to write km values in template input files and matching internal km to what is imported
+# from the input files.
+KM_PRECISION = Decimal("0.001")
+
 # dype is a dictionary holding the data type for every input. Includes 
 # model variable names and input file names. Note the datetime inputs
 # are identified as strings here "date" but are converted to integers
@@ -222,6 +229,233 @@ control_keys = (
     "lcsampmethod",
     "heatsource8",
 )
+
+# This dictionary holds the minimum required files needed for input file setup and each run type.
+required_files = {
+    "setup_inputs": (
+        "controlfile",
+    ),
+    "solar": (
+        "controlfile",
+        "morphfile",
+        "metsitesfile",
+        "metfiles",
+        "lcdatafile",
+        "lccodefile",
+    ),
+    "hydraulics": (
+        "controlfile",
+        "morphfile",
+        "bcfile",
+        "tribsitesfile",
+        "tribfiles",
+    ),
+    "temperature": (
+        "controlfile",
+        "morphfile",
+        "bcfile",
+        "metsitesfile",
+        "metfiles",
+        "tribsitesfile",
+        "tribfiles",
+        "lcdatafile",
+        "lccodefile",
+    ),
+}
+
+# This dictionary holds the minimum required fields needed for input file setup and each run type.
+required_fields = {
+    "setup_inputs": {
+        "controlfile": (
+            "inputdir",
+            "length",
+            "datastart",
+            "dataend",
+            "longsample",
+        ),
+    },
+    "solar": {
+        "controlfile": (
+            "inputdir",
+            "outputdir",
+            "length",
+            "outputkm",
+            "datastart",
+            "modelstart",
+            "modelend",
+            "dataend",
+            "offset",
+            "dt",
+            "outputdt",
+            "dx",
+            "longsample",
+            "metsites",
+            "metsitesfile",
+            "metfiles",
+            "metkm",
+            "morphfile",
+            "lcdatafile",
+            "lccodefile",
+            "trans_count",
+            "transsample_count",
+            "transsample_distance",
+            "emergent",
+            "lcdatainput",
+            "canopy_data",
+            "lcsampmethod",
+            "heatsource8",
+        ),
+        "morphfile": (
+            "NODE_ID",
+            "STREAM_KM",
+            "ELEVATION",
+        ),
+        "metsitesfile": (
+            "COLID",
+            "STREAM_KM",
+            "FILE_NAME",
+        ),
+        "metfiles": (
+            "DATETIME",
+            "CLOUDINESS1",
+        ),
+        "lcdatafile": (
+            "NODE_ID",
+            "STREAM_KM",
+            "LONGITUDE",
+            "LATITUDE",
+            "TOPO_W",
+            "TOPO_S",
+            "TOPO_E",
+        ),
+        "lccodefile": (
+            "CODE",
+            "HEIGHT",
+            "CANOPY",
+            "LAI",
+            "k",
+            "OVERHANG",
+            "CANOPY_DEPTH",
+        ),
+    },
+    "hydraulics": {
+        "controlfile": (
+            "inputdir",
+            "outputdir",
+            "length",
+            "outputkm",
+            "datastart",
+            "modelstart",
+            "modelend",
+            "dataend",
+            "flushdays",
+            "dt",
+            "outputdt",
+            "dx",
+            "longsample",
+            "bcfile",
+            "tribsites",
+            "tribsitesfile",
+            "tribfiles",
+            "tribkm",
+            "morphfile",
+        ),
+        "morphfile": (
+            "NODE_ID",
+            "STREAM_KM",
+            "ELEVATION",
+            "GRADIENT",
+            "BOTTOM_WIDTH",
+            "CHANNEL_ANGLE_Z",
+            "MANNINGS_n",
+        ),
+        "bcfile": (
+            "DATETIME",
+            "FLOW",
+            "TEMPERATURE",
+        ),
+        "accretionfile": (
+            "NODE_ID",
+            "STREAM_KM",
+        ),
+        "tribsitesfile": (
+            "COLID",
+            "STREAM_KM",
+            "FILE_NAME",
+        ),
+        "tribfiles": (
+            "DATETIME",
+            "FLOW1",
+            "TEMPERATURE1",
+        ),
+    },
+    "temperature": {
+        "controlfile": (
+            "inputdir",
+            "outputdir",
+            "length",
+            "outputkm",
+            "datastart",
+            "modelstart",
+            "modelend",
+            "dataend",
+            "flushdays",
+            "offset",
+            "dt",
+            "outputdt",
+            "dx",
+            "longsample",
+            "bcfile",
+            "tribsites",
+            "tribsitesfile",
+            "tribfiles",
+            "tribkm",
+            "metsites",
+            "metsitesfile",
+            "metfiles",
+            "metkm",
+            "metheights",
+            "calcevap",
+            "evapmethod",
+            "wind_a",
+            "wind_b",
+            "calcalluvium",
+            "alluviumtemp",
+            "morphfile",
+            "lcdatafile",
+            "lccodefile",
+            "trans_count",
+            "transsample_count",
+            "transsample_distance",
+            "emergent",
+            "lcdatainput",
+            "canopy_data",
+            "lcsampmethod",
+            "heatsource8",
+        ),
+        "morphfile": (
+            "NODE_ID",
+            "STREAM_KM",
+            "ELEVATION",
+            "GRADIENT",
+            "BOTTOM_WIDTH",
+            "CHANNEL_ANGLE_Z",
+            "MANNINGS_n",
+            "SED_THERMAL_CONDUCTIVITY",
+            "SED_THERMAL_DIFFUSIVITY",
+            "SED_HYPORHEIC_THICKNESS",
+            "POROSITY",
+        ),
+        "bcfile": ("DATETIME", "FLOW", "TEMPERATURE"),
+        "accretionfile": ("NODE_ID", "STREAM_KM"),
+        "metsitesfile": ("COLID", "STREAM_KM", "FILE_NAME", "MET_HEIGHT"),
+        "metfiles": ("DATETIME", "CLOUDINESS1", "WIND_SPEED1", "RELATIVE_HUMIDITY1", "AIR_TEMPERATURE1"),
+        "tribsitesfile": ("COLID", "STREAM_KM", "FILE_NAME"),
+        "tribfiles": ("DATETIME", "FLOW1", "TEMPERATURE1"),
+        "lcdatafile": ("NODE_ID", "STREAM_KM", "LONGITUDE", "LATITUDE", "TOPO_W", "TOPO_S", "TOPO_E"),
+        "lccodefile": ("CODE", "HEIGHT", "CANOPY", "LAI", "k", "OVERHANG", "CANOPY_DEPTH"),
+    },
+}
 
 legacy_cf_format_keys = {
     "metfiles": "metfiles",

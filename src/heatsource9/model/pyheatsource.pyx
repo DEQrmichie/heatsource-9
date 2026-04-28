@@ -285,7 +285,7 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
 def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, Eta, lcsampmethod, emergent, lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top, lc_k, lc_oh, lc_canopy_depth,
-                 ShaderList, tran, heatsource8):
+                 ShaderList, tran, heatsource8, solar_only=False):
     """ """
     theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
     F_Direct = [0]*8
@@ -614,6 +614,17 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
         Reflectivity = 0.091 * (1 / cos(SolarZenith * pi / 180)) - 0.0386
     F_Diffuse[5] = F_Diffuse[4] * 0.91
     F_Direct[5] = F_Direct[4] * (1 - Reflectivity)
+
+    if solar_only:
+        # Solar only runs write SR1 through SR5 and do not use SR6 or SR7.
+        # Return here to avoid unnecessary bed and water column calculations.
+        F_Solar[0] = F_Diffuse[0] + F_Direct[0]
+        F_Solar[1] = F_Diffuse[1] + F_Direct[1]
+        F_Solar[2] = F_Diffuse[2] + F_Direct[2]
+        F_Solar[3] = F_Diffuse[3] + F_Direct[3]
+        F_Solar[4] = F_Diffuse[4] + F_Direct[4]
+        F_Solar[5] = F_Diffuse[5] + F_Direct[5]
+        return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
     
     #=========================================================
     # 6 - Received by Water Column
@@ -921,8 +932,8 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
                                         transsample_count,
                                         BeersData, Eta, lcsampmethod, emergent,
                                         lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top,
-                                        lc_k, lc_oh, lc_canopy_depth, ShaderList, tran,
-                                        heatsource8)
+                                        lc_k, lc_oh, lc_canopy_depth, ShaderList, tran, heatsource8,
+                                        solar_only=solar_only)
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:

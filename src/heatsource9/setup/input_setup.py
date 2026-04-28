@@ -21,6 +21,7 @@ from heatsource9.setup.headers import (
 )
 
 import logging
+from heatsource9.setup.setup_validation import validate_column_values
 
 logger = logging.getLogger(__name__)
 
@@ -214,6 +215,13 @@ class InputSetup(object):
             value_check=self._validate,
             header_check=self.validate_headers,
         )
+        data = validate_column_values(
+            run_type=self.params.get("run_type"),
+            file_key="lccodefile",
+            data_dict=data,
+            params=self.params,
+            source="lccodefile",
+        )
         # Do some canopy depth validaton that can't be done easily in validate
         nrows = len(data.get("CODE", []))
         heights = data.get("HEIGHT", [])
@@ -243,6 +251,13 @@ class InputSetup(object):
             sheetname=sheetnames["lcdatafile"],
             value_check=self._validate,
             header_check=self.validate_headers,
+        )
+        data = validate_column_values(
+            run_type=self.params.get("run_type"),
+            file_key="lcdatafile",
+            data_dict=data,
+            params=self.params,
+            source="lcdatafile",
         )
         # Do some canopy depth validaton that can't be done easily in validate
         if self.params.get("lcdatainput") == "Values":
@@ -279,6 +294,13 @@ class InputSetup(object):
                 sheetname=sheetnames["tribfiles"],
                 value_check=self._validate,
             )
+            site_data = validate_column_values(
+                run_type=self.params.get("run_type"),
+                file_key="tribfiles",
+                data_dict=site_data,
+                params=self.params,
+                source="tribfiles",
+            )
             site_rows = self.dict2list(site_data, headers, skiprows, skipcols)
             if i == 0:
                 data = site_rows
@@ -295,6 +317,13 @@ class InputSetup(object):
             colnames=morph_headers,
             sheetname=sheetnames["morphfile"],
             value_check=self._validate,
+        )
+        data = validate_column_values(
+            run_type=self.params.get("run_type"),
+            file_key="morphfile",
+            data_dict=data,
+            params=self.params,
+            source="morphfile",
         )
         if return_list:
             return self.dict2list(data, morph_headers, skiprows=1, skipcols=0)
@@ -313,6 +342,13 @@ class InputSetup(object):
                 sheetname=sheetnames["metfiles"],
                 value_check=self._validate,
             )
+            site_data = validate_column_values(
+                run_type=self.params.get("run_type"),
+                file_key="metfiles",
+                data_dict=site_data,
+                params=self.params,
+                source="metfiles",
+            )
             site_rows = self.dict2list(site_data, headers, skiprows, skipcols)
             if i == 0:
                 data = site_rows
@@ -330,6 +366,13 @@ class InputSetup(object):
             sheetname=sheetnames["bcfile"],
             value_check=self._validate,
         )
+        data = validate_column_values(
+            run_type=self.params.get("run_type"),
+            file_key="bcfile",
+            data_dict=data,
+            params=self.params,
+            source="bcfile",
+        )
         if return_list:
             return self.dict2list(data, headers, skiprows, skipcols)
         return data
@@ -337,9 +380,17 @@ class InputSetup(object):
     def import_accretion(self):
         path = Path(self.params["inputdir"]) / self.params["accretionfile"]
         self._check_file_exists(path)
-        return read_to_dict(
+        data = read_to_dict(
             path=path,
             colnames=headers_accretion(),
             sheetname=sheetnames["accretionfile"],
             value_check=self._validate,
         )
+        data = validate_column_values(
+            run_type=self.params.get("run_type"),
+            file_key="accretionfile",
+            data_dict=data,
+            params=self.params,
+            source="accretionfile",
+        )
+        return data

@@ -4,6 +4,7 @@ from heatsource9.io.input_files import read_to_dict
 from heatsource9.setup.constants import sheetnames
 from heatsource9.setup.headers import headers_met_sites, headers_trib_sites
 from heatsource9.setup.input_setup import InputSetup
+from heatsource9.setup.setup_validation import file_required, validate_column_values
 
 
 def _validate_site_file_names(site_file_name, file_names):
@@ -24,12 +25,24 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
     met_params = {}
     met_count = int(control_params.get("metsites") or 0)
 
-    if met_count <= 0:
+    if not file_required(run_type, "metsitesfile", params=control_params, source="metsitesfile"):
         result = (met_rows, met_params)
         return result
 
-    met_path = model_path / control_params["metsitesfile"]
+    if met_count <= 0:
+        msg = "{0} runs require metsites to be greater than or equal to 1.".format(run_type)
+        raise ValueError(msg)
+
+    metsitesfile = control_params.get("metsitesfile")
+    met_path = model_path / metsitesfile
+    has_legacy_met = (
+        control_params.get("metfiles") not in (None, "") and
+        control_params.get("metkm") not in (None, "")
+    )
     if not met_path.exists():
+        if has_legacy_met:
+            result = (met_rows, met_params)
+            return result
         msg = (
             "Meteorological sites file '{0}' not found. Place the file in this directory: {1}."
         ).format(met_path.name, model_path)
@@ -43,6 +56,13 @@ def _get_met_sites(model_path, control_params, control_path, run_type, ext):
         sheetname=sheetnames["metsitesfile"],
         value_check=setup._validate,
         header_check=setup.validate_headers,
+    )
+    data = validate_column_values(
+        run_type=run_type,
+        file_key="metsitesfile",
+        data_dict=data,
+        params=control_params,
+        source="metsitesfile",
     )
 
     col_ids = list(data.get("COLID", []))
@@ -109,12 +129,24 @@ def _get_trib_sites(model_path, control_params, control_path, run_type, ext):
     trib_params = {}
     trib_count = int(control_params.get("tribsites") or 0)
 
+    if not file_required(run_type, "tribsitesfile", params=control_params, source="tribsitesfile"):
+        result = (trib_rows, trib_params)
+        return result
+
     if trib_count <= 0:
         result = (trib_rows, trib_params)
         return result
 
-    trib_path = model_path / control_params["tribsitesfile"]
+    tribsitesfile = control_params.get("tribsitesfile")
+    trib_path = model_path / tribsitesfile
+    has_legacy_trib = (
+        control_params.get("tribfiles") not in (None, "") and
+        control_params.get("tribkm") not in (None, "")
+    )
     if not trib_path.exists():
+        if has_legacy_trib:
+            result = (trib_rows, trib_params)
+            return result
         msg = (
             "Tributary sites file '{0}' not found. Place the file in this directory: {1}."
         ).format(trib_path.name, model_path)
@@ -128,6 +160,13 @@ def _get_trib_sites(model_path, control_params, control_path, run_type, ext):
         sheetname=sheetnames["tribsitesfile"],
         value_check=setup._validate,
         header_check=setup.validate_headers,
+    )
+    data = validate_column_values(
+        run_type=run_type,
+        file_key="tribsitesfile",
+        data_dict=data,
+        params=control_params,
+        source="tribsitesfile",
     )
 
     col_ids = list(data.get("COLID", []))
