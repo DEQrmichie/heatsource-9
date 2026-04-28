@@ -8,7 +8,8 @@ It passes execution to heatsource9.setup and heatsource9.run.
 from pathlib import Path
 
 import heatsource9.run as hs_run
-from heatsource9.setup import setup_cf as _setup_cf_brb, write_mi
+from heatsource9.setup import setup_cf as _setup_cf_brb
+from heatsource9.setup import setup_mi as _setup_mi_brb
 
 
 def setup_cf(
@@ -37,8 +38,8 @@ def setup_mi(model_dir, control_file = "HeatSource_Control.xlsx",
 
     model_path = Path(model_dir)
 
-    mi = write_mi(model_dir=model_path, control_file=control_file, 
-                  use_timestamp=use_timestamp, overwrite=overwrite)
+    mi = _setup_mi_brb(model_dir=model_path, control_file=control_file,
+                       use_timestamp=use_timestamp, overwrite=overwrite)
     
     return mi
 

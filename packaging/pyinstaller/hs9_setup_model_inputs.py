@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 from heatsource9.io.control_file import cf_path
-from heatsource9.setup import write_mi
+from heatsource9.setup import setup_mi
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
     control_path = cf_path(model_dir)
 
     # Write blank model input files from the selected control file.
-    write_mi(
+    setup_mi(
         model_dir=model_dir,
         control_file=str(control_path),
         use_timestamp=False,

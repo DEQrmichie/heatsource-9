@@ -50,7 +50,7 @@ from os.path import abspath
 import heatsource9.run as hs_run
 from heatsource9.setup import (
     setup_cf,
-    write_mi,
+    setup_mi,
 )
 
 
@@ -179,7 +179,7 @@ def main(argv = None):
                 **_parse_set_values(args.set_values),
             )
         if args.model_inputs:
-            write_mi(
+            setup_mi(
                 model_dir=model_dir,
                 use_timestamp=bool(args.timestamp),
                 overwrite=bool(args.overwrite),

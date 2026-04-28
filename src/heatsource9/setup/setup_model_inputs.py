@@ -304,7 +304,7 @@ def _inflow_tables(params, timelist, use_timestamp):
     return tables
 
 
-def write_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite = False):
+def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite = False):
     model_path = Path(model_dir).expanduser().resolve()
     configure_logging(model_dir=model_path, overwrite=True)
     try:

@@ -221,7 +221,7 @@ from heatsource9 import setup
 control_file = 'HeatSource_Control.xlsx'
 model_dir = r'C://path/to/model_directory/'
 
-setup.write_mi(model_dir=model_dir, control_file=control_file,
+setup.setup_mi(model_dir=model_dir, control_file=control_file,
                use_timestamp=True, overwrite=False)
 ```
 The file format for the input templates are CSV or XLSX from the control file extension.
