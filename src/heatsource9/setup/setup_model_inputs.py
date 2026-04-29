@@ -105,8 +105,6 @@ def _lcdata_table(params, kmlist, use_timestamp):
 
 def _lccode_table(params, use_timestamp):
     headers = headers_lccodes(params)
-    if headers == [None]:
-        return None
     rows = [[None]]
     filename = _out_name(params, "lccodefile", use_timestamp)
     table = (filename, headers, rows, sheetnames["lccodefile"])
@@ -364,8 +362,7 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
         ]
 
         lccode_table = _lccode_table(params, use_timestamp)
-        if lccode_table is not None:
-            tables.append(lccode_table)
+        tables.append(lccode_table)
 
         met_tables = _met_tables(params, timelist, use_timestamp)
         for table in met_tables:

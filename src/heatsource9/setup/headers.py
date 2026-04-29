@@ -45,20 +45,13 @@ def headers_inflow(params):
 
 
 def headers_lccodes(params):
-    if (params.get("lcdatainput") or "Codes") != "Codes":
-        return [None]
     if (params.get("canopy_data") or "LAI") == "LAI":
         return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG", "CANOPY_DEPTH"]
     return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG", "CANOPY_DEPTH"]
 
 
 def headers_lcdata(params):
-    lcdatainput = params.get("lcdatainput") or "Codes"
-    canopy_data = params.get("canopy_data") or "LAI"
-    if lcdatainput == "Values":
-        prefix = ["HT", "ELE", "LAI", "k", "OH", "CD"] if canopy_data == "LAI" else ["HT", "ELE", "CAN", "OH", "CD"]
-    else:
-        prefix = ["LC", "ELE"]
+    prefix = ["LC", "ELE"]
 
     trans_count = params.get("trans_count") or 0
     transsample_count = params.get("transsample_count") or 0

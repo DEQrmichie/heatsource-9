@@ -78,18 +78,12 @@ class InputSetup(object):
             if text == "CANOPY_DEPTH":
                 msg = "CANOPY_DEPTH is required in Land Cover Codes input."
                 raise ValueError(msg)
-            if self.params.get("lcdatainput") == "Values" and text.startswith("CD_"):
-                msg = "When lcdatainput is 'Values', all CD_T*_S* values are required."
-                raise ValueError(msg)
             return None
         if isinstance(value, str):
             value = value.strip()
             if value == "":
                 if text == "CANOPY_DEPTH":
                     msg = "CANOPY_DEPTH is required in Land Cover Codes input."
-                    raise ValueError(msg)
-                if self.params.get("lcdatainput") == "Values" and text.startswith("CD_"):
-                    msg = "When lcdatainput is 'Values', all CD_T*_S* values are required."
                     raise ValueError(msg)
                 return None
 
@@ -111,13 +105,10 @@ class InputSetup(object):
             # Land cover code columns are categorical strings, so no numeric range check.
             range_key = None
         else:
-            # Land cover value columns (HT/ELE/LAI/k/CAN/OH/CD) share float dtype.
-            # Use the specific header prefix when a direct range exists.
             header_prefix = text.split("_", 1)[0]
-            if header_prefix in {"HT", "ELE", "LAI", "k", "CAN", "OH", "CD"}:
+            if header_prefix == "ELE":
                 key = "topo"
-                if header_prefix in drange:
-                    range_key = header_prefix
+                range_key = "ELE"
 
         if key is None:
             return value
@@ -259,22 +250,6 @@ class InputSetup(object):
             params=self.params,
             source="lcdatafile",
         )
-        # Do some canopy depth validaton that can't be done easily in validate
-        if self.params.get("lcdatainput") == "Values":
-            cd_cols = [c for c in headers if isinstance(c, str) and c.startswith("CD_")]
-            for cd_col in cd_cols:
-                ht_col = "HT_" + cd_col[3:]
-                for row_i, (h, cd) in enumerate(zip(data[ht_col], data[cd_col]), start=2):
-                    h = float(h)
-                    cd = float(cd)
-                    if cd < 0 or cd > h or (cd == 0 and h > 0):
-                        msg = (
-                            "Canopy depth in file {0}, row {1} must be > 0 and <= vegetation height when HEIGHT > 0, "
-                            "and must be 0 only when HEIGHT = 0. HEIGHT={2}, CANOPY_DEPTH={3}".format(
-                                self.params["lcdatafile"], row_i, h, cd
-                            )
-                        )
-                        raise ValueError(msg)
         if return_list:
             return self.dict2list(data, headers, skiprows, skipcols)
         return data

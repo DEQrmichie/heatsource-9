@@ -32,9 +32,6 @@ def file_required(run_type, file_key, params = None, source = None):
     if file_key == "metsitesfile":
         return run_type in ("solar", "temperature")
 
-    if file_key == "lccodefile":
-        return (params.get("lcdatainput") or "Codes") == "Codes"
-
     return True
 
 
@@ -79,13 +76,7 @@ def field_required(run_type, file_key, field_name, params = None, source = None)
     required = required_fields.get(run_type, {}).get(file_key, ())
 
     if file_key == "lcdatafile" and run_type in ("solar", "temperature"):
-        lcdatainput = params.get("lcdatainput") or "Codes"
-        canopy_data = params.get("canopy_data") or "LAI"
-        if lcdatainput == "Values":
-            prefix = ["HT", "ELE", "LAI", "k", "OH", "CD"] if canopy_data == "LAI" else ["HT", "ELE", "CAN", "OH", "CD"]
-        else:
-            prefix = ["LC", "ELE"]
-        for p in prefix:
+        for p in ("LC", "ELE"):
             if field_name.startswith(p + "_"):
                 return True
         return field_name in required
@@ -94,8 +85,6 @@ def field_required(run_type, file_key, field_name, params = None, source = None)
         return False
 
     if file_key == "controlfile":
-        if field_name == "lccodefile":
-            return (params.get("lcdatainput") or "Codes") == "Codes"
         if field_name in ("tribfiles", "tribkm", "metfiles", "metkm", "metheights", "alluviumtemp"):
             return conditional_required(field_name, params=params, source=source)
 

@@ -59,7 +59,6 @@ dtype = {
     "transsample_count": int,
     "transsample_distance": float,
     "emergent": bool,
-    "lcdatainput": str,
     "canopy_data": str,
     "lcsampmethod": str,
     "heatsource8": bool,
@@ -224,7 +223,6 @@ control_keys = (
     "transsample_count",
     "transsample_distance",
     "emergent",
-    "lcdatainput",
     "canopy_data",
     "lcsampmethod",
     "heatsource8",
@@ -300,7 +298,6 @@ required_fields = {
             "transsample_count",
             "transsample_distance",
             "emergent",
-            "lcdatainput",
             "canopy_data",
             "lcsampmethod",
             "heatsource8",
@@ -428,7 +425,6 @@ required_fields = {
             "transsample_count",
             "transsample_distance",
             "emergent",
-            "lcdatainput",
             "canopy_data",
             "lcsampmethod",
             "heatsource8",
@@ -457,7 +453,7 @@ required_fields = {
     },
 }
 
-legacy_cf_format_keys = {
+legacy_cf_keys = {
     "metfiles": "metfiles",
     "metkm": "metkm",
     "inflowinfiles": "tribfiles",

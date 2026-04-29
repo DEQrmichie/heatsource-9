@@ -51,10 +51,9 @@ def control_file_dict():
         "transsample_count": [32, "Number Of Samples Per Transect", "transsample_count", None],
         "transsample_distance": [33, "Distance Between Transect Samples (meters)", "transsample_distance", None],
         "emergent": [34, "Account For Emergent Veg Shading (True/False)", "emergent", None],
-        "lcdatainput": [35, "Land Cover Data Input Type (Codes/Values)", "lcdatainput", None],
-        "canopy_data": [36, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
-        "lcsampmethod": [37, "Land Cover Sample Method (point/zone)", "lcsampmethod", None],
-        "heatsource8": [38, "Use Heat Source 8 Land Cover Methods (True/False)", "heatsource8", None],
+        "canopy_data": [35, "Canopy Data Type (LAI/CanopyCover)", "canopy_data", None],
+        "lcsampmethod": [36, "Land Cover Sample Method (point/zone)", "lcsampmethod", None],
+        "heatsource8": [37, "Use Heat Source 8 Land Cover Methods (True/False)", "heatsource8", None],
     }
 
     return cf_dict

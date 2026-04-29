@@ -160,10 +160,7 @@ class OutputWriter:
                 dir = ["T" + str(x) for x in range(1, self.params["trans_count"] + 1)]
                 zone = list(range(1, int(self.params["transsample_count"]) + 1))
 
-            if self.params["lcdatainput"] == "Values":
-                type_ = "HT"
-            else:
-                type_ = "LC"
+            type_ = "LC"
 
             for d in range(0, len(dir)):
                 for z in range(0, len(zone)):

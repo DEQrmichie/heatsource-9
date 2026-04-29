@@ -62,16 +62,25 @@ def cf_path(model_dir, control_file = None):
     return Path(validate_control_file(control_path))
 
 
-def _rename_control_key(key):
-    from heatsource9.setup.constants import legacy_cf_format_keys, renamed_cf_keys
+def _legacy_control_key(key, value = None):
+    from heatsource9.setup.constants import legacy_cf_keys, renamed_cf_keys
 
+    if key == "lcdatainput":
+        text = "" if value is None else str(value).strip()
+        if text == "Values":
+            msg = "The control file key 'lcdatainput' is deprecated and the values option is no longer supported. Please move to using a landcover codes file."
+            raise ValueError(msg)
+        if text == "Codes":
+            msg = "The control file key 'lcdatainput' is deprecated. The model uses landcover codes, by deftualt. Consider removing 'lcdatainput' from the control file."
+            logger.warning(msg)
+        return None
     if key in renamed_cf_keys:
         new_key = renamed_cf_keys[key]
         msg = 'Control key "{0}" is deprecated, use "{1}".'.format(key, new_key)
         logger.warning(msg)
         return new_key
-    if key in legacy_cf_format_keys:
-        new_key = legacy_cf_format_keys[key]
+    if key in legacy_cf_keys:
+        new_key = legacy_cf_keys[key]
         msg = 'Control key "{0}" is deprecated, use the sites file format instead.'.format(key)
         logger.warning(msg)
         return new_key
@@ -127,8 +136,8 @@ def import_control_file(control_path, *, dtype, control_sheet):
             continue
 
         raw_key = str(line[2]).strip()
-        key = _rename_control_key(raw_key)
         raw_val = line[3]
+        key = _legacy_control_key(raw_key, raw_val)
         if raw_val is None:
             val = ""
         elif isinstance(raw_val, datetime):
