@@ -88,7 +88,7 @@ class OutputWriter:
             desc["Heat_SR4"] = "Solar Radiation Flux above the Stream (watts/square meter)"
             desc["Heat_SR5"] = "Solar Radiation Flux Entering Stream (watts/square meter)"
             desc["Shade"] = "Effective Shade"
-            desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere obscured by land cover."
+            desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere visible from the stream node after obstruction by near stream land cover and the stream bank."
 
         if run_type in ("temperature", "hydraulics"):
             desc["Hyd_DA"] = "Average Depth (meters)"
