@@ -71,7 +71,7 @@ def _legacy_control_key(key, value = None):
             msg = "The control file key 'lcdatainput' is deprecated and the values option is no longer supported. Please move to using a landcover codes file."
             raise ValueError(msg)
         if text == "Codes":
-            msg = "The control file key 'lcdatainput' is deprecated. The model uses landcover codes, by deftualt. Consider removing 'lcdatainput' from the control file."
+            msg = "The control file key 'lcdatainput' is deprecated. The model uses landcover codes, by default. Consider removing 'lcdatainput' from the control file."
             logger.warning(msg)
         return None
     if key in renamed_cf_keys:
