@@ -25,7 +25,7 @@ def lc_values_to_codes(
     land cover data file stores the codes and sample elevations.
 
     Land cover value columns are read positionally after the first eight land
-    cover data columns, using the same transect and zone structure as the old
+    cover data columns, using the same transect and sample structure as the old
     land cover values headers. If canopy depth columns are missing, vegetation
     height is used as canopy depth.
     """
