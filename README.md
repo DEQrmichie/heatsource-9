@@ -2,11 +2,7 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0b32 (beta 32)
-
-Model math is stable. Just a few more updates before official version 9.0.0
-
- - Removal of the lcdatainput = "values" option.  The land cover codes file will be used by default.
+Current Version: heatsource 9.0.0
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of  Environmental Quality to simulate stream 
@@ -33,13 +29,13 @@ the executable to run the model. That's it. Python installation is not required.
 user PATH and run the model from the command line (see section 5.1). These executables were developed on Windows 10. 
 They have not been tested on other versions of Windows. 
 
-2. Install the model as a Python package. Requires install of Python 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, or 3.14.
+2. Install the model as a Python package. Requires install of Python 3.10 or higher.
 https://www.python.org/downloads/. This may be better option for Mac or Linux users.
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0b32 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0b32"
+# This command installs heat source version 9.0.0 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -51,13 +47,13 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heat source wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.0b32-cp312-cp312-win_amd64.whl --user
+py -m pip3 install heatsource9-9.0.0-cp312-cp312-win_amd64.whl --user
 
 # Installs the Python 3.12 heat source wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.0b32-cp312-cp312-win_amd64.whl
+py -m pip3 install heatsource9-9.0.0-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0b32/HS9_Windows_Executables_v9.0.0b32.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0b32
+[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0/HS9_Windows_Executables_v9.0.0.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0
 
 ## 3.0 QUICK STEPS TO GET GOING
 
@@ -364,7 +360,6 @@ setup.setup_cf(model_dir=model_dir, control_file=control_file,
                transsample_count=4,
                transsample_distance=8,
                emergent="True",
-               lcdatainput="Codes",
                canopy_data="CanopyCover",
                lcsampmethod="point",
                heatsource8="False")
@@ -412,56 +407,54 @@ Below are all the input parameters that must be included in the control file.
 |   32 | Number Of Samples Per Transect                    | transsample_count    |       |
 |   33 | Distance Between Transect Samples (meters)        | transsample_distance |       |
 |   34 | Account For Emergent Veg Shading (True/False)     | emergent             |       |
-|   35 | Land Cover Data Input Type (Codes/Values)         | lcdatainput          |       |
-|   36 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
-|   37 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
-|   38 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
+|   35 | Canopy Data Type (LAI/CanopyCover)                | canopy_data          |       |
+|   36 | Land Cover Sample Method (point/zone)             | lcsampmethod         |       |
+|   37 | Use Heat Source 8 Land Cover Methods (True/False) | heatsource8          |       |
 
+Some control file keys are optional and may be left blank depending on the model run type.
 Model run requirements:
 
-| KEY                    | INPUT FILE SETUP | SOLAR RUNS           | HYDRAULIC RUNS       | TEMPERATURE RUNS      |
-|:-----------------------|:-----------------|:---------------------|:---------------------|:----------------------|
-| `usertxt`              | Optional         | Optional             | Optional             | Optional              |
-| `name`                 | Optional         | Optional             | Optional             | Optional              |
-| `inputdir`             | Required         | Required             | Required             | Required              |
-| `outputdir`            | Optional         | Required             | Required             | Required              |
-| `length`               | Required         | Required             | Required             | Required              |
-| `outputkm`             | Optional         | Required             | Required             | Required              |
-| `datastart`            | Required         | Required             | Required             | Required              |
-| `modelstart`           | Optional         | Required             | Required             | Required              |
-| `modelend`             | Optional         | Required             | Required             | Required              |
-| `dataend`              | Required         | Required             | Required             | Required              |
-| `flushdays`            | Optional         | Optional             | Required             | Required              |
-| `offset`               | Optional         | Required             | Optional             | Required              |
-| `dt`                   | Optional         | Required             | Required             | Required              |
-| `dx`                   | Optional         | Required             | Required             | Required              |
-| `outputdt`             | Optional         | Optional<sup>2</sup> | Optional<sup>2</sup> | Optional<sup>2</sup>  |
-| `longsample`           | Required         | Required             | Required             | Required              |
-| `bcfile`               | Optional         | Optional             | Required             | Required              |
-| `tribsites`            | Optional         | Optional             | Required             | Required              |
-| `accretionfile`        | Optional         | Optional             | Optional             | Optional              |
-| `metsites`             | Optional         | Required             | Optional             | Required              |
-| `calcevap`             | Optional         | Optional             | Optional             | Required              |
-| `evapmethod`           | Optional         | Optional             | Optional             | Required              |
-| `wind_a`               | Optional         | Optional             | Optional             | Required              |
-| `wind_b`               | Optional         | Optional             | Optional             | Required              |
-| `calcalluvium`         | Optional         | Optional             | Optional             | Required              |
-| `alluviumtemp`         | Optional         | Optional             | Optional             | Conditional           |
-| `morphfile`            | Optional         | Required             | Required             | Required              |
-| `lcdatafile`           | Optional         | Required             | Optional             | Required              |
-| `lccodefile`           | Optional         | Conditional          | Optional             | Conditional           |
-| `trans_count`          | Optional         | Required             | Optional             | Required              |
-| `transsample_count`    | Optional         | Required             | Optional             | Required              |
-| `transsample_distance` | Optional         | Required             | Optional             | Required              |
-| `emergent`             | Optional         | Required             | Optional             | Required              |
-| `lcdatainput`          | Optional         | Required             | Optional             | Required              |
-| `canopy_data`          | Optional         | Required             | Optional             | Required              |
-| `lcsampmethod`         | Optional         | Required             | Optional             | Required              |
-| `heatsource8`          | Optional         | Required             | Optional             | Required              |
-| `inflowinfiles`        | Optional         | Optional             | Conditional          | Conditional           |
-| `inflowkm`             | Optional         | Optional             | Conditional          | Conditional           |
+| KEY                    | INPUT FILE SETUP | SOLAR RUNS           | HYDRAULIC RUNS       | TEMPERATURE RUNS        |
+|:-----------------------|:-----------------|:---------------------|:---------------------|:------------------------|
+| `usertxt`              | Optional         | Optional             | Optional             | Optional                |
+| `name`                 | Optional         | Optional             | Optional             | Optional                |
+| `inputdir`             | Required         | Required             | Required             | Required                |
+| `outputdir`            | Optional         | Required             | Required             | Required                |
+| `length`               | Required         | Required             | Required             | Required                |
+| `outputkm`             | Optional         | Required             | Required             | Required                |
+| `datastart`            | Required         | Required             | Required             | Required                |
+| `modelstart`           | Optional         | Required             | Required             | Required                |
+| `modelend`             | Optional         | Required             | Required             | Required                |
+| `dataend`              | Required         | Required             | Required             | Required                |
+| `flushdays`            | Optional         | Optional             | Required             | Required                |
+| `offset`               | Optional         | Required             | Optional             | Required                |
+| `dt`                   | Optional         | Required             | Required             | Required                |
+| `dx`                   | Optional         | Required             | Required             | Required                |
+| `outputdt`             | Optional         | Optional<sup>1</sup> | Optional<sup>1</sup> | Optional<sup>1</sup>    |
+| `longsample`           | Required         | Required             | Required             | Required                |
+| `bcfile`               | Optional         | Optional             | Required             | Required                |
+| `tribsites`            | Optional         | Optional             | Required             | Required                |
+| `accretionfile`        | Optional         | Optional             | Optional             | Optional                |
+| `metsites`             | Optional         | Required             | Optional             | Required                |
+| `calcevap`             | Optional         | Optional             | Optional             | Required                |
+| `evapmethod`           | Optional         | Optional             | Optional             | Required                |
+| `wind_a`               | Optional         | Optional             | Optional             | Required                |
+| `wind_b`               | Optional         | Optional             | Optional             | Required                |
+| `calcalluvium`         | Optional         | Optional             | Optional             | Required                |
+| `alluviumtemp`         | Optional         | Optional             | Optional             | Conditional<sup>2</sup> |
+| `morphfile`            | Optional         | Required             | Required             | Required                |
+| `lcdatafile`           | Optional         | Required             | Optional             | Required                |
+| `lccodefile`           | Optional         | Required             | Optional             | Required                |
+| `trans_count`          | Optional         | Required             | Optional             | Required                |
+| `transsample_count`    | Optional         | Required             | Optional             | Required                |
+| `transsample_distance` | Optional         | Required             | Optional             | Required                |
+| `emergent`             | Optional         | Required             | Optional             | Required                |
+| `canopy_data`          | Optional         | Required             | Optional             | Required                |
+| `lcsampmethod`         | Optional         | Required             | Optional             | Required                |
+| `heatsource8`          | Optional         | Required             | Optional             | Required                |
 
-<sup>2 `outputdt` defaults to 60 if left blank.</sup>
+<sup>1 `outputdt` defaults to 60 if left blank.</sup>
+<sup>2 `alluviumtemp` needs to be set if ```calcalluvium = "True"```, otherwise if can be left blank.</sup>
 
 ### 6.2 METEOROLOGICAL SITE FILE
 File name: `HeatSource_Met_Sites.[xlsx|csv]`
@@ -720,10 +713,10 @@ Field details:
 
 Model run requirements:
 
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|       1       | `DATETIME` |  Optional  |    Required    |     Required     |
-|       2       | `FLOW` |  Optional  |    Required    |     Required     |
+| COLUMN NUMBER | COLUMN NAME   | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:-------------:|:--------------|:----------:|:--------------:|:----------------:|
+|       1       | `DATETIME`    |  Optional  |    Required    |     Required     |
+|       2       | `FLOW`        |  Optional  |    Required    |     Required     |
 |       3       | `TEMPERATURE` |  Optional  |    Required    |     Required     |
 
 
@@ -822,16 +815,18 @@ from geospatial data using TTools.
 
 Field details:
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                          | UNITS           | DATA TYPE |
-|:-------------:|:------------|:-------------------------------------|:----------------|:----------|
-|       1       | `STREAM_ID` | Stream ID                            | N/A             | string    |
-|       2       | `NODE_ID`   | Node ID                              | N/A             | integer   |
-|       3       | `STREAM_KM` | Stream km                            | kilometer       | float     |
-|       4       | `LONGITUDE` | Node Longitude                       | decimal degrees | float     |
-|       5       | `LATITUDE`  | Node Latitude                        | decimal degrees | float     |
-|       6       | `TOPO_W`    | Topographic shade angle to the west  | degrees         | float     |
-|       7       | `TOPO_S`    | Topographic shade angle to the south | degrees         | float     |
-|       8       | `TOPO_E`    | Topographic shade angle to the east  | degrees         | float     |
+| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                 | UNITS           | DATA TYPE |
+|:-------------:|:------------|:--------------------------------------------|:----------------|:----------|
+|       1       | `STREAM_ID` | Stream ID                                   | N/A             | string    |
+|       2       | `NODE_ID`   | Node ID                                     | N/A             | integer   |
+|       3       | `STREAM_KM` | Stream km                                   | kilometer       | float     |
+|       4       | `LONGITUDE` | Node Longitude                              | decimal degrees | float     |
+|       5       | `LATITUDE`  | Node Latitude                               | decimal degrees | float     |
+|       6       | `TOPO_W`    | Topographic shade angle to the west         | degrees         | float     |
+|       7       | `TOPO_S`    | Topographic shade angle to the south        | degrees         | float     |
+|       8       | `TOPO_E`    | Topographic shade angle to the east         | degrees         | float     |
+|   multiple    | `LC_T#_S#`  | Land cover code on transect T for sample S  | N/A             | string    |
+|   multiple    | `ELE_T#_S#` | Ground elevation on transect T for sample S | meters          | float     |
 
 Model run requirements:
 
@@ -845,86 +840,40 @@ Model run requirements:
 |       6       | `TOPO_W`     |  Required  |    Optional    |     Required     |
 |       7       | `TOPO_S`     |  Required  |    Optional    |     Required     |
 |       8       | `TOPO_E`     |  Required  |    Optional    |     Required     |
-
-#### 6.9.1 Land Cover Data Input Type
-Land cover information can be input into the model in two different ways:
-Using codes or values. If using codes unique land cover attribute information is represented as a unique code.
-The land cover attribute associated to each code is parameterized in the Land Cover Codes file in long format.
-If using values, the land cover attribute information for each transect sample is explicitly in the land cover data file.
-
-The land cover data input type is identified in the control file.
-
-The number of columns is dependent on the number of transects and samples specified in the control file. The '#'
-in the column name will be a number and refers to the specific transect (T) number or sample (S) number. 
-For example LC_T2_S4 refers to the land cover sample on transect 2, sample number 4.
-
-##### Codes
-When ```lcdatainput = "Codes"```, the following columns will be used after column 8:
-
-Field details:
-
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                               | UNITS  | DATA TYPE |
-|:-------------:|:------------|:------------------------------------------|:-------|:----------|
-|   multiple    | `LC_T#_S#`  | Land cover code on transect T for sample S | N/A    | string    |
-|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S      | meters | float     |
-
-Model run requirements:
-
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|   multiple    | `LC_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T#_S#` |  Required  |    Optional    |     Required     |
-
-##### Values
-NOTICE: The values option for lcdatainput will be removed in a future version. Please move to using a landcover codes file.
-
-When ```lcdatainput = "Values"```, and ```canopy_data = "CanopyCover"``` the following columns will be used after column 8:
-
-Field details:
-
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                  | UNITS                  | DATA TYPE |
-|:-------------:|:------------|:---------------------------------------------|:-----------------------|:----------|
-|   multiple    | `HT_T#_S#`  | Land cover height on transect T for sample S | N/A                    | string    |
-|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S         | meters                 | float     |
-|   multiple    | `CAN_T#_S#` | Canopy cover on transect T for sample S      | decimal fraction (0-1) | float     |
-|   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S          | meters                 | float     |
-|   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S      | meters                 | float     |
-
-Model run requirements:
-
-| COLUMN NUMBER | COLUMN NAME  | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:-------------|:----------:|:--------------:|:----------------:|
-|   multiple    | `HT_T#_S#`   |  Required  |    Optional    |     Required     |
+|   multiple    | `LC_T#_S#`   |  Required  |    Optional    |     Required     |
 |   multiple    | `ELE_T#_S#`  |  Required  |    Optional    |     Required     |
-|   multiple    | `CAN_T#_S#`  |  Required  |    Optional    |     Required     |
-|   multiple    | `OH_T#_S#`   |  Required  |    Optional    |     Required     |
-|   multiple    | `CD_T#_S#`   |  Required  |    Optional    |     Required     |
 
-When ```lcdatainput = "Values"```, and ```canopy_data = "LAI"``` the following columns will be used after column 8:
+The number of `LC_T#_S#` and `ELE_T#_S#` columns is dependent on the number of land cover transects and samples specified 
+in the control file. The '#' in the column name will be a number and refers to the specific transect (T) number or 
+sample (S) number. For example LC_T2_S4 refers to the land cover sample on transect 2, sample number 4.
 
-Field details:
+The values that go into the `LC_T#_S#` columns are the land cover codes representing land cover attributes at each node 
+and sample location. The values that go into the `ELE_T#_S#` columns are the ground elevation at each sample. Each land 
+cover code represents a unique combination of vegetation height, canopy cover or LAI, overhang, and canopy depth. The 
+attributes for each code are defined in the Land Cover Codes file in long format.
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION                                          | UNITS         | DATA TYPE |
-|:-------------:|:------------|:-----------------------------------------------------|:--------------|:----------|
-|   multiple    | `HT_T#_S#`  | Land cover height on transect T for sample S         | N/A           | string    |
-|   multiple    | `ELE_T#_S#` | Elevation on transect T for sample S                 | meters        | float     |
-|   multiple    | `LAI_T#_S#` | Effective Leaf Area Index on transect T for sample S | dimensionless | float     |
-|   multiple    | `k_T#_S#`   | k extinction coefficient on transect T for sample S  | dimensionless | float     |
-|   multiple    | `OH_T#_S#`  | Overhang on transect T for sample S                  | meters        | float     |
-|   multiple    | `CD_T#_S#`  | Canopy depth on transect T for sample S              | meters        | float     |
+In previous versions of Heat Source, a `values` option was supported for setting up the land cover data file where
+the height, density, and overhang at each sample were input. In heat source 9 beta this was set using 
+`lcdatainput = values`. This option is no longer supported and all land cover attributes must be setup using the land cover
+codes file. Existing value style land cover data files may be converted using a built-in helper function as shown below.
 
-Model run requirements:
+```python
+from heatsource9.setup import lc_values_to_codes
 
-| COLUMN NUMBER | COLUMN NAME | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-------------:|:------------|:----------:|:--------------:|:----------------:|
-|   multiple    | `HT_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `ELE_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `LAI_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `k_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `OH_T#_S#` |  Required  |    Optional    |     Required     |
-|   multiple    | `CD_T#_S#` |  Required  |    Optional    |     Required     |
+lcdatafile_vals = "path/to/lcdatafile_using_values.csv"
+lcdatafile_codes_new = "path/to/new_lcdatafile_using_codes.csv"
+lccodesfile_new = "path/to/new_lccodesfile_using_codes.csv"
 
-
+# Convert an old values style land cover data file to land cover codes.
+lc_values_to_codes(lcdatafile = lcdatafile_vals,
+                   output_lccodefile = lccodesfile_new,
+                   output_lcdatafile = lcdatafile_codes_new,
+                   canopy_data = "CanopyCover",
+                   trans_count = 8,
+                   transsample_count = 4,
+                   heatsource8 = False,
+                   overwrite = False)
+```
 ### 6.10 MORPHOLOGY DATA FILE  
 File name: `UserDefinedFileName.[xlsx|csv]`
 
@@ -988,7 +937,7 @@ the headers are the output stream km.
 Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
 ```CSV
 File Created:,Tue Mar  3 14:18:18 2026
-Heat Source Version:,9.0.0b32
+Heat Source Version:,9.0.0
 Simulation Name:,Example River - HS9_example_model_xslx
 User Text:,This is an example model using xlsx files.
 Output:,Stream Temperature (Celsius)
