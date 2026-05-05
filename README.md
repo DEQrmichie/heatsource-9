@@ -254,25 +254,26 @@ Field details:
 
 Model run requirements:
 
-| INPUT FILE          | SOLAR RUNS           | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:--------------------|:---------------------|:---------------|:-----------------|
-| CONTROL FILE        | Required             | Required       | Required         |
-| MET SITE FILE       | Required             | Optional       | Required         |
-| TRIBUTARY SITE FILE | Optional             | Required       | Required         |
-| ACCRETION           | Optional             | Optional       | Optional         |
-| BOUNDARY CONDITION  | Optional             | Required       | Required         |
-| METEOROLOGICAL DATA | Required<sup>1</sup> | Optional       | Required         |
-| TRIBUTARY DATA      | Optional             | Required       | Required         |
-| LAND COVER CODES    | Required             | Optional       | Required         |
-| LAND COVER DATA     | Required             | Optional       | Required         |
-| MORPHOLOGY DATA     | Required             | Required       | Required         |
+| INPUT FILE          | SOLAR RUNS           | HYDRAULIC RUNS       | TEMPERATURE RUNS     |
+|:--------------------|:---------------------|:---------------------|:---------------------|
+| CONTROL FILE        | Required             | Required             | Required             |
+| MET SITE FILE       | Required             | Optional             | Required             |
+| TRIBUTARY SITE FILE | Optional             | Optional<sup>2</sup> | Optional<sup>2</sup> |
+| ACCRETION           | Optional             | Optional             | Optional             |
+| BOUNDARY CONDITION  | Optional             | Required             | Required             |
+| METEOROLOGICAL DATA | Required<sup>1</sup> | Optional             | Required             |
+| TRIBUTARY DATA      | Optional             | Optional<sup>2</sup> | Optional<sup>2</sup> |
+| LAND COVER CODES    | Required             | Optional             | Required             |
+| LAND COVER DATA     | Required             | Optional             | Required             |
+| MORPHOLOGY DATA     | Required             | Required<sup>1</sup> | Required             |
 
 Key to model input information:
 
- -   Required: Input value required.
- -   Optional: File or input value optional. Note control file value for `tribsites` must be 0 if there are no files.
+ -   Required: File or input value required.
+ -   Optional: File or input value optional.
  
- <sup>1 Cloudiness required, other met fields can be blank.</sup>
+ <sup>1 File required, but some columns can be blank. See tables of model run requirements for each column.</sup>
+ <sup>2 Optional only if the control file value for `tribsites` = 0. The files are required if `tribsites` > 0.</sup>
 
 General Information
 1. The control file and input files are set up as Excel (`.xlsx`) files by default. They can also be CSV (UTF-8) comma delimited files.
