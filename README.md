@@ -271,9 +271,8 @@ Key to model input information:
 
  -   Required: File or input value required.
  -   Optional: File or input value optional.
- 
- <sup>1 File required, but some columns can be blank. See tables of model run requirements for each column.</sup>
- <sup>2 Optional only if the control file value for `tribsites` = 0. The files are required if `tribsites` > 0.</sup>
+ - <sup>1</sup> File required, but some columns can be blank. See tables of model run requirements for each column.
+ - <sup>2</sup> Optional only if the control file value for `tribsites` = 0. The files are required if `tribsites` > 0.
 
 General Information
 1. The control file and input files are set up as Excel (`.xlsx`) files by default. They can also be CSV (UTF-8) comma delimited files.
