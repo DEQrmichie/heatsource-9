@@ -8,7 +8,7 @@ from openpyxl.utils import datetime as pyxl_datetime
 from heatsource9.io.control_file import cf_path, import_control_file
 from heatsource9.io.input_files import read_to_dict, write_input
 from heatsource9.io.logging_config import configure_logging
-from heatsource9.setup.constants import KM_PRECISION, dtype, sheetnames
+from heatsource9.setup.constants import KM_PRECISION, dtype, required_fields, sheetnames
 from heatsource9.setup.headers import (
     headers_accretion,
     headers_bc,
@@ -22,6 +22,7 @@ from heatsource9.setup.headers import (
 )
 from heatsource9.setup.input_setup import InputSetup
 from heatsource9.setup.site_setup import _validate_site_file_names
+from heatsource9.setup.setup_validation import validate_required_field
 
 
 logger = logging.getLogger(__name__)
@@ -312,14 +313,20 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
                                      dtype=dtype,
                                      control_sheet=sheetnames["controlfile"])["control_params"]
 
-        inputdir = Path(str(params.get("inputdir") or (model_path / "Inputs"))).expanduser().resolve()
-        outputdir = Path(str(params.get("outputdir") or (model_path / "Output"))).expanduser().resolve()
-        for p in (inputdir, outputdir):
-            try:
-                p.mkdir(parents=True, exist_ok=True)
-            except PermissionError as exc:
-                msg = f"Cannot create folder '{p}'. Check write permissions."
-                raise PermissionError(msg) from exc
+        for key in required_fields["setup_inputs"]["controlfile"]:
+            params[key] = validate_required_field(
+                run_type="setup_inputs",
+                file_key="controlfile",
+                field_name=key,
+                value=params.get(key),
+                params=params,
+                source="controlfile",
+            )
+
+        inputdir = Path(str(params.get("inputdir"))).expanduser().resolve()
+        if not inputdir.exists():
+            msg = "The 'inputdir' path set in the control file does not exist: {0}:".format(inputdir)
+            raise FileNotFoundError(msg)
 
         length_km = params.get("length")
         longsample = params.get("longsample")

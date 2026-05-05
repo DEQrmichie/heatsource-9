@@ -236,13 +236,14 @@ class ModelSetup(object):
 
         # dx must be a multiple of longsample and >= longsample
         if (self.params["dx"] % self.params["longsample"] or self.params["dx"] < self.params["longsample"]):
-            raise ValueError("Distance step (dx) must be a multiple of the longitudinal stream sample distance")
+            msg = "Distance step (dx) must be a multiple of the longitudinal stream sample distance"
+            raise ValueError(msg)
 
-        # Defaults if missing
-        if not self.params.get("inputdir"):
-            self.params["inputdir"] = self.inputs.model_dir
-        if not self.params.get("outputdir"):
-            raise ValueError("The control file must define 'outputdir'.")
+        for key in ("inputdir", "outputdir"):
+            path = Path(str(self.params[key])).expanduser().resolve()
+            if not path.exists():
+                msg = "The `{0}` path set in the control file does not exist: {1}".format(key, path)
+                raise FileNotFoundError(msg)
 
     def orient_nodes(self):
             # Now we manually set each nodes next and previous 
