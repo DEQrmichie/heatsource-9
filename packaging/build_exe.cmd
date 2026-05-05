@@ -22,8 +22,8 @@ py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workp
 py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_hydraulics.py --hidden-import=heatsource9.model.pyheatsource
 py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_solar.py --hidden-import=heatsource9.model.pyheatsource
 py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_run_temperature.py --hidden-import=heatsource9.model.pyheatsource
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_control_file.py
-py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_model_inputs.py
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_control_file.py --hidden-import=heatsource9.model.pyheatsource
+py -3 -m PyInstaller -F --version-file exe_metadata.txt -i hslogo256.ico --workpath "%BUILD_DIR%" --distpath "%DIST_DIR%" --specpath "%PYI_DIR%" "%PYI_DIR%"\hs9_setup_model_inputs.py --hidden-import=heatsource9.model.pyheatsource
 
 echo .
 echo .
