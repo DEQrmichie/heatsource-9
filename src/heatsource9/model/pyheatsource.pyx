@@ -1,20 +1,5 @@
-# Heat Source, Copyright (C) 2000-2019, 
-# Oregon Department of Environmental Quality
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""PyHeatsource is the core of the model and where the 
+"""PyHeatsource is the core of the model and where the
 flux and hydraulic calculations are made."""
 
 from builtins import range
@@ -91,16 +76,16 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
     if SolarHourAngle < -180.0:
         SolarHourAngle += 360.0
 
-    Dummy = (sin(toRadians*lat) * sin(toRadians*SolarDeclination) +
-             cos(toRadians*lat) * cos(toRadians*SolarDeclination) *
-             cos(toRadians*SolarHourAngle))
+    SolarZenithRatio = (sin(toRadians*lat) * sin(toRadians*SolarDeclination) +
+                        cos(toRadians*lat) * cos(toRadians*SolarDeclination) *
+                        cos(toRadians*SolarHourAngle))
     
-    if Dummy > 1.0:
-        Dummy = 1.0
-    elif Dummy < -1.0:
-        Dummy = -1.0
+    if SolarZenithRatio > 1.0:
+        SolarZenithRatio = 1.0
+    elif SolarZenithRatio < -1.0:
+        SolarZenithRatio = -1.0
 
-    SolarZenith = toDegrees*(acos(Dummy))
+    SolarZenith = toDegrees*(acos(SolarZenithRatio))
     Dummy = cos(toRadians*lat) * sin(toRadians*SolarZenith)
     if abs(Dummy) >= 0.000999:
         SolarAzimuthRatio = ((sin(toRadians*lat) * cos(toRadians*SolarZenith) -
