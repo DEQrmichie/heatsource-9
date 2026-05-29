@@ -2,7 +2,7 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.0
+Current Version: heatsource 9.0.1
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of  Environmental Quality to simulate stream 
@@ -34,8 +34,8 @@ https://www.python.org/downloads/. This may be better option for Mac or Linux us
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.0 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.0"
+# This command installs heat source version 9.0.1 directly from the GitHub repository.
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.1"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -47,13 +47,13 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heat source wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.0-cp312-cp312-win_amd64.whl --user
+py -m pip3 install heatsource9-9.0.1-cp312-cp312-win_amd64.whl --user
 
 # Installs the Python 3.12 heat source wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.0-cp312-cp312-win_amd64.whl
+py -m pip3 install heatsource9-9.0.1-cp312-cp312-win_amd64.whl
  ```
-[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.0/HS9_Windows_Executables_v9.0.0.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.0
+[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.1/HS9_Windows_Executables_v9.0.1.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.1
 
 ## 3.0 QUICK STEPS TO GET GOING
 
@@ -548,15 +548,15 @@ Field details:
 
 | COLUMN NUMBER | COLUMN NAME          | DESCRIPTION                 | UNITS                  | DATA TYPE |
 |:-------------:|:---------------------|:----------------------------|:-----------------------|:----------|
-|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       |  string   |
-|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) |   float   |
-|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          |   float   |
-|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) |   float   |
-|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        |   float   |
-|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) |   float   |
-|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          |   float   |
-|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) |   float   |
-|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        |   float   |
+|       1       | `DATETIME`           | The date/time               | yyyy-mm-dd hh:mm       | string    |
+|       2       | `CLOUDINESS1`        | Cloudiness at site 1        | decimal fraction (0-1) | float     |
+|       3       | `WIND_SPEED1`        | Wind Speed at site 1        | meters/second          | float     |
+|       4       | `RELATIVE_HUMIDITY1` | Relative Humidity at site 1 | decimal fraction (0-1) | float     |
+|       5       | `AIR_TEMPERATURE1`   | Air Temperature at site 1   | degrees Celsius        | float     |
+|       6       | `CLOUDINESS2`        | Cloudiness at site 2        | decimal fraction (0-1) | float     |
+|       7       | `WIND_SPEED2`        | Wind Speed at site 2        | meters/second          | float     |
+|       8       | `RELATIVE_HUMIDITY2` | Relative Humidity at site 2 | decimal fraction (0-1) | float     |
+|       9       | `AIR_TEMPERATURE2`   | Air Temperature at site 2   | degrees Celsius        | float     |
 
 ### 6.4 TRIBUTARY SITE FILE
 File name: `HeatSource_Tributary_Sites.[xlsx|csv]`
@@ -649,11 +649,11 @@ Field details:
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION             | UNITS               | DATA TYPE |
 |:-------------:|:---------------|:------------------------|:--------------------|:----------|
-|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    |  string   |
-|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second |   float   |
-|       3       | `TEMPERATURE1` | Tributary 1 temperature | degrees Celsius     |   float   |
-|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second |   float   |
-|       5       | `TEMPERATURE2` | Tributary 2 temperature | degrees Celsius     |   float   |
+|       1       | `DATETIME`     | The date/time           | yyyy-mm-dd hh:mm    | string    |
+|       2       | `FLOW1`        | Tributary 1 flow        | cubic meters/second | float     |
+|       3       | `TEMPERATURE1` | Tributary 1 temperature | degrees Celsius     | float     |
+|       4       | `FLOW2`        | Tributary 2 flow        | cubic meters/second | float     |
+|       5       | `TEMPERATURE2` | Tributary 2 temperature | degrees Celsius     | float     |
 
 ### 6.6 ACCRETION INPUT FILE  
 File name: `UserDefinedFileName.[xlsx|csv]`
@@ -745,12 +745,12 @@ Field details:
 
 | COLUMN NUMBER | COLUMN NAME    | DESCRIPTION       | UNITS                  | DATA TYPE |
 |:-------------:|:---------------|:------------------|:-----------------------|:----------|
-|       1       | `NAME`         | Land cover Name   | N/A                    |  string   |
-|       2       | `CODE`         | Land cover code   | N/A                    |  string   |
-|       3       | `HEIGHT`       | Land cover height | meters                 |   float   |
-|       4       | `CANOPY`       | Canopy cover      | decimal fraction (0-1) |   float   |
-|       5       | `OVERHANG`     | Overhang          | meters                 |   float   |
-|       6       | `CANOPY_DEPTH` | Canopy depth      | meters                 |   float   |
+|       1       | `NAME`         | Land cover Name   | N/A                    | string    |
+|       2       | `CODE`         | Land cover code   | N/A                    | string    |
+|       3       | `HEIGHT`       | Land cover height | meters                 | float     |
+|       4       | `CANOPY`       | Canopy cover      | decimal fraction (0-1) | float     |
+|       5       | `OVERHANG`     | Overhang          | meters                 | float     |
+|       6       | `CANOPY_DEPTH` | Canopy depth      | meters                 | float     |
 
 Model run requirements:
 
@@ -778,15 +778,15 @@ Input file formatting when ```canopy_data = "LAI"``` in the control file.
 
 Field details:
 
-| COLUMN NUMBER | COLUMN NAME | DESCRIPTION               | UNITS         | DATA TYPE |
-|:-------------:|:------------|:--------------------------|:--------------|:----------|
-|       1       | `NAME`         | Land cover Name           | N/A           |  string   |
-|       2       | `CODE`         | Land cover code           | N/A           |  string   |
-|       3       | `HEIGHT`       | Land cover height         | meters        |   float   |
-|       4       | `LAI`          | Effective Leaf Area Index | dimensionless |   float   |
-|       5       | `k`            | k extinction coefficient  | dimensionless |   float   |
-|       6       | `OVERHANG`     | Overhang                  | meters        |   float   |
-|       7       | `CANOPY_DEPTH` | Canopy depth              | meters        |   float   |
+| COLUMN NUMBER | COLUMN NAME    | DESCRIPTION               | UNITS         | DATA TYPE |
+|:-------------:|:---------------|:--------------------------|:--------------|:----------|
+|       1       | `NAME`         | Land cover Name           | N/A           | string    |
+|       2       | `CODE`         | Land cover code           | N/A           | string    |
+|       3       | `HEIGHT`       | Land cover height         | meters        | float     |
+|       4       | `LAI`          | Effective Leaf Area Index | dimensionless | float     |
+|       5       | `k`            | k extinction coefficient  | dimensionless | float     |
+|       6       | `OVERHANG`     | Overhang                  | meters        | float     |
+|       7       | `CANOPY_DEPTH` | Canopy depth              | meters        | float     |
 
 Model run requirements:
 
@@ -937,7 +937,7 @@ the headers are the output stream km.
 Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
 ```CSV
 File Created:,Tue Mar  3 14:18:18 2026
-Heat Source Version:,9.0.0
+Heat Source Version:,9.0.1
 Simulation Name:,Example River - HS9_example_model_xslx
 User Text:,This is an example model using xlsx files.
 Output:,Stream Temperature (Celsius)
@@ -999,12 +999,12 @@ YES means the output file is written for that model run type.
 | `Heat_Evap.csv`  |     NO     |       NO       |       YES        |
 | `Rate_Evap.csv`  |     NO     |       NO       |       YES        |
 | `Hyd_Disp.csv`   |     NO     |       NO       |       YES        |
-| `Hyd_DA.csv`     |     NO     |       YES      |       YES        |
-| `Hyd_DM.csv`     |     NO     |       YES      |       YES        |
-| `Hyd_Flow.csv`   |     NO     |       YES      |       YES        |
-| `Hyd_Hyp.csv`    |     NO     |       YES      |       YES        |
-| `Hyd_Vel.csv`    |     NO     |       YES      |       YES        |
-| `Hyd_WT.csv`     |     NO     |       YES      |       YES        |
+| `Hyd_DA.csv`     |     NO     |      YES       |       YES        |
+| `Hyd_DM.csv`     |     NO     |      YES       |       YES        |
+| `Hyd_Flow.csv`   |     NO     |      YES       |       YES        |
+| `Hyd_Hyp.csv`    |     NO     |      YES       |       YES        |
+| `Hyd_Vel.csv`    |     NO     |      YES       |       YES        |
+| `Hyd_WT.csv`     |     NO     |      YES       |       YES        |
 | `Temp_H2O.csv`   |     NO     |       NO       |       YES        |
 | `Temp_Sed.csv`   |     NO     |       NO       |       YES        |
 | `Temp_Hyp.csv`   |     NO     |       NO       |       YES        |

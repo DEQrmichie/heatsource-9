@@ -38,7 +38,7 @@
 
 major = 9
 minor = 0
-micro = 0
+micro = 1
 prerel = ''
 prerelversion = ''
 version_info = (major, minor, micro, prerel, prerelversion)
