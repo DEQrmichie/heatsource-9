@@ -163,7 +163,7 @@ def main(argv = None):
     # model version
     if getattr(args, "version", False):
         from heatsource9.__version__ import __version__
-        print(f"hs {__version__}")
+        print(f"Heat Source version {__version__}")
         return 0
 
     # Setup template writing
