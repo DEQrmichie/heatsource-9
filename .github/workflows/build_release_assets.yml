@@ -1,0 +1,149 @@
+# Build wheels using cibuildwheel https://github.com/pypa/cibuildwheel
+
+name: Wheels and Windows executables
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: read
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2025, ubuntu-24.04, macos-15]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      # Used to host cibuildwheel
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14.5"
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_BUILD: cp311-* cp312-* cp313-* cp314-*
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: HS9_Wheels_${{ matrix.os }}_${{ github.ref_name }}
+          path: ./wheelhouse/*.whl
+          if-no-files-found: error
+
+  build_windows_executables:
+    name: Build Windows executables
+    runs-on: windows-2025
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14.5"
+          cache: pip
+
+      - name: Install build requirements
+        run: |
+          python -m pip install pyinstaller
+          python -m pip install .
+
+      - name: Build executables
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $pyiDir = Join-Path $PWD "packaging\pyinstaller"
+          $artifactName = "HS9_Windows_Executables_${{ github.ref_name }}"
+          $distDir = Join-Path $PWD "artifact_contents\$artifactName"
+          $buildDir = Join-Path $PWD "build\pyinstaller"
+          $metadata = Join-Path $pyiDir "exe_metadata.txt"
+          $icon = Join-Path $pyiDir "hslogo256.ico"
+          $hiddenImport = "heatsource9.model.pyheatsource"
+
+          New-Item -ItemType Directory -Force $distDir
+
+          $entries = @(
+            @{ Script = "hs.py"; Name = "hs" },
+            @{ Script = "hs9_run_hydraulics.py"; Name = "" },
+            @{ Script = "hs9_run_solar.py"; Name = "" },
+            @{ Script = "hs9_run_temperature.py"; Name = "" },
+            @{ Script = "hs9_setup_control_file.py"; Name = "" },
+            @{ Script = "hs9_setup_model_inputs.py"; Name = "" }
+          )
+
+          foreach ($entry in $entries) {
+            $scriptPath = Join-Path $pyiDir $entry.Script
+            $pyinstallerArgs = @(
+              "-m", "PyInstaller",
+              "-F",
+              "--noconfirm",
+              "--clean",
+              "--version-file", $metadata,
+              "-i", $icon,
+              "--workpath", $buildDir,
+              "--distpath", $distDir,
+              "--specpath", $pyiDir
+            )
+
+            if ($entry.Name) {
+              $pyinstallerArgs += @("--name", $entry.Name)
+            }
+
+            $pyinstallerArgs += @($scriptPath, "--hidden-import=$hiddenImport")
+            python $pyinstallerArgs
+          }
+
+      - name: Check executables exist
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $artifactName = "HS9_Windows_Executables_${{ github.ref_name }}"
+          $distDir = Join-Path $PWD "artifact_contents\$artifactName"
+          $expected = @(
+            "hs.exe",
+            "hs9_run_hydraulics.exe",
+            "hs9_run_solar.exe",
+            "hs9_run_temperature.exe",
+            "hs9_setup_control_file.exe",
+            "hs9_setup_model_inputs.exe"
+          )
+
+          foreach ($fileName in $expected) {
+            $path = Join-Path $distDir $fileName
+            if (-not (Test-Path $path)) {
+              throw "Missing executable: $path"
+            }
+          }
+
+          $hsPath = Join-Path $distDir "hs.exe"
+          & $hsPath --version
+          Get-ChildItem $distDir -Filter *.exe | Select-Object -ExpandProperty Name
+
+      - name: Add executable package files
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $artifactName = "HS9_Windows_Executables_${{ github.ref_name }}"
+          $distDir = Join-Path $PWD "artifact_contents\$artifactName"
+          Copy-Item packaging\pyinstaller\README.txt $distDir\
+          Copy-Item packaging\pyinstaller\install_hs_on_PATH.bat $distDir\
+          Copy-Item packaging\pyinstaller\path.ps1 $distDir\
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: HS9_Windows_Executables_${{ github.ref_name }}
+          path: artifact_contents
+          if-no-files-found: error
