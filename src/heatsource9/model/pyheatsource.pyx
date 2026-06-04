@@ -282,14 +282,14 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
     #======================================================
     # 0 - Edge of atmosphere
     
-    # Radius Vector (Wunderlich 1972)
-    SolarRadiusVector = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
+    # Radius Vector Ratio (Wunderlich 1972)
+    SolarRadiusVectorRatio = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
     
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
     
     # Global Direct Solar Radiation Flux at the Edge of the Atmosphere (Wunderlich 1972)
-    F_Direct[0] = ((SolarConstant / (SolarRadiusVector ** 2)) *
+    F_Direct[0] = ((SolarConstant / (SolarRadiusVectorRatio ** 2)) *
                    sin(radians(SolarAltitude)))
     
     F_Diffuse[0] = 0
