@@ -1,0 +1,42 @@
+# Build wheels using cibuildwheel https://github.com/pypa/cibuildwheel
+
+name: Wheels
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: read
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2025-vs2026, ubuntu-24.04, macos-15]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      # Used to host cibuildwheel
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14.5"
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_BUILD: cp311-* cp312-* cp313-* cp314-*
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: HS9_Wheels_${{ matrix.os }}_${{ github.ref_name }}
+          path: ./wheelhouse/*.whl
+          if-no-files-found: error
