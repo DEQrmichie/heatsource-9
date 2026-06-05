@@ -8,7 +8,7 @@ from datetime import timezone
 
 from openpyxl.utils import datetime as pyxl_datetime
 
-from heatsource9.io.input_files import read_to_dict
+from heatsource9.io.input_files import read_to_dict, read_to_list
 from heatsource9.setup.constants import drange, dtype, head2var, sheetnames
 from heatsource9.setup.headers import (
     headers_accretion,
@@ -236,13 +236,36 @@ class InputSetup(object):
         headers = headers_lcdata(self.params)
         path = Path(self.params["inputdir"]) / self.params["lcdatafile"]
         self._check_file_exists(path)
+
+        rows = read_to_list(path, skiprows=0, skipcols=0, sheetname=sheetnames["lcdatafile"])
+        header_count = len(rows[0])
+
+        # This checks for the legacy three topo direction lcdata format based on column count.
+        # Legacy format has three topo columns, five fewer columns than the current format. heatsource8 automatically uses three topo directions, even if all eight are included.
+        legacy_lcdata = header_count == len(headers) - 5
+        self.params["legacy_lcdata"] = legacy_lcdata
+        self.params["topo3"] = legacy_lcdata or self.params.get("heatsource8")
+
+        if legacy_lcdata:
+            headers_to_read = headers[:5] + ["TOPO_W", "TOPO_S", "TOPO_E"] + headers[13:]
+        else:
+            headers_to_read = headers
+
         data = read_to_dict(
             path=path,
-            colnames=headers,
+            colnames=headers_to_read,
             sheetname=sheetnames["lcdatafile"],
             value_check=self._validate,
             header_check=self.validate_headers,
         )
+        if legacy_lcdata:
+            row_count = len(data["NODE_ID"])
+            data["TOPO_N"] = [None for row in range(row_count)]
+            data["TOPO_NW"] = [None for row in range(row_count)]
+            data["TOPO_SW"] = [None for row in range(row_count)]
+            data["TOPO_SE"] = [None for row in range(row_count)]
+            data["TOPO_NE"] = [None for row in range(row_count)]
+
         data = validate_column_values(
             run_type=self.params.get("run_type"),
             file_key="lcdatafile",
@@ -250,6 +273,7 @@ class InputSetup(object):
             params=self.params,
             source="lcdatafile",
         )
+
         if return_list:
             return self.dict2list(data, headers, skiprows, skipcols)
         return data

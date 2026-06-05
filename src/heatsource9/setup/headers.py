@@ -63,9 +63,14 @@ def headers_lcdata(params):
         "STREAM_KM",
         "LONGITUDE",
         "LATITUDE",
-        "TOPO_W",
-        "TOPO_S",
+        "TOPO_NE",
         "TOPO_E",
+        "TOPO_SE",
+        "TOPO_S",
+        "TOPO_SW",
+        "TOPO_W",
+        "TOPO_NW",
+        "TOPO_N",
     ]
 
     tran = ["NE", "E", "SE", "S", "SW", "W", "NW"] if heatsource8 else [f"T{x}" for x in range(1, trans_count + 1)]

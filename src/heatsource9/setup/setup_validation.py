@@ -79,6 +79,10 @@ def field_required(run_type, file_key, field_name, params = None, source = None)
         for p in ("LC", "ELE"):
             if field_name.startswith(p + "_"):
                 return True
+        if field_name.startswith("TOPO_") and params.get("topo3"):
+            if field_name in ("TOPO_W", "TOPO_S", "TOPO_E"):
+                return True
+            return False
         return field_name in required
 
     if field_name not in required:

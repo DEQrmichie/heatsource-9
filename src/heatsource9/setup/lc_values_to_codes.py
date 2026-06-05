@@ -2,7 +2,6 @@ from pathlib import Path
 
 from heatsource9.io.input_files import read_to_list, write_input
 from heatsource9.setup.constants import sheetnames
-from heatsource9.setup.headers import headers_lcdata
 
 
 def lc_values_to_codes(
@@ -24,10 +23,13 @@ def lc_values_to_codes(
     vegetation attributes for those codes in the appropriate columns. The output
     land cover data file stores the codes and sample elevations.
 
-    Land cover value columns are read positionally after the first eight land
-    cover data columns, using the same transect and sample structure as the old
-    land cover values headers. If canopy depth columns are missing, vegetation
-    height is used as canopy depth.
+    Land cover value columns are read positionally starting at the ninth land
+    cover data column (LC_T0_S0), using the same transect and sample structure
+    as the old land cover values headers. If canopy depth columns are missing,
+    vegetation height is used as canopy depth. The output lcdata file retains
+    the three topographic angle columns TOPO_W, TOPO_S, and TOPO_E. The three
+    topographic column format can still be used by the model, but this format
+    is deprecated and will be retired at the next major release.
     """
     if trans_count is None or transsample_count is None:
         msg = "trans_count and transsample_count are required for land cover values conversion."
@@ -53,7 +55,7 @@ def lc_values_to_codes(
     rows = read_to_list(lcdata_path, skiprows=0, skipcols=0, sheetname=sheetnames["lcdatafile"])
     headers = list(rows[0])
     data_rows = rows[1:]
-    base_headers = headers_lcdata({})[:8]
+    base_headers = list(headers[:8])
 
     trans_count = trans_count or 0
     transsample_count = transsample_count or 0
