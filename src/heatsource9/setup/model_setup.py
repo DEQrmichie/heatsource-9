@@ -185,9 +185,10 @@ class ModelSetup(object):
             if not self.params["transsample_count"]:
                 self.params["transsample_count"] = 4.0
 
-            # Format for heat source 8 methods same as 8 directions but no north
+            # Format for heat source 8 methods same as 8 directions but no north and 3 topo directions
             if self.params["heatsource8"]:
                 self.params["trans_count"] = 7
+                self.params["topo3"] = True
 
             # Set the total number landcover sample count (0 = emergent)
             self.params["sample_count"] = int(self.params["transsample_count"] * self.params["trans_count"])
@@ -825,6 +826,15 @@ class ModelSetup(object):
         # Grab all of the data in a dictionary
         data = self.get_columnar_data()
 
+        if self.params.get("legacy_lcdata"):
+            msg = ("The lcdatafile '{0}' uses the legacy topographic angle format with TOPO_W, "
+                   "TOPO_S, and TOPO_E only. The three direction format is deprecated. "
+                   "The current lcdata format supports 8 directions: TOPO_NE, TOPO_E, "
+                   "TOPO_SE, TOPO_S, TOPO_SW, TOPO_W, TOPO_NW, and TOPO_N. "
+                   "All 8 topographic angle columns will be required in the next major release."
+                   ).format(self.params["lcdatafile"])
+            logger.warning(msg)
+
         # Build a boundary node
         node = StreamNode(run_type=self.run_type, Q_mb=Q_mb, run_params=self.params)
         # Then set the attributes for everything in the dictionary
@@ -897,7 +907,7 @@ class ModelSetup(object):
             k = []
 
             # For each column of LULC data
-            for i in range(6, radial_count * transsample_count + 7):
+            for i in range(11, radial_count * transsample_count + 12):
             
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
@@ -928,7 +938,7 @@ class ModelSetup(object):
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
                         self.params["lcdatafile"], self.params["lccodefile"], stderr.message))
-                if i > 6:
+                if i > 11:
                     # There isn't a stream center elevation 
                     # (that is in the morphology file), so we don't want 
                     # to read in first elevation value which is actually 
@@ -936,7 +946,7 @@ class ModelSetup(object):
 
                     elevation.append(self.multiplier(elev, average))
                 msg = "Translating Land Cover Data"
-                print_console(msg, True, i, radial_count * transsample_count + 7)
+                print_console(msg, True, i, radial_count * transsample_count + 12)
 
             for i in range(len(keys)):
                 node = self.reach[keys[i]]
@@ -966,7 +976,7 @@ class ModelSetup(object):
             # using canopy cover data
 
             # For each column of LULC data
-            for i in range(6, radial_count * transsample_count + 7):
+            for i in range(11, radial_count * transsample_count + 12):
 
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
@@ -995,7 +1005,7 @@ class ModelSetup(object):
                 except KeyError as stderr:
                     raise Exception("At least one land cover code in %s is blank or not in %s (Code: %s)." % (
                         self.params["lcdatafile"], self.params["lccodefile"], stderr.message))
-                if i > 6:
+                if i > 11:
 
                     # There isn't a stream center elevation
                     # (that is in the morphology file), so we don't want 
@@ -1005,7 +1015,7 @@ class ModelSetup(object):
                     elevation.append(self.multiplier(elev, average))
 
                 msg = "Translating Land Cover Data"
-                print_console(msg, True, i, radial_count * transsample_count + 7)
+                print_console(msg, True, i, radial_count * transsample_count + 12)
 
             for i in range(len(keys)):
                 node = self.reach[keys[i]]
@@ -1031,20 +1041,32 @@ class ModelSetup(object):
                         n = n + 1
 
         # Average over the topo values
-        # topo_ne = self.multiplier([float(LCdata[row][3]) for row in range(0, len(LCdata))], average)
-        topo_e = self.multiplier([float(LCdata[row][5])
+        topo_e = self.multiplier([float(LCdata[row][4])
                                   for row in range(0, len(LCdata))],
                                  average)
-        # topo_se = self.multiplier([float(LCdata[row][4]) for row in range(0, len(LCdata))], average)
-        topo_s = self.multiplier([float(LCdata[row][4])
+        topo_s = self.multiplier([float(LCdata[row][6])
                                   for row in range(0, len(LCdata))],
                                  average)
-        # topo_sw = self.multiplier([float(LCdata[row][7]) for row in range(0, len(LCdata))], average)
-        topo_w = self.multiplier([float(LCdata[row][3])
+        topo_w = self.multiplier([float(LCdata[row][8])
                                   for row in range(0, len(LCdata))],
                                  average)
-        # topo_nw = self.multiplier([float(LCdata[row][9]) for row in range(0, len(LCdata))], average)
-        # topo_n = self.multiplier([float(LCdata[row][10]) for row in range(0, len(LCdata))], average)
+        if not self.params.get("topo3"):
+            # Using eight topo directions
+            topo_ne = self.multiplier([float(LCdata[row][3])
+                                      for row in range(0, len(LCdata))],
+                                     average)
+            topo_se = self.multiplier([float(LCdata[row][5])
+                                       for row in range(0, len(LCdata))],
+                                      average)
+            topo_sw = self.multiplier([float(LCdata[row][7])
+                                       for row in range(0, len(LCdata))],
+                                      average)
+            topo_nw = self.multiplier([float(LCdata[row][9])
+                                       for row in range(0, len(LCdata))],
+                                      average)
+            topo_n = self.multiplier([float(LCdata[row][10])
+                                      for row in range(0, len(LCdata))],
+                                     average)
 
         # ... and you thought things were crazy earlier! Here is where 
         # we build up the values for each node. This is culled from 
@@ -1058,11 +1080,12 @@ class ModelSetup(object):
             node = self.reach[keys[h]]
             vts_total = 0  # View to sky value
 
-            # Now we set the topographic elevations in each direction
-            # Topography factor Above Stream Surface
-            node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
-            # This is basically a list of directions, each 
-            # with one of three topographies
+            # Calculate the topographic shade factor from the available topo shade angles.
+            if self.params.get("topo3"):
+                node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
+            else:
+                node.TopoFactor = (topo_n[h] + topo_nw[h] + topo_w[h] + topo_sw[h] + topo_s[h] + topo_se[h] + topo_e[h] + topo_ne[h]) / (90 * 8)
+            # theta_topo_list stores the topo angle value used for each transect direction.
             theta_topo_list = []
             angle_incr = 360.0 / radial_count
             dir_numbers = list(range(1, radial_count + 1))
@@ -1071,12 +1094,32 @@ class ModelSetup(object):
             # Iterate through each transect direction
             for i in range(radial_count):
                 dir_angle = angle_mid[i]
-                if dir_angle < 135:
-                    theta_topo_list.append(topo_e[h])
-                elif dir_angle < 225:
-                    theta_topo_list.append(topo_s[h])
+                if self.params.get("topo3"):
+                    # Using three topo directions
+                    if dir_angle < 135:
+                        theta_topo_list.append(topo_e[h])
+                    elif dir_angle < 225:
+                        theta_topo_list.append(topo_s[h])
+                    else:
+                        theta_topo_list.append(topo_w[h])
                 else:
-                    theta_topo_list.append(topo_w[h])
+                    # Using eight topo directions
+                    if dir_angle < 67.5:
+                        theta_topo_list.append(topo_ne[h])
+                    elif dir_angle < 112.5:
+                        theta_topo_list.append(topo_e[h])
+                    elif dir_angle < 157.5:
+                        theta_topo_list.append(topo_se[h])
+                    elif dir_angle < 202.5:
+                        theta_topo_list.append(topo_s[h])
+                    elif dir_angle < 247.5:
+                        theta_topo_list.append(topo_sw[h])
+                    elif dir_angle < 292.5:
+                        theta_topo_list.append(topo_w[h])
+                    elif dir_angle < 337.5:
+                        theta_topo_list.append(topo_nw[h])
+                    else:
+                        theta_topo_list.append(topo_n[h])
 
             # Sun comes down and can be full-on, blocked by veg, or 
             # blocked by topography. Earlier implementations calculated 
