@@ -822,9 +822,14 @@ Field details:
 |       3       | `STREAM_KM` | Stream km                                   | kilometer       | float     |
 |       4       | `LONGITUDE` | Node Longitude                              | decimal degrees | float     |
 |       5       | `LATITUDE`  | Node Latitude                               | decimal degrees | float     |
-|       6       | `TOPO_W`    | Topographic shade angle to the west         | degrees         | float     |
-|       7       | `TOPO_S`    | Topographic shade angle to the south        | degrees         | float     |
-|       8       | `TOPO_E`    | Topographic shade angle to the east         | degrees         | float     |
+|       6       | `TOPO_NE`   | Topographic shade angle to the northeast    | degrees         | float     |
+|       7       | `TOPO_E`    | Topographic shade angle to the east         | degrees         | float     |
+|       8       | `TOPO_SE`   | Topographic shade angle to the southeast    | degrees         | float     |
+|       9       | `TOPO_S`    | Topographic shade angle to the south        | degrees         | float     |
+|       10      | `TOPO_SW`   | Topographic shade angle to the southwest    | degrees         | float     |
+|       11      | `TOPO_W`    | Topographic shade angle to the west         | degrees         | float     |
+|       12      | `TOPO_NW`   | Topographic shade angle to the northwest    | degrees         | float     |
+|       13      | `TOPO_N`    | Topographic shade angle to the north        | degrees         | float     |
 |   multiple    | `LC_T#_S#`  | Land cover code on transect T for sample S  | N/A             | string    |
 |   multiple    | `ELE_T#_S#` | Ground elevation on transect T for sample S | meters          | float     |
 
@@ -837,11 +842,21 @@ Model run requirements:
 |       3       | `STREAM_KM`  |  Required  |    Optional    |     Required     |
 |       4       | `LONGITUDE`  |  Required  |    Optional    |     Required     |
 |       5       | `LATITUDE`   |  Required  |    Optional    |     Required     |
-|       6       | `TOPO_W`     |  Required  |    Optional    |     Required     |
-|       7       | `TOPO_S`     |  Required  |    Optional    |     Required     |
-|       8       | `TOPO_E`     |  Required  |    Optional    |     Required     |
+|       6       | `TOPO_NE`    |  Required  |    Optional    |     Required     |
+|       7       | `TOPO_E`     |  Required  |    Optional    |     Required     |
+|       8       | `TOPO_SE`    |  Required  |    Optional    |     Required     |
+|       9       | `TOPO_S`     |  Required  |    Optional    |     Required     |
+|       10      | `TOPO_SW`    |  Required  |    Optional    |     Required     |
+|       11      | `TOPO_W`     |  Required  |    Optional    |     Required     |
+|       12      | `TOPO_NW`    |  Required  |    Optional    |     Required     |
+|       13      | `TOPO_N`     |  Required  |    Optional    |     Required     |
 |   multiple    | `LC_T#_S#`   |  Required  |    Optional    |     Required     |
 |   multiple    | `ELE_T#_S#`  |  Required  |    Optional    |     Required     |
+
+Legacy land cover data files that include only three topographic shade angle columns, `TOPO_W`, `TOPO_S`, and `TOPO_E`,
+can still be used, but this format is deprecated and will be retired at the next major release. When eight topographic
+shade angle columns are present, all eight are required unless `heatsource8=True`, in which case only the three legacy
+columns are used by the model.
 
 The number of `LC_T#_S#` and `ELE_T#_S#` columns is dependent on the number of land cover transects and samples specified 
 in the control file. The '#' in the column name will be a number and refers to the specific transect (T) number or 
