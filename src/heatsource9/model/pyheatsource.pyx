@@ -777,11 +777,8 @@ cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
     F_Diffuse7 = B3 - B4
     return F_Direct6, F_Diffuse6, F_Direct7, F_Diffuse7
 
-def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
-                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
-                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
-                    F_Solar5, F_Solar7, zm):
-
+cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
+                       calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt):
     # Ksed units of W/(m *C)
     # Alpha_sed units of cm^2/sec
 
@@ -791,10 +788,6 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
     # density * heat capacity * diffusivity,
     # therefore (density * heat capacity) = (conductivity / diffusivity)
     # units of (J / m3 / *C)
-
-    # Water Variable
-    cdef double Rhow = 998.2  # density of water kg / m3
-    cdef int Cpw = 4187 #J/(kg *C)
 
     # Conduction flux (positive is heat into stream)
     # units of (W/m2)
@@ -814,6 +807,20 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
         msg = "Sediment temperature is {0}. must be bounded in 0<=temp<=50".format(T_sed_next)
         logger.error(msg)
         raise RuntimeError(msg)
+    return F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next
+
+def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
+                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
+                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
+                    F_Solar5, F_Solar7, zm):
+
+    # Water Variable
+    cdef double Rhow = 998.2  # density of water kg / m3
+    cdef int Cpw = 4187 #J/(kg *C)
+
+    F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next = \
+        conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
+                   calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt)
 
     #=====================================================
     # Calculate Longwave FLUX
