@@ -15,14 +15,14 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JC, heatsource8, radial_count):
     toRadians = pi/180.0
     toDegrees = 180.0/pi
-    
+
     MeanObliquity = (23.0 + (26.0 + ((21.448 - JC *
                                       (46.815 + JC *
                                        (0.00059 - JC * 0.001813))) /
                                      60.0)) / 60.0)
     Obliquity = (MeanObliquity + 0.00256 *
                  cos(toRadians*(125.04 - 1934.136 * JC)))
-    
+
     Eccentricity = 0.016708634 - JC * (0.000042037 + 0.0000001267 * JC)
     GeoMeanLongSun = 280.46646 + JC * (36000.76983 + 0.0003032 * JC)
 
@@ -114,7 +114,7 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
     else:
         Dummy = tan(toRadians*(theta_atm))
         if theta_atm > 5:
-            
+
             RefractionCorrection = (58.1 / Dummy - 0.07 /
                                     pow(Dummy,3) + 0.000086 /
                                     pow(Dummy,5))
@@ -274,7 +274,7 @@ cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_
     cdef double PL_lc
 
     if heatsource8 and BeersData != "LAI":
-        # Strict HS8 compatibility path in riparian canopy cover mode.
+        # Strict HS8 compatibility path in riparian canopy-cover mode.
         cos_altitude = cos(radians(SolarAltitude))
         if abs(cos_altitude) < 1e-6:
             cos_altitude = 1e-6
@@ -488,98 +488,97 @@ cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
             raise RuntimeError(msg)
     return fraction_passed
 
-def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
-                 TopoFactor, ViewToSky, transsample_distance, transsample_count,
-                 BeersData, Eta, lcsampmethod, emergent, lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top, lc_k, lc_oh, lc_canopy_depth,
-                 ShaderList, tran, heatsource8, solar_only=False):
-    """ """
-    theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
-    F_Direct = [0]*8
-    F_Diffuse = [0]*8
-    F_Solar = [0]*8
-
-    # Make all math functions local to save time by preventing failed 
-    # searches of local, class and global namespaces
+cdef inline SR0(hour, doy, SolarAltitude):
     #======================================================
-    # 0 - Edge of atmosphere
-    
+    # SR0 - Extraterrestrial Solar Radiation at edge of atmosphere
+
     # Radius Vector (Wunderlich 1972)
     SolarRadiusVector = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
-    
+
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
-    
-    # Global Direct Solar Radiation Flux at the Edge of the Atmosphere (Wunderlich 1972)
-    F_Direct[0] = ((SolarConstant / (SolarRadiusVector ** 2)) *
-                   sin(radians(SolarAltitude)))
-    
-    F_Diffuse[0] = 0
+
+    # Extraterrestrial Solar Radiation Flux at the edge of the atmosphere (Wunderlich 1972)
+    F_SR0 = ((SolarConstant / (SolarRadiusVector ** 2)) *
+             sin(radians(SolarAltitude)))
+
+    F_Direct0 = F_SR0
+    F_Diffuse0 = 0
+
+    return F_Direct0, F_Diffuse0
+
+cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
     #======================================================
-    # 1 - Above Topography
-    
+    # 1 - Above Topography, after attenuation through the atmosphere
+
     # Optical Air Mass Thickness (Ibqal 1983)
     AirMass = (35 / sqrt(1224 * sin(radians(SolarAltitude)) + 1)) * \
         exp(-0.0001184 * Zs)
-    
+
     # Atmospheric Transmissivity (Ibqal 1983)
     Tr_atm = 0.0685 * cos((2 * pi / 365) * (doy + 10)) + 0.8
-    
+
     # Direct Beam Solar Radiation above Topographic Features
     # (Wunderlich 1972, Martin and McCutcheon 1999)
-    F_Direct[1] = F_Direct[0] * (Tr_atm ** AirMass) * (1 - 0.65 *
-                                                           cloud ** 2)
+    F_SR1 = F_SR0 * (Tr_atm ** AirMass) * (1 - 0.65 * cloud ** 2)
+
     # Clearness Index (Chen 1994)
-    if F_Direct[0] == 0:
+    if F_SR0 == 0:
         ClearnessIndex = 1
     else:
-        ClearnessIndex = F_Direct[1] / F_Direct[0]
+        ClearnessIndex = F_SR1 / F_SR0
 
-    Dummy = F_Direct[1]
-    
     # Diffuse Fraction (Chen 1994)
     DiffuseFraction = (0.938 + 1.071 * ClearnessIndex) - \
         (5.14 * (ClearnessIndex ** 2)) + \
         (2.98 * (ClearnessIndex ** 3)) - \
         (sin(2 * pi * (doy - 40) / 365)) * \
         (0.009 - 0.078 * ClearnessIndex)
-    F_Direct[1] = Dummy * (1 - DiffuseFraction)
-    
-    # Diffuse above Topographic Features (Chen 1994)
-    F_Diffuse[1] = Dummy * (DiffuseFraction) * (1 - 0.65 * cloud ** 2)
+    F_Direct1 = F_SR1 * (1 - DiffuseFraction)
 
+    # Diffuse above Topographic Features (Chen 1994)
+    F_Diffuse1 = F_SR1 * (DiffuseFraction) * (1 - 0.65 * cloud ** 2)
+    return F_Direct1, F_Diffuse1
+
+cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
+                    TopoFactor, theta_full_sun_max, transsample_count,
+                    theta_full_sun, theta_path, transsample_distance,
+                    lcsampmethod, lc_oh, lc_height_node_top,
+                    lc_canopy_depth, BeersData, heatsource8, tran, lc_lai,
+                    lc_k, lc_canopy_cover, ViewToSky) except *:
     #======================================================
     # 2 - Below Topography
     # 3 - Below Landcover (Above Bank Shade & Emergent)
-    
+
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     Solar_blocked_byVeg = [0]*transsample_count
     PL_lc =[0]*transsample_count
-    
+
     if SolarAltitude <= theta_topo:
         # Topographic shade is occurring
-        F_Direct[2] = 0
-        F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
-        F_Direct[3] = 0
+        F_Direct2 = 0
+        F_Diffuse2 = F_Diffuse1 * (1 - TopoFactor)
+        F_Direct3 = 0
     elif SolarAltitude >= theta_full_sun_max:
         # Full sun
-        F_Direct[2] = F_Direct[1]
-        F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
-        F_Direct[3] = F_Direct[2]
+        F_Direct2 = F_Direct1
+        F_Diffuse2 = F_Diffuse1 * (1 - TopoFactor)
+        F_Direct3 = F_Direct2
     else:
         #======================================================
         # Topographic Shade is not occurring and
         # Partial shade from veg
-        F_Direct[2] = F_Direct[1]
-        F_Diffuse[2] = F_Diffuse[1] * (1 - TopoFactor)
-        
+        F_Direct2 = F_Direct1
+        F_Diffuse2 = F_Diffuse1 * (1 - TopoFactor)
+
         # 3 - Below Landcover (Above Bank Shade & Emergent)
-        Dummy1 = F_Direct[2]
+        Dummy1 = F_Direct2
 
         # Now calculate the fraction of radiation passed through the canopy
         s = transsample_count - 1
-        
+
         while s >= 0:
             if SolarAltitude >= theta_full_sun[s]:
                 # no shading
@@ -591,7 +590,7 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                                                lc_height_node_top,
                                                lc_canopy_depth, BeersData,
                                                heatsource8, tran, s)
-                
+
                 # shading is occurring from this sample
                 if BeersData == "LAI":
                     # use LAI and k to calculate the riparian extinction value
@@ -601,7 +600,7 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                                                                      PL_lc,
                                                                      tran, s)
                 else:
-                    # Use canopy cover to calculate 
+                    # Use canopy cover to calculate
                     # the riparian extinction value
                     fraction_passed = landcover_canopy_cover_fraction_passed(lc_canopy_cover,
                                                                              lc_canopy_depth,
@@ -611,28 +610,33 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                                                                              lc_height_node_top,
                                                                              SolarAltitude,
                                                                              theta_full_sun)
-                        
+
             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
             s -= 1
-        F_Direct[3] = Dummy1
-        
-    F_Diffuse[3] = F_Diffuse[2] * ViewToSky
-    diffuse_blocked = F_Diffuse[2]-F_Diffuse[3]
+        F_Direct3 = Dummy1
+
+    F_Diffuse3 = F_Diffuse2 * ViewToSky
+    diffuse_blocked = F_Diffuse2-F_Diffuse3
     Solar_blocked_byVeg.append(diffuse_blocked)
-            
+    return F_Direct2, F_Diffuse2, F_Direct3, F_Diffuse3, Solar_blocked_byVeg
+
+cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
+                theta_bank_max, emergent, BeersData, lc_height_node_top,
+                lc_lai, lc_canopy_cover, heatsource8, Wb,
+                transsample_distance, lc_canopy_depth, lc_k) except *:
     #=========================================================
     # 4 - At Stream Surface (Below Bank Shade & Emergent)
     # What a Solar Pathfinder measures
-    
+
     if SolarAltitude > theta_topo and SolarAltitude <= theta_bank_max:
         # Bank shade is occurring
-        F_Direct[4] = 0
-        F_Diffuse[4] = F_Diffuse[3]
+        F_Direct4 = 0
+        F_Diffuse4 = F_Diffuse3
     else:
         # bank shade is not occurring
-        F_Direct[4] = F_Direct[3]
-        F_Diffuse[4] = F_Diffuse[3]
+        F_Direct4 = F_Direct3
+        F_Diffuse4 = F_Diffuse3
 
     if emergent:
         # Account for emergent vegetation
@@ -643,10 +647,10 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
         if no_emergent_veg:
             # Set to one if no veg or no canopy
             fraction_passed = 1
-    
+
         else:
             # sun vector is passing through the canopy
-            
+
             if heatsource8 and BeersData != "LAI":
                 # HS8 canopy cover
                 direct_passed = emergent_hs8_direct_passed(SolarAltitude, Wb,
@@ -656,36 +660,38 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 diffuse_passed = emergent_hs8_diffuse_passed(lc_height_node_top,
                                                               lc_canopy_cover)
 
-                F_Direct[4] = F_Direct[4] * direct_passed
-                F_Diffuse[4] = F_Diffuse[4] * diffuse_passed
+                F_Direct4 = F_Direct4 * direct_passed
+                F_Diffuse4 = F_Diffuse4 * diffuse_passed
                 fraction_passed = 1.0
             else:
                 #--------- (Norman and Welles 1983)
-                # PL_emerg is the path length of the sun vector through 
+                # PL_emerg is the path length of the sun vector through
                 # the vegetation in the emergent sample
                 PL_emerg = path_length_emergent(SolarAltitude, Wb,
                                                  transsample_distance,
                                                  lc_height_node_top,
                                                  lc_canopy_depth)
-                
+
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
                 fraction_passed = emergent_lai_fraction_passed(lc_lai, lc_k,
                                                                lc_canopy_depth,
                                                                PL_emerg)
-                
+
             else:
                 fraction_passed = emergent_canopy_cover_fraction_passed(lc_canopy_cover,
                                                                         lc_canopy_depth,
                                                                         PL_emerg)
-                
+
         if not (heatsource8 and BeersData != "LAI"):
-            F_Direct[4] = F_Direct[4] * fraction_passed
-            F_Diffuse[4] = F_Diffuse[4] * fraction_passed
-        
+            F_Direct4 = F_Direct4 * fraction_passed
+            F_Diffuse4 = F_Diffuse4 * fraction_passed
+    return F_Direct4, F_Diffuse4
+
+cdef inline SR5(F_Direct4, F_Diffuse4, SolarZenith):
     #=========================================================
     # 5 - Entering Stream
-    
+
     # Stream Surface Reflectivity (Sellers 1965)
     if SolarZenith > 80:
         Reflectivity = 0.0515 * (SolarZenith) - 3.636
@@ -695,110 +701,80 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
         Reflectivity = 0.0515 * (SolarZenith * pi / 180) - 3.636
     if abs(Reflectivity) > 1:
         Reflectivity = 0.091 * (1 / cos(SolarZenith * pi / 180)) - 0.0386
-    F_Diffuse[5] = F_Diffuse[4] * 0.91
-    F_Direct[5] = F_Direct[4] * (1 - Reflectivity)
+    F_Diffuse5 = F_Diffuse4 * 0.91
+    F_Direct5 = F_Direct4 * (1 - Reflectivity)
+    return F_Direct5, F_Diffuse5
 
-    if solar_only:
-        # Solar only runs write SR1 through SR5 and do not use SR6 or SR7.
-        # Return here to avoid unnecessary bed and water column calculations.
-        F_Solar[0] = F_Diffuse[0] + F_Direct[0]
-        F_Solar[1] = F_Diffuse[1] + F_Direct[1]
-        F_Solar[2] = F_Diffuse[2] + F_Direct[2]
-        F_Solar[3] = F_Diffuse[3] + F_Direct[3]
-        F_Solar[4] = F_Diffuse[4] + F_Direct[4]
-        F_Solar[5] = F_Diffuse[5] + F_Direct[5]
-        return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
-    
+cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
     #=========================================================
     # 6 - Received by Water Column
     # 7 - Received by Bed
-    
+
     # Direct Beam Solar Radiation Water Column Path Length (Jerlov 1976)
     Water_Path = (Dw / cos(atan((sin(radians(SolarZenith)) / 1.3333) /
                                  sqrt(-(sin(radians(SolarZenith)) / 1.3333) *
                                       (sin(radians(SolarZenith)) / 1.3333) + 1))))
-    
-    
-    # Transmissivity of Water for Direct Beam Solar Radiation 
+
+
+    # Transmissivity of Water for Direct Beam Solar Radiation
     # (Austin and Halikas 1976)
     Tr_direct = 0.415 - (0.194 * log10(Water_Path * 100))
     if Tr_direct > 1:
         Tr_direct = 1
-    
+
     # Direct Solar Radiation attenuated on way down
-    A1 = F_Direct[5] * (1 - Tr_direct)
-    
+    A1 = F_Direct5 * (1 - Tr_direct)
+
     # Direct Solar Radiation Hitting Stream bed
-    A2 = F_Direct[5] - A1
-    
+    A2 = F_Direct5 - A1
+
     # Stream Bed Reflection Coef. for Direct Solar
     # (Beschta and Weathered 1984 adopted from Sellers 1965)
     R_bed_dir = exp(0.0214 * (SolarZenith * pi / 180) - 1.941)
     BedRock = 1 - Eta
-    
+
     # Direct Solar Radiation Absorbed in Bed
-    A3 = A2 * (1 - R_bed_dir)                
-    
+    A3 = A2 * (1 - R_bed_dir)
+
     # Direct Solar Radiation Immediately Returned to Water Column as Heat
-    A4 = 0.53 * BedRock * A3                   
-    
+    A4 = 0.53 * BedRock * A3
+
     # Direct Solar Radiation Reflected off Bed
-    A5 = A2 * R_bed_dir                      
-    
+    A5 = A2 * R_bed_dir
+
     # Direct Solar Radiation attenuated on way up
-    A6 = A5 * (1 - Tr_direct)               
-    
-    F_Direct[6] = A1 + A4 + A6
-    F_Direct[7] = A3 - A4
+    A6 = A5 * (1 - Tr_direct)
+
+    F_Direct6 = A1 + A4 + A6
+    F_Direct7 = A3 - A4
     Tr_diffuse = 0.415 - (0.194 * log10(100 * Dw))
     if Tr_diffuse > 1:
         Tr_diffuse = 1
-    
+
     # Diffuse Solar Radiation attenuated on way down
-    B1 = F_Diffuse[5] * (1 - Tr_diffuse)
-    
+    B1 = F_Diffuse5 * (1 - Tr_diffuse)
+
     # Diffuse Solar Radiation Hitting Stream bed
-    B2 = F_Diffuse[5] - B1                  
-    
+    B2 = F_Diffuse5 - B1
+
     # Reflection Coef. for Diffuse Solar
     # TODO: The following ALWAYS becomes exp(-1.941)
     R_bed_diff = exp(0.0214 * (0) - 1.941)
-    
+
     # Diffuse Solar Radiation Absorbed in Bed
     B3 = B2 * (1 - R_bed_diff)
-    
+
     # Diffuse Solar Radiation Immediately Returned to Water Column as Heat
     B4 = 0.53 * BedRock * B3
-    
+
     # Diffuse Solar Radiation Reflected off Bed
     B5 = B2 * R_bed_diff
-    
+
     # Diffuse Solar Radiation attenuated on way up
     B6 = B5 * (1 - Tr_diffuse)
-    F_Diffuse[6] = B1 + B4 + B6
-    F_Diffuse[7] = B3 - B4
-    
-    #=========================================================
-    # Flux_Solar(x) and Flux_Diffuse = Solar flux at various positions
-    # 0 - Edge of atmosphere
-    # 1 - Above Topography
-    # 2 - Below Topography
-    # 3 - Below Landcover (Above Bank Shade & Emergent)
-    # 4 - At Stream Surface (What a Solar Pathfinder Measures)
-    # 5 - Entering Stream
-    # 6 - Received by Water Column
-    # 7 - Received by Bed
-    
-    F_Solar[0] = F_Diffuse[0] + F_Direct[0]
-    F_Solar[1] = F_Diffuse[1] + F_Direct[1]
-    F_Solar[2] = F_Diffuse[2] + F_Direct[2]
-    F_Solar[3] = F_Diffuse[3] + F_Direct[3]
-    F_Solar[4] = F_Diffuse[4] + F_Direct[4]
-    F_Solar[5] = F_Diffuse[5] + F_Direct[5]
-    F_Solar[6] = F_Diffuse[6] + F_Direct[6]
-    F_Solar[7] = F_Diffuse[7] + F_Direct[7]
-    
-    return F_Solar, F_Diffuse, F_Direct, Solar_blocked_byVeg
+    F_Diffuse6 = B1 + B4 + B6
+    F_Diffuse7 = B3 - B4
+    return F_Direct6, F_Diffuse6, F_Direct7, F_Diffuse7
 
 def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, Eta,
                     lc_height_top, ViewToSky, Dsed, dx, dt, Ksed,
@@ -989,7 +965,6 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
                    tran, Disp, hour, doy, daytime, SolarAltitude, SolarZenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
-    
     cloud, Uzm, humidity, T_air = metData
 
     Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy_cover, lc_lai, lc_height_top, \
@@ -1006,17 +981,74 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
     veg_block = [0]*len(ShaderList[3])+[0]
     
     if daytime:
-        
-        (solar, diffuse,
-        direct, veg_block) = get_solar_flux(hour, doy, SolarAltitude, SolarZenith,
-                                        cloud, Dw, Wb, Zs,
-                                        TopoFactor, ViewToSky,
-                                        transsample_distance,
-                                        transsample_count,
-                                        BeersData, Eta, lcsampmethod, emergent,
-                                        lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top,
-                                        lc_k, lc_oh, lc_canopy_depth, ShaderList, tran, heatsource8,
-                                        solar_only=solar_only)
+        theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
+        F_Direct = direct
+        F_Diffuse = diffuse
+        F_Solar = solar
+
+        # Make all math functions local to save time by preventing failed
+        # searches of local, class and global namespaces
+        F_Direct[0], F_Diffuse[0] = SR0(hour, doy, SolarAltitude)
+        F_Direct[1], F_Diffuse[1] = SR1(F_Direct[0], SolarAltitude, Zs,
+                                        doy, cloud)
+
+        F_Direct[2], F_Diffuse[2], F_Direct[3], F_Diffuse[3], \
+            Solar_blocked_byVeg = SR2_SR3(F_Direct[1], F_Diffuse[1],
+                                          SolarAltitude, theta_topo,
+                                          TopoFactor, theta_full_sun_max,
+                                          transsample_count, theta_full_sun,
+                                          theta_path, transsample_distance,
+                                          lcsampmethod, lc_oh,
+                                          lc_height_node_top, lc_canopy_depth,
+                                          BeersData, heatsource8, tran,
+                                          lc_lai, lc_k, lc_canopy_cover,
+                                          ViewToSky)
+
+        F_Direct[4], F_Diffuse[4] = SR4(F_Direct[3], F_Diffuse[3],
+                                        SolarAltitude, theta_topo,
+                                        theta_bank_max, emergent, BeersData,
+                                        lc_height_node_top, lc_lai,
+                                        lc_canopy_cover, heatsource8, Wb,
+                                        transsample_distance, lc_canopy_depth,
+                                        lc_k)
+
+        F_Direct[5], F_Diffuse[5] = SR5(F_Direct[4], F_Diffuse[4],
+                                        SolarZenith)
+
+        if solar_only:
+            # Solar only runs write SR1 through SR5 and do not use SR6 or SR7.
+            # Return here to avoid unnecessary bed and water column calculations.
+            F_Solar[0] = F_Diffuse[0] + F_Direct[0]
+            F_Solar[1] = F_Diffuse[1] + F_Direct[1]
+            F_Solar[2] = F_Diffuse[2] + F_Direct[2]
+            F_Solar[3] = F_Diffuse[3] + F_Direct[3]
+            F_Solar[4] = F_Diffuse[4] + F_Direct[4]
+            F_Solar[5] = F_Diffuse[5] + F_Direct[5]
+        else:
+            F_Direct[6], F_Diffuse[6], F_Direct[7], F_Diffuse[7] = \
+                SR6_SR7(F_Direct[5], F_Diffuse[5], SolarZenith, Dw, Eta)
+
+            #=========================================================
+            # Flux_Solar(x) and Flux_Diffuse = Solar flux at various positions
+            # 0 - Edge of atmosphere
+            # 1 - Above Topography
+            # 2 - Below Topography
+            # 3 - Below Landcover (Above Bank Shade & Emergent)
+            # 4 - At Stream Surface (What a Solar Pathfinder Measures)
+            # 5 - Entering Stream
+            # 6 - Received by Water Column
+            # 7 - Received by Bed
+
+            F_Solar[0] = F_Diffuse[0] + F_Direct[0]
+            F_Solar[1] = F_Diffuse[1] + F_Direct[1]
+            F_Solar[2] = F_Diffuse[2] + F_Direct[2]
+            F_Solar[3] = F_Diffuse[3] + F_Direct[3]
+            F_Solar[4] = F_Diffuse[4] + F_Direct[4]
+            F_Solar[5] = F_Diffuse[5] + F_Direct[5]
+            F_Solar[6] = F_Diffuse[6] + F_Direct[6]
+            F_Solar[7] = F_Diffuse[7] + F_Direct[7]
+
+        veg_block = Solar_blocked_byVeg
 
     # We're only running shade, so return solar and some empty calories
     if solar_only:
