@@ -366,6 +366,128 @@ cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
         PL_emerg = (lc_xn_exit - lc_xn_enter) / cos_altitude
     return PL_emerg
 
+cdef inline double landcover_lai_fraction_passed(lc_lai, lc_k,
+                                                 lc_canopy_depth, PL_lc,
+                                                 tran, s):
+    cdef double fraction_passed
+
+    try:
+        K_rip = lc_lai[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
+        fraction_passed = exp(-1 * K_rip * PL_lc)
+    except:
+        # can't divide by height zero
+        fraction_passed = 0
+    return fraction_passed
+
+cdef inline double landcover_canopy_cover_fraction_passed(lc_canopy_cover,
+                                                          lc_canopy_depth,
+                                                          PL_lc, heatsource8,
+                                                          tran, s,
+                                                          lc_height_node_top,
+                                                          SolarAltitude,
+                                                          theta_full_sun) except *:
+    cdef double fraction_passed
+
+    if heatsource8:
+        #---------  Boyd and Kasper 2007
+        # from original heat source model
+        PL = 10
+    else:
+        #--------- Norman and Welles 1983, Chen et al 1998
+        PL = lc_canopy_depth[tran][s]
+
+    try:
+        K_rip = -log(1- lc_canopy_cover[tran][s]) / PL
+        fraction_passed = exp(-1 * K_rip * PL_lc)
+    except:
+        if (lc_canopy_cover[tran][s] >= 1 or PL <= 0):
+            # can't take log or divide by zero
+            fraction_passed = 0
+        else:
+            # some other error
+            msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} SolarAltitude={6} theta_full_sun={7}".format(
+                tran, s, lc_height_node_top[tran][s], lc_canopy_cover[tran][s], PL_lc, PL, SolarAltitude, theta_full_sun[s]
+            )
+            logger.exception(msg)
+            raise RuntimeError(msg)
+    return fraction_passed
+
+cdef inline double emergent_hs8_direct_passed(SolarAltitude, Wb,
+                                              transsample_distance,
+                                              lc_height_node_top,
+                                              lc_canopy_cover):
+    cdef double direct_passed
+
+    H = lc_height_node_top[0][0]
+    C = lc_canopy_cover[0][0]
+
+    if C <= 0 or H <= 0:
+        direct_passed = 1.0
+    elif C >= 1:
+        # HS8 direct is fully blocked; diffuse is near fully blocked.
+        direct_passed = 0.0
+    else:
+        width_cap = Wb if Wb > 0 else transsample_distance
+        path_emergent = H / sin(radians(SolarAltitude))
+        if path_emergent > width_cap:
+            path_emergent = width_cap
+
+        # Direct uses HS8 denominator = 10 m.
+        rip_ext_direct = -log(1 - C) / 10.0
+        direct_passed = exp(-rip_ext_direct * path_emergent)
+    return direct_passed
+
+cdef inline double emergent_hs8_diffuse_passed(lc_height_node_top,
+                                               lc_canopy_cover):
+    cdef double diffuse_passed
+
+    H = lc_height_node_top[0][0]
+    C = lc_canopy_cover[0][0]
+
+    if C <= 0 or H <= 0:
+        diffuse_passed = 1.0
+    elif C >= 1:
+        # HS8 direct is fully blocked; diffuse is near fully blocked.
+        diffuse_passed = 0.0001
+    else:
+        # Diffuse uses full emergent height path.
+        rip_ext_diffuse = -log(1 - C) / H
+        diffuse_passed = exp(-rip_ext_diffuse * H)
+    return diffuse_passed
+
+cdef inline double emergent_lai_fraction_passed(lc_lai, lc_k,
+                                                lc_canopy_depth,
+                                                PL_emerg):
+    cdef double fraction_passed
+
+    K_rip = lc_lai[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
+    fraction_passed = exp(-1 * K_rip * PL_emerg)
+    return fraction_passed
+
+cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
+                                                         lc_canopy_depth,
+                                                         PL_emerg) except *:
+    cdef double fraction_passed
+
+    try:
+        # Use canopy cover to calculate
+        # the riparian extinction value
+        K_rip = -log(1- lc_canopy_cover[0][0]) / lc_canopy_depth[0][0]
+        fraction_passed = exp(-1 * K_rip * PL_emerg)
+
+    except:
+        if lc_canopy_cover[0][0] >= 1:
+            # can't take log of zero
+            fraction_passed = 0
+        else:
+            # some other error
+            msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1}".format(
+                lc_canopy_cover[0][0], PL_emerg
+            )
+            logger.exception(msg)
+            raise RuntimeError(msg)
+    return fraction_passed
+
 def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, Eta, lcsampmethod, emergent, lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top, lc_k, lc_oh, lc_canopy_depth,
@@ -472,39 +594,23 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 
                 # shading is occurring from this sample
                 if BeersData == "LAI":
-                    
                     # use LAI and k to calculate the riparian extinction value
-                    try:
-                        K_rip = lc_lai[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
-                        fraction_passed = exp(-1 * K_rip * PL_lc)
-                    except:
-                        # can't divide by height zero
-                        fraction_passed = 0
+                    fraction_passed = landcover_lai_fraction_passed(lc_lai,
+                                                                     lc_k,
+                                                                     lc_canopy_depth,
+                                                                     PL_lc,
+                                                                     tran, s)
                 else:
                     # Use canopy cover to calculate 
                     # the riparian extinction value
-                    if heatsource8:
-                        #---------  Boyd and Kasper 2007 
-                        # from original heat source model
-                        PL = 10
-                    else:
-                        #--------- Norman and Welles 1983, Chen et al 1998
-                        PL = lc_canopy_depth[tran][s]
-                    
-                    try:
-                        K_rip = -log(1- lc_canopy_cover[tran][s]) / PL
-                        fraction_passed = exp(-1 * K_rip * PL_lc)
-                    except:
-                        if (lc_canopy_cover[tran][s] >= 1 or PL <= 0):
-                            # can't take log or divide by zero
-                            fraction_passed = 0
-                        else:
-                            # some other error
-                            msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} SolarAltitude={6} theta_full_sun={7}".format(
-                                tran, s, lc_height_node_top[tran][s], lc_canopy_cover[tran][s], PL_lc, PL, SolarAltitude, theta_full_sun[s]
-                            )
-                            logger.exception(msg)
-                            raise RuntimeError(msg)
+                    fraction_passed = landcover_canopy_cover_fraction_passed(lc_canopy_cover,
+                                                                             lc_canopy_depth,
+                                                                             PL_lc,
+                                                                             heatsource8,
+                                                                             tran, s,
+                                                                             lc_height_node_top,
+                                                                             SolarAltitude,
+                                                                             theta_full_sun)
                         
             Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
@@ -543,29 +649,12 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
             
             if heatsource8 and BeersData != "LAI":
                 # HS8 canopy cover
-                H = lc_height_node_top[0][0]
-                C = lc_canopy_cover[0][0]
-
-                if C <= 0 or H <= 0:
-                    direct_passed = 1.0
-                    diffuse_passed = 1.0
-                elif C >= 1:
-                    # HS8 direct is fully blocked; diffuse is near fully blocked.
-                    direct_passed = 0.0
-                    diffuse_passed = 0.0001
-                else:
-                    width_cap = Wb if Wb > 0 else transsample_distance
-                    path_emergent = H / sin(radians(SolarAltitude))
-                    if path_emergent > width_cap:
-                        path_emergent = width_cap
-
-                    # Direct uses HS8 denominator = 10 m.
-                    rip_ext_direct = -log(1 - C) / 10.0
-                    direct_passed = exp(-rip_ext_direct * path_emergent)
-
-                    # Diffuse uses full emergent height path.
-                    rip_ext_diffuse = -log(1 - C) / H
-                    diffuse_passed = exp(-rip_ext_diffuse * H)
+                direct_passed = emergent_hs8_direct_passed(SolarAltitude, Wb,
+                                                            transsample_distance,
+                                                            lc_height_node_top,
+                                                            lc_canopy_cover)
+                diffuse_passed = emergent_hs8_diffuse_passed(lc_height_node_top,
+                                                              lc_canopy_cover)
 
                 F_Direct[4] = F_Direct[4] * direct_passed
                 F_Diffuse[4] = F_Diffuse[4] * diffuse_passed
@@ -581,27 +670,14 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
-                K_rip = lc_lai[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
-                fraction_passed = exp(-1 * K_rip * PL_emerg)
+                fraction_passed = emergent_lai_fraction_passed(lc_lai, lc_k,
+                                                               lc_canopy_depth,
+                                                               PL_emerg)
                 
             else:
-                try:
-                    # Use canopy cover to calculate 
-                    # the riparian extinction value
-                    K_rip = -log(1- lc_canopy_cover[0][0]) / lc_canopy_depth[0][0]
-                    fraction_passed = exp(-1 * K_rip * PL_emerg)
-                    
-                except:
-                    if lc_canopy_cover[0][0] >= 1:
-                        # can't take log of zero
-                        fraction_passed = 0
-                    else:
-                        # some other error
-                        msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1}".format(
-                            lc_canopy_cover[0][0], PL_emerg
-                        )
-                        logger.exception(msg)
-                        raise RuntimeError(msg)
+                fraction_passed = emergent_canopy_cover_fraction_passed(lc_canopy_cover,
+                                                                        lc_canopy_depth,
+                                                                        PL_emerg)
                 
         if not (heatsource8 and BeersData != "LAI"):
             F_Direct[4] = F_Direct[4] * fraction_passed
