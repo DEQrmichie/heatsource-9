@@ -502,6 +502,7 @@ cdef inline SR0(hour, doy, SolarAltitude):
     F_SR0 = ((SolarConstant / (SolarRadiusVector ** 2)) *
              sin(radians(SolarAltitude)))
 
+    # This is total extraterrestrial so all of it gets assigned to direct. There's no diffuse until it's in the atmosphere.
     F_Direct0 = F_SR0
     F_Diffuse0 = 0
 
@@ -553,7 +554,7 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
-    Solar_blocked_byVeg = [0]*transsample_count
+    F_SR3b = [0]*transsample_count
     PL_lc =[0]*transsample_count
 
     if SolarAltitude <= theta_topo:
@@ -611,15 +612,15 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
                                                                              SolarAltitude,
                                                                              theta_full_sun)
 
-            Solar_blocked_byVeg[s] = Dummy1 - (Dummy1 * fraction_passed)
+            F_SR3b[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
             s -= 1
         F_Direct3 = Dummy1
 
     F_Diffuse3 = F_Diffuse2 * ViewToSky
     diffuse_blocked = F_Diffuse2-F_Diffuse3
-    Solar_blocked_byVeg.append(diffuse_blocked)
-    return F_Direct2, F_Diffuse2, F_Direct3, F_Diffuse3, Solar_blocked_byVeg
+    F_SR3b.append(diffuse_blocked)
+    return F_Direct2, F_Diffuse2, F_Direct3, F_Diffuse3, F_SR3b
 
 cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
                 theta_bank_max, emergent, BeersData, lc_height_node_top,
@@ -973,18 +974,15 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, zm, T_alluv = C_args
 
-    solar = [0]*8
-    diffuse = [0]*8
-    direct = [0]*8
+    F_Solar = [0]*8
+    F_Diffuse = [0]*8
+    F_Direct = [0]*8
     
     # plus one for diffuse blocked
-    veg_block = [0]*len(ShaderList[3])+[0]
+    F_SR3b = [0]*len(ShaderList[3])+[0]
     
     if daytime:
         theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
-        F_Direct = direct
-        F_Diffuse = diffuse
-        F_Solar = solar
 
         # Make all math functions local to save time by preventing failed
         # searches of local, class and global namespaces
@@ -993,16 +991,16 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
                                         doy, cloud)
 
         F_Direct[2], F_Diffuse[2], F_Direct[3], F_Diffuse[3], \
-            Solar_blocked_byVeg = SR2_SR3(F_Direct[1], F_Diffuse[1],
-                                          SolarAltitude, theta_topo,
-                                          TopoFactor, theta_full_sun_max,
-                                          transsample_count, theta_full_sun,
-                                          theta_path, transsample_distance,
-                                          lcsampmethod, lc_oh,
-                                          lc_height_node_top, lc_canopy_depth,
-                                          BeersData, heatsource8, tran,
-                                          lc_lai, lc_k, lc_canopy_cover,
-                                          ViewToSky)
+            F_SR3b = SR2_SR3(F_Direct[1], F_Diffuse[1],
+                              SolarAltitude, theta_topo,
+                              TopoFactor, theta_full_sun_max,
+                              transsample_count, theta_full_sun,
+                              theta_path, transsample_distance,
+                              lcsampmethod, lc_oh,
+                              lc_height_node_top, lc_canopy_depth,
+                              BeersData, heatsource8, tran,
+                              lc_lai, lc_k, lc_canopy_cover,
+                              ViewToSky)
 
         F_Direct[4], F_Diffuse[4] = SR4(F_Direct[3], F_Diffuse[3],
                                         SolarAltitude, theta_topo,
@@ -1047,9 +1045,6 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
             F_Solar[5] = F_Diffuse[5] + F_Direct[5]
             F_Solar[6] = F_Diffuse[6] + F_Direct[6]
             F_Solar[7] = F_Diffuse[7] + F_Direct[7]
-
-        veg_block = Solar_blocked_byVeg
-
     # We're only running shade, so return solar and some empty calories
     if solar_only:
         ground = [0]*9
@@ -1058,27 +1053,27 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
         Mac = [0]*3
         
         # Boundary node
-        if not has_prev: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
+        if not has_prev: return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T
         
         # regular node
-        else: return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
+        else: return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T, Mac
 
     ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs,
                     Eta, lc_height_top, ViewToSky, Dsed, dx,
                     dt, Ksed, Alpha_sed, calcalluv, T_alluv,
                     Pw, Ww, emergent, penman, wind_a, wind_b,
-                    calcevap, T_prev, T_sed, Q_hyp, solar[5],
-                    solar[7], zm)
+                    calcevap, T_prev, T_sed, Q_hyp, F_Solar[5],
+                    F_Solar[7], zm)
     T_hyp = ground[1]
 
-    F_Total =  solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
+    F_Total =  F_Solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
     
     # Vars are Cp (J/kg *C) and P (kgS/m3)
     Delta_T = F_Total * dt / ((area / Ww) * 4182 * 998.2) 
 
     if not has_prev:
         # Boundary node
-        return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T
+        return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T
 
     Mac = calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tribs,
                          T_tribs, Q_up_prev, Delta_T, Disp, 0, 0.0,
@@ -1086,4 +1081,4 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
                          MixTDelta_dn_prev)
 
     # Mac includes Temp, S, T_mix
-    return solar, diffuse, direct, veg_block, ground, F_Total, Delta_T, Mac
+    return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T, Mac
