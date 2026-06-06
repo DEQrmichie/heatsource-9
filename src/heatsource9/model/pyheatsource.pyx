@@ -777,11 +777,10 @@ cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
     F_Diffuse7 = B3 - B4
     return F_Direct6, F_Diffuse6, F_Direct7, F_Diffuse7
 
-def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, Eta,
-                    lc_height_top, ViewToSky, Dsed, dx, dt, Ksed,
-                    Alpha_sed, calcalluv, T_alluv, Pw, Ww, emergent,
-                    penman, wind_a, wind_b, calcevap, T_prev, T_sed,
-                    Q_hyp, F_Solar5, F_Solar7, zm):
+def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
+                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
+                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
+                    F_Solar5, F_Solar7, zm):
 
     # Ksed units of W/(m *C)
     # Alpha_sed units of cm^2/sec
@@ -961,14 +960,14 @@ def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         Temp = T1 + S * dt
     return Temp, S, T_mix
 
-def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
+def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    tran, Disp, hour, doy, daytime, SolarAltitude, SolarZenith,
                    Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     cloud, Uzm, humidity, T_air = metData
 
-    Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy_cover, lc_lai, lc_height_top, \
+    Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy_cover, lc_lai, \
         lc_height_node_top, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
@@ -1059,11 +1058,10 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Pw, Ww, U, Q_tribs,
         else: return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T, Mac
 
     ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs,
-                    Eta, lc_height_top, ViewToSky, Dsed, dx,
-                    dt, Ksed, Alpha_sed, calcalluv, T_alluv,
-                    Pw, Ww, emergent, penman, wind_a, wind_b,
-                    calcevap, T_prev, T_sed, Q_hyp, F_Solar[5],
-                    F_Solar[7], zm)
+                    ViewToSky, Dsed, dx, dt, Ksed, Alpha_sed,
+                    calcalluv, T_alluv, Ww, penman, wind_a, wind_b,
+                    calcevap, T_prev, T_sed, Q_hyp, F_Solar[5], F_Solar[7],
+                    zm)
     T_hyp = ground[1]
 
     F_Total =  F_Solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
