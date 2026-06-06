@@ -809,19 +809,7 @@ cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
         raise RuntimeError(msg)
     return F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next
 
-def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
-                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
-                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
-                    F_Solar5, F_Solar7, zm):
-
-    # Water Variable
-    cdef double Rhow = 998.2  # density of water kg / m3
-    cdef int Cpw = 4187 #J/(kg *C)
-
-    F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next = \
-        conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
-                   calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt)
-
+cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
     #=====================================================
     # Calculate Longwave FLUX
     #=====================================================
@@ -847,6 +835,23 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
     cdef double F_LW_veg = 0.96 * (1 - ViewToSky) * 0.96 * Sigma * (T_air + 273.2) ** 4
     # Calculate the net longwave flux
     cdef double F_LW = F_LW_atm + F_LW_stream + F_LW_veg
+    return F_LW_atm, F_LW_stream, F_LW_veg, F_LW
+
+def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
+                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
+                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
+                    F_Solar5, F_Solar7, zm):
+
+    # Water Variable
+    cdef double Rhow = 998.2  # density of water kg / m3
+    cdef int Cpw = 4187 #J/(kg *C)
+
+    F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next = \
+        conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
+                   calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt)
+
+    F_LW_atm, F_LW_stream, F_LW_veg, F_LW = \
+        longwave(cloud, humidity, T_air, ViewToSky, T_prev)
 
     #===================================================
     # Calculate Evaporation FLUX
