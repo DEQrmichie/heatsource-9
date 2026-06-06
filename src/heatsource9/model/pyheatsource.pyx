@@ -267,6 +267,105 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
     Geom = get_stream_geometry(Q_new, Wb, Z, n, S, D_est, dx, dt)
     return Q_new, Geom
 
+cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_distance,
+                                         lcsampmethod, lc_oh, lc_height_node_top,
+                                         lc_canopy_depth, BeersData, heatsource8,
+                                         tran, s):
+    cdef double PL_lc
+
+    if heatsource8 and BeersData != "LAI":
+        # Strict HS8 compatibility path in riparian canopy cover mode.
+        cos_altitude = cos(radians(SolarAltitude))
+        if abs(cos_altitude) < 1e-6:
+            cos_altitude = 1e-6
+        PL_lc = transsample_distance / cos_altitude
+    else:
+        adj_zone = 0.5 if lcsampmethod == "zone" else 0.0
+        lc_xn_near = transsample_distance * (s + 1 - adj_zone)
+        lc_xn_far = transsample_distance * (s + 2 - adj_zone)
+        if s == 0:
+            lc_xn_near -= lc_oh[tran][s]
+
+        altitude_rad = radians(SolarAltitude)
+        cos_altitude = cos(altitude_rad)
+        if abs(cos_altitude) < 1e-6:
+            cos_altitude = 1e-6
+
+        tan_altitude = tan(altitude_rad)
+        if abs(tan_altitude) < 1e-6:
+            tan_altitude = 1e-6
+
+        lc_height_node_top_value = lc_height_node_top[tran][s]
+        if BeersData == "LAI":
+            lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[tran][s]
+        else:
+            H_canopy_depth = lc_canopy_depth[tran][s]
+            lc_height_node_base = lc_height_node_top_value - H_canopy_depth
+
+        lc_xn_base = lc_height_node_base / tan_altitude
+        lc_xn_top = lc_height_node_top_value / tan_altitude
+
+        if SolarAltitude <= theta_path[s]:
+            # Side entry path length
+            lc_xn_enter = max(lc_xn_near, lc_xn_base)
+            lc_xn_exit = min(lc_xn_far, lc_xn_top)
+            if lc_xn_exit <= lc_xn_enter:
+                PL_lc = 0.0
+            else:
+                PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
+        else:
+            # Top entry
+            lc_xn_enter = max(lc_xn_near, lc_xn_base)
+            lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
+            if lc_xn_exit <= lc_xn_enter:
+                PL_lc = 0.0
+            else:
+                PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
+    if PL_lc < 0:
+        PL_lc = 0.0
+    return PL_lc
+
+cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
+                                        lc_height_node_top, lc_canopy_depth):
+    cdef double PL_emerg
+
+    # The emergent zone can't be wider than half the
+    # wetted width. if this is a solar only run the wetted
+    # width is not calculated so Wb = 0. The sample zone
+    # width is used instead.
+    if Wb == 0:
+        emergent_distance = transsample_distance
+    else:
+        emergent_distance = Wb * 0.5
+
+    lc_height_node_top_value = lc_height_node_top[0][0]
+    lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[0][0]
+
+    altitude_rad = radians(SolarAltitude)
+    cos_altitude = cos(altitude_rad)
+    if abs(cos_altitude) < 1e-6:
+        cos_altitude = 1e-6
+    tan_altitude = tan(altitude_rad)
+    if abs(tan_altitude) < 1e-6:
+        tan_altitude = 1e-6
+
+    lc_xn_near = 0.0
+    lc_xn_far = emergent_distance
+    lc_xn_base = lc_height_node_base / tan_altitude
+    lc_xn_top = lc_height_node_top_value / tan_altitude
+
+    if SolarAltitude <= degrees(atan(lc_height_node_top_value / emergent_distance)):
+        lc_xn_enter = max(lc_xn_near, lc_xn_base)
+        lc_xn_exit = min(lc_xn_far, lc_xn_top)
+    else:
+        lc_xn_enter = max(lc_xn_near, lc_xn_base)
+        lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
+    if lc_xn_exit <= lc_xn_enter:
+        PL_emerg = 0.0
+    else:
+        PL_emerg = (lc_xn_exit - lc_xn_enter) / cos_altitude
+    return PL_emerg
+
 def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                  TopoFactor, ViewToSky, transsample_distance, transsample_count,
                  BeersData, Eta, lcsampmethod, emergent, lc_canopy_cover, lc_lai, lc_height_top, lc_height_node_top, lc_k, lc_oh, lc_canopy_depth,
@@ -282,14 +381,14 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
     #======================================================
     # 0 - Edge of atmosphere
     
-    # Radius Vector Ratio (Wunderlich 1972)
-    SolarRadiusVectorRatio = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
+    # Radius Vector (Wunderlich 1972)
+    SolarRadiusVector = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
     
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
     
     # Global Direct Solar Radiation Flux at the Edge of the Atmosphere (Wunderlich 1972)
-    F_Direct[0] = ((SolarConstant / (SolarRadiusVectorRatio ** 2)) *
+    F_Direct[0] = ((SolarConstant / (SolarRadiusVector ** 2)) *
                    sin(radians(SolarAltitude)))
     
     F_Diffuse[0] = 0
@@ -364,57 +463,12 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 # no shading
                 fraction_passed = 1
             else:
-                
-                if heatsource8 and BeersData != "LAI":
-                    # Strict HS8 compatibility path in riparian canopy-cover mode.
-                    cos_altitude = cos(radians(SolarAltitude))
-                    if abs(cos_altitude) < 1e-6:
-                        cos_altitude = 1e-6
-                    PL_lc = transsample_distance / cos_altitude
-                else:
-                    adj_zone = 0.5 if lcsampmethod == "zone" else 0.0
-                    lc_xn_near = transsample_distance * (s + 1 - adj_zone)
-                    lc_xn_far = transsample_distance * (s + 2 - adj_zone)
-                    if s == 0:
-                        lc_xn_near -= lc_oh[tran][s]
-
-                    altitude_rad = radians(SolarAltitude)
-                    cos_altitude = cos(altitude_rad)
-                    if abs(cos_altitude) < 1e-6:
-                        cos_altitude = 1e-6
-
-                    tan_altitude = tan(altitude_rad)
-                    if abs(tan_altitude) < 1e-6:
-                        tan_altitude = 1e-6
-
-                    lc_height_node_top_value = lc_height_node_top[tran][s]
-                    if BeersData == "LAI":
-                        lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[tran][s]
-                    else:
-                        H_canopy_depth = lc_canopy_depth[tran][s]
-                        lc_height_node_base = lc_height_node_top_value - H_canopy_depth
-
-                    lc_xn_base = lc_height_node_base / tan_altitude
-                    lc_xn_top = lc_height_node_top_value / tan_altitude
-
-                    if SolarAltitude <= theta_path[s]:
-                        # Side entry path length
-                        lc_xn_enter = max(lc_xn_near, lc_xn_base)
-                        lc_xn_exit = min(lc_xn_far, lc_xn_top)
-                        if lc_xn_exit <= lc_xn_enter:
-                            PL_lc = 0.0
-                        else:
-                            PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
-                    else:
-                        # Top entry
-                        lc_xn_enter = max(lc_xn_near, lc_xn_base)
-                        lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
-                        if lc_xn_exit <= lc_xn_enter:
-                            PL_lc = 0.0
-                        else:
-                            PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
-                if PL_lc < 0:
-                    PL_lc = 0.0
+                PL_lc = path_length_landcover(SolarAltitude, theta_path,
+                                               transsample_distance,
+                                               lcsampmethod, lc_oh,
+                                               lc_height_node_top,
+                                               lc_canopy_depth, BeersData,
+                                               heatsource8, tran, s)
                 
                 # shading is occurring from this sample
                 if BeersData == "LAI":
@@ -520,42 +574,10 @@ def get_solar_flux(hour, doy, SolarAltitude, SolarZenith, cloud, Dw, Wb, Zs,
                 #--------- (Norman and Welles 1983)
                 # PL_emerg is the path length of the sun vector through 
                 # the vegetation in the emergent sample
-        
-                # The emergent zone can't be wider than half the 
-                # wetted width. if this is a solar only run the wetted 
-                # width is not calculated so Wb = 0. The sample zone 
-                # width is used instead.
-                if Wb == 0: 
-                    emergent_distance = transsample_distance 
-                else:
-                    emergent_distance = Wb * 0.5
-
-                lc_height_node_top_value = lc_height_node_top[0][0]
-                lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[0][0]
-
-                altitude_rad = radians(SolarAltitude)
-                cos_altitude = cos(altitude_rad)
-                if abs(cos_altitude) < 1e-6:
-                    cos_altitude = 1e-6
-                tan_altitude = tan(altitude_rad)
-                if abs(tan_altitude) < 1e-6:
-                    tan_altitude = 1e-6
-
-                lc_xn_near = 0.0
-                lc_xn_far = emergent_distance
-                lc_xn_base = lc_height_node_base / tan_altitude
-                lc_xn_top = lc_height_node_top_value / tan_altitude
-
-                if SolarAltitude <= degrees(atan(lc_height_node_top_value / emergent_distance)):
-                    lc_xn_enter = max(lc_xn_near, lc_xn_base)
-                    lc_xn_exit = min(lc_xn_far, lc_xn_top)
-                else:
-                    lc_xn_enter = max(lc_xn_near, lc_xn_base)
-                    lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
-                if lc_xn_exit <= lc_xn_enter:
-                    PL_emerg = 0.0
-                else:
-                    PL_emerg = (lc_xn_exit - lc_xn_enter) / cos_altitude
+                PL_emerg = path_length_emergent(SolarAltitude, Wb,
+                                                 transsample_distance,
+                                                 lc_height_node_top,
+                                                 lc_canopy_depth)
                 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
