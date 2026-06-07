@@ -194,14 +194,18 @@ def get_stream_geometry(Q_est, Wb, Z, n, S, D_est, dx, dt):
             count += 1
     # Use the calculated wetted depth to calculate new 
     # channel characteristics
-    cdef double A, Pw, Rh, Ww, U, ShearVelocity, DL
+    cdef double A, Pw, Rh, Ww, U
     A = (D_est * (Wb + Z * D_est))
     Pw = (Wb + 2 * D_est * sqrt(1+ pow(Z,2)))
     Rh = A/Pw
     Ww = Wb + 2 * Z * D_est
     U = Q_est / A
+    return D_est, A, Pw, Rh, Ww, U
 
-    # This is a sheer velocity estimate, followed by an estimate 
+
+cdef inline double dispersion(U, Ww, D_est, S, dx, dt):
+    cdef double ShearVelocity, DL
+    # This is a shear velocity estimate, followed by an estimate
     # of numerical dispersion
     if S == 0.0:
         ShearVelocity = U
@@ -209,11 +213,10 @@ def get_stream_geometry(Q_est, Wb, Z, n, S, D_est, dx, dt):
         ShearVelocity = sqrt(9.8 * D_est * S)
     DL = ((0.011 * pow(U,2.0) * pow(Ww,2.0)) /
           (D_est * ShearVelocity))
-    
+
     if (DL * dt / pow(dx,2.0)) > 0.5:
         DL = (0.45 * pow(dx,2)) / dt
-    #DL = 50
-    return D_est, A, Pw, Rh, Ww, U, DL
+    return DL
 
 def calc_muskingum(Q_est, U, Ww, S, dx, dt):
     """Return the values for the Muskigum routing coefficients
@@ -248,6 +251,7 @@ def calc_muskingum(Q_est, U, Ww, S, dx, dt):
 def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
               Q_net, Q_bc):
     cdef double Q1, Q2, Q_new
+    cdef double A, Pw, Rh, DL
     cdef double C[3]
 
     if Q_bc >= 0:
@@ -264,7 +268,9 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
 
     #if Q_new > 0.000:
-    Geom = get_stream_geometry(Q_new, Wb, Z, n, S, D_est, dx, dt)
+    D_est, A, Pw, Rh, Ww, U = get_stream_geometry(Q_new, Wb, Z, n, S, D_est, dx, dt)
+    DL = dispersion(U, Ww, D_est, S, dx, dt)
+    Geom = D_est, A, Pw, Rh, Ww, U, DL
     return Q_new, Geom
 
 cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_distance,
