@@ -837,6 +837,32 @@ cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
     cdef double F_LW = F_LW_atm + F_LW_stream + F_LW_veg
     return F_LW_atm, F_LW_stream, F_LW_veg, F_LW
 
+cdef inline evaporation(penman, T_air, F_Solar5, F_LW, Rhow, L_evap,
+                        f_U2m, Es_w, Ea_w, Gamma, Ww, dx, calcevap):
+    cdef double Delta_sat, NetRadiation, E_aero, E_rate, F_Evap
+    #===================================================
+    # Calculate Evaporation FLUX
+    #=====================================================
+
+    if penman:
+        Delta_sat = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
+                     6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
+        
+        NetRadiation = F_Solar5 + F_LW  #J/m2/s
+        
+        if NetRadiation < 0:
+            NetRadiation = 0 #J/m2/s
+        E_aero = f_U2m * (Es_w - Ea_w)  #m/s
+        E_rate = (((NetRadiation * Delta_sat / (Rhow * L_evap)) + E_aero * Gamma) /
+                  (Delta_sat + Gamma))
+        
+        F_Evap = -E_rate * L_evap * Rhow #W/m2
+    else:
+        E_rate = f_U2m * (Es_w - Ea_w)  #m/s
+        F_Evap = -E_rate * L_evap * Rhow #W/m2
+    cdef double Q_evap = E_rate * Ww * dx if calcevap else 0
+    return E_rate, F_Evap, Q_evap
+
 def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
                     dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
                     penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
@@ -884,22 +910,12 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
     cdef double L_evap = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
     #===================================================
     # Use Jobson Wind Function
-    cdef double Gamma, Delta_sat, NetRadiation, E_aero, E_rate, F_Evap, BR
+    cdef double Gamma, E_rate, F_Evap, Q_evap, BR
     if penman:
-        #Calculate Evaporation FLUX
         Gamma = 1003.5 * P_atm / (L_evap * 0.62198) #mb/*C  Cuenca p 141
-        Delta_sat = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
-                     6.1275 * exp(17.27 * (T_air - 1) / (237.3 + T_air - 1)))
-        
-        NetRadiation = F_Solar5 + F_LW  #J/m2/s
-        
-        if NetRadiation < 0:
-            NetRadiation = 0 #J/m2/s
-        E_aero = f_U2m * (Es_w - Ea_w)  #m/s
-        E_rate = (((NetRadiation * Delta_sat / (Rhow * L_evap)) + E_aero * Gamma) /
-                  (Delta_sat + Gamma))
-        
-        F_Evap = -E_rate * L_evap * Rhow #W/m2
+        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar5, F_LW,
+                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
+                                             Gamma, Ww, dx, calcevap)
         # Calculate Convection FLUX
         if (Es_w - Ea_w) != 0:
             BR = Gamma * (T_prev - T_air) / (Es_w - Ea_w)
@@ -907,10 +923,9 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
             # Vapor pressure equilibrium. Bowen ratio is undefined, use BR = 1. Evaporation and convection are zero.
             BR = 1        
     else:
-        #===================================================
-        # Calculate Evaporation FLUX
-        E_rate = f_U2m * (Es_w - Ea_w)  #m/s
-        F_Evap = -E_rate * L_evap * Rhow #W/m2
+        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar5, F_LW,
+                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
+                                             0.0, Ww, dx, calcevap)
         # Calculate Convection FLUX
         if (Es_w - Ea_w) != 0:
             BR = (0.61 * (P_atm / 1000) * (T_prev - T_air) /
@@ -920,7 +935,6 @@ def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
             BR = 1
             
     cdef double F_Conv = F_Evap * BR
-    cdef double Q_evap = E_rate * Ww * dx if calcevap else 0
     return F_Cond, T_sed_next, F_LW, F_LW_atm, F_LW_stream, F_LW_veg, F_Evap, F_Conv, Q_evap
 
 def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
