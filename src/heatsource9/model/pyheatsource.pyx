@@ -879,68 +879,6 @@ cdef inline convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap):
     cdef double F_Conv = F_Evap * BR
     return BR, F_Conv
 
-def get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs, ViewToSky, Dsed,
-                    dx, dt, Ksed, Alpha_sed, calcalluv, T_alluv, Ww,
-                    penman, wind_a, wind_b, calcevap, T_prev, T_sed, Q_hyp,
-                    F_Solar5, F_Solar7, zm):
-
-    # Water Variable
-    cdef double Rhow = 998.2  # density of water kg / m3
-    cdef int Cpw = 4187 #J/(kg *C)
-
-    F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next = \
-        conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
-                   calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt)
-
-    F_LW_atm, F_LW_stream, F_LW_veg, F_LW = \
-        longwave(cloud, humidity, T_air, ViewToSky, T_prev)
-
-    #===================================================
-    # Calculate Evaporation FLUX
-    #===================================================
-    # Atmospheric Variables
-    cdef double P_atm = 1013 - 0.1055 * Zs #mbar
-    
-    # mbar (Chapra p. 567)
-    cdef double Es_w = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
-    cdef double Ea_w = humidity * Es_w
-    #===================================================
-    # Normalize measured wind speed to 2 m above the water surface using a logarithmic profile.
-    # The log profile is applied to both open water and emergent models.
-    # Long term emergent needs an improved process based approach. Under this, any wind sheltering from
-    # emergent vegetation is not accounted for and needs to be reflected in the wind speed input into the model.
-    cdef double U2m, z2, z0
-    z2 = 2.0
-    z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
-    if zm <= z2:
-        U2m = Uzm
-    else:
-        U2m = Uzm * log(z2 / z0) / log(zm / z0)
-    #===================================================
-    # Wind Function f(w)
-    #m/mbar/s
-    cdef double f_U2m = float(wind_a) + float(wind_b) * U2m
-
-    #===================================================
-    # Latent Heat of Vaporization
-    cdef double L_evap = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
-    #===================================================
-    # Use Jobson Wind Function
-    cdef double Gamma, E_rate, F_Evap, Q_evap, BR, F_Conv
-    if penman:
-        Gamma = 1003.5 * P_atm / (L_evap * 0.62198) #mb/*C  Cuenca p 141
-        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar5, F_LW,
-                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
-                                             Gamma, Ww, dx, calcevap)
-        BR, F_Conv = convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap)
-    else:
-        Gamma = 0.0 # Not used but declared as double
-        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar5, F_LW,
-                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
-                                             Gamma, Ww, dx, calcevap)
-        BR, F_Conv = convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap)
-    return F_Cond, T_sed_next, F_LW, F_LW_atm, F_LW_stream, F_LW_veg, F_Evap, F_Conv, Q_evap
-
 def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
                    Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
                    T_accr, MixTDelta_dn):
@@ -1087,11 +1025,69 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
         # regular node
         else: return F_Solar, F_Diffuse, F_Direct, F_SR3b, ground, F_Total, Delta_T, Mac
 
-    ground = get_ground_fluxes(cloud, Uzm, humidity, T_air, Zs,
-                    ViewToSky, Dsed, dx, dt, Ksed, Alpha_sed,
-                    calcalluv, T_alluv, Ww, penman, wind_a, wind_b,
-                    calcevap, T_prev, T_sed, Q_hyp, F_Solar[5], F_Solar[7],
-                    zm)
+    # Density of water kg / m3 @ 20 deg-C
+    cdef double Rhow = 998.2  
+
+    # Specific heat capacity of water J/(kg *C)
+    cdef int Cpw = 4187
+
+    F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next = \
+        conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
+                   calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar[7], dt)
+
+    F_LW_atm, F_LW_stream, F_LW_veg, F_LW = \
+        longwave(cloud, humidity, T_air, ViewToSky, T_prev)
+
+    #===================================================
+    # Calculate Evaporation FLUX
+    #===================================================
+    # Atmospheric Variables
+    cdef double P_atm = 1013 - 0.1055 * Zs #mbar
+    
+    # mbar (Chapra p. 567)
+    cdef double Es_w = 6.1275 * exp(17.27 * T_prev / (237.3 + T_prev))
+    cdef double Ea_w = humidity * Es_w
+    #===================================================
+    # Normalize measured wind speed to 2 m above the water surface using a logarithmic profile.
+    # The log profile is applied to both open water and emergent models.
+    # Long term emergent needs an improved process based approach. Under this, any wind sheltering from
+    # emergent vegetation is not accounted for and needs to be reflected in the wind speed input into the model.
+    cdef double U2m, z2, z0
+    z2 = 2.0
+    z0 = 0.00023 #Brustsaert (1982) p. 277 Dingman
+    if zm <= z2:
+        U2m = Uzm
+    else:
+        U2m = Uzm * log(z2 / z0) / log(zm / z0)
+    #===================================================
+    # Wind Function f(w)
+    #m/mbar/s
+    cdef double f_U2m = float(wind_a) + float(wind_b) * U2m
+
+    #===================================================
+    # Latent Heat of Vaporization
+    cdef double L_evap = 1000 * (2501.4 + (1.83 * T_prev)) #J/kg
+    #===================================================
+
+    cdef double Gamma, E_rate, F_Evap, Q_evap, BR, F_Conv
+    if penman:
+        Gamma = 1003.5 * P_atm / (L_evap * 0.62198) #mb/*C  Cuenca p 141
+        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar[5], F_LW,
+                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
+                                             Gamma, Ww, dx, calcevap)
+        BR, F_Conv = convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w,
+                                Gamma, F_Evap)
+    else:
+        # Mass Transfer
+        Gamma = 0.0 # Not used but declared as double
+        E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar[5], F_LW,
+                                             Rhow, L_evap, f_U2m, Es_w, Ea_w,
+                                             Gamma, Ww, dx, calcevap)
+        BR, F_Conv = convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w,
+                                Gamma, F_Evap)
+
+    ground = (F_Cond, T_sed_next, F_LW, F_LW_atm, F_LW_stream, F_LW_veg,
+              F_Evap, F_Conv, Q_evap)
     T_hyp = ground[1]
 
     F_Total =  F_Solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
