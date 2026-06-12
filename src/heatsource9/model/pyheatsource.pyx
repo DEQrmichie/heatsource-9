@@ -276,21 +276,22 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
 cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_distance,
                                          lcsampmethod, lc_oh, lc_height_node_top,
                                          lc_canopy_depth, BeersData, heatsource8,
-                                         tran, s):
+                                         s):
     cdef double PL_lc
 
     if heatsource8 and BeersData != "LAI":
-        # Strict HS8 compatibility path in riparian canopy-cover mode.
+        # HS8 and canopy cover
         cos_altitude = cos(radians(SolarAltitude))
         if abs(cos_altitude) < 1e-6:
             cos_altitude = 1e-6
         PL_lc = transsample_distance / cos_altitude
     else:
+        # LAI or HS9 and canopy cover
         adj_zone = 0.5 if lcsampmethod == "zone" else 0.0
         lc_xn_near = transsample_distance * (s + 1 - adj_zone)
         lc_xn_far = transsample_distance * (s + 2 - adj_zone)
         if s == 0:
-            lc_xn_near -= lc_oh[tran][s]
+            lc_xn_near -= lc_oh
 
         altitude_rad = radians(SolarAltitude)
         cos_altitude = cos(altitude_rad)
@@ -301,19 +302,14 @@ cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_
         if abs(tan_altitude) < 1e-6:
             tan_altitude = 1e-6
 
-        lc_height_node_top_value = lc_height_node_top[tran][s]
-        if BeersData == "LAI":
-            lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[tran][s]
-        else:
-            H_canopy_depth = lc_canopy_depth[tran][s]
-            lc_height_node_base = lc_height_node_top_value - H_canopy_depth
+        lc_height_node_base = lc_height_node_top - lc_canopy_depth
 
         lc_xn_base = lc_height_node_base / tan_altitude
-        lc_xn_top = lc_height_node_top_value / tan_altitude
+        lc_xn_top = lc_height_node_top / tan_altitude
+        lc_xn_enter = max(lc_xn_near, lc_xn_base)
 
-        if SolarAltitude <= theta_path[s]:
+        if SolarAltitude <= theta_path:
             # Side entry path length
-            lc_xn_enter = max(lc_xn_near, lc_xn_base)
             lc_xn_exit = min(lc_xn_far, lc_xn_top)
             if lc_xn_exit <= lc_xn_enter:
                 PL_lc = 0.0
@@ -321,7 +317,6 @@ cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_
                 PL_lc = (lc_xn_exit - lc_xn_enter) / cos_altitude
         else:
             # Top entry
-            lc_xn_enter = max(lc_xn_near, lc_xn_base)
             lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
             if lc_xn_exit <= lc_xn_enter:
                 PL_lc = 0.0
@@ -333,19 +328,18 @@ cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_
 
 cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
                                         lc_height_node_top, lc_canopy_depth):
-    cdef double PL_emerg
+    cdef double PL_emergent
 
     # The emergent zone can't be wider than half the
     # wetted width. if this is a solar only run the wetted
     # width is not calculated so Wb = 0. The sample zone
     # width is used instead.
     if Wb == 0:
-        emergent_distance = transsample_distance
+        W_emerg = transsample_distance
     else:
-        emergent_distance = Wb * 0.5
+        W_emerg = Wb * 0.5
 
-    lc_height_node_top_value = lc_height_node_top[0][0]
-    lc_height_node_base = lc_height_node_top_value - lc_canopy_depth[0][0]
+    lc_height_node_base = lc_height_node_top - lc_canopy_depth
 
     altitude_rad = radians(SolarAltitude)
     cos_altitude = cos(altitude_rad)
@@ -356,29 +350,28 @@ cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
         tan_altitude = 1e-6
 
     lc_xn_near = 0.0
-    lc_xn_far = emergent_distance
+    lc_xn_far = W_emerg
     lc_xn_base = lc_height_node_base / tan_altitude
-    lc_xn_top = lc_height_node_top_value / tan_altitude
+    lc_xn_top = lc_height_node_top / tan_altitude
 
-    if SolarAltitude <= degrees(atan(lc_height_node_top_value / emergent_distance)):
+    if SolarAltitude <= degrees(atan(lc_height_node_top / W_emerg)):
         lc_xn_enter = max(lc_xn_near, lc_xn_base)
         lc_xn_exit = min(lc_xn_far, lc_xn_top)
     else:
         lc_xn_enter = max(lc_xn_near, lc_xn_base)
         lc_xn_exit = min(max(lc_xn_top, lc_xn_near), lc_xn_far)
     if lc_xn_exit <= lc_xn_enter:
-        PL_emerg = 0.0
+        PL_emergent = 0.0
     else:
-        PL_emerg = (lc_xn_exit - lc_xn_enter) / cos_altitude
-    return PL_emerg
+        PL_emergent = (lc_xn_exit - lc_xn_enter) / cos_altitude
+    return PL_emergent
 
 cdef inline double landcover_lai_fraction_passed(lc_lai, lc_k,
-                                                 lc_canopy_depth, PL_lc,
-                                                 tran, s):
+                                                 lc_canopy_depth, PL_lc):
     cdef double fraction_passed
 
     try:
-        K_rip = lc_lai[tran][s] * lc_k[tran][s] / lc_canopy_depth[tran][s]
+        K_rip = lc_lai * lc_k / lc_canopy_depth
         fraction_passed = exp(-1 * K_rip * PL_lc)
     except:
         # can't divide by height zero
@@ -394,118 +387,116 @@ cdef inline double landcover_canopy_cover_fraction_passed(lc_canopy_cover,
                                                           theta_full_sun) except *:
     cdef double fraction_passed
 
+    # Calculate path length used for riparian extinction coefficient
     if heatsource8:
-        #---------  Boyd and Kasper 2007
+        # Boyd and Kasper 2007
         # from original heat source model
-        PL = 10
-    else:
-        #--------- Norman and Welles 1983, Chen et al 1998
-        PL = lc_canopy_depth[tran][s]
+        lc_canopy_depth = 10
 
     try:
-        K_rip = -log(1- lc_canopy_cover[tran][s]) / PL
+        K_rip = -log(1- lc_canopy_cover) / lc_canopy_depth
         fraction_passed = exp(-1 * K_rip * PL_lc)
     except:
-        if (lc_canopy_cover[tran][s] >= 1 or PL <= 0):
+        if (lc_canopy_cover >= 1 or lc_canopy_depth <= 0):
             # can't take log or divide by zero
             fraction_passed = 0
         else:
             # some other error
-            msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} PL={5} SolarAltitude={6} theta_full_sun={7}".format(
-                tran, s, lc_height_node_top[tran][s], lc_canopy_cover[tran][s], PL_lc, PL, SolarAltitude, theta_full_sun[s]
+            msg = "Unknown error when calculating riparian extinction value. transect={0} s={1} relative height={2} canopy={3} PL_lc={4} lc_canopy_depth={5} SolarAltitude={6} theta_full_sun={7}".format(
+                tran, s, lc_height_node_top, lc_canopy_cover, PL_lc, lc_canopy_depth, SolarAltitude, theta_full_sun
             )
             logger.exception(msg)
             raise RuntimeError(msg)
     return fraction_passed
 
 cdef inline double emergent_hs8_direct_passed(SolarAltitude, Wb,
-                                              transsample_distance,
                                               lc_height_node_top,
                                               lc_canopy_cover):
-    cdef double direct_passed
+    cdef double fraction_passed_direct
 
-    H = lc_height_node_top[0][0]
-    C = lc_canopy_cover[0][0]
-
-    if C <= 0 or H <= 0:
-        direct_passed = 1.0
-    elif C >= 1:
+    if lc_canopy_cover <= 0 or lc_height_node_top <= 0:
+        fraction_passed_direct = 1.0
+    elif lc_canopy_cover >= 1:
         # HS8 direct is fully blocked; diffuse is near fully blocked.
-        direct_passed = 0.0
+        fraction_passed_direct = 0.0
     else:
-        width_cap = Wb if Wb > 0 else transsample_distance
-        path_emergent = H / sin(radians(SolarAltitude))
-        if path_emergent > width_cap:
-            path_emergent = width_cap
+        PL_emergent = lc_height_node_top / sin(radians(SolarAltitude))
+        if PL_emergent > Wb:
+            PL_emergent = Wb
 
         # Direct uses HS8 denominator = 10 m.
-        rip_ext_direct = -log(1 - C) / 10.0
-        direct_passed = exp(-rip_ext_direct * path_emergent)
-    return direct_passed
+        K_rip = -log(1 - lc_canopy_cover) / 10.0
+        fraction_passed_direct = exp(-K_rip * PL_emergent)
+    return fraction_passed_direct
 
 cdef inline double emergent_hs8_diffuse_passed(lc_height_node_top,
                                                lc_canopy_cover):
-    cdef double diffuse_passed
+    cdef double fraction_passed_diffuse
 
-    H = lc_height_node_top[0][0]
-    C = lc_canopy_cover[0][0]
-
-    if C <= 0 or H <= 0:
-        diffuse_passed = 1.0
-    elif C >= 1:
+    if lc_canopy_cover <= 0 or lc_height_node_top <= 0:
+        fraction_passed_diffuse = 1.0
+    elif lc_canopy_cover >= 1:
         # HS8 direct is fully blocked; diffuse is near fully blocked.
-        diffuse_passed = 0.0001
+        fraction_passed_diffuse = 0.0001
     else:
         # Diffuse uses full emergent height path.
-        rip_ext_diffuse = -log(1 - C) / H
-        diffuse_passed = exp(-rip_ext_diffuse * H)
-    return diffuse_passed
+        K_rip = -log(1 - lc_canopy_cover) / lc_height_node_top
+        fraction_passed_diffuse = exp(-K_rip * lc_height_node_top)
+    return fraction_passed_diffuse
 
 cdef inline double emergent_lai_fraction_passed(lc_lai, lc_k,
                                                 lc_canopy_depth,
-                                                PL_emerg):
+                                                lc_height_node_top,
+                                                PL_emergent):
     cdef double fraction_passed
 
-    K_rip = lc_lai[0][0] * lc_k[0][0] / lc_canopy_depth[0][0]
-    fraction_passed = exp(-1 * K_rip * PL_emerg)
+    if lc_height_node_top <= 0 or lc_lai == 0:
+        fraction_passed = 1.0
+    else:
+        K_rip = lc_lai * lc_k / lc_canopy_depth
+        fraction_passed = exp(-1 * K_rip * PL_emergent)
     return fraction_passed
 
 cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
                                                          lc_canopy_depth,
-                                                         PL_emerg) except *:
+                                                         lc_height_node_top,
+                                                         PL_emergent) except *:
     cdef double fraction_passed
 
-    try:
-        # Use canopy cover to calculate
-        # the riparian extinction value
-        K_rip = -log(1- lc_canopy_cover[0][0]) / lc_canopy_depth[0][0]
-        fraction_passed = exp(-1 * K_rip * PL_emerg)
+    if lc_height_node_top <= 0 or lc_canopy_cover == 0:
+        fraction_passed = 1.0
+    else:
+        try:
+            # Use canopy cover to calculate
+            # the riparian extinction value
+            K_rip = -log(1- lc_canopy_cover) / lc_canopy_depth
+            fraction_passed = exp(-1 * K_rip * PL_emergent)
 
-    except:
-        if lc_canopy_cover[0][0] >= 1:
-            # can't take log of zero
-            fraction_passed = 0
-        else:
-            # some other error
-            msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emerg={1}".format(
-                lc_canopy_cover[0][0], PL_emerg
-            )
-            logger.exception(msg)
-            raise RuntimeError(msg)
+        except:
+            if lc_canopy_cover >= 1:
+                # can't take log of zero
+                fraction_passed = 0
+            else:
+                # some other error
+                msg = "Unknown error when calculating emergent riparian extinction value. canopy={0} PL_emergent={1}".format(
+                    lc_canopy_cover, PL_emergent
+                )
+                logger.exception(msg)
+                raise RuntimeError(msg)
     return fraction_passed
 
 cdef inline SR0(hour, doy, SolarAltitude):
     #======================================================
-    # SR0 - Extraterrestrial Solar Radiation at edge of atmosphere
+    # SR0 - Extraterrestrial solar radiation at edge of atmosphere
 
     # Radius Vector (Wunderlich 1972)
-    SolarRadiusVector = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
+    SolarRadiusVectorRatio = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
 
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
 
     # Extraterrestrial Solar Radiation Flux at the edge of the atmosphere (Wunderlich 1972)
-    F_SR0 = ((SolarConstant / (SolarRadiusVector ** 2)) *
+    F_SR0 = ((SolarConstant / (SolarRadiusVectorRatio ** 2)) *
              sin(radians(SolarAltitude)))
 
     # This is total extraterrestrial so all of it gets assigned to direct. There's no diffuse until it's in the atmosphere.
@@ -525,7 +516,7 @@ cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
     # Atmospheric Transmissivity (Ibqal 1983)
     Tr_atm = 0.0685 * cos((2 * pi / 365) * (doy + 10)) + 0.8
 
-    # Direct Beam Solar Radiation above Topographic Features
+    # Solar Radiation above Topographic Features (all direct at this point)
     # (Wunderlich 1972, Martin and McCutcheon 1999)
     F_SR1 = F_SR0 * (Tr_atm ** AirMass) * (1 - 0.65 * cloud ** 2)
 
@@ -543,7 +534,7 @@ cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
         (0.009 - 0.078 * ClearnessIndex)
     F_Direct1 = F_SR1 * (1 - DiffuseFraction)
 
-    # Diffuse above Topographic Features (Chen 1994)
+    # Diffuse above Topographic Features (Chen 1994) TODO
     F_Diffuse1 = F_SR1 * (DiffuseFraction) * (1 - 0.65 * cloud ** 2)
     return F_Direct1, F_Diffuse1
 
@@ -596,7 +587,7 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
                                                lcsampmethod, lc_oh,
                                                lc_height_node_top,
                                                lc_canopy_depth, BeersData,
-                                               heatsource8, tran, s)
+                                               heatsource8, s)
 
                 # shading is occurring from this sample
                 if BeersData == "LAI":
@@ -647,50 +638,40 @@ cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
 
     if emergent:
         # Account for emergent vegetation
-        if BeersData == "LAI":
-            no_emergent_veg = (lc_height_node_top[0][0] <= 0) or (lc_lai[0][0] == 0)
+        if heatsource8 and BeersData != "LAI":
+            # HS8 canopy cover
+            fraction_passed_direct = emergent_hs8_direct_passed(SolarAltitude, Wb,
+                                                                lc_height_node_top[0][0],
+                                                                lc_canopy_cover[0][0])
+            fraction_passed_diffuse = emergent_hs8_diffuse_passed(lc_height_node_top[0][0],
+                                                                  lc_canopy_cover[0][0])
+
+            F_Direct4 = F_Direct4 * fraction_passed_direct
+            F_Diffuse4 = F_Diffuse4 * fraction_passed_diffuse
+            return F_Direct4, F_Diffuse4
         else:
-            no_emergent_veg = (lc_height_node_top[0][0] <= 0) or (lc_canopy_cover[0][0] == 0)
-        if no_emergent_veg:
-            # Set to one if no veg or no canopy
-            fraction_passed = 1
-
-        else:
-            # sun vector is passing through the canopy
-
-            if heatsource8 and BeersData != "LAI":
-                # HS8 canopy cover
-                direct_passed = emergent_hs8_direct_passed(SolarAltitude, Wb,
-                                                            transsample_distance,
-                                                            lc_height_node_top,
-                                                            lc_canopy_cover)
-                diffuse_passed = emergent_hs8_diffuse_passed(lc_height_node_top,
-                                                              lc_canopy_cover)
-
-                F_Direct4 = F_Direct4 * direct_passed
-                F_Diffuse4 = F_Diffuse4 * diffuse_passed
-                fraction_passed = 1.0
-            else:
-                #--------- (Norman and Welles 1983)
-                # PL_emerg is the path length of the sun vector through
-                # the vegetation in the emergent sample
-                PL_emerg = path_length_emergent(SolarAltitude, Wb,
-                                                 transsample_distance,
-                                                 lc_height_node_top,
-                                                 lc_canopy_depth)
+            #--------- (Norman and Welles 1983)
+            # PL_emergent is the path length of the sun vector through
+            # the vegetation in the emergent sample
+            PL_emergent = path_length_emergent(SolarAltitude, Wb,
+                                                transsample_distance,
+                                                lc_height_node_top[0][0],
+                                                lc_canopy_depth[0][0])
 
             if BeersData == "LAI":
                 # use LAI and k to calculate the riparian extinction value
-                fraction_passed = emergent_lai_fraction_passed(lc_lai, lc_k,
-                                                               lc_canopy_depth,
-                                                               PL_emerg)
+                fraction_passed = emergent_lai_fraction_passed(lc_lai[0][0],
+                                                               lc_k[0][0],
+                                                               lc_canopy_depth[0][0],
+                                                               lc_height_node_top[0][0],
+                                                               PL_emergent)
 
             else:
-                fraction_passed = emergent_canopy_cover_fraction_passed(lc_canopy_cover,
-                                                                        lc_canopy_depth,
-                                                                        PL_emerg)
+                fraction_passed = emergent_canopy_cover_fraction_passed(lc_canopy_cover[0][0],
+                                                                        lc_canopy_depth[0][0],
+                                                                        lc_height_node_top[0][0],
+                                                                        PL_emergent)
 
-        if not (heatsource8 and BeersData != "LAI"):
             F_Direct4 = F_Direct4 * fraction_passed
             F_Diffuse4 = F_Diffuse4 * fraction_passed
     return F_Direct4, F_Diffuse4
@@ -819,8 +800,8 @@ cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
     #=====================================================
     # Calculate Longwave FLUX
     #=====================================================
+
     # Atmospheric variables
-    
     # mbar (Chapra p. 567)
     cdef double Es = 6.1275 * exp(17.27 * T_air / (237.3 + T_air)) 
     cdef double Ea = humidity * Es
@@ -957,8 +938,17 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
     if daytime:
         theta_full_sun_max, theta_topo, theta_bank_max, theta_full_sun, theta_path = ShaderList
 
-        # Make all math functions local to save time by preventing failed
-        # searches of local, class and global namespaces
+        # Calculate solar radiation (SR) flux for each position
+        #=========================================================
+        # SR0 - Edge of atmosphere
+        # SR1 - Above Topography
+        # SR2 - Below Topography
+        # SR3 - Below Landcover (Above Bank Shade & Emergent)
+        # SR4 - At Stream Surface (What a Solar Pathfinder Measures)
+        # SR5 - Entering Stream
+        # SR6 - Received by Water Column
+        # SR7 - Received by Bed
+
         F_Direct[0], F_Diffuse[0] = SR0(hour, doy, SolarAltitude)
         F_Direct[1], F_Diffuse[1] = SR1(F_Direct[0], SolarAltitude, Zs,
                                         doy, cloud)
@@ -999,17 +989,6 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
             F_Direct[6], F_Diffuse[6], F_Direct[7], F_Diffuse[7] = \
                 SR6_SR7(F_Direct[5], F_Diffuse[5], SolarZenith, Dw, Eta)
 
-            #=========================================================
-            # Flux_Solar(x) and Flux_Diffuse = Solar flux at various positions
-            # 0 - Edge of atmosphere
-            # 1 - Above Topography
-            # 2 - Below Topography
-            # 3 - Below Landcover (Above Bank Shade & Emergent)
-            # 4 - At Stream Surface (What a Solar Pathfinder Measures)
-            # 5 - Entering Stream
-            # 6 - Received by Water Column
-            # 7 - Received by Bed
-
             F_Solar[0] = F_Diffuse[0] + F_Direct[0]
             F_Solar[1] = F_Diffuse[1] + F_Direct[1]
             F_Solar[2] = F_Diffuse[2] + F_Direct[2]
@@ -1045,7 +1024,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
         longwave(cloud, humidity, T_air, ViewToSky, T_prev)
 
     #===================================================
-    # Calculate Evaporation FLUX
+    # Calculate Evaporation and Conduction
     #===================================================
     # Atmospheric Variables
     cdef double P_atm = 1013 - 0.1055 * Zs #mbar
@@ -1067,7 +1046,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
         U2m = Uzm * log(z2 / z0) / log(zm / z0)
     #===================================================
     # Wind Function f(w)
-    #m/mbar/s
+    # m/mbar/s
     cdef double f_U2m = float(wind_a) + float(wind_b) * U2m
 
     #===================================================
@@ -1076,6 +1055,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
     #===================================================
 
     cdef double Gamma, E_rate, F_Evap, Q_evap, BR, F_Conv
+
     if penman:
         Gamma = 1003.5 * P_atm / (L_evap * 0.62198) #mb/*C  Cuenca p 141
         E_rate, F_Evap, Q_evap = evaporation(penman, T_air, F_Solar[5], F_LW,
@@ -1098,7 +1078,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
 
     F_Total =  F_Solar[6] + ground[0] + ground[2] + ground[6] + ground[7]
     
-    # Vars are Cp (J/kg *C) and P (kgS/m3)
+    # 4182 = specific heat (J/kg *C) and 998.2 = water density (kg/m3)
     Delta_T = F_Total * dt / ((area / Ww) * 4182 * 998.2) 
 
     if not has_prev:
