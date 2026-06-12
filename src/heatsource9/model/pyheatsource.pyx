@@ -219,7 +219,7 @@ cdef inline double dispersion(U, Ww, D_est, S, dx, dt):
     return DL
 
 def calc_muskingum(Q_est, U, Ww, S, dx, dt):
-    """Return the values for the Muskigum routing coefficients
+    """Return the values for the Muskingum routing coefficients
     using current timestep and optional discharge"""
     # Calculate an initial geometry based on an estimated 
     # discharge (typically (t,x-1))
@@ -267,7 +267,6 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
         C = calc_muskingum(Q2, U, Ww, S, dx, dt)
         Q_new = C[0]*Q1 + C[1]*Q2 + C[2]*Q
 
-    #if Q_new > 0.000:
     D_est, A, Pw, Rh, Ww, U = get_stream_geometry(Q_new, Wb, Z, n, S, D_est, dx, dt)
     DL = dispersion(U, Ww, D_est, S, dx, dt)
     Geom = D_est, A, Pw, Rh, Ww, U, DL
@@ -275,8 +274,7 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
 
 cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_distance,
                                          lcsampmethod, lc_oh, lc_height_node_top,
-                                         lc_canopy_depth, BeersData, heatsource8,
-                                         s):
+                                         lc_canopy_depth, BeersData, heatsource8, s):
     cdef double PL_lc
 
     if heatsource8 and BeersData != "LAI":
@@ -485,9 +483,12 @@ cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
                 raise RuntimeError(msg)
     return fraction_passed
 
+#=========================================================
+# Solar Radiation Flux
+# SR0 - Extraterrestrial solar radiation at edge of atmosphere
+#=========================================================
 cdef inline SR0(hour, doy, SolarAltitude):
-    #======================================================
-    # SR0 - Extraterrestrial solar radiation at edge of atmosphere
+
 
     # Radius Vector (Wunderlich 1972)
     SolarRadiusVectorRatio = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
@@ -505,9 +506,11 @@ cdef inline SR0(hour, doy, SolarAltitude):
 
     return F_Direct0, F_Diffuse0
 
+#=========================================================
+# Solar Radiation Flux
+# 1 - Above Topography, after attenuation through the atmosphere
+#=========================================================
 cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
-    #======================================================
-    # 1 - Above Topography, after attenuation through the atmosphere
 
     # Optical Air Mass Thickness (Ibqal 1983)
     AirMass = (35 / sqrt(1224 * sin(radians(SolarAltitude)) + 1)) * \
@@ -537,16 +540,18 @@ cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
     # Diffuse above Topographic Features (Chen 1994) TODO
     F_Diffuse1 = F_SR1 * (DiffuseFraction) * (1 - 0.65 * cloud ** 2)
     return F_Direct1, F_Diffuse1
-
+#=========================================================
+# Solar Radiation Flux
+# 2 - Below Topography
+# 3 - Below Landcover (Above Bank Shade & Emergent)
+# 3b  Blocked by Landcover
+#=========================================================
 cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
                     TopoFactor, theta_full_sun_max, transsample_count,
                     theta_full_sun, theta_path, transsample_distance,
                     lcsampmethod, lc_oh, lc_height_node_top,
                     lc_canopy_depth, BeersData, heatsource8, tran, lc_lai,
                     lc_k, lc_canopy_cover, ViewToSky) except *:
-    #======================================================
-    # 2 - Below Topography
-    # 3 - Below Landcover (Above Bank Shade & Emergent)
 
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
@@ -565,7 +570,6 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
         F_Diffuse2 = F_Diffuse1 * (1 - TopoFactor)
         F_Direct3 = F_Direct2
     else:
-        #======================================================
         # Topographic Shade is not occurring and
         # Partial shade from veg
         F_Direct2 = F_Direct1
@@ -582,32 +586,31 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
                 # no shading
                 fraction_passed = 1
             else:
-                PL_lc = path_length_landcover(SolarAltitude, theta_path,
+                PL_lc = path_length_landcover(SolarAltitude, theta_path[s],
                                                transsample_distance,
-                                               lcsampmethod, lc_oh,
-                                               lc_height_node_top,
-                                               lc_canopy_depth, BeersData,
-                                               heatsource8, s)
+                                               lcsampmethod, lc_oh[tran][s],
+                                               lc_height_node_top[tran][s],
+                                               lc_canopy_depth[tran][s],
+                                               BeersData, heatsource8, s)
 
                 # shading is occurring from this sample
                 if BeersData == "LAI":
                     # use LAI and k to calculate the riparian extinction value
-                    fraction_passed = landcover_lai_fraction_passed(lc_lai,
-                                                                     lc_k,
-                                                                     lc_canopy_depth,
-                                                                     PL_lc,
-                                                                     tran, s)
+                    fraction_passed = landcover_lai_fraction_passed(lc_lai[tran][s],
+                                                                     lc_k[tran][s],
+                                                                     lc_canopy_depth[tran][s],
+                                                                     PL_lc)
                 else:
                     # Use canopy cover to calculate
                     # the riparian extinction value
-                    fraction_passed = landcover_canopy_cover_fraction_passed(lc_canopy_cover,
-                                                                             lc_canopy_depth,
+                    fraction_passed = landcover_canopy_cover_fraction_passed(lc_canopy_cover[tran][s],
+                                                                             lc_canopy_depth[tran][s],
                                                                              PL_lc,
                                                                              heatsource8,
                                                                              tran, s,
-                                                                             lc_height_node_top,
+                                                                             lc_height_node_top[tran][s],
                                                                              SolarAltitude,
-                                                                             theta_full_sun)
+                                                                             theta_full_sun[s])
 
             F_SR3b[s] = Dummy1 - (Dummy1 * fraction_passed)
             Dummy1 *= fraction_passed
@@ -619,13 +622,15 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
     F_SR3b.append(diffuse_blocked)
     return F_Direct2, F_Diffuse2, F_Direct3, F_Diffuse3, F_SR3b
 
+#=========================================================
+# Solar Radiation Flux
+# 4 - At Stream Surface (Below Bank Shade & Emergent)
+# What a Solar Pathfinder measures
+#=========================================================
 cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
                 theta_bank_max, emergent, BeersData, lc_height_node_top,
                 lc_lai, lc_canopy_cover, heatsource8, Wb,
                 transsample_distance, lc_canopy_depth, lc_k) except *:
-    #=========================================================
-    # 4 - At Stream Surface (Below Bank Shade & Emergent)
-    # What a Solar Pathfinder measures
 
     if SolarAltitude > theta_topo and SolarAltitude <= theta_bank_max:
         # Bank shade is occurring
@@ -650,7 +655,7 @@ cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
             F_Diffuse4 = F_Diffuse4 * fraction_passed_diffuse
             return F_Direct4, F_Diffuse4
         else:
-            #--------- (Norman and Welles 1983)
+            # (Norman and Welles 1983)
             # PL_emergent is the path length of the sun vector through
             # the vegetation in the emergent sample
             PL_emergent = path_length_emergent(SolarAltitude, Wb,
@@ -676,9 +681,11 @@ cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
             F_Diffuse4 = F_Diffuse4 * fraction_passed
     return F_Direct4, F_Diffuse4
 
+#=========================================================
+# Solar Radiation Flux penetrating the stream surface
+# 5 - Entering Stream
+#=========================================================
 cdef inline SR5(F_Direct4, F_Diffuse4, SolarZenith):
-    #=========================================================
-    # 5 - Entering Stream
 
     # Stream Surface Reflectivity (Sellers 1965)
     if SolarZenith > 80:
@@ -693,10 +700,12 @@ cdef inline SR5(F_Direct4, F_Diffuse4, SolarZenith):
     F_Direct5 = F_Direct4 * (1 - Reflectivity)
     return F_Direct5, F_Diffuse5
 
+#=========================================================
+# Solar Radiation Flux
+# 6 - Received by Water Column
+# 7 - Received by Bed
+#=========================================================
 cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
-    #=========================================================
-    # 6 - Received by Water Column
-    # 7 - Received by Bed
 
     # Direct Beam Solar Radiation Water Column Path Length (Jerlov 1976)
     Water_Path = (Dw / cos(atan((sin(radians(SolarZenith)) / 1.3333) /
@@ -764,6 +773,9 @@ cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
     F_Diffuse7 = B3 - B4
     return F_Direct6, F_Diffuse6, F_Direct7, F_Diffuse7
 
+#=========================================================
+# Substrate Conductive Flux
+#=========================================================
 cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
                        calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt):
     # Ksed units of W/(m *C)
@@ -796,10 +808,10 @@ cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
         raise RuntimeError(msg)
     return F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next
 
+#=========================================================
+# Longwave Radiation Flux
+#=========================================================
 cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
-    #=====================================================
-    # Calculate Longwave FLUX
-    #=====================================================
 
     # Atmospheric variables
     # mbar (Chapra p. 567)
@@ -824,12 +836,12 @@ cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
     cdef double F_LW = F_LW_atm + F_LW_stream + F_LW_veg
     return F_LW_atm, F_LW_stream, F_LW_veg, F_LW
 
+#=========================================================
+# Evaporative Flux
+#=========================================================
 cdef inline evaporation(penman, T_air, F_Solar5, F_LW, Rhow, L_evap,
                         f_U2m, Es_w, Ea_w, Gamma, Ww, dx, calcevap):
     cdef double Delta_sat, NetRadiation, E_aero, E_rate, F_Evap
-    #===================================================
-    # Calculate Evaporation FLUX
-    #=====================================================
 
     if penman:
         Delta_sat = (6.1275 * exp(17.27 * T_air / (237.3 + T_air)) -
@@ -850,7 +862,9 @@ cdef inline evaporation(penman, T_air, F_Solar5, F_LW, Rhow, L_evap,
     cdef double Q_evap = E_rate * Ww * dx if calcevap else 0
     return E_rate, F_Evap, Q_evap
 
-# Calculate Convection FLUX
+#=========================================================
+# Convective Heat Flux (Sensible Heat)
+#=========================================================
 cdef inline convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap):
     cdef double BR
 
@@ -940,8 +954,8 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
 
         # Calculate solar radiation (SR) flux for each position
         #=========================================================
-        # SR0 - Edge of atmosphere
-        # SR1 - Above Topography
+        # SR0 - Extraterrestrial solar radiation at edge of atmosphere
+        # SR1 - Above Topography, after attenuation through the atmosphere
         # SR2 - Below Topography
         # SR3 - Below Landcover (Above Bank Shade & Emergent)
         # SR4 - At Stream Surface (What a Solar Pathfinder Measures)
