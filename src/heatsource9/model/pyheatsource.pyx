@@ -5,7 +5,6 @@ flux and hydraulic calculations are made."""
 from builtins import range
 from math import pow, sqrt, log, log10, exp, pi
 from math import atan, sin, cos, tan, acos, radians, degrees
-from random import randint
 from bisect import bisect
 
 import logging
@@ -48,11 +47,6 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
 
     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)
     SolarDeclination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
-
-    SolarRadiusVector = ((1.000001018 * (1 - pow(Eccentricity,2))) /
-                    (1 + Eccentricity * cos(toRadians*
-                                            (GeoMeanAnomalySun +
-                                             SunEqCenter))))
 
     #======================================================
     # Equation of time (minutes)
