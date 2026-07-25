@@ -892,7 +892,7 @@ def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
             numerator += Qitem*Titem
     if numerator and (Q_trib > 0):
         T_trib = numerator/Q_trib
-    # This is basically mix_it_up from the VB code
+    # This is basically mix_it_up from the hs7 VB code
     T_mix = ((Q_trib * T_trib) + (T_up * Q_up)) / (Q_up + Q_trib)
     
     # Calculate temperature change from mass transfer from hyporheic zone
