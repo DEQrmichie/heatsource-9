@@ -16,10 +16,8 @@ def headers_trib_sites():
     return ["COLID", "TRIB_NAME", "STREAM_KM", "FILE_NAME"]
 
 
-def headers_met(params):
-    metsites = params.get("metsites") or 0
-    metfiles = [p.strip() for p in str(params.get("metfiles") or "met.csv").split(",") if p.strip()]
-    ncols = int(metsites // max(1, len(metfiles)))
+def headers_met(metsites, metfile_count):
+    ncols = int(metsites // metfile_count)
     header = ["DATETIME"]
     for n in range(1, ncols + 1):
         header += [
@@ -31,31 +29,22 @@ def headers_met(params):
     return header
 
 
-def headers_inflow(params):
-    inflow_sites = params.get("tribsites") or 0
-    inflow_files_value = params.get("tribfiles")
-    inflow_files = [p.strip() for p in str(inflow_files_value or "").split(",") if p.strip()]
-    if inflow_sites <= 0:
-        return [None]
-    ncols = int(inflow_sites // max(1, len(inflow_files)))
+def headers_tribfiles(tribsites, tribfile_count):
+    ncols = int(tribsites // tribfile_count)
     header = ["DATETIME"]
     for n in range(1, ncols + 1):
         header += [f"FLOW{n}", f"TEMPERATURE{n}"]
     return header
 
 
-def headers_lccodes(params):
-    if (params.get("canopy_data") or "LAI") == "LAI":
+def headers_lccodes(canopy_data):
+    if canopy_data == "LAI":
         return ["NAME", "CODE", "HEIGHT", "LAI", "k", "OVERHANG", "CANOPY_DEPTH"]
     return ["NAME", "CODE", "HEIGHT", "CANOPY", "OVERHANG", "CANOPY_DEPTH"]
 
 
-def headers_lcdata(params):
+def headers_lcdata(trans_count, transsample_count, heatsource8):
     prefix = ["LC", "ELE"]
-
-    trans_count = params.get("trans_count") or 0
-    transsample_count = params.get("transsample_count") or 0
-    heatsource8 = params.get("heatsource8") or False
 
     headers = [
         "STREAM_ID",
@@ -73,15 +62,18 @@ def headers_lcdata(params):
         "TOPO_N",
     ]
 
-    tran = ["NE", "E", "SE", "S", "SW", "W", "NW"] if heatsource8 else [f"T{x}" for x in range(1, trans_count + 1)]
-    zones = list(range(1, transsample_count + 1))
+    if heatsource8:
+        tran = ["NE", "E", "SE", "S", "SW", "W", "NW"]
+    else:
+        tran = [f"T{x}" for x in range(1, trans_count + 1)]
+    samples = list(range(1, transsample_count + 1))
 
     for p in prefix:
         for ti, t in enumerate(tran):
-            for z in zones:
-                if p != "ELE" and ti == 0 and z == 1:
+            for s in samples:
+                if p != "ELE" and ti == 0 and s == 1:
                     headers.append(f"{p}_T0_S0")
-                headers.append(f"{p}_{t}_S{z}")
+                headers.append(f"{p}_{t}_S{s}")
     return headers
 
 

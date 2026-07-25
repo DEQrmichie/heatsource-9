@@ -12,12 +12,12 @@ from heatsource9.setup.constants import KM_PRECISION, dtype, required_fields, sh
 from heatsource9.setup.headers import (
     headers_accretion,
     headers_bc,
-    headers_inflow,
     headers_lccodes,
     headers_lcdata,
     headers_met,
     headers_met_sites,
     headers_morph,
+    headers_tribfiles,
     headers_trib_sites,
 )
 from heatsource9.setup.input_setup import InputSetup
@@ -97,7 +97,10 @@ def _morph_table(params, kmlist, use_timestamp):
 
 
 def _lcdata_table(params, kmlist, use_timestamp):
-    headers = headers_lcdata(params)
+    headers = headers_lcdata(params["trans_count"],
+                             params["transsample_count"],
+                             params["heatsource8"]
+                             )
     rows = [[None, None, km] + [None] * (len(headers) - 3) for km in kmlist]
     filename = _out_name(params, "lcdatafile", use_timestamp)
     table = (filename, headers, rows, sheetnames["lcdatafile"])
@@ -105,7 +108,7 @@ def _lcdata_table(params, kmlist, use_timestamp):
 
 
 def _lccode_table(params, use_timestamp):
-    headers = headers_lccodes(params)
+    headers = headers_lccodes(params["canopy_data"])
     rows = [[None]]
     filename = _out_name(params, "lccodefile", use_timestamp)
     table = (filename, headers, rows, sheetnames["lccodefile"])
@@ -117,7 +120,7 @@ def _met_tables(params, timelist, use_timestamp):
     met_files = [p.strip() for p in str(params.get("metfiles") or "").split(",") if p.strip()]
     if not met_files:
         return tables
-    headers = headers_met(params)
+    headers = headers_met(params["metsites"], len(met_files))
     rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
     for file in met_files:
         if use_timestamp:
@@ -293,7 +296,7 @@ def _inflow_tables(params, timelist, use_timestamp):
         return tables
     inflow_files_value = params.get("tribfiles")
     inflow_files = [p.strip() for p in str(inflow_files_value or "").split(",") if p.strip()]
-    headers = headers_inflow(params)
+    headers = headers_tribfiles(params["tribsites"], len(inflow_files))
     rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
     for filename in inflow_files:
         if use_timestamp:

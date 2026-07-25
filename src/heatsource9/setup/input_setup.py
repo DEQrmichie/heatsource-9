@@ -13,11 +13,11 @@ from heatsource9.setup.constants import drange, dtype, head2var, sheetnames
 from heatsource9.setup.headers import (
     headers_accretion,
     headers_bc,
-    headers_inflow,
     headers_lccodes,
     headers_lcdata,
     headers_met,
     headers_morph,
+    headers_tribfiles,
 )
 
 import logging
@@ -201,7 +201,7 @@ class InputSetup(object):
         self._check_file_exists(path)
         data = read_to_dict(
             path=path,
-            colnames=headers_lccodes(self.params),
+            colnames=headers_lccodes(self.params["canopy_data"]),
             sheetname=sheetnames["lccodefile"],
             value_check=self._validate,
             header_check=self.validate_headers,
@@ -233,7 +233,10 @@ class InputSetup(object):
 
     def import_lcdata(self, return_list=True, skiprows=1, skipcols=2):
         """Returns the land cover data."""
-        headers = headers_lcdata(self.params)
+        headers = headers_lcdata(self.params["trans_count"],
+                                 self.params["transsample_count"],
+                                 self.params["heatsource8"]
+                                 )
         path = Path(self.params["inputdir"]) / self.params["lcdatafile"]
         self._check_file_exists(path)
 
@@ -281,8 +284,8 @@ class InputSetup(object):
     def import_inflow(self, return_list=True, skiprows=1, skipcols=1):
         if self.params["tribsites"] <= 0:
             return []
-        headers = headers_inflow(self.params)
         filenames = [f.strip() for f in self.params["tribfiles"].split(",") if f.strip()]
+        headers = headers_tribfiles(self.params["tribsites"], len(filenames))
         data = []
         for i, filename in enumerate(filenames):
             path = Path(self.params["inputdir"]) / filename
@@ -329,8 +332,8 @@ class InputSetup(object):
         return data
 
     def import_met(self, return_list=True, skiprows=1, skipcols=1):
-        headers = headers_met(self.params)
         filenames = [f.strip() for f in self.params["metfiles"].split(",") if f.strip()]
+        headers = headers_met(self.params["metsites"], len(filenames))
         data = []
         for i, filename in enumerate(filenames):
             path = Path(self.params["inputdir"]) / filename
