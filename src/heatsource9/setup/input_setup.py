@@ -281,13 +281,13 @@ class InputSetup(object):
             return self.dict2list(data, headers, skiprows, skipcols)
         return data
 
-    def import_inflow(self, return_list=True, skiprows=1, skipcols=1):
+    def import_tribs(self, return_list=True, skiprows=1, skipcols=1):
         if self.params["tribsites"] <= 0:
             return []
         filenames = [f.strip() for f in self.params["tribfiles"].split(",") if f.strip()]
-        headers = headers_tribfiles(self.params["tribsites"], len(filenames))
         data = []
         for i, filename in enumerate(filenames):
+            headers = headers_tribfiles(self.params["tribsites"], len(filenames), i + 1)
             path = Path(self.params["inputdir"]) / filename
             self._check_file_exists(path)
             site_data = read_to_dict(
@@ -333,9 +333,9 @@ class InputSetup(object):
 
     def import_met(self, return_list=True, skiprows=1, skipcols=1):
         filenames = [f.strip() for f in self.params["metfiles"].split(",") if f.strip()]
-        headers = headers_met(self.params["metsites"], len(filenames))
         data = []
         for i, filename in enumerate(filenames):
+            headers = headers_met(self.params["metsites"], len(filenames), i + 1)
             path = Path(self.params["inputdir"]) / filename
             self._check_file_exists(path)
             site_data = read_to_dict(

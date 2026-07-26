@@ -460,13 +460,13 @@ class ModelSetup(object):
     def get_tributary_data(self):
         """Populate the tributary flow and temperature values for
         nodes from the Flow Data page"""
-        print_console("Reading inflow data")
+        print_console("Reading tributary inflow data")
         # Get a list of the timestamps that we have data for, and use 
         # that to grab the data block
         timelist = self.flowtimelist
         data = []
         if self.params["tribsites"] > 0:
-            data = self.inputs.import_inflow()
+            data = self.inputs.import_tribs()
 
         # The data is being put into this format
         # | Site 1     | Site 2     | Site 3       | ...

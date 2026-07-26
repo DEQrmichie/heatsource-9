@@ -16,10 +16,13 @@ def headers_trib_sites():
     return ["COLID", "TRIB_NAME", "STREAM_KM", "FILE_NAME"]
 
 
-def headers_met(metsites, metfile_count):
-    ncols = int(metsites // metfile_count)
+def headers_met(metsites, metfile_count, metsite_number=1):
+    if metfile_count == 1:
+        metsite_numbers = range(1, metsites + 1)
+    else:
+        metsite_numbers = [metsite_number]
     header = ["DATETIME"]
-    for n in range(1, ncols + 1):
+    for n in metsite_numbers:
         header += [
             f"CLOUDINESS{n}",
             f"WIND_SPEED{n}",
@@ -29,10 +32,13 @@ def headers_met(metsites, metfile_count):
     return header
 
 
-def headers_tribfiles(tribsites, tribfile_count):
-    ncols = int(tribsites // tribfile_count)
+def headers_tribfiles(tribsites, tribfile_count, tribsite_number=1):
+    if tribfile_count == 1:
+        tribsite_numbers = range(1, tribsites + 1)
+    else:
+        tribsite_numbers = [tribsite_number]
     header = ["DATETIME"]
-    for n in range(1, ncols + 1):
+    for n in tribsite_numbers:
         header += [f"FLOW{n}", f"TEMPERATURE{n}"]
     return header
 

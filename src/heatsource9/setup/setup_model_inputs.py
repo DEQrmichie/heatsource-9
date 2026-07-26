@@ -97,10 +97,11 @@ def _morph_table(params, kmlist, use_timestamp):
 
 
 def _lcdata_table(params, kmlist, use_timestamp):
-    headers = headers_lcdata(params["trans_count"],
-                             params["transsample_count"],
-                             params["heatsource8"]
-                             )
+    headers = headers_lcdata(
+        params["trans_count"],
+        params["transsample_count"],
+        params["heatsource8"],
+    )
     rows = [[None, None, km] + [None] * (len(headers) - 3) for km in kmlist]
     filename = _out_name(params, "lcdatafile", use_timestamp)
     table = (filename, headers, rows, sheetnames["lcdatafile"])
@@ -120,9 +121,9 @@ def _met_tables(params, timelist, use_timestamp):
     met_files = [p.strip() for p in str(params.get("metfiles") or "").split(",") if p.strip()]
     if not met_files:
         return tables
-    headers = headers_met(params["metsites"], len(met_files))
-    rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
-    for file in met_files:
+    for metsite_number, file in enumerate(met_files, start=1):
+        headers = headers_met(params["metsites"], len(met_files), metsite_number)
+        rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
         if use_timestamp:
             met_filename = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + file
         else:
@@ -218,8 +219,8 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
     tribfiles_value = ""
     tribkm_value = ""
     written = None
-    inflow_count = int(params.get("tribsites") or 0)
-    if inflow_count <= 0:
+    trib_count = int(params.get("tribsites") or 0)
+    if trib_count <= 0:
         result = (tribfiles_value, tribkm_value, written)
         return result
 
@@ -228,7 +229,7 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
     if not trib_path.exists():
         rows = []
         tribfiles = []
-        for i in range(1, inflow_count + 1):
+        for i in range(1, trib_count + 1):
             filename = "tribsite{0}{1}".format(i, ext)
             tribfiles.append(filename)
             rows.append([i, None, None, filename])
@@ -254,9 +255,9 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
     trib_col_ids = list(data.get("COLID", []))
     trib_file_names = list(data.get("FILE_NAME", []))
     trib_kms = list(data.get("STREAM_KM", []))
-    if len(trib_col_ids) != inflow_count:
+    if len(trib_col_ids) != trib_count:
         msg = "{0} must have exactly {1} data rows because tribsites = {1} in the control file.".format(
-            trib_path.name, inflow_count
+            trib_path.name, trib_count
         )
         raise ValueError(msg)
     if any(col_id in (None, "") for col_id in trib_col_ids):
@@ -289,16 +290,16 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
     return result
 
 
-def _inflow_tables(params, timelist, use_timestamp):
+def _trib_tables(params, timelist, use_timestamp):
     tables = []
-    inflow_sites = params.get("tribsites") or 0
-    if inflow_sites <= 0:
+    trib_sites = params.get("tribsites") or 0
+    if trib_sites <= 0:
         return tables
-    inflow_files_value = params.get("tribfiles")
-    inflow_files = [p.strip() for p in str(inflow_files_value or "").split(",") if p.strip()]
-    headers = headers_tribfiles(params["tribsites"], len(inflow_files))
-    rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
-    for filename in inflow_files:
+    trib_files_value = params.get("tribfiles")
+    trib_files = [p.strip() for p in str(trib_files_value or "").split(",") if p.strip()]
+    for tribsite_number, filename in enumerate(trib_files, start=1):
+        headers = headers_tribfiles(params["tribsites"], len(trib_files), tribsite_number)
+        rows = [[t] + [None] * (len(headers) - 1) for t in timelist]
         if use_timestamp:
             filename = datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + filename
         table = (filename, headers, rows, sheetnames["tribfiles"])
@@ -378,8 +379,8 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
         for table in met_tables:
             tables.append(table)
 
-        inflow_tables = _inflow_tables(params, timelist, use_timestamp)
-        for table in inflow_tables:
+        trib_tables = _trib_tables(params, timelist, use_timestamp)
+        for table in trib_tables:
             tables.append(table)
 
         for filename, headers, rows, sheet in tables:
