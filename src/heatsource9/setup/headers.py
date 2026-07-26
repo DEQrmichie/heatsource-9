@@ -58,19 +58,21 @@ def headers_lcdata(trans_count, transsample_count, heatsource8):
         "STREAM_KM",
         "LONGITUDE",
         "LATITUDE",
-        "TOPO_NE",
-        "TOPO_E",
-        "TOPO_SE",
-        "TOPO_S",
-        "TOPO_SW",
-        "TOPO_W",
-        "TOPO_NW",
-        "TOPO_N",
     ]
 
     if heatsource8:
+        headers.extend(["TOPO_W", "TOPO_S", "TOPO_E"])
         tran = ["NE", "E", "SE", "S", "SW", "W", "NW"]
     else:
+        headers.extend(["TOPO_NE",
+                        "TOPO_E",
+                        "TOPO_SE",
+                        "TOPO_S",
+                        "TOPO_SW",
+                        "TOPO_W",
+                        "TOPO_NW",
+                        "TOPO_N",
+                        ])
         tran = [f"T{x}" for x in range(1, trans_count + 1)]
     samples = list(range(1, transsample_count + 1))
 

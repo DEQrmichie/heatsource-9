@@ -237,6 +237,14 @@ class InputSetup(object):
                                  self.params["transsample_count"],
                                  self.params["heatsource8"]
                                  )
+        topo8 = ["TOPO_NE", "TOPO_E", "TOPO_SE", "TOPO_S", "TOPO_SW", "TOPO_W", "TOPO_NW", "TOPO_N"]
+        if self.params.get("heatsource8"):
+            headers_topo3 = headers
+            headers_topo8 = headers[:5] + topo8 + headers[8:]
+        else:
+            headers_topo3 = headers[:5] + ["TOPO_W", "TOPO_S", "TOPO_E"] + headers[13:]
+            headers_topo8 = headers
+
         path = Path(self.params["inputdir"]) / self.params["lcdatafile"]
         self._check_file_exists(path)
 
@@ -244,15 +252,21 @@ class InputSetup(object):
         header_count = len(rows[0])
 
         # This checks for the legacy three topo direction lcdata format based on column count.
-        # Legacy format has three topo columns, five fewer columns than the current format. heatsource8 automatically uses three topo directions, even if all eight are included.
-        legacy_lcdata = header_count == len(headers) - 5
+        legacy_lcdata = header_count == len(headers_topo3)
+        topo8_lcdata = header_count == len(headers_topo8)
+
+        if self.params.get("heatsource8") and topo8_lcdata:
+            msg = ("The 'lcdatafile' has too many columns. Are you using eight topo columns instead of three? "
+                   "Use only `TOPO_W`, `TOPO_S`, and `TOPO_E` when `heatsource8=True`")
+            raise ValueError(msg)
+
         self.params["legacy_lcdata"] = legacy_lcdata
         self.params["topo3"] = legacy_lcdata or self.params.get("heatsource8")
 
         if legacy_lcdata:
-            headers_to_read = headers[:5] + ["TOPO_W", "TOPO_S", "TOPO_E"] + headers[13:]
+            headers_to_read = headers_topo3
         else:
-            headers_to_read = headers
+            headers_to_read = headers_topo8
 
         data = read_to_dict(
             path=path,
@@ -278,7 +292,7 @@ class InputSetup(object):
         )
 
         if return_list:
-            return self.dict2list(data, headers, skiprows, skipcols)
+            return self.dict2list(data, headers_topo8, skiprows, skipcols)
         return data
 
     def import_tribs(self, return_list=True, skiprows=1, skipcols=1):
