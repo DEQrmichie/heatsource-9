@@ -856,7 +856,7 @@ Model run requirements:
 Legacy land cover data files that include only three topographic shade angle columns, `TOPO_W`, `TOPO_S`, and `TOPO_E`,
 can still be used, but this format is deprecated and will be retired at the next major release. When eight topographic
 shade angle columns are present, all eight are required unless `heatsource8=True`, in which case only the three legacy
-columns are used by the model.
+columns are required and used by the model.
 
 The number of `LC_T#_S#` and `ELE_T#_S#` columns is dependent on the number of land cover transects and samples specified 
 in the control file. The '#' in the column name will be a number and refers to the specific transect (T) number or 
@@ -982,13 +982,13 @@ Output Files:
 | `Heat_Conv.csv` | Convection Flux                                   | watts/square meter     |
 | `Heat_Evap.csv` | Evaporation Flux                                  | watts/square meter     |
 | `Rate_Evap.csv` | Evaporation Rate                                  | mm/hour                |
-| `Hyd_Disp.csv`  | Hydraulic Dispersion                              | mm/hour                |
+| `Hyd_Disp.csv`  | Hydraulic Dispersion                              | square meters/second   |
 | `Hyd_DA.csv`    | Average Depth                                     | meters                 |
 | `Hyd_DM.csv`    | Max Depth                                         | meters                 |
-| `Hyd_Flow.csv`  | Flow Rate                                         | meters                 |
+| `Hyd_Flow.csv`  | Flow Rate                                         | cubic meters/second    |
 | `Hyd_Hyp.csv`   | Hyporheic Exchange                                | cubic meters/second    |
 | `Hyd_Vel.csv`   | Flow Velocity                                     | meters/second          |
-| `Hyd_WT.csv`    | Top Width                                         | square meters/second   |
+| `Hyd_WT.csv`    | Top Width                                         | meters                 |
 | `Temp_H2O.csv`  | Stream Temperature                                | Celsius                |
 | `Temp_Sed.csv`  | Sediment Temperature                              | Celsius                |
 | `Temp_Hyp.csv`  | Hyporheic Return Water Temperature                | Celsius                |
