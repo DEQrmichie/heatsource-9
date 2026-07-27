@@ -24,7 +24,9 @@ class StreamNode(object):
                 "Mix_T_Delta", #Change in temperature due to tribs, gw, points sources, accretion
                 "T", "T_prev", # Current and previous stream temperature
                 "TopoFactor", # Topo_W + Topo_S + Topo_E / (90*3). From Above stream surface solar flux calculations
-                "ViewToSky", # Total angle of full sun view
+                "ViewToSky", # Fraction of the sky visible after vegetation and bank obstruction, excluding topo.
+                "VegFactor", # Fraction of the sky blocked by vegetation, excluding overlap with topo and bank obstruction
+                "GapFraction", # Fraction of the sky visible after combining topo, stream bank, and any veg obstruction
                 "ShaderList", # List of angles and attributes to determine sun shading.
                 "F_DailySum", "F_Total", "Solar_Blocked", # Specific sums of solar fluxes
                 "F_Solar", # List of important solar fluxes
@@ -150,7 +152,7 @@ class StreamNode(object):
         self.CalcDischarge = self.calculate_discharge
         rp = self.run_params
         self.C_args = (self.Wb, self.Zs, self.TopoFactor,
-                       self.ViewToSky, self.Eta, self.lc_canopy_cover,
+                       self.ViewToSky, self.VegFactor, self.GapFraction, self.Eta, self.lc_canopy_cover,
                        self.lc_lai, self.lc_height_node_top, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.Dsed,
                        self.dx, self.dt, self.Ksed,
                        self.Alpha_sed, self.Q_accr, self.T_accr,

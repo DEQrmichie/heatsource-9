@@ -421,21 +421,6 @@ cdef inline double emergent_hs8_direct_passed(SolarAltitude, Wb,
         fraction_passed_direct = exp(-K_rip * PL_emergent)
     return fraction_passed_direct
 
-cdef inline double emergent_hs8_diffuse_passed(lc_height_node_top,
-                                               lc_canopy_cover):
-    cdef double fraction_passed_diffuse
-
-    if lc_canopy_cover <= 0 or lc_height_node_top <= 0:
-        fraction_passed_diffuse = 1.0
-    elif lc_canopy_cover >= 1:
-        # HS8 direct is fully blocked; diffuse is near fully blocked.
-        fraction_passed_diffuse = 0.0001
-    else:
-        # Diffuse uses full emergent height path.
-        K_rip = -log(1 - lc_canopy_cover) / lc_height_node_top
-        fraction_passed_diffuse = exp(-K_rip * lc_height_node_top)
-    return fraction_passed_diffuse
-
 cdef inline double emergent_lai_fraction_passed(lc_lai, lc_k,
                                                 lc_canopy_depth,
                                                 lc_height_node_top,
@@ -545,7 +530,7 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
                     theta_full_sun, theta_path, transsample_distance,
                     lcsampmethod, lc_oh, lc_height_node_top,
                     lc_canopy_depth, BeersData, heatsource8, tran, lc_lai,
-                    lc_k, lc_canopy_cover, ViewToSky) except *:
+                    lc_k, lc_canopy_cover, VegFactor) except *:
 
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
@@ -611,7 +596,7 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
             s -= 1
         F_Direct3 = Dummy1
 
-    F_Diffuse3 = F_Diffuse2 * ViewToSky
+    F_Diffuse3 = F_Diffuse1 * (1 - TopoFactor - VegFactor)
     diffuse_blocked = F_Diffuse2-F_Diffuse3
     F_SR3b.append(diffuse_blocked)
     return F_Direct2, F_Diffuse2, F_Direct3, F_Diffuse3, F_SR3b
@@ -621,19 +606,19 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
 # 4 - At Stream Surface (Below Bank Shade & Emergent)
 # What a Solar Pathfinder measures
 #=========================================================
-cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
-                theta_bank_max, emergent, BeersData, lc_height_node_top,
+cdef inline SR4(F_Direct3, F_Diffuse1, SolarAltitude, theta_topo,
+                theta_bank_max, GapFraction, emergent, BeersData, lc_height_node_top,
                 lc_lai, lc_canopy_cover, heatsource8, Wb,
                 transsample_distance, lc_canopy_depth, lc_k) except *:
 
     if SolarAltitude > theta_topo and SolarAltitude <= theta_bank_max:
         # Bank shade is occurring
         F_Direct4 = 0
-        F_Diffuse4 = F_Diffuse3
     else:
         # bank shade is not occurring
         F_Direct4 = F_Direct3
-        F_Diffuse4 = F_Diffuse3
+
+    F_Diffuse4 = F_Diffuse1 * GapFraction
 
     if emergent:
         # Account for emergent vegetation
@@ -642,11 +627,8 @@ cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
             fraction_passed_direct = emergent_hs8_direct_passed(SolarAltitude, Wb,
                                                                 lc_height_node_top[0][0],
                                                                 lc_canopy_cover[0][0])
-            fraction_passed_diffuse = emergent_hs8_diffuse_passed(lc_height_node_top[0][0],
-                                                                  lc_canopy_cover[0][0])
 
             F_Direct4 = F_Direct4 * fraction_passed_direct
-            F_Diffuse4 = F_Diffuse4 * fraction_passed_diffuse
             return F_Direct4, F_Diffuse4
         else:
             # (Norman and Welles 1983)
@@ -672,7 +654,6 @@ cdef inline SR4(F_Direct3, F_Diffuse3, SolarAltitude, theta_topo,
                                                                         PL_emergent)
 
             F_Direct4 = F_Direct4 * fraction_passed
-            F_Diffuse4 = F_Diffuse4 * fraction_passed
     return F_Direct4, F_Diffuse4
 
 #=========================================================
@@ -930,7 +911,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
                    heatsource8):
     cloud, Uzm, humidity, T_air = metData
 
-    Wb, Zs, TopoFactor, ViewToSky, Eta, lc_canopy_cover, lc_lai, \
+    Wb, Zs, TopoFactor, ViewToSky, VegFactor, GapFraction, Eta, lc_canopy_cover, lc_lai, \
         lc_height_node_top, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
@@ -971,11 +952,11 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
                               lc_height_node_top, lc_canopy_depth,
                               BeersData, heatsource8, tran,
                               lc_lai, lc_k, lc_canopy_cover,
-                              ViewToSky)
+                              VegFactor)
 
-        F_Direct[4], F_Diffuse[4] = SR4(F_Direct[3], F_Diffuse[3],
+        F_Direct[4], F_Diffuse[4] = SR4(F_Direct[3], F_Diffuse[1],
                                         SolarAltitude, theta_topo,
-                                        theta_bank_max, emergent, BeersData,
+                                        theta_bank_max, GapFraction, emergent, BeersData,
                                         lc_height_node_top, lc_lai,
                                         lc_canopy_cover, heatsource8, Wb,
                                         transsample_distance, lc_canopy_depth,

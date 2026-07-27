@@ -1078,9 +1078,14 @@ class ModelSetup(object):
             msg = "Building land cover zones"
             print_console(msg, True, h + 1, len(keys))
             node = self.reach[keys[h]]
-            vts_total = 0  # View to sky value
+            # Initialize view to sky, summed bank blocked angle above topographic obstruction, and
+            # summed effective vegetation blocked angle
+            vts_total = 0
+            theta_bank_blocked_total = 0
+            theta_veg_blocked_total = 0
 
             # Calculate the topographic shade factor from the available topo shade angles.
+            # Fraction of the sky blocked by topographic features.
             if self.params.get("topo3"):
                 node.TopoFactor = (topo_w[h] + topo_s[h] + topo_e[h]) / (90 * 3)
             else:
@@ -1229,12 +1234,59 @@ class ModelSetup(object):
                                 vdens_ave_veg = 0
                             vdens_mod = ((max(theta_full_sun) - max(theta_bank)) * vdens_ave_veg + max(theta_bank)) / max(theta_full_sun)
                         else:
+                            vdens_ave_veg = 0
                             vdens_mod = 1.0
                         vts_total += max(theta_full_sun) * vdens_mod  # Add angle at end of each zone calculation
+
+                # Maximum angle with full sun for one transect direction
                 theta_full_sun_max = max(theta_full_sun)
+
+                # Maximum angle of the stream bank for one transect direction
                 theta_bank_max = max(theta_bank)
+
+                # Topographic blocked angle for one transect direction
+                theta_topo_blocked = theta_topo_list[i]
+
+                # Bank blocked angle above topographic obstruction for one transect direction
+                theta_bank_range = max(theta_bank_max - theta_topo_blocked, 0)
+
+                # Lower angle used to remove overlap between veg obstruction and fully blocked topographic or bank obstruction
+                theta_veg_lower = max(theta_topo_blocked, theta_bank_max)
+
+                # Angular range occupied by vegetation above theta_veg_lower for one transect
+                theta_veg_range = max(theta_full_sun_max - theta_veg_lower, 0)
+
+                # Effective vegetation blocked angle for one transect direction
+                theta_veg_blocked = theta_veg_range * vdens_ave_veg
+
+                # Summed bank blocked angle above topographic obstruction
+                theta_bank_blocked_total += theta_bank_range
+
+                # Summed effective vegetation blocked angle
+                theta_veg_blocked_total += theta_veg_blocked
+
                 node.ShaderList += (theta_full_sun_max, theta_topo_list[i], theta_bank_max, theta_full_sun, theta_path),
             node.ViewToSky = 1 - vts_total / (radial_count * 90)
+
+            # Fraction of the sky blocked by vegetation, excluding any portion
+            # already blocked by topography or the stream bank
+            node.VegFactor = theta_veg_blocked_total / (radial_count * 90)
+
+            # Fraction of the sky blocked by the stream bank, excluding any portion
+            # already blocked by topography
+            BankFactor = theta_bank_blocked_total / (radial_count * 90)
+
+            if self.params["emergeng"]:
+                if self.params["canopy_data"] == "LAI":
+                    EmergentFactor = 1 - exp(-node.lc_k[0][0] * node.lc_lai[0][0])
+                else:
+                    EmergentFactor = node.lc_canopy_cover[0][0]
+            else:
+                EmergentFactor = 0
+
+            # Fraction of the sky visible after combining topographic,
+            # stream bank, and any vegetation obstruction
+            node.GapFraction = (1 - node.TopoFactor - node.VegFactor - BankFactor) * (1 - EmergentFactor)
 
     def get_lc_codes(self):
         """Return the codes from the Land Cover Codes input file

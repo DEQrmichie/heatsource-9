@@ -74,10 +74,8 @@ class OutputWriter:
             desc["Heat_DF2"] = "Diffuse Solar Radiation Flux below Topographic Features (watts/square meter)"
             desc["Heat_DF4"] = "Diffuse Solar Radiation Flux above the Stream (watts/square meter)"
             desc["Heat_DF5"] = "Diffuse Solar Radiation Flux Entering Stream (watts/square meter)"
-            desc["Solar_Azimuth"] = (
-                "Solar Azimuth (degrees). Angle of the sun along the horizon with zero degrees "
-                "corresponding to true north."
-            )
+            desc["Solar_Azimuth"] = ("Solar Azimuth (degrees). Angle of the sun along the horizon with zero degrees "
+                                     "corresponding to true north.")
             desc["Solar_Elevation"] = "Solar Elevation (degrees). Angle up from the horizon to the sun."
 
         if run_type in ("temperature", "solar"):
@@ -88,7 +86,10 @@ class OutputWriter:
             desc["Heat_SR4"] = "Solar Radiation Flux above the Stream (watts/square meter)"
             desc["Heat_SR5"] = "Solar Radiation Flux Entering Stream (watts/square meter)"
             desc["Shade"] = "Effective Shade"
-            desc["VTS"] = "View to Sky. Calculated proportion of the sky hemisphere visible from the stream node after obstruction by near stream land cover and the stream bank."
+            desc["VTS"] = ("View to Sky. Calculated proportion of the sky hemisphere visible from the stream node "
+                           "after obstruction by near stream land cover and the stream bank.")
+            desc["GapFraction"] = ("Gap Fraction. Calculated proportion of the sky hemisphere visible from the stream "
+                                   "node after combining topographic, stream bank, and any vegetation obstruction.")
 
         if run_type in ("temperature", "hydraulics"):
             desc["Hyd_DA"] = "Average Depth (meters)"
@@ -192,14 +193,14 @@ class OutputWriter:
         The result is the maximum number of output timesteps that can be queued
         before write_to_csv() is called automatically.
 
-        Daily outputs are Shade, VTS, and Heat_SR3b. Those are not included in
+        Daily outputs are Shade, VTS, GapFraction, and Heat_SR3b. Those are not included in
         the count because their size is fixed and the write schedule is at the
         end of each day.
         """
         target_values = 30000000
         nondaily_outputs = [
             name for name in self.data
-            if name not in ("Shade", "VTS", "Heat_SR3b")
+            if name not in ("Shade", "VTS", "GapFraction", "Heat_SR3b")
         ]
         values_per_timestep = len(self.nodes) * len(nondaily_outputs)
 
@@ -272,13 +273,14 @@ class OutputWriter:
     def queue_daily_outputs(self, time):
         """
         Queue daily output rows using the timestamp of the last included timestep.
-        Daily outputs are Shade, VTS, and Heat_SR3b. These are not called for hydraulics.
+        Daily outputs are Shade, VTS, GapFraction, and Heat_SR3b. These are not called for hydraulics.
         """
 
         timestamp = excel_time(time)
         nodes = self.nodes
         self.data["Shade"][timestamp] = [((x.F_DailySum[1] - x.F_DailySum[4]) / x.F_DailySum[1]) for x in nodes]
         self.data["VTS"][timestamp] = [x.ViewToSky for x in nodes]
+        self.data["GapFraction"][timestamp] = [x.GapFraction for x in nodes]
         self.data["Heat_SR3b"][timestamp] = []
 
     def write_to_csv(self):
