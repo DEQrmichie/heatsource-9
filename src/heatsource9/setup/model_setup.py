@@ -1276,7 +1276,7 @@ class ModelSetup(object):
             # already blocked by topography
             BankFactor = theta_bank_blocked_total / (radial_count * 90)
 
-            if self.params["emergeng"]:
+            if self.params["emergent"]:
                 if self.params["canopy_data"] == "LAI":
                     EmergentFactor = 1 - exp(-node.lc_k[0][0] * node.lc_lai[0][0])
                 else:
