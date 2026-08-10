@@ -116,10 +116,10 @@ There are multiple workflows available for setting up and running a model.
 ### 5.1 Windows Executables
 
 [Windows executables][2] have been compiled from the source code and can be used to run the model on Windows machines. 
-Place the executables in the model directory with your model files. Double-click the executable to setup or run 
+Place the executables in the model directory with your model files. Double-click the executable to set up or run 
 the model.
 
-Setup the model executing using one of the following:
+Set up the model executing using one of the following:
    * `hs9_setup_control_file.exe` writes a blank template control file.
    * `hs9_setup_model_inputs.exe` writes blank template input files from a parameterized control file.
 
@@ -454,7 +454,7 @@ Model run requirements:
 | `heatsource8`          | Optional         | Required             | Optional             | Required                |
 
 <sup>1 `outputdt` defaults to 60 if left blank.</sup>
-<sup>2 `alluviumtemp` needs to be set if ```calcalluvium = "True"```, otherwise if can be left blank.</sup>
+<sup>2 `alluviumtemp` needs to be set if ```calcalluvium = "True"```, otherwise it can be left blank.</sup>
 
 ### 6.2 METEOROLOGICAL SITE FILE
 File name: `HeatSource_Met_Sites.[xlsx|csv]`
@@ -826,10 +826,10 @@ Field details:
 |       7       | `TOPO_E`    | Topographic shade angle to the east         | degrees         | float     |
 |       8       | `TOPO_SE`   | Topographic shade angle to the southeast    | degrees         | float     |
 |       9       | `TOPO_S`    | Topographic shade angle to the south        | degrees         | float     |
-|       10      | `TOPO_SW`   | Topographic shade angle to the southwest    | degrees         | float     |
-|       11      | `TOPO_W`    | Topographic shade angle to the west         | degrees         | float     |
-|       12      | `TOPO_NW`   | Topographic shade angle to the northwest    | degrees         | float     |
-|       13      | `TOPO_N`    | Topographic shade angle to the north        | degrees         | float     |
+|      10       | `TOPO_SW`   | Topographic shade angle to the southwest    | degrees         | float     |
+|      11       | `TOPO_W`    | Topographic shade angle to the west         | degrees         | float     |
+|      12       | `TOPO_NW`   | Topographic shade angle to the northwest    | degrees         | float     |
+|      13       | `TOPO_N`    | Topographic shade angle to the north        | degrees         | float     |
 |   multiple    | `LC_T#_S#`  | Land cover code on transect T for sample S  | N/A             | string    |
 |   multiple    | `ELE_T#_S#` | Ground elevation on transect T for sample S | meters          | float     |
 
@@ -846,10 +846,10 @@ Model run requirements:
 |       7       | `TOPO_E`     |  Required  |    Optional    |     Required     |
 |       8       | `TOPO_SE`    |  Required  |    Optional    |     Required     |
 |       9       | `TOPO_S`     |  Required  |    Optional    |     Required     |
-|       10      | `TOPO_SW`    |  Required  |    Optional    |     Required     |
-|       11      | `TOPO_W`     |  Required  |    Optional    |     Required     |
-|       12      | `TOPO_NW`    |  Required  |    Optional    |     Required     |
-|       13      | `TOPO_N`     |  Required  |    Optional    |     Required     |
+|      10       | `TOPO_SW`    |  Required  |    Optional    |     Required     |
+|      11       | `TOPO_W`     |  Required  |    Optional    |     Required     |
+|      12       | `TOPO_NW`    |  Required  |    Optional    |     Required     |
+|      13       | `TOPO_N`     |  Required  |    Optional    |     Required     |
 |   multiple    | `LC_T#_S#`   |  Required  |    Optional    |     Required     |
 |   multiple    | `ELE_T#_S#`  |  Required  |    Optional    |     Required     |
 
@@ -953,7 +953,7 @@ Here's a snippet of a stream temperature output file: `Temp_H2O.csv`.
 ```CSV
 File Created:,Tue Mar  3 14:18:18 2026
 Heat Source Version:,9.0.1
-Simulation Name:,Example River - HS9_example_model_xslx
+Simulation Name:,Example River - HS9_example_model_xlsx
 User Text:,This is an example model using xlsx files.
 Output:,Stream Temperature (Celsius)
 ""
@@ -967,64 +967,66 @@ The table below provides a summary of all the model outputs.
 
 Output Files:
 
-| OUTPUT NAME     | DESCRIPTION                                       | UNITS                  |
-|:----------------|:--------------------------------------------------|:-----------------------|
-| `Heat_SR1.csv`  | Solar Radiation Flux above Topographic Features   | watts/square meter     |
-| `Heat_SR2.csv`  | Solar Radiation Flux below Topographic Features   | watts/square meter     |
-| `Heat_SR3.csv`  | Solar Radiation Flux below Land Cover             | watts/square meter     |
-| `Heat_SR3b.csv` | Solar Radiation Flux blocked by Land Cover Sample | watts/square meter     |
-| `Heat_SR4.csv`  | Solar Radiation Flux below Bank Shade & Emergent  | watts/square meter     |
-| `Heat_SR5.csv`  | Solar Radiation Flux Entering Stream              | watts/square meter     |
-| `Heat_SR6.csv`  | Solar Radiation Flux Received by Stream           | watts/square meter     |
-| `Heat_SR7.csv`  | Solar Radiation Flux Received by Substrate        | watts/square meter     |
-| `Heat_Cond.csv` | Streambed Conduction Flux                         | watts/square meter     |
-| `Heat_Long.csv` | Longwave Flux                                     | watts/square meter     |
-| `Heat_Conv.csv` | Convection Flux                                   | watts/square meter     |
-| `Heat_Evap.csv` | Evaporation Flux                                  | watts/square meter     |
-| `Rate_Evap.csv` | Evaporation Rate                                  | mm/hour                |
-| `Hyd_Disp.csv`  | Hydraulic Dispersion                              | square meters/second   |
-| `Hyd_DA.csv`    | Average Depth                                     | meters                 |
-| `Hyd_DM.csv`    | Max Depth                                         | meters                 |
-| `Hyd_Flow.csv`  | Flow Rate                                         | cubic meters/second    |
-| `Hyd_Hyp.csv`   | Hyporheic Exchange                                | cubic meters/second    |
-| `Hyd_Vel.csv`   | Flow Velocity                                     | meters/second          |
-| `Hyd_WT.csv`    | Top Width                                         | meters                 |
-| `Temp_H2O.csv`  | Stream Temperature                                | Celsius                |
-| `Temp_Sed.csv`  | Sediment Temperature                              | Celsius                |
-| `Temp_Hyp.csv`  | Hyporheic Return Water Temperature                | Celsius                |
-| `Shade.csv`     | Effective Shade                                   | decimal fraction (0-1) |
-| `VTS.csv`       | View to Sky                                       | decimal fraction (0-1) |
+| OUTPUT NAME       | DESCRIPTION                                       | UNITS                  |
+|:------------------|:--------------------------------------------------|:-----------------------|
+| `Heat_SR1.csv`    | Solar Radiation Flux above Topographic Features   | watts/square meter     |
+| `Heat_SR2.csv`    | Solar Radiation Flux below Topographic Features   | watts/square meter     |
+| `Heat_SR3.csv`    | Solar Radiation Flux below Land Cover             | watts/square meter     |
+| `Heat_SR3b.csv`   | Solar Radiation Flux blocked by Land Cover Sample | watts/square meter     |
+| `Heat_SR4.csv`    | Solar Radiation Flux below Bank Shade & Emergent  | watts/square meter     |
+| `Heat_SR5.csv`    | Solar Radiation Flux Entering Stream              | watts/square meter     |
+| `Heat_SR6.csv`    | Solar Radiation Flux Received by Stream           | watts/square meter     |
+| `Heat_SR7.csv`    | Solar Radiation Flux Received by Substrate        | watts/square meter     |
+| `Heat_Cond.csv`   | Streambed Conduction Flux                         | watts/square meter     |
+| `Heat_Long.csv`   | Longwave Flux                                     | watts/square meter     |
+| `Heat_Conv.csv`   | Convection Flux                                   | watts/square meter     |
+| `Heat_Evap.csv`   | Evaporation Flux                                  | watts/square meter     |
+| `Rate_Evap.csv`   | Evaporation Rate                                  | mm/hour                |
+| `Hyd_Disp.csv`    | Hydraulic Dispersion                              | square meters/second   |
+| `Hyd_DA.csv`      | Average Depth                                     | meters                 |
+| `Hyd_DM.csv`      | Max Depth                                         | meters                 |
+| `Hyd_Flow.csv`    | Flow Rate                                         | cubic meters/second    |
+| `Hyd_Hyp.csv`     | Hyporheic Exchange                                | cubic meters/second    |
+| `Hyd_Vel.csv`     | Flow Velocity                                     | meters/second          |
+| `Hyd_WT.csv`      | Top Width                                         | meters                 |
+| `Temp_H2O.csv`    | Stream Temperature                                | Celsius                |
+| `Temp_Sed.csv`    | Sediment Temperature                              | Celsius                |
+| `Temp_Hyp.csv`    | Hyporheic Return Water Temperature                | Celsius                |
+| `GapFraction.csv` | Gap Fraction                                      | decimal fraction (0-1) |
+| `Shade.csv`       | Effective Shade                                   | decimal fraction (0-1) |
+| `VTS.csv`         | View to Sky                                       | decimal fraction (0-1) |
 
 The table below summarizes the outputs written by model run type. 
 YES means the output file is written for that model run type.
 
-| OUTPUT NAME      | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
-|:-----------------|:----------:|:--------------:|:----------------:|
-| `Heat_SR1.csv`   |    YES     |       NO       |       YES        |
-| `Heat_SR2.csv`   |    YES     |       NO       |       YES        |
-| `Heat_SR3.csv`   |    YES     |       NO       |       YES        |
-| `Heat_SR3b.csv`  |    YES     |       NO       |       YES        |
-| `Heat_SR4.csv`   |    YES     |       NO       |       YES        |
-| `Heat_SR5.csv`   |    YES     |       NO       |       YES        |
-| `Heat_SR6.csv`   |     NO     |       NO       |       YES        |
-| `Heat_SR7.csv`   |     NO     |       NO       |       YES        |
-| `Heat_Cond.csv`  |     NO     |       NO       |       YES        |
-| `Heat_Long.csv`  |     NO     |       NO       |       YES        |
-| `Heat_Conv.csv`  |     NO     |       NO       |       YES        |
-| `Heat_Evap.csv`  |     NO     |       NO       |       YES        |
-| `Rate_Evap.csv`  |     NO     |       NO       |       YES        |
-| `Hyd_Disp.csv`   |     NO     |       NO       |       YES        |
-| `Hyd_DA.csv`     |     NO     |      YES       |       YES        |
-| `Hyd_DM.csv`     |     NO     |      YES       |       YES        |
-| `Hyd_Flow.csv`   |     NO     |      YES       |       YES        |
-| `Hyd_Hyp.csv`    |     NO     |      YES       |       YES        |
-| `Hyd_Vel.csv`    |     NO     |      YES       |       YES        |
-| `Hyd_WT.csv`     |     NO     |      YES       |       YES        |
-| `Temp_H2O.csv`   |     NO     |       NO       |       YES        |
-| `Temp_Sed.csv`   |     NO     |       NO       |       YES        |
-| `Temp_Hyp.csv`   |     NO     |       NO       |       YES        |
-| `Shade.csv`      |    YES     |       NO       |       YES        |
-| `VTS.csv`        |    YES     |       NO       |       YES        |
+| OUTPUT NAME       | SOLAR RUNS | HYDRAULIC RUNS | TEMPERATURE RUNS |
+|:------------------|:----------:|:--------------:|:----------------:|
+| `Heat_SR1.csv`    |    YES     |       NO       |       YES        |
+| `Heat_SR2.csv`    |    YES     |       NO       |       YES        |
+| `Heat_SR3.csv`    |    YES     |       NO       |       YES        |
+| `Heat_SR3b.csv`   |    YES     |       NO       |       YES        |
+| `Heat_SR4.csv`    |    YES     |       NO       |       YES        |
+| `Heat_SR5.csv`    |    YES     |       NO       |       YES        |
+| `Heat_SR6.csv`    |     NO     |       NO       |       YES        |
+| `Heat_SR7.csv`    |     NO     |       NO       |       YES        |
+| `Heat_Cond.csv`   |     NO     |       NO       |       YES        |
+| `Heat_Long.csv`   |     NO     |       NO       |       YES        |
+| `Heat_Conv.csv`   |     NO     |       NO       |       YES        |
+| `Heat_Evap.csv`   |     NO     |       NO       |       YES        |
+| `Rate_Evap.csv`   |     NO     |       NO       |       YES        |
+| `Hyd_Disp.csv`    |     NO     |       NO       |       YES        |
+| `Hyd_DA.csv`      |     NO     |      YES       |       YES        |
+| `Hyd_DM.csv`      |     NO     |      YES       |       YES        |
+| `Hyd_Flow.csv`    |     NO     |      YES       |       YES        |
+| `Hyd_Hyp.csv`     |     NO     |      YES       |       YES        |
+| `Hyd_Vel.csv`     |     NO     |      YES       |       YES        |
+| `Hyd_WT.csv`      |     NO     |      YES       |       YES        |
+| `Temp_H2O.csv`    |     NO     |       NO       |       YES        |
+| `Temp_Sed.csv`    |     NO     |       NO       |       YES        |
+| `Temp_Hyp.csv`    |     NO     |       NO       |       YES        |
+| `GapFraction.csv` |    YES     |       NO       |       YES        |
+| `Shade.csv`       |    YES     |       NO       |       YES        |
+| `VTS.csv`         |    YES     |       NO       |       YES        |
 
 ## 8.0 LICENSE
 GNU General Public License v3 (GPLv3)
