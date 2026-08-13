@@ -4,7 +4,7 @@
 # then adds the 'current' folder to the user's PATH
 
 param(
-    [string]$Version = "9.0.1",
+    [string]$Version = "9.1.0",
     [string]$SourceExePath = "",
     [string]$InstallRoot = ""
 )
