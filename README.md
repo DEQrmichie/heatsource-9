@@ -2,7 +2,7 @@
 
 Heat Source 9
 -------------
-Current Version: heatsource 9.0.1
+Current Version: heatsource 9.1.0
 
 ## 1.0 ABOUT 
 Heat Source is a computer model used by the Oregon Department of  Environmental Quality to simulate stream 
@@ -35,7 +35,7 @@ https://www.python.org/downloads/. This may be better option for Mac or Linux us
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
 # This command installs heat source version 9.0.1 directly from the GitHub repository.
-pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.0.1"
+pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.1.0"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
 your OS platform and python version. Python wheels have been built to support Windows, Mac, and Linux.
@@ -47,10 +47,10 @@ cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
 # Installs the Python 3.12 heat source wheel for windows in the local directory
-py -m pip3 install heatsource9-9.0.1-cp312-cp312-win_amd64.whl --user
+py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl --user
 
 # Installs the Python 3.12 heat source wheel for windows in the global directory
-py -m pip3 install heatsource9-9.0.1-cp312-cp312-win_amd64.whl
+py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl
  ```
 [2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.1/HS9_Windows_Executables_v9.0.1.zip
 [3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.1

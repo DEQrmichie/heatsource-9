@@ -37,8 +37,8 @@
 #    pre release version number
 
 major = 9
-minor = 0
-micro = 1
+minor = 1
+micro = 0
 prerel = ''
 prerelversion = ''
 version_info = (major, minor, micro, prerel, prerelversion)
