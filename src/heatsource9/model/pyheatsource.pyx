@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 
 def calc_solar_position(lat, lon, hour, min, sec, offset,
                       JC, heatsource8, radial_count):
+    """Calculate various solar position terms based on equations in Meeus (1988, 1991)
+    and which landcover transect direction corresponds to the current solar azimuth."""
+
     toRadians = pi/180.0
     toDegrees = 180.0/pi
 
@@ -33,20 +36,26 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
 
     GeoMeanAnomalySunRad = toRadians*GeoMeanAnomalySun
     Dummy2 = sin(GeoMeanAnomalySunRad)
-    Dummy3 = sin(Dummy2 * 2)
-    Dummy4 = sin(Dummy3 * 3)
-    
+    Dummy3 = sin(GeoMeanAnomalySunRad * 2)
+    Dummy4 = sin(GeoMeanAnomalySunRad * 3)
+
     SunEqCenter = (Dummy2 * (1.914602 - JC *
                                (0.004817 + 0.000014 * JC)) + Dummy3 *
                      (0.019993 - 0.000101 * JC) + Dummy4 * 0.000289)
-    
+
+    SunTrueAnomaly = GeoMeanAnomalySun + SunEqCenter
+
     SunTrueLong = GeoMeanLongSun + SunEqCenter
+
     SunApparentLong = (SunTrueLong -
                        0.00569 - 0.00478 *
                        sin(toRadians*((125.04 - 1934.136 * JC))))
 
     Dummy1 = sin(toRadians*Obliquity) * sin(toRadians*SunApparentLong)
     SolarDeclination = toDegrees*(atan(Dummy1 / sqrt(-Dummy1 * Dummy1 + 1)))
+
+    SolarRadiusVector = ((1.000001018 * (1 - Eccentricity ** 2)) /
+                         (1 + Eccentricity * cos(toRadians * SunTrueAnomaly)))
 
     #======================================================
     # Equation of time (minutes)
@@ -142,7 +151,7 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
             Azimuth_mod = SolarAzimuth
         tran = bisect(AngleStart,Azimuth_mod)-1
 
-    return SolarAltitude, SolarZenith, Daytime, tran, Azimuth_mod
+    return SolarAltitude, SolarZenith, Daytime, tran, Azimuth_mod, SolarRadiusVector
 
 def get_stream_geometry(Q_est, Wb, Z, n, S, D_est, dx, dt):
     cdef double Converge = 10
@@ -466,17 +475,13 @@ cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
 # Solar Radiation Flux
 # SR0 - Extraterrestrial solar radiation at edge of atmosphere
 #=========================================================
-cdef inline SR0(hour, doy, SolarAltitude):
-
-
-    # Radius Vector (Wunderlich 1972)
-    SolarRadiusVectorRatio = 1 + 0.017 * cos((2 * pi / 365) * (186 - doy + hour / 24))
+cdef inline SR0(SolarRadiusVector, SolarAltitude):
 
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
 
     # Extraterrestrial Solar Radiation Flux at the edge of the atmosphere (Wunderlich 1972)
-    F_SR0 = ((SolarConstant / (SolarRadiusVectorRatio ** 2)) *
+    F_SR0 = ((SolarConstant / (SolarRadiusVector ** 2)) *
              sin(radians(SolarAltitude)))
 
     # This is total extraterrestrial so all of it gets assigned to direct. There's no diffuse until it's in the atmosphere.
@@ -907,7 +912,7 @@ def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
 def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
                    T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
                    tran, Disp, hour, doy, daytime, SolarAltitude, SolarZenith,
-                   Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
+                   SolarRadiusVector, Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
                    heatsource8):
     cloud, Uzm, humidity, T_air = metData
 
@@ -938,7 +943,7 @@ def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
         # SR6 - Received by Water Column
         # SR7 - Received by Bed
 
-        F_Direct[0], F_Diffuse[0] = SR0(hour, doy, SolarAltitude)
+        F_Direct[0], F_Diffuse[0] = SR0(SolarRadiusVector, SolarAltitude)
         F_Direct[1], F_Diffuse[1] = SR1(F_Direct[0], SolarAltitude, Zs,
                                         doy, cloud)
 
