@@ -52,8 +52,8 @@ py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl --user
 # Installs the Python 3.12 heat source wheel for windows in the global directory
 py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl
  ```
-[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.0.1/HS9_Windows_Executables_v9.0.1.zip
-[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.0.1
+[2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.1.0/HS9_Windows_Executables_v9.1.0.zip
+[3]: https://github.com/DEQrmichie/heatsource-9/releases/tag/v9.1.0
 
 ## 3.0 QUICK STEPS TO GET GOING
 
