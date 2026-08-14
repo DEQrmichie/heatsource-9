@@ -29,12 +29,12 @@ the executable to run the model. That's it. Python installation is not required.
 user PATH and run the model from the command line (see section 5.1). These executables were developed on Windows 10. 
 They have not been tested on other versions of Windows. 
 
-2. Install the model as a Python package. Requires install of Python 3.10 or higher.
+2. Install the model as a Python package. Requires install of Python 3.11 or higher.
 https://www.python.org/downloads/. This may be better option for Mac or Linux users.
 
 After Python has been installed, install the Heat Source package from the command line using pip.
 ```shell
-# This command installs heat source version 9.0.1 directly from the GitHub repository.
+# This command installs heat source version 9.1.0 directly from the GitHub repository.
 pip install "git+https://github.com/DEQrmichie/heatsource-9@v9.1.0"
 ```
 Alternatively, the package can be installed by downloading the [heat source python wheel][3] appropriate to 
@@ -46,10 +46,10 @@ After downloading the wheel, install from the command line using pip.
 cd path\to\directory_where_the_heatsource9_wheel_was_saved\
 py -m pip install <name of wheel file>
 
-# Installs the Python 3.12 heat source wheel for windows in the local directory
+# Installs the Python 3.13 heat source wheel for windows in the local directory
 py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl --user
 
-# Installs the Python 3.12 heat source wheel for windows in the global directory
+# Installs the Python 3.13 heat source wheel for windows in the global directory
 py -m pip3 install heatsource9-9.1.0-cp313-cp313-win_amd64.whl
  ```
 [2]: https://github.com/DEQrmichie/heatsource-9/releases/download/v9.1.0/HS9_Windows_Executables_v9.1.0.zip
