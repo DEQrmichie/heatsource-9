@@ -361,6 +361,7 @@ required_fields = {
             "modelend",
             "dataend",
             "flushdays",
+            "offset",
             "dt",
             "outputdt",
             "dx",

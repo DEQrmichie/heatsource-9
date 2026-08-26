@@ -427,7 +427,7 @@ Model run requirements:
 | `modelend`             | Optional         | Required             | Required             | Required                |
 | `dataend`              | Required         | Required             | Required             | Required                |
 | `flushdays`            | Optional         | Optional             | Required             | Required                |
-| `offset`               | Optional         | Required             | Optional             | Required                |
+| `offset`               | Optional         | Required             | Required             | Required                |
 | `dt`                   | Optional         | Required             | Required             | Required                |
 | `dx`                   | Optional         | Required             | Required             | Required                |
 | `outputdt`             | Optional         | Optional<sup>1</sup> | Optional<sup>1</sup> | Optional<sup>1</sup>    |

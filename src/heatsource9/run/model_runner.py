@@ -70,8 +70,9 @@ class ModelRunner:
 
             # Initialize daily solar accumulators before first step.
             self._reset_daily_solar_accumulators(simulation, 0, 0, 0, force=True)
+            offset = self.model_setup.params["offset"]
             for step_number, epoch_seconds in enumerate(simulation.clock):
-                hour, minute, second, doy, jc = time_parts(epoch_seconds)
+                hour, minute, second, doy, jc = time_parts(epoch_seconds, offset)
                 self._reset_daily_solar_accumulators(simulation, hour, minute, second)
                 self._step(simulation, epoch_seconds, hour, minute, second, doy, jc)
 

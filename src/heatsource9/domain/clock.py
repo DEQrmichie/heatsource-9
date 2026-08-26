@@ -10,9 +10,12 @@ class Clock:
     """
     Manages model simulation time progression.
 
-    Internal model time and time progression is measured in
-    UNIX epoch seconds. Epoch seconds is the number of seconds 
-    since the epoch (1970-01-01 00:00:00 UTC)
+    Internal model time and time progression is measured in seconds counted from
+    the UNIX epoch (1970-01-01 00:00:00). Here, the UTC offset is not applied 
+    so it's not the true conventional UNIX epoch seconds which is relative to
+    UTC. This is done to preserve the local time values used for output,
+    timestamping, and model calculations. Calculations that require UTC time
+    apply the offset directly.
 
     start_time: Start time of the simulation (includes flushtime)
     end_time: End time of the simulation.
@@ -61,26 +64,26 @@ def _to_epoch_seconds(t):
     raise TypeError(f"Unsupported time type: {type(t).__name__}")
 
 
-def time_parts(epoch_seconds):
+def time_parts(epoch_seconds, offset):
     """
     Return time values calculated from UNIX epoch seconds.
 
-    (hour, minute, second, doy, JC)
+    (hour, minute, second, doy, jc)
 
     Where:
       - doy: Day of Year
-      - JC: julian century
+      - jc: Julian Century
     """
     model_time = gmtime(float(epoch_seconds))
     hour = int(model_time.tm_hour)
     minute = int(model_time.tm_min)
     second = int(model_time.tm_sec)
     doy = int(model_time.tm_yday)
-    jc = julian_century(float(epoch_seconds))
+    jc = julian_century(float(epoch_seconds), offset)
     return hour, minute, second, doy, jc
 
 
-def julian_century(epoch_seconds):
+def julian_century(epoch_seconds, offset):
     """
     Returns Julian Century (JC) from epoch seconds.
     This same function returned JDC in older models (Julian Day Century).
@@ -92,21 +95,25 @@ def julian_century(epoch_seconds):
 
     The formulation follows the equations in Meeus (1988, 1991).
 
-    Here JC is computed on demand for the current time.
+    Here JC is computed on demand for the current model time after conversion to UTC.
     """
-    model_time = gmtime(float(epoch_seconds))
-    y = int(model_time.tm_year)
-    m = int(model_time.tm_mon)
-    d = int(model_time.tm_mday)
+    model_time = gmtime(float(epoch_seconds) - float(offset) * 3600.0)
+    year = int(model_time.tm_year)
+    mon = int(model_time.tm_mon)
+    mday = int(model_time.tm_mday)
+    hour = int(model_time.tm_hour)
+    min = int(model_time.tm_min)
+    sec = int(model_time.tm_sec)
+    mday_frac = mday + (hour + (min + sec / 60.0) / 60.0) / 24.0
 
-    if m < 3:
-        m += 12
-        y -= 1
+    if mon < 3:
+        mon += 12
+        year -= 1
 
-    julian_day = int(365.25 * (y + 4716.0)) + int(30.6001 * (m + 1)) + d - 1524.5
+    julian_day = int(365.25 * (year + 4716.0)) + int(30.6001 * (mon + 1)) + mday_frac - 1524.5
 
     if julian_day > 2299160.0:
-        a = int(y / 100)
+        a = int(year / 100)
         b = (2 - a + int(a / 4))
         julian_day += b
 
