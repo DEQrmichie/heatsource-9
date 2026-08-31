@@ -153,7 +153,7 @@ def calc_solar_position(lat, lon, hour, min, sec, offset,
 
     return SolarAltitude, SolarZenith, Daytime, tran, Azimuth_mod, SolarRadiusVector
 
-def get_stream_geometry(Q_est, Wb, Z, n, S, D_est, dx, dt):
+def get_stream_geometry(double Q_est, double Wb, double Z, double n, double S, double D_est, double dx, double dt):
     cdef double Converge = 10
     cdef double Delta_Dw = 0.01
     cdef int count = 0
@@ -206,7 +206,7 @@ def get_stream_geometry(Q_est, Wb, Z, n, S, D_est, dx, dt):
     return D_est, A, Pw, Rh, Ww, U
 
 
-cdef inline double dispersion(U, Ww, D_est, S, dx, dt):
+cdef inline double dispersion(double U, double Ww, double D_est, double S, double dx, double dt):
     cdef double ShearVelocity, DL
     # This is a shear velocity estimate, followed by an estimate
     # of numerical dispersion
@@ -221,7 +221,7 @@ cdef inline double dispersion(U, Ww, D_est, S, dx, dt):
         DL = (0.45 * pow(dx,2)) / dt
     return DL
 
-def calc_muskingum(Q_est, U, Ww, S, dx, dt):
+def calc_muskingum(double Q_est, double U, double Ww, double S, double dx, double dt):
     """Return the values for the Muskingum routing coefficients
     using current timestep and optional discharge"""
     # Calculate an initial geometry based on an estimated 
@@ -251,8 +251,8 @@ def calc_muskingum(Q_est, U, Ww, S, dx, dt):
     # such as Moramarco, et.al., 2006
     return C1, C2, C3
 
-def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
-              Q_net, Q_bc):
+def calc_flows(double U, double Ww, double Wb, double S, double dx, double dt, double Z, double n, double D_est,
+               double Q, double Q_up, double Q_up_prev, double Q_net, double Q_bc):
     cdef double Q1, Q2, Q_new
     cdef double A, Pw, Rh, DL
     cdef double C[3]
@@ -275,10 +275,12 @@ def calc_flows(U, Ww, Wb, S, dx, dt, Z, n, D_est, Q, Q_up, Q_up_prev,
     Geom = D_est, A, Pw, Rh, Ww, U, DL
     return Q_new, Geom
 
-cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_distance,
-                                         lcsampmethod, lc_oh, lc_height_node_top,
-                                         lc_canopy_depth, BeersData, heatsource8, s):
-    cdef double PL_lc
+cdef inline double path_length_landcover(double SolarAltitude, double theta_path, double transsample_distance,
+                                         lcsampmethod, double lc_oh, double lc_height_node_top,
+                                         double lc_canopy_depth, BeersData, bint heatsource8, int s):
+    cdef double PL_lc, cos_altitude, adj_zone, lc_xn_near, lc_xn_far
+    cdef double altitude_rad, tan_altitude, lc_height_node_base
+    cdef double lc_xn_base, lc_xn_top, lc_xn_enter, lc_xn_exit
 
     if heatsource8 and BeersData != "LAI":
         # HS8 and canopy cover
@@ -327,9 +329,11 @@ cdef inline double path_length_landcover(SolarAltitude, theta_path, transsample_
         PL_lc = 0.0
     return PL_lc
 
-cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
-                                        lc_height_node_top, lc_canopy_depth):
-    cdef double PL_emergent
+cdef inline double path_length_emergent(double SolarAltitude, double Wb, double transsample_distance,
+                                        double lc_height_node_top, double lc_canopy_depth):
+    cdef double PL_emergent, W_emerg, lc_height_node_base, altitude_rad,
+    cdef double cos_altitude, tan_altitude, lc_xn_near, lc_xn_far
+    cdef double lc_xn_base, lc_xn_top, lc_xn_enter, lc_xn_exit
 
     # The emergent zone can't be wider than half the
     # wetted width. if this is a solar only run the wetted
@@ -367,9 +371,8 @@ cdef inline double path_length_emergent(SolarAltitude, Wb, transsample_distance,
         PL_emergent = (lc_xn_exit - lc_xn_enter) / cos_altitude
     return PL_emergent
 
-cdef inline double landcover_lai_fraction_passed(lc_lai, lc_k,
-                                                 lc_canopy_depth, PL_lc):
-    cdef double fraction_passed
+cdef inline double landcover_lai_fraction_passed(double lc_lai, double lc_k, double lc_canopy_depth, double PL_lc):
+    cdef double fraction_passed, K_rip
 
     try:
         K_rip = lc_lai * lc_k / lc_canopy_depth
@@ -379,14 +382,14 @@ cdef inline double landcover_lai_fraction_passed(lc_lai, lc_k,
         fraction_passed = 0
     return fraction_passed
 
-cdef inline double landcover_canopy_cover_fraction_passed(lc_canopy_cover,
-                                                          lc_canopy_depth,
-                                                          PL_lc, heatsource8,
-                                                          tran, s,
-                                                          lc_height_node_top,
-                                                          SolarAltitude,
-                                                          theta_full_sun) except *:
-    cdef double fraction_passed
+cdef inline double landcover_canopy_cover_fraction_passed(double lc_canopy_cover,
+                                                          double lc_canopy_depth,
+                                                          double PL_lc, bint heatsource8,
+                                                          int tran, int s,
+                                                          double lc_height_node_top,
+                                                          double SolarAltitude,
+                                                          double theta_full_sun) except *:
+    cdef double fraction_passed, K_rip
 
     # Calculate path length used for riparian extinction coefficient
     if heatsource8:
@@ -410,10 +413,10 @@ cdef inline double landcover_canopy_cover_fraction_passed(lc_canopy_cover,
             raise RuntimeError(msg)
     return fraction_passed
 
-cdef inline double emergent_hs8_direct_passed(SolarAltitude, Wb,
-                                              lc_height_node_top,
-                                              lc_canopy_cover):
-    cdef double fraction_passed_direct
+cdef inline double emergent_hs8_direct_passed(double SolarAltitude, double Wb,
+                                              double lc_height_node_top,
+                                              double lc_canopy_cover):
+    cdef double fraction_passed_direct, K_rip
 
     if lc_canopy_cover <= 0 or lc_height_node_top <= 0:
         fraction_passed_direct = 1.0
@@ -430,11 +433,11 @@ cdef inline double emergent_hs8_direct_passed(SolarAltitude, Wb,
         fraction_passed_direct = exp(-K_rip * PL_emergent)
     return fraction_passed_direct
 
-cdef inline double emergent_lai_fraction_passed(lc_lai, lc_k,
-                                                lc_canopy_depth,
-                                                lc_height_node_top,
-                                                PL_emergent):
-    cdef double fraction_passed
+cdef inline double emergent_lai_fraction_passed(double lc_lai, double lc_k,
+                                                double lc_canopy_depth,
+                                                double lc_height_node_top,
+                                                double PL_emergent):
+    cdef double fraction_passed, K_rip
 
     if lc_height_node_top <= 0 or lc_lai == 0:
         fraction_passed = 1.0
@@ -443,11 +446,11 @@ cdef inline double emergent_lai_fraction_passed(lc_lai, lc_k,
         fraction_passed = exp(-1 * K_rip * PL_emergent)
     return fraction_passed
 
-cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
-                                                         lc_canopy_depth,
-                                                         lc_height_node_top,
-                                                         PL_emergent) except *:
-    cdef double fraction_passed
+cdef inline double emergent_canopy_cover_fraction_passed(double lc_canopy_cover,
+                                                         double lc_canopy_depth,
+                                                         double lc_height_node_top,
+                                                         double PL_emergent) except *:
+    cdef double fraction_passed, K_rip
 
     if lc_height_node_top <= 0 or lc_canopy_cover == 0:
         fraction_passed = 1.0
@@ -475,7 +478,9 @@ cdef inline double emergent_canopy_cover_fraction_passed(lc_canopy_cover,
 # Solar Radiation Flux
 # SR0 - Extraterrestrial solar radiation at edge of atmosphere
 #=========================================================
-cdef inline SR0(SolarRadiusVector, SolarAltitude):
+cdef inline SR0(double SolarRadiusVector, double SolarAltitude):
+
+    cdef double SolarConstant, F_SR0, F_Direct0, F_Diffuse0
 
     # Solar Constant (Dingman 2002)
     SolarConstant = 1367 # W/m2
@@ -494,7 +499,10 @@ cdef inline SR0(SolarRadiusVector, SolarAltitude):
 # Solar Radiation Flux
 # 1 - Above Topography, after attenuation through the atmosphere
 #=========================================================
-cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
+cdef inline SR1(double F_SR0, double SolarAltitude, double Zs, int doy, double cloud):
+
+    cdef double AirMass, Tr_atm, F_SR1, ClearnessIndex
+    cdef double DiffuseFraction, F_Direct1, F_Diffuse1
 
     # Optical Air Mass Thickness (Ibqal 1983)
     AirMass = (35 / sqrt(1224 * sin(radians(SolarAltitude)) + 1)) * \
@@ -530,18 +538,21 @@ cdef inline SR1(F_SR0, SolarAltitude, Zs, doy, cloud):
 # 3 - Below Landcover (Above Bank Shade & Emergent)
 # 3b  Blocked by Landcover
 #=========================================================
-cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
-                    TopoFactor, theta_full_sun_max, transsample_count,
-                    theta_full_sun, theta_path, transsample_distance,
+cdef inline SR2_SR3(double F_Direct1, double F_Diffuse1, double SolarAltitude, double theta_topo,
+                    double TopoFactor, double theta_full_sun_max, int transsample_count,
+                    theta_full_sun, theta_path, double transsample_distance,
                     lcsampmethod, lc_oh, lc_height_node_top,
-                    lc_canopy_depth, BeersData, heatsource8, tran, lc_lai,
-                    lc_k, lc_canopy_cover, VegFactor) except *:
+                    lc_canopy_depth, BeersData, bint heatsource8, int tran, lc_lai,
+                    lc_k, lc_canopy_cover, double VegFactor) except *:
+
+    cdef int s
+    cdef double F_direct2, F_diffuse2, F_Direct3, F_Diffuse3
+    cdef double Dummy1, fraction_passed, diffuse_blocked, PL_lc
 
     # need to add 1 because zero is emergent in stack data,
     # TODO fix. this should be consistent across the codebase
     tran = tran + 1
     F_SR3b = [0]*transsample_count
-    PL_lc =[0]*transsample_count
 
     if SolarAltitude <= theta_topo:
         # Topographic shade is occurring
@@ -611,10 +622,13 @@ cdef inline SR2_SR3(F_Direct1, F_Diffuse1, SolarAltitude, theta_topo,
 # 4 - At Stream Surface (Below Bank Shade & Emergent)
 # What a Solar Pathfinder measures
 #=========================================================
-cdef inline SR4(F_Direct3, F_Diffuse1, SolarAltitude, theta_topo,
-                theta_bank_max, GapFraction, emergent, BeersData, lc_height_node_top,
-                lc_lai, lc_canopy_cover, heatsource8, Wb,
-                transsample_distance, lc_canopy_depth, lc_k) except *:
+cdef inline SR4(double F_Direct3, double F_Diffuse1, double SolarAltitude, double theta_topo,
+                double theta_bank_max, double GapFraction, bint emergent, BeersData, lc_height_node_top,
+                lc_lai, lc_canopy_cover, bint heatsource8, double Wb,
+                double transsample_distance, lc_canopy_depth, lc_k) except *:
+
+    cdef double F_Direct4, F_Diffuse4, fraction_passed_direct
+    cdef double PL_emergent, fraction_passed
 
     if SolarAltitude > theta_topo and SolarAltitude <= theta_bank_max:
         # Bank shade is occurring
@@ -665,7 +679,9 @@ cdef inline SR4(F_Direct3, F_Diffuse1, SolarAltitude, theta_topo,
 # Solar Radiation Flux penetrating the stream surface
 # 5 - Entering Stream
 #=========================================================
-cdef inline SR5(F_Direct4, F_Diffuse4, SolarZenith):
+cdef inline SR5(double F_Direct4, double F_Diffuse4, double SolarZenith):
+
+    cdef double Reflectivity, F_Diffuse5, F_Direct5
 
     # Stream Surface Reflectivity (Sellers 1965)
     if SolarZenith > 80:
@@ -685,7 +701,11 @@ cdef inline SR5(F_Direct4, F_Diffuse4, SolarZenith):
 # 6 - Received by Water Column
 # 7 - Received by Bed
 #=========================================================
-cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
+cdef inline SR6_SR7(double F_Direct5, double F_Diffuse5, double SolarZenith, double Dw, double Eta):
+
+    cdef double Water_Path, Tr_direct, R_bed_dir, BedRock, Tr_diffuse
+    cdef double A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6
+    cdef double R_bed_diff, F_Direct6, F_direct7, F_Diffuse6, F_Diffuse7
 
     # Direct Beam Solar Radiation Water Column Path Length (Jerlov 1976)
     Water_Path = (Dw / cos(atan((sin(radians(SolarZenith)) / 1.3333) /
@@ -756,8 +776,9 @@ cdef inline SR6_SR7(F_Direct5, F_Diffuse5, SolarZenith, Dw, Eta):
 #=========================================================
 # Substrate Conductive Flux
 #=========================================================
-cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
-                       calcalluv, Q_hyp, Rhow, Cpw, Ww, dx, F_Solar7, dt):
+cdef inline conduction(double Ksed, double Alpha_sed, double T_sed, double T_prev, double Dsed, double T_alluv,
+                       bint calcalluv, double Q_hyp, double Rhow, int Cpw, double Ww, double dx, double F_Solar7, double dt):
+
     # Ksed units of W/(m *C)
     # Alpha_sed units of cm^2/sec
 
@@ -791,7 +812,7 @@ cdef inline conduction(Ksed, Alpha_sed, T_sed, T_prev, Dsed, T_alluv,
 #=========================================================
 # Longwave Radiation Flux
 #=========================================================
-cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
+cdef inline longwave(double cloud, double humidity, double T_air, double ViewToSky, double T_prev):
 
     # Atmospheric variables
     # mbar (Chapra p. 567)
@@ -819,8 +840,8 @@ cdef inline longwave(cloud, humidity, T_air, ViewToSky, T_prev):
 #=========================================================
 # Evaporative Flux
 #=========================================================
-cdef inline evaporation(penman, T_air, F_Solar5, F_LW, Rhow, L_evap,
-                        f_U2m, Es_w, Ea_w, Gamma, Ww, dx, calcevap):
+cdef inline evaporation(bint penman, double T_air, double F_Solar5, double F_LW, double Rhow, double L_evap,
+                        double f_U2m, double Es_w, double Ea_w, double Gamma, double Ww, double dx, bint calcevap):
     cdef double Delta_sat, NetRadiation, E_aero, E_rate, F_Evap
 
     if penman:
@@ -845,7 +866,8 @@ cdef inline evaporation(penman, T_air, F_Solar5, F_LW, Rhow, L_evap,
 #=========================================================
 # Convective Heat Flux (Sensible Heat)
 #=========================================================
-cdef inline convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap):
+cdef inline convection(bint penman, double P_atm, double T_prev, double T_air, double Es_w,
+                       double Ea_w, double Gamma, double F_Evap):
     cdef double BR
 
     if (Es_w - Ea_w) != 0:
@@ -860,9 +882,9 @@ cdef inline convection(penman, P_atm, T_prev, T_air, Es_w, Ea_w, Gamma, F_Evap):
     cdef double F_Conv = F_Evap * BR
     return BR, F_Conv
 
-def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
-                   Delta_T, Disp, S1, S1_value, T0, T1, T2, Q_accr,
-                   T_accr, MixTDelta_dn):
+def calc_maccormick(double dt, double dx, double U, double T_hyp, double T_prev, double Q_hyp, Q_tup, T_tup,
+                    double Q_up, double Delta_T, double Disp, bint S1, double S1_value, double T0, double T1, double T2,
+                    double Q_accr, double T_accr, double MixTDelta_dn):
 
     cdef double Q_trib = 0.0
     cdef double T_trib = 0.0
@@ -870,6 +892,8 @@ def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
     cdef double numerator = 0.0
     cdef double T_mix
     cdef double Qitem, Titem
+    cdef Py_ssize_t i
+
     for i in range(len(Q_tup)):
         Qitem = Q_tup[i]
         Titem = T_tup[i]
@@ -909,18 +933,31 @@ def calc_maccormick(dt, dx, U, T_hyp, T_prev, Q_hyp, Q_tup, T_tup, Q_up,
         Temp = T1 + S * dt
     return Temp, S, T_mix
 
-def calc_heat_fluxes(metData, C_args, Dw, area, Ww, U, Q_tribs,
-                   T_tribs, T_prev, T_sed, Q_hyp, T_dn_prev, ShaderList,
-                   tran, Disp, hour, doy, daytime, SolarAltitude, SolarZenith,
-                   SolarRadiusVector, Q_up_prev, T_up_prev, solar_only, MixTDelta_dn_prev,
-                   heatsource8):
+def calc_heat_fluxes(metData, C_args, double Dw, double area, double Ww, double U, Q_tribs,
+                     T_tribs, double T_prev, double T_sed, double Q_hyp, double T_dn_prev, ShaderList,
+                     int tran, double Disp, int hour, int doy, bint daytime, double SolarAltitude, double SolarZenith,
+                     double SolarRadiusVector, double Q_up_prev, double T_up_prev, bint solar_only,
+                     double MixTDelta_dn_prev, bint heatsource8):
+
+    cdef double cloud, Uzm, humidity, T_air
+
     cloud, Uzm, humidity, T_air = metData
+
+    cdef double Wb, Zs, TopoFactor, ViewToSky, VegFactor, GapFraction, Eta
+    cdef double Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, T_accr
+    cdef double transsample_distance, wind_a, wind_b, zm, T_alluv
+    cdef int transsample_count
+    cdef bint has_prev, emergent, calcevap, penman, calcalluv
 
     Wb, Zs, TopoFactor, ViewToSky, VegFactor, GapFraction, Eta, lc_canopy_cover, lc_lai, \
         lc_height_node_top, lc_k, lc_oh, lc_canopy_depth, Dsed, dx, dt, Ksed, Alpha_sed, Q_accr, \
         T_accr, has_prev, transsample_distance, transsample_count, \
         BeersData, lcsampmethod, emergent, wind_a, wind_b, calcevap, penman, \
         calcalluv, zm, T_alluv = C_args
+
+    cdef double F_Cond, F_Cond_alluv, F_hyp, F_sed_net, Delta_T_sed, T_sed_next
+    cdef double F_LW_atm, F_LW_stream, F_LW_veg, F_LW, T_hyp, F_Total, Delta_T
+    cdef double theta_full_sun_max, theta_topo, theta_bank_max
 
     F_Solar = [0]*8
     F_Diffuse = [0]*8

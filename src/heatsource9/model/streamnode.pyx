@@ -177,9 +177,12 @@ class StreamNode(object):
             msg += f", Q_bc={q_bc}"
         raise RuntimeError(msg) from exc
 
-    def calc_discharge_opt(self, time):
+    def calc_discharge_opt(self, double time):
         """A Version of calculate_discharge() that does not require
         checking for boundary conditions"""
+
+        cdef double Q_net, Q
+
         Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.Q_evap
         self.Q_mass += Q_net
         up = self.prev_km
@@ -200,7 +203,10 @@ class StreamNode(object):
         # Hyporheic discharge
         self.Q_hyp = Q * self.Q_hyp_frac 
 
-    def calc_discharge_boundary_node(self, time):
+    def calc_discharge_boundary_node(self, double time):
+
+        cdef double Q_bc, Q
+
         Q_bc = self.Q_bc[time]
         self.Q_mass += Q_bc
         # We fill the discharge arguments with 0 because it is 
@@ -220,7 +226,8 @@ class StreamNode(object):
         self.Q_prev = self.Q
         self.Q = Q
         self.Q_hyp = Q * self.Q_hyp_frac # Hyporheic discharge
-    def calculate_discharge(self, time):
+
+    def calculate_discharge(self, double time):
         """Return the discharge for the current timestep
 
         This method uses the GetKnownDischarges() and GetMuskigum()
@@ -239,6 +246,9 @@ class StreamNode(object):
         None if we are not at a spatial boundary. dt is the timestep in
         minutes, which cannot be None.
         """
+
+        cdef double Q_net, Q, Q_bc
+
         Q_net = self.Q_accr + sum(self.Q_tribs[time]) - self.Q_with - self.Q_evap
         # Check if we are a spatial or temporal boundary node
         if self.prev_km:
@@ -283,8 +293,8 @@ class StreamNode(object):
         self.Q = Q
         self.Q_hyp = Q * self.Q_hyp_frac # Hyporheic discharge
 
-    def calc_heat_opt(self, time, hour, min, sec, doy,
-                     JC, solar_only=False):
+    def calc_heat_opt(self, double time, int hour, int min, int sec, int doy,
+                     double JC, bint solar_only=False):
         """Inlined version of CalcHeat optimized for non-boundary nodes
         (removes a bunch of if/else statements)"""
         # The solar_only keyword is a kludge to turn off calculation of the
@@ -357,7 +367,7 @@ class StreamNode(object):
             self.Solar_Blocked[tran][i] += veg_block[i]
         self.Solar_Blocked["diffuse"] += veg_block[-1]
 
-    def calc_heat_boundary_node(self, time, hour, min, sec, doy, JC, solar_only=False):
+    def calc_heat_boundary_node(self, double time, int hour, int min, int sec, int doy, double JC, bint solar_only=False):
         # Reset temperatures
         self.T_prev = self.T
         self.T = None
@@ -434,7 +444,7 @@ class StreamNode(object):
         self.T = self.T_bc[time]
         self.T_prev = self.T_bc[time]
 
-    def maccormick2(self, time):
+    def maccormick2(self, double time):
         #===================================================
         #Set control temps
         if not self.prev_km:
