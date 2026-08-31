@@ -35,7 +35,6 @@ classifiers = [
 ]
 
 dependencies = [
-    "Cython==3.1.4",
     "openpyxl <= 3.1.5"
 ]
 
@@ -48,5 +47,5 @@ dependencies = [
 hs = "heatsource9.__main__:main"
 
 [build-system]
-requires = ["setuptools>=77.0.3", "Cython==3.1.4"]
+requires = ["setuptools>=77.0.3", "Cython==3.2.9"]
 build-backend = "setuptools.build_meta"
