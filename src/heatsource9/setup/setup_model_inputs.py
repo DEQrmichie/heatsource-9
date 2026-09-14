@@ -65,53 +65,53 @@ def _compute_stream_kms(length_km, longsample_m):
     return kms
 
 
-def _out_name(params, base, use_timestamp):
-    base_name = str(params.get(base) or (base + ".csv"))
+def _out_name(params, base, ext, use_timestamp):
+    base_name = str(params.get(base) or (base + ext))
     if use_timestamp:
         return datetime.now().strftime("%Y-%m-%d_%H%M%S") + "_" + base_name
     return base_name
 
 
-def _accretion_table(params, kmlist, use_timestamp):
+def _accretion_table(params, kmlist, ext, use_timestamp):
     rows = [[None, None, km, None, None, None] for km in kmlist]
-    filename = _out_name(params, "accretionfile", use_timestamp)
+    filename = _out_name(params, "accretionfile", ext, use_timestamp)
     headers = headers_accretion()
     table = (filename, headers, rows, sheetnames["accretionfile"])
     return table
 
 
-def _bc_table(params, timelist, use_timestamp):
+def _bc_table(params, timelist, ext, use_timestamp):
     rows = [[t, None, None] for t in timelist]
-    filename = _out_name(params, "bcfile", use_timestamp)
+    filename = _out_name(params, "bcfile", ext, use_timestamp)
     headers = headers_bc()
     table = (filename, headers, rows, sheetnames["bcfile"])
     return table
 
 
-def _morph_table(params, kmlist, use_timestamp):
+def _morph_table(params, kmlist, ext, use_timestamp):
     rows = [[None, None, km] + [None] * 10 for km in kmlist]
-    filename = _out_name(params, "morphfile", use_timestamp)
+    filename = _out_name(params, "morphfile", ext, use_timestamp)
     headers = headers_morph()
     table = (filename, headers, rows, sheetnames["morphfile"])
     return table
 
 
-def _lcdata_table(params, kmlist, use_timestamp):
+def _lcdata_table(params, kmlist, ext, use_timestamp):
     headers = headers_lcdata(
         params["trans_count"],
         params["transsample_count"],
         params["heatsource8"],
     )
     rows = [[None, None, km] + [None] * (len(headers) - 3) for km in kmlist]
-    filename = _out_name(params, "lcdatafile", use_timestamp)
+    filename = _out_name(params, "lcdatafile", ext, use_timestamp)
     table = (filename, headers, rows, sheetnames["lcdatafile"])
     return table
 
 
-def _lccode_table(params, use_timestamp):
+def _lccode_table(params, ext, use_timestamp):
     headers = headers_lccodes(params["canopy_data"])
     rows = [[None]]
-    filename = _out_name(params, "lccodefile", use_timestamp)
+    filename = _out_name(params, "lccodefile", ext, use_timestamp)
     table = (filename, headers, rows, sheetnames["lccodefile"])
     return table
 
@@ -360,10 +360,10 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
         if trib_site_file is not None:
             written.append(trib_site_file)
 
-        accretion_table = _accretion_table(params, kmlist, use_timestamp)
-        bc_table = _bc_table(params, timelist, use_timestamp)
-        morph_table = _morph_table(params, kmlist, use_timestamp)
-        lcdata_table = _lcdata_table(params, kmlist, use_timestamp)
+        accretion_table = _accretion_table(params, kmlist, ext, use_timestamp)
+        bc_table = _bc_table(params, timelist, ext, use_timestamp)
+        morph_table = _morph_table(params, kmlist, ext, use_timestamp)
+        lcdata_table = _lcdata_table(params, kmlist, ext, use_timestamp)
 
         tables = [
             accretion_table,
@@ -372,7 +372,7 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
             lcdata_table,
         ]
 
-        lccode_table = _lccode_table(params, use_timestamp)
+        lccode_table = _lccode_table(params, ext, use_timestamp)
         tables.append(lccode_table)
 
         met_tables = _met_tables(params, timelist, use_timestamp)
