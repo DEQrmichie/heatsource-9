@@ -425,7 +425,7 @@ cdef inline double emergent_hs8_direct_passed(double SolarAltitude, double Wb,
         fraction_passed_direct = 0.0
     else:
         PL_emergent = lc_height_node_top / sin(radians(SolarAltitude))
-        if PL_emergent > Wb:
+        if PL_emergent > Wb and Wb !=0:
             PL_emergent = Wb
 
         # Direct uses HS8 denominator = 10 m.
