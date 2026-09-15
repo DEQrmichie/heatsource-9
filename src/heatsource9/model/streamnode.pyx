@@ -151,18 +151,34 @@ class StreamNode(object):
 
         self.CalcDischarge = self.calculate_discharge
         rp = self.run_params
+
+        # Set optional solar inputs that were left blank in the control file as zero to avoid a Cython error.
+        # These are not used but need a numeric value since they are declared as doubles.
+        # TODO calc_heat_fluxes() and C_args should be split between solar and temperature so only the needed parameters are passed into C.
+        if rp["run_type"] == "solar":
+            if self.Wb is None: self.Wb = 0.0
+            if self.Eta is None: self.Eta = 0.0
+            if self.Q_accr is None: self.Q_accr = 0.0
+            if self.T_accr is None: self.T_accr = 0.0
+            if self.zm is None: self.zm = 0.0
+            if rp["wind_a"] is None: rp["wind_a"] = 0.0
+            if rp["wind_b"] is None: rp["wind_b"] = 0.0
+
+        # Alluvium temp can be blank in temperature runs if 'calcalluvium' is False
+        if rp["alluviumtemp"] is None: rp["alluviumtemp"] = 0.0
+
         self.C_args = (self.Wb, self.Zs, self.TopoFactor,
                        self.ViewToSky, self.VegFactor, self.GapFraction, self.Eta, self.lc_canopy_cover,
                        self.lc_lai, self.lc_height_node_top, self.lc_k, self.lc_oh, self.lc_canopy_depth, self.Dsed,
                        self.dx, self.dt, self.Ksed,
                        self.Alpha_sed, self.Q_accr, self.T_accr,
-                       has_prev, rp.get("transsample_distance", 0.0),
-                       rp.get("transsample_count", 0),
-                       rp.get("canopy_data", "LAI"), rp.get("lcsampmethod", "point"), rp.get("emergent", False),
-                       rp.get("wind_a", 0.0), rp.get("wind_b", 0.0),
-                       rp.get("calcevap", False), rp.get("penman", False),
-                       rp.get("calcalluvium", False), self.zm,
-                       rp.get("alluviumtemp", 0.0))
+                       has_prev, rp["transsample_distance"],
+                       rp["transsample_count"],
+                       rp["canopy_data"], rp["lcsampmethod"], rp["emergent"],
+                       rp["wind_a"], rp["wind_b"],
+                       rp["calcevap"], rp["penman"],
+                       rp["calcalluvium"], self.zm,
+                       rp["alluviumtemp"])
 
     def _raise_discharge_error(self, exc, time, Q_net, up_q=None, q_bc=None):
         msg = (
