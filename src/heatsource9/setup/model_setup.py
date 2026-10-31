@@ -1109,7 +1109,9 @@ class ModelSetup(object):
                         theta_topo_list.append(topo_w[h])
                 else:
                     # Using eight topo directions
-                    if dir_angle < 67.5:
+                    if dir_angle < 22.5:
+                        theta_topo_list.append(topo_n[h])
+                    elif dir_angle < 67.5:
                         theta_topo_list.append(topo_ne[h])
                     elif dir_angle < 112.5:
                         theta_topo_list.append(topo_e[h])
