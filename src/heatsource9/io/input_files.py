@@ -34,6 +34,7 @@ def read_csv_to_dict(path, colnames, value_check = None, header_check = None):
     extra_cols_empty = False
     extra_cols_non_empty = False
 
+    path = Path(path)
     with path.open("r", encoding="utf-8-sig") as f:
         reader = csv.reader(f)
         header_row = next(reader, [])
@@ -102,6 +103,7 @@ def read_xlsx_to_dict(
     Values are normalized so blank strings and "None" are treated as None.
     Some values are validated for the correct data type and value range.
     """
+    path = Path(path)
     wb = load_workbook(filename=path, data_only=True)
     ws = wb.worksheets[0] if sheetname is None else wb[sheetname]
 
@@ -133,32 +135,6 @@ def read_xlsx_to_dict(
     wb.close()
     return data
 
-
-def read_csv_to_list(path, skiprows = 0, skipcols = 0):
-    """Reads a comma delimited text file into a list of lists indexed by row number."""
-    with path.open("r", encoding="utf-8-sig") as f:
-        reader = csv.reader(f)
-        for _ in range(skiprows):
-            next(reader)
-        return [row[skipcols:] for row in reader if row]
-
-
-def read_xlsx_to_list(path, skiprows = 0, skipcols = 0, sheetname = None):
-    """Reads an excel worksheet into a list of lists indexed by row number."""
-    wb = load_workbook(filename=path, data_only=True)
-    ws = wb.worksheets[0] if sheetname is None else wb[sheetname]
-
-    data= []
-    for r, row in enumerate(ws.iter_rows(values_only=True)):
-        if r < skiprows or row is None:
-            continue
-        values = list(row)[skipcols:]
-        if values:
-            data.append(values)
-    wb.close()
-    return data
-
-
 def read_to_dict(
     path,
     colnames,
@@ -175,6 +151,7 @@ def read_to_dict(
     """
     if colnames == [None]:
         return {}
+    path = Path(path)
     if path.suffix.lower() == ".csv":
         return read_csv_to_dict(path=path, colnames=colnames, value_check=value_check, header_check=header_check)
     return read_xlsx_to_dict(path=path, colnames=colnames, sheetname=sheetname, value_check=value_check, header_check=header_check)
@@ -183,13 +160,28 @@ def read_to_dict(
 def read_to_list(path, skiprows = 0, skipcols = 0, sheetname = None):
     """
     Reads a csv or xlsx table into a list of lists indexed by row number.
-
-    This is a wrapper for read_csv_to_list or read_xlsx_to_list and is
-    used to reference the appropriate method based on the input file type.
     """
+    path = Path(path)
     if path.suffix.lower() == ".csv":
-        return read_csv_to_list(path=path, skiprows=skiprows, skipcols=skipcols)
-    return read_xlsx_to_list(path=path, skiprows=skiprows, skipcols=skipcols, sheetname=sheetname)
+        with path.open("r", encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            for _ in range(skiprows):
+                next(reader)
+            return [row[skipcols:] for row in reader if row]
+
+    # XLSX
+    wb = load_workbook(filename=path, data_only=True)
+    ws = wb.worksheets[0] if sheetname is None else wb[sheetname]
+
+    data = []
+    for r, row in enumerate(ws.iter_rows(values_only=True)):
+        if r < skiprows or row is None:
+            continue
+        values = list(row)[skipcols:]
+        if values:
+            data.append(values)
+    wb.close()
+    return data
 
 
 def write_input(path, headers, rows, sheetname, csv_mode):
@@ -199,6 +191,7 @@ def write_input(path, headers, rows, sheetname, csv_mode):
     Writes the header row first, then writes all data rows in order.
     """
     try:
+        path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
     except PermissionError as exc:
         msg = f"Cannot create folder '{path.parent}'. Check write permissions."
