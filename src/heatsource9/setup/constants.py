@@ -30,7 +30,7 @@ dtype = {
     "modelend": "date",
     "dataend": "date",
     "flushdays": int,
-    "offset": int,
+    "offset": float,
     "dt": float,
     "outputdt": float,
     "dx": int,
