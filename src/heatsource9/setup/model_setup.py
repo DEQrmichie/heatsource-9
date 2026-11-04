@@ -942,8 +942,8 @@ class ModelSetup(object):
 
                     elev = [float(LCdata[row][i + radial_count * transsample_count]) for row in range(0, len(LCdata))]
                     elevation.append(self.multiplier(elev, average))
-                msg = "Translating Land Cover Data"
-                print_console(msg, True, i, radial_count * transsample_count + 12)
+                msg = "Translating land cover data"
+                print_console(msg, True, i -10, radial_count * transsample_count + 1)
 
             for i in range(len(keys)):
                 node = self.reach[keys[i]]
@@ -1012,7 +1012,7 @@ class ModelSetup(object):
                             for row in range(0, len(LCdata))]
                     elevation.append(self.multiplier(elev, average))
 
-                msg = "Translating Land Cover Data"
+                msg = "Translating land cover data"
                 print_console(msg, True, i - 10, radial_count * transsample_count + 1)
 
             for i in range(len(keys)):
