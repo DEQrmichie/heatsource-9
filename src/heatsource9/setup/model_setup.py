@@ -289,7 +289,6 @@ class ModelSetup(object):
 
     def set_atmospheric_data(self):
         """For each node without met data, use closest (up or downstream) node's data"""
-        print_console("Assigning Meteorological Data to Nodes")
 
         # Localize the variable for speed
         sites = self.metDataSites
@@ -327,14 +326,14 @@ class ModelSetup(object):
                     datasite = self.reach[down]
                 self.reach[km].metData = datasite.metData
                 self.reach[km].zm = datasite.zm
-            msg = "Assigning Node"
+            msg = "Assigning meteorological data to nodes"
             current = next(c)+1
             print_console(msg, True, current, len(l))
 
     def get_boundary_conditions(self):
         """Get the boundary conditions"""
         # Get the columns, which is faster than accessing cells
-        print_console("Reading boundary conditions")
+
         timelist = self.continuoustimelist
 
         # the data block is a tuple of tuples, each corresponding 
@@ -460,7 +459,7 @@ class ModelSetup(object):
     def get_tributary_data(self):
         """Populate the tributary flow and temperature values for
         nodes from the Flow Data page"""
-        print_console("Reading tributary inflow data")
+
         # Get a list of the timestamps that we have data for, and use 
         # that to grab the data block
         timelist = self.flowtimelist
@@ -509,7 +508,7 @@ class ModelSetup(object):
                     # Append to tuple
                     node.Q_tribs[time] += flow,
                     node.T_tribs[time] += temp,
-                    msg = "Reading inflow data"
+                    msg = "Reading tributary data"
                     current = next(tm) + 1
                     print_console(msg, True, current, length * self.params["tribsites"])
 
@@ -542,7 +541,6 @@ class ModelSetup(object):
         """Get data from the input met data file"""
         # This is remarkably similar to GetInflowData. We get a block 
         # of data, then set the dictionary of the node
-        print_console("Reading meteorological data")
 
         timelist = self.continuoustimelist
 
@@ -602,7 +600,7 @@ class ModelSetup(object):
         for km in self.metDataSites:
             node = self.reach[km]
             node.metData = node.metData.view(self.params["flushtimestart"], self.params["modelend"], aft=1)
-            msg = "Subsetting met data"
+            msg = "Subsetting meteorological data"
             current = next(tm)+1
             print_console(msg, True, current, length)
 
@@ -820,7 +818,7 @@ class ModelSetup(object):
 
     def build_nodes(self):
         # This is the worst of the methods but it works. # TODO
-        print_console("Building Stream Nodes")
+
         Q_mb = 0.0
 
         # Grab all of the data in a dictionary
@@ -864,7 +862,7 @@ class ModelSetup(object):
             self.initialize_node(node)
             self.reach[node.km] = node
             self.ID2km[node.nodeID] = node.km
-            msg = "Building Stream Nodes"
+            msg = "Building stream nodes"
             print_console(msg, True, i + 1, num_nodes)
 
         # Find the mouth node and calculate the actual distance
@@ -899,7 +897,6 @@ class ModelSetup(object):
         cdepth = []
         elevation = []
 
-        print_console("Translating landcover Data")
         if self.params["canopy_data"] == "LAI":
             # -------------------------------------------------------------
             # using LAI data
