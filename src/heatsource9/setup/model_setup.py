@@ -1016,7 +1016,7 @@ class ModelSetup(object):
                     elevation.append(self.multiplier(elev, average))
 
                 msg = "Translating Land Cover Data"
-                print_console(msg, True, i, radial_count * transsample_count + 12)
+                print_console(msg, True, i - 10, radial_count * transsample_count + 1)
 
             for i in range(len(keys)):
                 node = self.reach[keys[i]]
