@@ -911,7 +911,6 @@ class ModelSetup(object):
             
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
-                elev = [float(LCdata[row][i + radial_count * transsample_count]) for row in range(0, len(LCdata))]
 
                 # Make a list from the LC codes from the column, then 
                 # send that to the multiplier with a lambda function 
@@ -944,6 +943,7 @@ class ModelSetup(object):
                     # to read in first elevation value which is actually 
                     # the last LULC col.
 
+                    elev = [float(LCdata[row][i + radial_count * transsample_count]) for row in range(0, len(LCdata))]
                     elevation.append(self.multiplier(elev, average))
                 msg = "Translating Land Cover Data"
                 print_console(msg, True, i, radial_count * transsample_count + 12)
@@ -980,8 +980,7 @@ class ModelSetup(object):
 
                 # LULC row and index column 
                 col = [LCdata[row][i] for row in range(0, len(LCdata))]
-                elev = [float(LCdata[row][i + radial_count * transsample_count])
-                        for row in range(0, len(LCdata))]
+
                 # Make a list from the LC codes from the column, then 
                 # send that to the multiplier with a lambda function 
                 # that averages them appropriately. Note, we're 
@@ -1012,6 +1011,8 @@ class ModelSetup(object):
                     # to read in first elevation value which is actually 
                     # the last LULC col.
 
+                    elev = [float(LCdata[row][i + radial_count * transsample_count])
+                            for row in range(0, len(LCdata))]
                     elevation.append(self.multiplier(elev, average))
 
                 msg = "Translating Land Cover Data"
