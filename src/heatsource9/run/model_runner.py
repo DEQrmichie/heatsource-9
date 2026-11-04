@@ -1,6 +1,6 @@
 
 import logging
-from time import perf_counter, gmtime
+from time import perf_counter, gmtime, strftime
 
 from heatsource9.setup.model_setup import ModelSetup
 from heatsource9.model.model_routine import ModelRoutine
@@ -58,7 +58,7 @@ class ModelRunner:
                 run_type=self.model_setup.run_type,
             )
 
-            msg = "Starting model run"
+            msg = f"Starting model run at {strftime('%Y-%m-%d %H:%M:%S')}"
             print_console(msg)
             start = perf_counter()
             total_steps = self._calculate_step_count()
@@ -82,7 +82,7 @@ class ModelRunner:
                     print_console("Timesteps", progress_bar=True, current=step_number + 1, total=total_steps)
 
             elapsed = perf_counter() - start
-            msg = "Model run complete in %.2f seconds" % elapsed
+            msg = f"Model run complete at {strftime('%Y-%m-%d %H:%M:%S')} (runtime: {elapsed / 60:.2f} minutes)"
             print_console(msg)
 
             # Sum node inflow (cms) across the simulation.
