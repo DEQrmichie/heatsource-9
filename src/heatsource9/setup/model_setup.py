@@ -39,9 +39,6 @@ class ModelSetup(object):
         self.reach = {}
         self.ID2km = {}
 
-        msg = "Starting Model Initialization"
-        print_console(msg)
-
         self.inputs = InputSetup(control_file_path)
 
         # Boundary condition interpolators

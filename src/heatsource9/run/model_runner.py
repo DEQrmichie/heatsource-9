@@ -8,6 +8,7 @@ from heatsource9.io.console import print_console
 from heatsource9.io.control_file import validate_control_file
 from heatsource9.domain.clock import pretty_time, time_parts
 from heatsource9.io.output_files import OutputWriter
+from heatsource9.__version__ import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -44,11 +45,12 @@ class ModelRunner:
         model calculations, and writes outputs.
         """
         try:
+            msg = f"Heat Source Version: {__version__}"
+            print_console(msg)
             self.model_setup = ModelSetup(control_file_path=self.control_file_path, run_type=run_type)
             self.model_routine = ModelRoutine(self.model_setup.run_type)
-            msg = "Building model"
-            print_console(msg)
-            msg = f"Heat Source Version: {self.model_setup.params['version']}"
+
+            msg = "Starting model setup and initialization"
             print_console(msg)
             simulation = self.model_setup.build()
 
