@@ -4,7 +4,7 @@
 # then adds the 'current' folder to the user's PATH
 
 param(
-    [string]$Version = "9.1.0",
+    [string]$Version = "",
     [string]$SourceExePath = "",
     [string]$InstallRoot = ""
 )
@@ -41,6 +41,10 @@ $InstallRoot = Resolve-NormalizedPath $InstallRoot
 
 if (-not (Test-Path -LiteralPath $SourceExePath -PathType Leaf)) {
     throw "Source executable not found: $SourceExePath"
+}
+
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    $Version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($SourceExePath).ProductVersion
 }
 
 $versionDir = Join-Path $InstallRoot ("heatsource" + $Version)

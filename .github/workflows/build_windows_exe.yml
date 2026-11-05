@@ -38,7 +38,9 @@ jobs:
           $artifactName = "HS9_Windows_Executables_${{ github.ref_name }}"
           $distDir = Join-Path $PWD "artifact_contents\$artifactName"
           $buildDir = Join-Path $PWD "build\pyinstaller"
-          $metadata = Join-Path $pyiDir "exe_metadata.txt"
+          $metadata = Join-Path $PWD "build\exe_metadata.txt"
+          python (Join-Path $pyiDir "make_exe_metadata.py") $metadata
+          If ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $icon = Join-Path $pyiDir "hslogo256.ico"
           $hiddenImport = "heatsource9.model.pyheatsource"
 
