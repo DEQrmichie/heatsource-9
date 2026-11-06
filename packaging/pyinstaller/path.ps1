@@ -11,7 +11,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Resolve-NormalizedPath {
+function GetPath {
     param([string]$PathValue)
 
     if ([string]::IsNullOrWhiteSpace($PathValue)) {
@@ -36,15 +36,15 @@ if ([string]::IsNullOrWhiteSpace($InstallRoot)) {
     $InstallRoot = Join-Path $env:LOCALAPPDATA "Programs\HeatSource"
 }
 
-$SourceExePath = Resolve-NormalizedPath $SourceExePath
-$InstallRoot = Resolve-NormalizedPath $InstallRoot
+$SourceExePath = GetPath $SourceExePath
+$InstallRoot = GetPath $InstallRoot
 
 if (-not (Test-Path -LiteralPath $SourceExePath -PathType Leaf)) {
     throw "Source executable not found: $SourceExePath"
 }
 
 if ([string]::IsNullOrWhiteSpace($Version)) {
-    $Version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($SourceExePath).ProductVersion
+    $Version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($SourceExePath).FileVersion
 }
 
 $versionDir = Join-Path $InstallRoot ("heatsource" + $Version)
@@ -69,11 +69,11 @@ if (-not [string]::IsNullOrWhiteSpace($userPath)) {
     )
 }
 
-$normalizedCurrentDir = Resolve-NormalizedPath $currentDir
+$normalizedCurrentDir = GetPath $currentDir
 $pathExists = $false
 
 foreach ($entry in $pathEntries) {
-    if ((Resolve-NormalizedPath $entry) -ieq $normalizedCurrentDir) {
+    if ((GetPath $entry) -ieq $normalizedCurrentDir) {
         $pathExists = $true
         break
     }
