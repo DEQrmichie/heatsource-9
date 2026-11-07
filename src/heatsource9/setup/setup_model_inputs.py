@@ -155,7 +155,7 @@ def _get_met_site_params(model_path, params, control_path, ext, csv_mode):
             metfiles_list.append(filename)
             rows.append([i, None, None, filename, None])
 
-        msg = f"Writing template sites file: {params["metsitesfile"]}"
+        msg = f"Writing template sites file: {params['metsitesfile']}"
         logger.info(msg)
 
         write_input(
@@ -239,7 +239,7 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
             tribfiles.append(filename)
             rows.append([i, None, None, filename])
 
-        msg = f"Writing template sites file: {params["tribsitesfile"]}"
+        msg = f"Writing template sites file: {params['tribsitesfile']}"
         logger.info(msg)
 
         write_input(
