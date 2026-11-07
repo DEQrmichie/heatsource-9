@@ -23,6 +23,7 @@ from heatsource9.setup.headers import (
 from heatsource9.setup.input_setup import InputSetup
 from heatsource9.setup.site_setup import _validate_site_file_names
 from heatsource9.setup.setup_validation import validate_required_field
+from heatsource9.__version__ import __version__
 
 
 logger = logging.getLogger(__name__)
@@ -153,6 +154,10 @@ def _get_met_site_params(model_path, params, control_path, ext, csv_mode):
             filename = "metsite{0}{1}".format(i, ext)
             metfiles_list.append(filename)
             rows.append([i, None, None, filename, None])
+
+        msg = f"Writing template sites file: {params["metsitesfile"]}"
+        logger.info(msg)
+
         write_input(
             path=met_path,
             headers=headers,
@@ -233,6 +238,10 @@ def _get_trib_site_params(model_path, params, control_path, ext, csv_mode):
             filename = "tribsite{0}{1}".format(i, ext)
             tribfiles.append(filename)
             rows.append([i, None, None, filename])
+
+        msg = f"Writing template sites file: {params["tribsitesfile"]}"
+        logger.info(msg)
+
         write_input(
             path=trib_path,
             headers=headers,
@@ -311,6 +320,9 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
     model_path = Path(model_dir).expanduser().resolve()
     configure_logging(model_dir=model_path, overwrite=True)
     try:
+        msg = f"Heat Source Version: {__version__}"
+        logger.info(msg)
+
         control_path = cf_path(model_path, control_file)
 
         params = import_control_file(control_path=control_path,
@@ -386,10 +398,19 @@ def setup_mi(model_dir, control_file = None, *, use_timestamp = False, overwrite
         for filename, headers, rows, sheet in tables:
             path = inputdir / filename
             if path.exists() and not overwrite:
+                msg = f"{filename} already exists, not overwriting"
+                logger.info(msg)
                 written.append(path)
                 continue
+
+            msg = f"Writing template input file: {filename}"
+            logger.info(msg)
+
             write_input(path=path, headers=headers, rows=rows, sheetname=sheet, csv_mode=csv_mode)
             written.append(path)
+
+        msg = f"Input directory: {inputdir}"
+        logger.info(msg)
 
         return written
     except Exception:
