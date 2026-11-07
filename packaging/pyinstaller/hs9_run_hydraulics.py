@@ -11,21 +11,34 @@ It then finds that `HeatSource_Control.[xlsx|csv]` is in that directory and
 runs the hydraulics model.
 """
 import sys
+import traceback
 from pathlib import Path
 
 import heatsource9.run as hs_run
 
 
 def main():
+    frozen = getattr(sys, "frozen", False)
+
     # Use executable folder for PyInstaller builds, otherwise script folder.
-    if getattr(sys, "frozen", False):
+    if frozen:
         model_dir = Path(sys.executable).resolve().parent
     else:
         model_dir = Path(__file__).resolve().parent
 
-    # Run Heat Source Hydraulics.
-    hs_run.hydraulics(model_dir)
-    return 0
+    exit_code = 0
+    try:
+        # Run Heat Source Hydraulics.
+        hs_run.hydraulics(model_dir)
+    except Exception:
+        if not frozen:
+            raise
+        traceback.print_exc()
+        exit_code = 1
+
+    if frozen:
+        input("Press Enter to exit...")
+    return exit_code
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ It then finds that `HeatSource_Control.[xlsx|csv]` is in that directory and
 writes blank model input files based on that control file.
 """
 import sys
+import traceback
 from pathlib import Path
 
 from heatsource9.io.control_file import cf_path
@@ -18,23 +19,33 @@ from heatsource9.setup import setup_mi
 
 
 def main():
+    frozen = getattr(sys, "frozen", False)
+
     # Use executable folder for PyInstaller builds, otherwise script folder.
-    if getattr(sys, "frozen", False):
+    if frozen:
         model_dir = Path(sys.executable).resolve().parent
     else:
         model_dir = Path(__file__).resolve().parent
 
-    # Find and validate HeatSource_Control.xlsx or HeatSource_Control.csv.
-    control_path = cf_path(model_dir)
+    exit_code = 0
+    try:
+        # Find and validate HeatSource_Control.xlsx or HeatSource_Control.csv.
+        control_path = cf_path(model_dir)
 
-    # Write blank model input files from the selected control file.
-    setup_mi(
-        model_dir=model_dir,
-        control_file=str(control_path),
-        use_timestamp=False,
-        overwrite=False,
-    )
-    return 0
+        # Write blank model input files from the selected control file.
+        setup_mi(model_dir=model_dir,
+                 control_file=str(control_path),
+                 use_timestamp=False,
+                 overwrite=False)
+    except Exception:
+        if not frozen:
+            raise
+        traceback.print_exc()
+        exit_code = 1
+
+    if frozen:
+        input("Press Enter to exit...")
+    return exit_code
 
 
 if __name__ == "__main__":
