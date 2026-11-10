@@ -142,7 +142,7 @@ def setup_cf(model_dir,
             msg = f"Writing template control file: {cf_name}"
         logger.info(msg)
 
-        rows = [row for _, row in sorted(cf_dict().items(), key=lambda kv: kv[1][0])]
+        rows = [row for _, row in sorted(cf_dict.items(), key=lambda kv: kv[1][0])]
         write_input(path=control_path,
                     headers=["LINE", "PARAMETER", "KEY", "VALUE"],
                     rows=rows,
